@@ -2,7 +2,10 @@
 
 Urbanization is a .NET implementation of a city building simulation game, heavily inspired by the classic [Simcity](http://en.wikipedia.org/wiki/SimCity_(1989_video_game)) game released in 1989; of which its source code has been released under the title [Micropolis](https://github.com/SimHacker/micropolis).
 
-The implementation is far from complete, but most of the basics are currently present.
+The implementation is far from complete, but most of the basics are currently present. These include (amongst others):
+- Customizable terrain generation
+- Power grid and infrastructure simulation (including population growth)
+- Crime and pollution
 
 ![Screenshot of 'Urbanization'](/screenshot.png?raw=true "Screenshot of 'Urbanization'")
 
