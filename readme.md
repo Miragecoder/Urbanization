@@ -29,10 +29,10 @@ This project was set up primarily for educational purposes. It was primarily bor
 
 ## Credits
 
-SharpDX
+SharpDX:
 http://sharpdx.org/
 
-RhinoMocks
+RhinoMocks:
 http://hibernatingrhinos.com/oss/rhino-mocks
 
 ## License
