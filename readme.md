@@ -1,11 +1,15 @@
 # Urbanization
 
-TODO: Write a project description
+Urbanization is a .NET implementation of a city building simulation game, heavily inspired by the classic Simcity game released in 1989. (See: http://www.wikiwand.com/en/SimCity_(1989_video_game)) Its source code has been released under the title 'Micropolis'. (See: https://github.com/simhacker/micropolis)
+
+The implementation is far from complete, but most of the basics are currently present.
 
 ## Installation
 
 1. Clone the repository
 2. Build the solution
+3. Run the (primarily, integration) tests
+4. Run the *Mirage.Urbanization.WinForms*-project 
 
 ## Usage
 
@@ -13,11 +17,11 @@ Currently, the simulation engine has only been implemented in a Winforms client.
 
 ## Contributing
 
-I'm not expecting high contribution on this project but if you're totally interested 
+I'm not expecting high contribution rates on this project but if you're totally interested you're more than welcome to chime in.
 
 ## History
 
-TODO: Write history
+This project was set up primarily for educational purposes. It was primarily born out of interest into (game) engine design. To its author, it is a welcome expedition away from his day-to-day activities as a .NET developer which primarily involve the development of data synchronization services.
 
 ## Credits
 
