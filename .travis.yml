@@ -1,3 +1,0 @@
-before_script: cd src
-language: csharp
-solution: Mirage.Urbanization.sln
