@@ -4,6 +4,8 @@ Urbanization is a .NET implementation of a city building simulation game, heavil
 
 The implementation is far from complete, but most of the basics are currently present.
 
+![Screenshot of 'Urbanization'](/screenshot.png?raw=true "Screenshot of 'Urbanization'")
+
 ## Installation
 
 1. Clone the repository
