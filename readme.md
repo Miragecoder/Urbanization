@@ -35,4 +35,4 @@ http://hibernatingrhinos.com/oss/rhino-mocks
 
 ## License
 
-TODO: Write license
+This project uses the MIT license. See 'license.txt' for more info.
