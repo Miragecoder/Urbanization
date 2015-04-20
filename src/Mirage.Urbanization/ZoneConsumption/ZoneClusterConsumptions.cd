@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Mirage.Urbanization.ZoneConsumption.IndustrialZoneClusterConsumption" Collapsed="true">
+    <Position X="6.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAQAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\IndustrialZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseImplementedZoneClusterConsumption" Collapsed="true">
+    <Position X="9" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAACA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseImplementedZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.CommercialZoneClusterConsumption" Collapsed="true">
+    <Position X="4.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAQAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\CommercialZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.ResidentialZoneClusterConsumption" Collapsed="true">
+    <Position X="9" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACABIAAAQAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\ResidentialZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.AirportZoneClusterConsumption" Collapsed="true">
+    <Position X="11.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAABAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\AirportZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.CoalPowerPlantZoneClusterConsumption" Collapsed="true">
+    <Position X="13.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAABAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\CoalPowerPlantZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseZoneClusterConsumption" Collapsed="true">
+    <Position X="9" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABCQAABEAIAQACAAAAAQAASAAAAAAADA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.StaticZoneClusterConsumption" Collapsed="true">
+    <Position X="12.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\StaticZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseGrowthZoneClusterConsumption" Collapsed="true">
+    <Position X="6.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAEBBAEAABBAAIAJAAAhBgQIEAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseGrowthZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

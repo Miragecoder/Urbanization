@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Mirage.Urbanization.ZoneConsumption.EmptyZoneConsumption" Collapsed="true">
+    <Position X="1.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\EmptyZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseZoneConsumption" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.ZoneClusterMemberConsumption" Collapsed="true">
+    <Position X="14.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAQCAEIAAACAADAAAQQAEAABAAAAECggkABAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\ZoneClusterMemberConsumption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.WoodlandZoneConsumption" Collapsed="true">
+    <Position X="12.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\WoodlandZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.RubbishZoneConsumption" Collapsed="true">
+    <Position X="1.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\RubbishZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.PowerLineConsumption" Collapsed="true">
+    <Position X="3.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAQAAAAACAAAAAAAgAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\PowerLineConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.RailRoadZoneConsumption" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAQAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\RailRoadZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.RoadZoneConsumption" Collapsed="true">
+    <Position X="8" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAgAAAAAAAAAIAAAAAAAQIAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\RoadZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.WaterZoneConsumption" Collapsed="true">
+    <Position X="10.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAIAAAAAAAQEAAAAgAAAAAAggIAAAAA=</HashCode>
+      <FileName>ZoneConsumption\WaterZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.IntersectingZoneConsumption" Collapsed="true">
+    <Position X="17.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAABAAACEAAAAAQIAAAAAAAAAAAgoAARAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\IntersectingZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseNetworkZoneConsumption" Collapsed="true">
+    <Position X="8" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAIAAAAAIAAAAAAAAAgQCAgAAgAAAAAAQAA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseNetworkZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseInfrastructureNetworkZoneConsumption" Collapsed="true">
+    <Position X="7" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseNetworkZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mirage.Urbanization.ZoneConsumption.Base.BaseSingleZoneConsumption" Collapsed="true">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\BaseZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Mirage.Urbanization.ZoneConsumption.Base.IIntersectingZoneConsumption" Collapsed="true">
+    <Position X="0.75" Y="10.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\IIntersectingZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Mirage.Urbanization.ZoneConsumption.Base.IAreaZoneConsumption" Collapsed="true">
+    <Position X="1" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\IAreaZoneConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Mirage.Urbanization.ZoneConsumption.Base.IAreaConsumption" Collapsed="true">
+    <Position X="2.75" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZoneConsumption\Base\IAreaConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Mirage.Urbanization.ZoneConsumption.Base.IAreaZoneClusterConsumption" Collapsed="true">
+    <Position X="4" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>ZoneConsumption\Base\IAreaZoneClusterConsumption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

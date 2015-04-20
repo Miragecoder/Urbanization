@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Mirage.Urbanization.Persistence;
+using Mirage.Urbanization.Simulation.Persistence;
+
+namespace Mirage.Urbanization.Simulation
+{
+    public class SimulationOptions
+    {
+        private readonly TerraformingOptions _terraformingOptions;
+        private readonly PersistedSimulation _persistedSimulation;
+        private readonly ProcessOptions _processOptions;
+
+        public SimulationOptions(TerraformingOptions terraformingOptions, ProcessOptions processOptions)
+        {
+            _terraformingOptions = terraformingOptions;
+            _processOptions = processOptions;
+
+        }
+        public SimulationOptions(PersistedSimulation persistedSimulation, ProcessOptions processOptions)
+        {
+            _persistedSimulation = persistedSimulation;
+            _processOptions = processOptions;
+        }
+
+        public void WithPersistedSimulation(Action<PersistedSimulation> action)
+        {
+            if (_persistedSimulation != null)
+                action(_persistedSimulation);
+        }
+
+        public AreaOptions GetAreaOptions()
+        {
+            if (_terraformingOptions != null && _persistedSimulation == null)
+                return new AreaOptions(_terraformingOptions, _processOptions);
+            else if (_persistedSimulation != null && _terraformingOptions == null)
+                return new AreaOptions(_persistedSimulation.PersistedArea, _processOptions);
+            else 
+                throw new InvalidOperationException();
+        }
+    }
+}
