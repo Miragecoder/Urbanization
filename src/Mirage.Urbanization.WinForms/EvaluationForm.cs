@@ -14,12 +14,13 @@ namespace Mirage.Urbanization.WinForms
 {
     public partial class EvaluationForm : Form
     {
-        public EvaluationForm(PersistedCityStatistics cityStatistics)
+        public EvaluationForm(CityStatisticsView cityStatistics)
         {
             InitializeComponent();
 
-            AddLabelValue("Population", cityStatistics.GlobalZonePopulationStatistics.Sum.ToString());
-            AddLabelValue("Land value", cityStatistics.LandValueNumbers.Sum.ToString("C0"));
+            AddLabelValue("Population", cityStatistics.Population.ToString());
+            AddLabelValue("Assessed value", cityStatistics.AssessdValue.ToString("C0"));
+            AddLabelValue("Category", cityStatistics.CityCategory);
         }
 
         private void AddLabelValue(string label, string value)

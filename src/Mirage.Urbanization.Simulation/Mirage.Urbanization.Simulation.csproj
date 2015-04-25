@@ -40,9 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateExceptionExtensions.cs" />
+    <Compile Include="CityStatisticsView.cs" />
     <Compile Include="EventArgsWithData.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
+    <Compile Include="PersistedCityStatistics.cs" />
     <Compile Include="Persistence\PersistedSimulation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulation.cs" />

@@ -288,7 +288,7 @@ namespace Mirage.Urbanization.WinForms
                     .GetRecentStatistics()
                     .WithResultIfHasMatch(statistics =>
                     {
-                        new EvaluationForm(statistics).Show(this);
+                        new EvaluationForm(new CityStatisticsView(statistics)).Show(this);
                     }
                 );
             });
