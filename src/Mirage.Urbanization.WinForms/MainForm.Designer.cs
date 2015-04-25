@@ -60,6 +60,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
+            this.evaluationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -140,6 +141,7 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.evaluationToolStripMenuItem,
             this.statisticsToolStripMenuItem,
             this.toolStripSeparator1,
             this.showPollution,
@@ -315,6 +317,14 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
+            // evaluationToolStripMenuItem
+            // 
+            this.evaluationToolStripMenuItem.Name = "evaluationToolStripMenuItem";
+            this.evaluationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.evaluationToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
+            this.evaluationToolStripMenuItem.Text = "Evaluation...";
+            this.evaluationToolStripMenuItem.Click += new System.EventHandler(this.evaluationToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -370,6 +380,7 @@
         private System.Windows.Forms.ToolStripMenuItem showPopulationDensityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showLandValueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem evaluationToolStripMenuItem;
     }
 }
 

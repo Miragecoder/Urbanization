@@ -278,5 +278,20 @@ namespace Mirage.Urbanization.WinForms
                 _lastSaveFileName = fileName;
             }
         }
+
+        private void evaluationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WithAreaRenderHelper(helper =>
+            {
+                helper
+                    .SimulationSession
+                    .GetRecentStatistics()
+                    .WithResultIfHasMatch(statistics =>
+                    {
+                        new EvaluationForm(statistics).Show(this);
+                    }
+                );
+            });
+        }
     }
 }

@@ -58,6 +58,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaRenderHelper.cs" />
+    <Compile Include="ControlExtensions.cs" />
+    <Compile Include="EvaluationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EvaluationForm.Designer.cs">
+      <DependentUpon>EvaluationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GraphicsManagerSelection.cs" />
     <Compile Include="NewCityForm.cs">
       <SubType>Form</SubType>
@@ -90,6 +97,9 @@
     <Compile Include="ZoneRenderInfo.cs" />
     <Compile Include="ZoneSelectionPanelCreator.cs" />
     <Compile Include="ZoomMode.cs" />
+    <EmbeddedResource Include="EvaluationForm.resx">
+      <DependentUpon>EvaluationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
