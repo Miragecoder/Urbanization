@@ -49,6 +49,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public int PopulationDensity { get { return _populationDensity; } }
 
+        public int PopulationStatistics { get { return _populationDensity * 3;} }
+
         public bool CanGrow { get { return _populationDensity < 50; } }
 
         public bool CanGrowAndHasPower { get { return CanGrow && HasPower; } }

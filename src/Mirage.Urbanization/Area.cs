@@ -351,9 +351,9 @@ namespace Mirage.Urbanization
                             .Select(x => x.MatchingObject)
                             .Count()
                             ),
-                    residentialZonePopulationNumbers: growthZones.OfType<ResidentialZoneClusterConsumption>().Distinct().Select(x => x.PopulationDensity).ToList(),
-                    commercialZonePopulationNumbers:  growthZones.OfType<CommercialZoneClusterConsumption>().Distinct().Select(x => x.PopulationDensity).ToList(),
-                    industrialZonePopulationNumbers: growthZones.OfType<IndustrialZoneClusterConsumption>().Distinct().Select(x => x.PopulationDensity).ToList()
+                    residentialZonePopulationNumbers: growthZones.OfType<ResidentialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
+                    commercialZonePopulationNumbers: growthZones.OfType<CommercialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
+                    industrialZonePopulationNumbers: growthZones.OfType<IndustrialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList()
                 ) as IGrowthZoneStatistics;
             }, cancellationToken: cancellationToken);
         }
