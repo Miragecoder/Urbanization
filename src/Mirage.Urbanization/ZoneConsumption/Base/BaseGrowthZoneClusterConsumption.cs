@@ -21,8 +21,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             : base(createZoneInfoFinderFunc, new ElectricityConsumerBehaviour(15), color, 3, 3)
         {
             _pollutionBehaviour =
-                new DynamicPollutionBehaviour(() => Convert.ToInt32(PopulationDensity*PopulationPollutionFactor));
-            _crimeBehaviour = new DynamicCrimeBehaviour(() => Convert.ToInt32(PopulationDensity*PopulationCrimeFactor));
+                new DynamicPollutionBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationPollutionFactor));
+            _crimeBehaviour = new DynamicCrimeBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationCrimeFactor));
         }
 
         public override IPollutionBehaviour PollutionBehaviour
@@ -41,12 +41,14 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public int PopulationStatistics
         {
-            get { return PopulationDensity*3; }
+            get { return PopulationDensity * 3; }
         }
+
+        private const int MaximumPopulation = 50;
 
         public bool CanGrow
         {
-            get { return PopulationDensity < 50; }
+            get { return PopulationDensity < MaximumPopulation; }
         }
 
         public bool CanGrowAndHasPower
@@ -57,6 +59,14 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public bool IsPopulated
         {
             get { return PopulationDensity > 0; }
+        }
+
+        public override int Value
+        {
+            get
+            {
+                return 100 + (PopulationDensity * 20);
+            }
         }
 
         public int AverageTravelDistance { get; private set; }

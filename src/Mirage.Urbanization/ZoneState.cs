@@ -443,7 +443,12 @@ namespace Mirage.Urbanization
 
         public QueryResult<IQueryLandValueResult> QueryLandValue()
         {
-            if (!ConsumptionState.GetIsZoneClusterMember()) return new QueryResult<IQueryLandValueResult>();
+            var consumption = ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
+
+            if (consumption == null)
+            {
+                return new QueryResult<IQueryLandValueResult>();
+            }
 
             var currentCrime = GetLastQueryCrimeResult();
             var currentPollution = GetLastQueryPollutionResult();
@@ -461,7 +466,7 @@ namespace Mirage.Urbanization
                 ? list.Average(x => x.MatchingObject.AverageTravelDistance)
                 : 100;
 
-            var score = Convert.ToInt32(1000 - (
+            var score = Convert.ToInt32(consumption.ParentBaseZoneClusterConsumption.Value - (
                 (currentCrime.HasMatch ? currentCrime.MatchingObject.CrimeInUnits : 0)
                 + (currentPollution.HasMatch ? currentPollution.MatchingObject.PollutionInUnits : 0)
                 + travelDistance)

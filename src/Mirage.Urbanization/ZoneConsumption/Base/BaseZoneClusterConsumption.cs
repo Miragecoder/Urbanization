@@ -13,6 +13,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract ICrimeBehaviour CrimeBehaviour { get; }
         public IElectricityBehaviour ElectricityBehaviour { get { return _electricityBehaviour; } }
 
+        public abstract int Value { get; }
+
         protected BaseZoneClusterConsumption(IElectricityBehaviour electricityBehaviour)
         {
             _electricityBehaviour = electricityBehaviour;

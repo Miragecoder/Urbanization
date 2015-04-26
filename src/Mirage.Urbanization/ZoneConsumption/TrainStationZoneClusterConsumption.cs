@@ -12,6 +12,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return "Train station"; }
         }
 
+        public override int Value { get { return 250; } }
+
         public TrainStationZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
             : base(
                 createZoneInfoFinderFunc: createZoneInfoFinderFunc,
