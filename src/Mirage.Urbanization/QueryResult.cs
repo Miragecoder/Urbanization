@@ -19,6 +19,8 @@ namespace Mirage.Urbanization
         {
             if (HasMatch) action(MatchingObject);
         }
+
+        public static readonly QueryResult<T> Empty = new QueryResult<T>();
     }
 
     public class QueryResult<TMatchingObject, TQuery> : QueryResult<TMatchingObject>

@@ -29,6 +29,7 @@ namespace Mirage.Urbanization
     public interface IQueryPollutionResult
     {
         int PollutionInUnits { get; }
+        decimal LandValueMultiplier { get; }
     }
 
     internal class QueryPollutionResult : IQueryPollutionResult
@@ -36,11 +37,14 @@ namespace Mirage.Urbanization
         private readonly int _pollutionInUnits;
         public QueryPollutionResult(int pollutionInUnits) { _pollutionInUnits = pollutionInUnits; }
         public int PollutionInUnits { get { return _pollutionInUnits > 0 ? _pollutionInUnits : 0; } }
+
+        public decimal LandValueMultiplier { get { return (1000M - PollutionInUnits) / 1000M; } }
     }
 
     public interface IQueryCrimeResult
     {
         int CrimeInUnits { get; }
+        decimal LandValueMultiplier { get; }
     }
 
     internal class QueryCrimeResult : IQueryCrimeResult
@@ -48,6 +52,7 @@ namespace Mirage.Urbanization
         private readonly int _crimeInUnits;
         public QueryCrimeResult(int crimeInUnits) { _crimeInUnits = crimeInUnits; }
         public int CrimeInUnits { get { return _crimeInUnits > 0 ? _crimeInUnits : 0; } }
+        public decimal LandValueMultiplier { get { return (1000M - CrimeInUnits) / 1000M; } }
     }
 
     public interface IQueryLandValueResult
@@ -345,13 +350,13 @@ namespace Mirage.Urbanization
 
             int crimeInUnits = (from match in GetSurroundingZoneInfosDiamond(20)
                     .Where(x => x.HasMatch)
-                let crimeBehaviourResult = match
-                    .MatchingObject
-                    .GetCrimeBehaviour()
-                where crimeBehaviourResult.HasMatch
-                select crimeBehaviourResult
-                    .MatchingObject
-                    .GetCrimeInUnits(match.QueryObject)
+                                let crimeBehaviourResult = match
+                                    .MatchingObject
+                                    .GetCrimeBehaviour()
+                                where crimeBehaviourResult.HasMatch
+                                select crimeBehaviourResult
+                                    .MatchingObject
+                                    .GetCrimeInUnits(match.QueryObject)
                     ).Sum();
 
             return _lastQueryCrimeResult = new QueryResult<IQueryCrimeResult>(new QueryCrimeResult(crimeInUnits));
@@ -447,34 +452,45 @@ namespace Mirage.Urbanization
 
             if (consumption == null)
             {
-                return new QueryResult<IQueryLandValueResult>();
+                return QueryResult<IQueryLandValueResult>.Empty;
             }
 
-            var currentCrime = GetLastQueryCrimeResult();
-            var currentPollution = GetLastQueryPollutionResult();
+            if (consumption.ParentBaseZoneClusterConsumption.LandValueAffectedBySurroundings)
+            {
+                var currentCrime = GetLastQueryCrimeResult();
+                var currentPollution = GetLastQueryPollutionResult();
 
-            var list = GetSurroundingZoneInfosDiamond(20)
-                .Where(x => x.HasMatch)
-                .Select(x => x.MatchingObject.ConsumptionState)
-                .Select(x => x.QueryAsZoneClusterMember())
-                .Where(x => x.HasMatch)
-                .Select(x => x.MatchingObject.QueryParentAsBaseGrowthZoneClusterConsumption())
-                .Where(x => x.HasMatch)
-                .ToList();
+                var list = GetSurroundingZoneInfosDiamond(20)
+                    .Where(x => x.HasMatch)
+                    .Select(x => x.MatchingObject.ConsumptionState)
+                    .Select(x => x.QueryAsZoneClusterMember())
+                    .Where(x => x.HasMatch)
+                    .Select(x => x.MatchingObject.QueryParentAsBaseGrowthZoneClusterConsumption())
+                    .Where(x => x.HasMatch)
+                    .ToList();
 
-            var travelDistance = list.Any()
-                ? list.Average(x => x.MatchingObject.AverageTravelDistance)
-                : 100;
+                var travelDistance = 0;
 
-            var score = Convert.ToInt32(consumption.ParentBaseZoneClusterConsumption.CellValue - (
-                (currentCrime.HasMatch ? currentCrime.MatchingObject.CrimeInUnits : 0)
-                + (currentPollution.HasMatch ? currentPollution.MatchingObject.PollutionInUnits : 0)
-                + travelDistance)
-            );
+                if (list.Any())
+                    travelDistance = Convert.ToInt32(Math.Ceiling(list.Average(x => x.MatchingObject.AverageTravelDistance)));
 
-            _lastQueryLandValueResult = new QueryResult<IQueryLandValueResult>( new QueryLandValueResult(score));
+                if (travelDistance == 0)
+                    travelDistance = 100;
 
-            return _lastQueryLandValueResult;
+                var averageMultiplier = new[]
+                {
+                    (currentCrime.HasMatch ? currentCrime.MatchingObject.LandValueMultiplier : 1M),
+                    (currentPollution.HasMatch ? currentPollution.MatchingObject.LandValueMultiplier : 1M),
+                    (100M - travelDistance) / 100M
+                }.Average();
+
+                var score = Convert.ToInt32(consumption.ParentBaseZoneClusterConsumption.CellValue * averageMultiplier);
+
+                _lastQueryLandValueResult = new QueryResult<IQueryLandValueResult>(new QueryLandValueResult(score));
+
+                return _lastQueryLandValueResult;
+            }
+            return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult(consumption.ParentBaseZoneClusterConsumption.CellValue));
         }
 
         private QueryResult<IQueryLandValueResult> _lastQueryLandValueResult;

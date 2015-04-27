@@ -17,10 +17,10 @@ namespace Mirage.Urbanization.ZoneConsumption
         public TrainStationZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
             : base(
                 createZoneInfoFinderFunc: createZoneInfoFinderFunc,
-                electricityBehaviour: new ElectricityConsumerBehaviour(10), 
-                pollutionInUnits: 0,  
-                color: Color.Yellow, 
-                widthInZones: 2, 
+                electricityBehaviour: new ElectricityConsumerBehaviour(10),
+                pollutionInUnits: 0,
+                color: Color.Yellow,
+                widthInZones: 2,
                 heightInZones: 2)
         {
             _crimeBehaviour = new DynamicCrimeBehaviour(() => 10);

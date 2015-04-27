@@ -36,6 +36,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public int RelativeToParentCenterX { get { return _relativeToParentCenterX; } }
         public int RelativeToParentCenterY { get { return _relativeToParentCenterY; } }
 
+
         public bool IsCentralClusterMember
         {
             get { return RelativeToParentCenterX == 0 && RelativeToParentCenterY == 0; }

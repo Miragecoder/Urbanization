@@ -15,6 +15,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public abstract int Value { get; }
 
+        public abstract bool LandValueAffectedBySurroundings { get; }
+
         public int CellValue
         {
             get
@@ -40,28 +42,27 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public abstract string Name { get; }
         public abstract IReadOnlyCollection<ZoneClusterMemberConsumption> ZoneClusterMembers { get; }
-        public bool ClusterMembersAreUnlocked { get { return _clusterMembersAreUnlocked; } }
+        public bool ClusterMembersAreUnlocked { get; private set; }
 
         private readonly DateTime _dateTimeCreated = DateTime.Now;
 
         protected DateTime DateTimeCreated { get { return _dateTimeCreated; } }
 
-        private bool _clusterMembersAreUnlocked;
         private readonly object _clusterMemberLocker = new object();
 
         public void WithUnlockedClusterMembers(Action action)
         {
             lock (_clusterMemberLocker)
             {
-                if (_clusterMembersAreUnlocked) throw new InvalidOperationException();
-                _clusterMembersAreUnlocked = true;
+                if (ClusterMembersAreUnlocked) throw new InvalidOperationException();
+                ClusterMembersAreUnlocked = true;
                 try
                 {
                     action();
                 }
                 catch
                 {
-                    _clusterMembersAreUnlocked = false;
+                    ClusterMembersAreUnlocked = false;
                     throw;
                 }
             }
