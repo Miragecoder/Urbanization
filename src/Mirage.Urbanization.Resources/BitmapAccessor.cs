@@ -13,16 +13,32 @@ namespace Mirage.Urbanization.Tilesets
 {
     internal class BitmapSelector
     {
-        private readonly Bitmap[] _bitmaps;
+        private readonly object[] _objects;
 
         internal BitmapSelector(params Bitmap[] bitmaps)
+            :this(bitmaps, null)
         {
-            _bitmaps = bitmaps;
+            
+        }
+
+        internal BitmapSelector(Bitmap[] bitmaps = null, AnimatedBitmap[] animatedBitmaps = null)
+        {
+            var @objects = new List<object>();
+            if (bitmaps != null)
+                @objects.AddRange(bitmaps);
+            if (animatedBitmaps != null)
+                @objects.AddRange(animatedBitmaps);
+            _objects = @objects.ToArray();
         }
 
         public Bitmap SelectOneWithId(int id)
         {
-            return _bitmaps[id % _bitmaps.Length];
+            var @object = _objects[id % _objects.Length];
+            if (@object is Bitmap)
+                return @object as Bitmap;
+            else if (@object is AnimatedBitmap)
+                return (@object as AnimatedBitmap).GetCurrentBitmapFrame();
+            throw new InvalidOperationException("Unsupported object type encountered: " + @object.GetType().Name);
         }
     }
 
@@ -65,7 +81,7 @@ namespace Mirage.Urbanization.Tilesets
     {
         internal static readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> CommercialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity == 0,
-                new BitmapSelector(BitmapAccessor.GetImage("GrowthZones.Commercial.empty.png"))
+                new BitmapSelector(new [] { BitmapAccessor.GetImage("GrowthZones.Commercial.empty.png") })
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity > 0 && x.PopulationDensity < 25,
                 new BitmapSelector(
@@ -88,12 +104,26 @@ namespace Mirage.Urbanization.Tilesets
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity > 0 && x.PopulationDensity < 25,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1.png")
+                    animatedBitmaps: new[]
+                    {
+                        new AnimatedBitmap(300,
+                            BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a1.png"),
+                            BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a2.png"),
+                            BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a3.png")
+                        ), 
+                    }
                 )
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity >= 25,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1.png")
+                    animatedBitmaps: new[]
+                    {
+                        new AnimatedBitmap(200,
+                            BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a1.png"),
+                            BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a2.png"),
+                            BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a3.png")
+                        ), 
+                    }
                 )
             )
         );
