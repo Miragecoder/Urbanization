@@ -49,6 +49,11 @@ namespace Mirage.Urbanization.WinForms
             _zoomStateChanged = true;
         }
 
+        public bool HandleKeyChar(char @char)
+        {
+            return _zoneSelectionPanelBehaviour.HandleKeyCharAction(@char);
+        }
+
         private static void MoveScroll(ScrollProperties scrollProperties, int modifier)
         {
             var newValue = scrollProperties.Value + (modifier * 300);
@@ -98,7 +103,7 @@ namespace Mirage.Urbanization.WinForms
 
             _simulationSession = new SimulationSession(options);
 
-            _zoneSelectionPanel.Width = 100;
+            _zoneSelectionPanel.Width = 160;
             _zoneSelectionPanel.Dock = DockStyle.Left;
 
             _viewportPanel.Dock = DockStyle.Fill;

@@ -16,6 +16,8 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         }
 
+        public override char KeyChar { get { return 'g'; } }
+
         protected override decimal PopulationPollutionFactor
         {
             get { return 0.2M; }

@@ -21,6 +21,8 @@ namespace Mirage.Urbanization.ZoneConsumption
                 heightInZones: 4
                 ) { }
 
+
+        public override char KeyChar { get { return 'p'; } }
         public override string Name { get { return "Coal power plant"; } }
         private readonly ICrimeBehaviour _crimeBehaviour = new DynamicCrimeBehaviour(() => 0);
         public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }

@@ -12,6 +12,8 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         }
 
+        public override char KeyChar { get { return 'w'; } }
+
         public override string Name
         {
             get { return "Water"; }

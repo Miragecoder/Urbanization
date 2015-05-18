@@ -9,6 +9,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     {
         private readonly int _id = Random.Next(0, Int32.MaxValue);
 
+        public override char KeyChar { get { throw new NotImplementedException(); } }
+
         public int Id { get { return _id; } }
 
         private static readonly Random Random = new Random();

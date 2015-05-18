@@ -10,6 +10,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return "Clear"; }
         }
 
+        public override char KeyChar { get { return 'd'; } }
+
         public override Color Color
         {
             get { return DefaultColor; }

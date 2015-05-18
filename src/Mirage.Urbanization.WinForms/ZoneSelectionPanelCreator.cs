@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Mirage.Urbanization.ZoneConsumption;
@@ -11,10 +12,21 @@ namespace Mirage.Urbanization.WinForms
     public class ZoneSelectionPanelCreator
     {
         private readonly Panel _targetPanel;
-        private readonly IReadOnlyArea _area;
 
         private readonly IDictionary<Button, Func<IAreaConsumption>> _buttonsAndFactories;
         private Func<IAreaConsumption> _currentFactory;
+
+        private readonly Dictionary<char, Action> _handleKeyCharActions = new Dictionary<char, Action>();
+
+        public bool HandleKeyCharAction(char @char)
+        {
+            if (_handleKeyCharActions.ContainsKey(@char))
+            {
+                _handleKeyCharActions[@char]();
+                return true;
+            }
+            return false;
+        }
 
         public ZoneSelectionPanelCreator(IReadOnlyArea area, Panel targetPanel)
         {
@@ -23,22 +35,22 @@ namespace Mirage.Urbanization.WinForms
 
             _targetPanel = targetPanel;
 
-            _area = area;
-
             EventHandler currentClickHandler = null;
 
-            _buttonsAndFactories = _area.GetSupportedZoneConsumptionFactories().Reverse()
+            _buttonsAndFactories = area.GetSupportedZoneConsumptionFactories().Reverse()
                 .Select(factory =>
                 {
                     var sample = factory();
 
                     var button = new Button
                     {
-                        Text = sample.Name,
+                        Text = string.Format("{0} ({1})", sample.Name, sample.KeyChar.ToString().ToUpperInvariant()),
                         Dock = DockStyle.Top,
-                        BackColor = SystemColors.Control
+                        BackColor = SystemColors.Control,
+                        Parent = _targetPanel
                     };
-                    button.Parent = _targetPanel;
+
+                    _handleKeyCharActions.Add(sample.KeyChar, () => button.PerformClick());
 
                     currentClickHandler = (sender, e) =>
                     {

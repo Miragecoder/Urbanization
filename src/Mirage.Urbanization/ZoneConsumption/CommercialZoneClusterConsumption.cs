@@ -18,6 +18,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return 0.7M; }
         }
 
+        public override char KeyChar { get { return 'c'; } }
+
         public override string Name { get { return "Commercial zone"; } }
     }
 }

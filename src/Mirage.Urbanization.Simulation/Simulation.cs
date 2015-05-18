@@ -201,7 +201,7 @@ namespace Mirage.Urbanization.Simulation
                 }
                 catch (AggregateException aggEx)
                 {
-                    if (!aggEx.IsCancelled())
+                    if (!aggEx.IsCancelled()
                         throw;
                 }
             }

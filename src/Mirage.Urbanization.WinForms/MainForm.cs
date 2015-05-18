@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,19 @@ namespace Mirage.Urbanization.WinForms
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            {
+                var keyCharHandled = false;
+                var keyDataAsString = keyData.ToString().ToLowerInvariant();
+                if (keyDataAsString.Length == 1)
+                {
+                    WithAreaRenderHelper(
+                        helper =>
+                            keyCharHandled = helper.HandleKeyChar(keyDataAsString[0]));
+                }
+                if (keyCharHandled)
+                    return true;
+            }
+
             switch (keyData)
             {
                 case Keys.Oemplus:

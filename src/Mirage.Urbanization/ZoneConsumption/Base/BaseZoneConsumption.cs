@@ -8,6 +8,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     {
         public abstract string Name { get; }
         public abstract Color Color { get; }
+        public abstract char KeyChar { get; }
 
         public abstract IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption);
     }

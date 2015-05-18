@@ -15,6 +15,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return "Railroad"; }
         }
 
+        public override char KeyChar { get { return 't'; } }
+
         public override bool CanBeOverriddenByZoneClusters
         {
             get { return false; }

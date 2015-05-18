@@ -14,6 +14,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return "Power line"; }
         }
 
+        public override char KeyChar { get { return 'l'; } }
+
         public override Color Color
         {
             get { return Color.Teal; }

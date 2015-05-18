@@ -13,6 +13,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return "Woodlands"; }
         }
 
+        public override char KeyChar { get { return 'b'; } }
+
         private static readonly DynamicPollutionBehaviour WoodlandPollutionBehaviour = new DynamicPollutionBehaviour(() => -50);
 
         public IPollutionBehaviour PollutionBehaviour

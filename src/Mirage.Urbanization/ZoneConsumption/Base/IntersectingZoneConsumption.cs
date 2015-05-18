@@ -9,6 +9,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     {
         private readonly ZoneInfoFinder _zoneInfoFinder;
 
+        public char KeyChar { get { throw new NotImplementedException(); } }
+
         public IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)
         {
             if (consumption is EmptyZoneConsumption)
@@ -38,7 +40,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public IntersectingZoneConsumption(ZoneInfoFinder zoneInfoFinder, BaseInfrastructureNetworkZoneConsumption eastWestZoneConsumption, BaseInfrastructureNetworkZoneConsumption northSouthZoneConsumption)
         {
-            if (zoneInfoFinder ==null) throw new ArgumentNullException("zoneInfoFinder");
+            if (zoneInfoFinder == null) throw new ArgumentNullException("zoneInfoFinder");
             if (eastWestZoneConsumption == null) throw new ArgumentNullException("eastWestZoneConsumption");
             if (northSouthZoneConsumption == null) throw new ArgumentNullException("northSouthZoneConsumption");
 
@@ -71,7 +73,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             var match = TryGetRoad();
             var density = TrafficDensity.None;
 
-            match.WithResultIfHasMatch(road => density=road.GetTrafficDensity());
+            match.WithResultIfHasMatch(road => density = road.GetTrafficDensity());
 
             return density;
         }

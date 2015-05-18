@@ -36,6 +36,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             });
         }
 
+        public override char KeyChar { get { return 'r'; } }
+
         public override string Name
         {
             get { return "Road"; }

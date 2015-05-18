@@ -20,6 +20,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             _crimeBehaviour = new DynamicCrimeBehaviour(() => 50);
         }
 
+        public override char KeyChar { get { return 'a'; } }
+
         public override string Name
         {
             get { return "Airport"; }

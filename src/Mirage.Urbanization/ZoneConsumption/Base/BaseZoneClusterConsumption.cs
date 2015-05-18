@@ -9,6 +9,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     {
         private readonly IElectricityBehaviour _electricityBehaviour;
 
+        public abstract char KeyChar { get; }
+
         public abstract IPollutionBehaviour PollutionBehaviour { get; }
         public abstract ICrimeBehaviour CrimeBehaviour { get; }
         public IElectricityBehaviour ElectricityBehaviour { get { return _electricityBehaviour; } }
