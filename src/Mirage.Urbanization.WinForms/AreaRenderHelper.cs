@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -15,6 +16,7 @@ using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.WinForms.Rendering;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Orientation = Mirage.Urbanization.ZoneConsumption.Base.Orientation;
 
 namespace Mirage.Urbanization.WinForms
 {
@@ -28,7 +30,7 @@ namespace Mirage.Urbanization.WinForms
         private readonly Panel _zoneSelectionPanel = new Panel();
         private readonly Panel _canvasPanel;
         private IGraphicsManagerWrapper _graphicsManager;
-        private readonly IReadOnlyCollection<ZoneRenderInfo> _zoneRenderInfos;
+        private readonly IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo> _zoneRenderInfos;
 
         private bool _zoomStateChanged;
 
@@ -73,7 +75,7 @@ namespace Mirage.Urbanization.WinForms
             {
                 throw new InvalidOperationException();
             }
-            
+
         }
 
         public void MoveRight()
@@ -155,7 +157,8 @@ namespace Mirage.Urbanization.WinForms
 
             _zoneRenderInfos = _simulationSession.Area
                     .EnumerateZoneInfos()
-                    .Select(zoneRenderInfo =>
+                    .ToDictionary(x => x,
+                    zoneRenderInfo =>
                         new ZoneRenderInfo(
                             zoneInfo: zoneRenderInfo,
                             createRectangle: zonePoint => new Rectangle(
@@ -166,8 +169,9 @@ namespace Mirage.Urbanization.WinForms
                                 ),
                             tilesetAccessor: _tilesetAccessor,
                             renderZoneOptions: renderZoneOptions
-                        )
-                    ).ToList();
+                        ));
+
+            _trainRenderState = new TrainRenderState(() => _zoneRenderInfos);
 
             _graphicsManager = CreateGraphicsManagerWrapperWithFactory(renderZoneOptions.SelectedGraphicsManager.Factory);
         }
@@ -192,12 +196,209 @@ namespace Mirage.Urbanization.WinForms
                     var result = rect.RenderZoneInto(_graphicsManager.GetGraphicsWrapper(), rect.GetRectangle().Contains(currentCursorPoint));
                     if (result != null) highlightAction = result;
                 }
+
+                _trainRenderState.Render(_graphicsManager.GetGraphicsWrapper());
+
                 if (highlightAction != null)
                 {
                     var consumption = _zoneSelectionPanelBehaviour.CreateNewCurrentZoneConsumption();
                     highlightAction(consumption);
                 }
             });
+        }
+
+        private readonly TrainRenderState _trainRenderState;
+
+        private class TrainRenderState
+        {
+            private readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> _getZoneRenderInfosFunc;
+
+            public TrainRenderState(Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> getZoneRenderInfosFunc)
+            {
+                _getZoneRenderInfosFunc = getZoneRenderInfosFunc;
+
+                _cachedNetworks = new SimpleCache<ISet<ISet<ZoneRenderInfo>>>(GetRailwayNetworks, new TimeSpan(0, 0, 1));
+            }
+
+            internal void Render(IGraphicsWrapper graphicsWrapper)
+            {
+                var cachedNetworksEntry = _cachedNetworks.GetValue();
+
+                if (!cachedNetworksEntry.SelectMany(x => x).Any())
+                    return;
+
+                foreach (var network in cachedNetworksEntry.Where(x => x.Count() > 20))
+                {
+                    var desiredAmountOfTrains = Math.Abs(network.Count() / 50) + 1;
+
+                    List<Train> trainsInNetwork = null;
+
+                    while (trainsInNetwork == null || trainsInNetwork.Count() < desiredAmountOfTrains)
+                    {
+                        trainsInNetwork = _trains
+                            .Where(x => network.Contains(x.CurrentPosition))
+                            .ToList();
+
+                        int desiredAdditionaTrains = desiredAmountOfTrains - trainsInNetwork.Count;
+
+                        if (desiredAdditionaTrains > 0)
+                        {
+                            foreach (var iteration in Enumerable.Range(0, desiredAmountOfTrains - trainsInNetwork.Count))
+                            {
+                                _trains.Add(new Train(_getZoneRenderInfosFunc, network
+                                    .OrderBy(x => Random.Next())
+                                    .First()
+                                ));
+                            }
+                        }
+                    }
+
+                    foreach (var train in trainsInNetwork)
+                    {
+                        train.CrawlNetwork(network);
+                    }
+                }
+
+                foreach (var orphanTrain in _trains.Where(x => x.CanBeRemoved).ToArray())
+                    _trains.Remove(orphanTrain);
+
+                foreach (var train in _trains)
+                {
+                    train.DrawInto(graphicsWrapper);
+                }
+            }
+
+            private readonly HashSet<Train> _trains = new HashSet<Train>();
+
+            private static readonly Random Random = new Random();
+
+            private class Train
+            {
+                private ZoneRenderInfo _currentPosition;
+                private ZoneRenderInfo _previousPosition;
+                private ZoneRenderInfo _previousPreviousPosition;
+                private ZoneRenderInfo _previousPreviousPreviousPosition;
+
+                public ZoneRenderInfo CurrentPosition { get { return _currentPosition; } }
+
+                public void DrawInto(IGraphicsWrapper graphicsWrapper)
+                {
+                    if (_previousPreviousPreviousPosition == null)
+                        return;
+
+                    foreach (var pair in new[]
+                    {
+                        new { Render = true, First = _currentPosition, Second = _previousPosition, Head = true},
+                        new { Render = true, First = _previousPosition, Second = _previousPreviousPosition, Head = false},
+                        new { Render = true, First = _previousPreviousPosition, Second = _previousPreviousPreviousPosition, Head = false}
+                    })
+                    {
+                        var orientation = pair.Second.ZoneInfo.Point.OrientationTo(pair.First.ZoneInfo.Point);
+
+                        bool horizontal = orientation.HasFlag(Orientation.East) || orientation.HasFlag(Orientation.West);
+
+                        if (pair.Render)
+                            graphicsWrapper
+                                .DrawImage(horizontal ? MiscBitmaps.TrainHorizontal : MiscBitmaps.TrainVertical
+                                ,pair.Second
+                                .GetRectangle()
+                                .InflateAndReturn(horizontal ? 0 : -10, !horizontal ? 0 : -10)
+                                .Relocate(currentLocation =>
+                                {
+                                    switch (orientation)
+                                    {
+                                        case Orientation.East:
+                                            return new Point(currentLocation.X, currentLocation.Y + 6);
+                                        case Orientation.West:
+                                            return new Point(currentLocation.X, currentLocation.Y - 6);
+                                        case Orientation.North:
+                                            return new Point(currentLocation.X + 6, currentLocation.Y);
+                                        case Orientation.South:
+                                            return new Point(currentLocation.X - 6, currentLocation.Y);
+                                    }
+                                    return currentLocation;
+                                }));
+                    }
+                }
+
+                public bool CanBeRemoved
+                {
+                    get
+                    {
+                        return _currentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
+                    }
+                }
+
+                private readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> _getZoneRenderInfosFunc;
+
+                public Train(Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> getZoneRenderInfosFunc, ZoneRenderInfo currentPosition)
+                {
+                    _getZoneRenderInfosFunc = getZoneRenderInfosFunc;
+                    _currentPosition = currentPosition;
+                }
+
+                private DateTime _lastChange = DateTime.Now;
+
+                public void CrawlNetwork(ISet<ZoneRenderInfo> trainNetwork)
+                {
+                    if (_lastChange > DateTime.Now.AddMilliseconds(-300))
+                    {
+                        return;
+                    }
+                    _lastChange = DateTime.Now;
+                    if (!trainNetwork.Contains(_currentPosition))
+                    {
+                        _currentPosition = trainNetwork.First();
+                    }
+                    else
+                    {
+                        var queryNext = _currentPosition
+                            .ZoneInfo
+                            .GetNorthEastSouthWest()
+                            .OrderBy(x => Random.Next())
+                            .Where(x => x.HasMatch)
+                            .Select(x => x.MatchingObject)
+                            .Where(x => trainNetwork.Select(y => y.ZoneInfo).Contains(x))
+                            .Select(x => _getZoneRenderInfosFunc()[x])
+                            .AsQueryable();
+
+                        var next = queryNext
+                            .FirstOrDefault(x => x != _previousPosition && x != _currentPosition)
+                            ?? queryNext.FirstOrDefault();
+
+                        _previousPreviousPreviousPosition = _previousPreviousPosition;
+                        _previousPreviousPosition = _previousPosition;
+
+                        _previousPosition = _currentPosition;
+
+                        _currentPosition = next;
+                    }
+                }
+            }
+
+            private readonly SimpleCache<ISet<ISet<ZoneRenderInfo>>> _cachedNetworks;
+
+            private ISet<ISet<ZoneRenderInfo>> GetRailwayNetworks()
+            {
+                var railwayNetworks = new HashSet<ISet<ZoneRenderInfo>>();
+                foreach (var railroadZoneInfo in _getZoneRenderInfosFunc()
+                    .Where(x => x.Key.ZoneConsumptionState.GetIsRailroadNetworkMember())
+                    .Where(x => !railwayNetworks.SelectMany(y => y).Contains(x.Value)))
+                {
+                    var railwayNetwork = new HashSet<ZoneRenderInfo> { railroadZoneInfo.Value };
+
+                    foreach (var member in railroadZoneInfo
+                        .Key
+                        .CrawlAllDirections(x => x.ConsumptionState.GetIsRailroadNetworkMember())
+                        )
+                    {
+                        railwayNetwork.Add(_getZoneRenderInfosFunc().First(x => x.Key == member).Value);
+                    }
+
+                    railwayNetworks.Add(railwayNetwork);
+                }
+                return railwayNetworks;
+            }
         }
 
         public void ChangeRenderer(Func<Panel, Action, IGraphicsManagerWrapper> graphicsManagerWrapperFactory)
@@ -265,9 +466,9 @@ namespace Mirage.Urbanization.WinForms
 
                 _toBeRenderedZoneInfosCache.Clear();
 
-                foreach (var x in _zoneRenderInfos.Where(rect => IsVisibleInViewPort(rect.GetRectangle())))
+                foreach (var x in _zoneRenderInfos.Where(rect => IsVisibleInViewPort(rect.Value.GetRectangle())))
                 {
-                    _toBeRenderedZoneInfosCache.Add(x);
+                    _toBeRenderedZoneInfosCache.Add(x.Value);
                 }
             }
 

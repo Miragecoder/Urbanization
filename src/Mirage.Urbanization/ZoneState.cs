@@ -23,6 +23,8 @@ namespace Mirage.Urbanization
         QueryResult<IQueryLandValueResult> GetLastLandValueResult();
 
         int GetLastAverageTravelDistance();
+        IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest();
+        IEnumerable<IZoneInfo> CrawlAllDirections(Func<IZoneInfo, bool> predicate);
         int GetPopulationDensity();
     }
 
@@ -134,7 +136,6 @@ namespace Mirage.Urbanization
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetEast();
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetWest();
         IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest();
-        IEnumerable<IZoneInfo> CrawlAllDirections(Func<IZoneInfo, bool> predicate);
         IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetSurroundingZoneInfosDiamond(int size);
         QueryResult<IQueryPollutionResult> QueryPollution();
         QueryResult<IPollutionBehaviour> GetPollutionBehaviour();
@@ -227,8 +228,8 @@ namespace Mirage.Urbanization
         public IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest()
         {
             yield return GetNorth();
-            yield return GetSouth();
             yield return GetEast();
+            yield return GetSouth();
             yield return GetWest();
         }
 

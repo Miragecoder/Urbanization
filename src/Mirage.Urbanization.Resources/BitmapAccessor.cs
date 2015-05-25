@@ -164,11 +164,20 @@ namespace Mirage.Urbanization.Tilesets
 
     }
 
+    public static class MiscBitmaps
+    {
+        public static Bitmap TrainHorizontal { get { return BitmapAccessor.TrainHorizontal; } }
+        public static Bitmap TrainVertical { get { return BitmapAccessor.TrainVertical; } }
+    }
+
     internal static class BitmapAccessor
     {
         public static readonly AnimatedBitmap PowerPlant = new AnimatedBitmap(250, GetImage("coal1.png"), GetImage("coal2.png"), GetImage("coal3.png"), GetImage("coal4.png"));
 
         public static readonly Bitmap TrainStation = GetImage("trainstation.png");
+
+        public static readonly Bitmap TrainHorizontal = GetImage("train.png");
+        public static readonly Bitmap TrainVertical = GetImage("train.png").Get90DegreesRotatedClone();
 
         public static readonly Bitmap Police = GetImage("police.png");
 

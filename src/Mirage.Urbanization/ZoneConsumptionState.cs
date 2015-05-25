@@ -9,13 +9,13 @@ namespace Mirage.Urbanization
     {
         IAreaZoneConsumption GetZoneConsumption();
         DateTime LastUpdateDateTime { get; }
+        bool GetIsRailroadNetworkMember();
     }
 
     public interface IZoneConsumptionState : IReadOnlyZoneConsumptionState
     {
         bool GetIsPowerGridMember();
         bool GetIsRoadNetworkMember();
-        bool GetIsRailroadNetworkMember();
         bool GetIsZoneClusterMember();
         QueryResult<ZoneClusterMemberConsumption> QueryAsZoneClusterMember();
 

@@ -62,7 +62,7 @@ namespace Mirage.Urbanization.WinForms
             }
             else
             {
-                graphics.FillRectangle(_brushManager.GetBrushFor(consumption), rectangle);
+                graphics.FillRectangle(BrushManager.Instance.GetBrushFor(consumption), rectangle);
             }
 
 
@@ -162,34 +162,6 @@ namespace Mirage.Urbanization.WinForms
                 };
             }
             return null;
-        }
-
-        private readonly BrushManager _brushManager = new BrushManager();
-
-        private class BrushManager
-        {
-            private IAreaZoneConsumption _currentAreaZoneConsumption;
-
-            public static readonly Font ZoneInfoFont = new Font(FontFamily.GenericMonospace, 6);
-            public static readonly Pen RedPen = new Pen(new SolidBrush(Color.Red)),
-                BluePen = new Pen(new SolidBrush(Color.Blue)),
-                YellowPen = new Pen(new SolidBrush(Color.Yellow), 3f),
-                GreenPen = new Pen(new SolidBrush(Color.LawnGreen), 3f);
-
-            public static readonly SolidBrush BlackSolidBrush = new SolidBrush(Color.Black),
-                RedSolidBrush = new SolidBrush(Color.Red);
-
-            private SolidBrush _currentBrush;
-
-            public SolidBrush GetBrushFor(IAreaZoneConsumption consumption)
-            {
-                if (consumption != _currentAreaZoneConsumption)
-                {
-                    _currentBrush = new SolidBrush(consumption.Color);
-                    _currentAreaZoneConsumption = consumption;
-                }
-                return _currentBrush;
-            }
         }
     }
 }

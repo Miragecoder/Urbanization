@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaRenderHelper.cs" />
+    <Compile Include="BrushManager.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="EvaluationForm.cs">
       <SubType>Form</SubType>
@@ -72,6 +73,7 @@
     <Compile Include="NewCityForm.Designer.cs">
       <DependentUpon>NewCityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RectangleExtensions.cs" />
     <Compile Include="Rendering\BufferedGraphics\BufferedGraphicsManagerWrapper.cs" />
     <Compile Include="Rendering\GraphicsManagerWrapperOption.cs" />
     <Compile Include="Rendering\IGraphicsManagerWrapper.cs" />

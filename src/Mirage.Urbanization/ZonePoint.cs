@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
 {
