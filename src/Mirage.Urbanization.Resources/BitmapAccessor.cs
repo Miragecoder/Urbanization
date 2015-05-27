@@ -168,6 +168,22 @@ namespace Mirage.Urbanization.Tilesets
     {
         public static Bitmap TrainHorizontal { get { return BitmapAccessor.TrainHorizontal; } }
         public static Bitmap TrainVertical { get { return BitmapAccessor.TrainVertical; } }
+        public static Bitmap TrainDiagonalNwSe { get { return BitmapAccessor.TrainDiagonalNwSe; } }
+        public static Bitmap TrainDiagonalNeSw { get { return BitmapAccessor.TrainDiagonalNeSw; } }
+
+        public static Bitmap GetTrainBitmap(Orientation orientation)
+        {
+            if (orientation == Orientation.East || orientation == Orientation.West)
+                return TrainHorizontal;
+            else if (orientation == Orientation.North || orientation == Orientation.South)
+                return TrainVertical;
+            else if (orientation == Orientation.NorthWest || orientation == Orientation.SouthEast)
+                return TrainDiagonalNwSe;
+            else if (orientation == Orientation.NorthEast || orientation == Orientation.SouthWest)
+                return TrainDiagonalNeSw;
+            else 
+                throw new InvalidOperationException();
+        }
     }
 
     internal static class BitmapAccessor
@@ -178,6 +194,8 @@ namespace Mirage.Urbanization.Tilesets
 
         public static readonly Bitmap TrainHorizontal = GetImage("train.png");
         public static readonly Bitmap TrainVertical = GetImage("train.png").Get90DegreesRotatedClone();
+        public static readonly Bitmap TrainDiagonalNwSe = GetImage("train.png").RotateImage(45);
+        public static readonly Bitmap TrainDiagonalNeSw = GetImage("train.png").RotateImage(135);
 
         public static readonly Bitmap Police = GetImage("police.png");
 
@@ -411,6 +429,20 @@ namespace Mirage.Urbanization.Tilesets
 
             clone.RotateFlip(RotateFlipType.Rotate90FlipNone);
             return clone;
+        }
+
+        public static Bitmap RotateImage(this Bitmap bmp, float angle)
+        {
+            Bitmap rotatedImage = new Bitmap(bmp.Width * 2, bmp.Height * 2);
+            using (Graphics g = Graphics.FromImage(rotatedImage))
+            {
+                g.TranslateTransform(bmp.Width / 2, bmp.Height / 2); //set the rotation point as the center into the matrix
+                g.RotateTransform(angle); //rotate
+                g.TranslateTransform(-(bmp.Width / 2), -(bmp.Height / 2)); //restore rotation point into the matrix
+                g.DrawImage(bmp, new Point(0, 0)); //draw the image on the new bitmap
+            }
+
+            return rotatedImage;
         }
     }
 }

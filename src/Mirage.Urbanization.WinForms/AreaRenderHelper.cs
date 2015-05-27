@@ -278,46 +278,68 @@ namespace Mirage.Urbanization.WinForms
                 private ZoneRenderInfo _previousPosition;
                 private ZoneRenderInfo _previousPreviousPosition;
                 private ZoneRenderInfo _previousPreviousPreviousPosition;
+                private ZoneRenderInfo _previousPreviousPreviousPreviousPosition;
 
                 public ZoneRenderInfo CurrentPosition { get { return _currentPosition; } }
 
                 public void DrawInto(IGraphicsWrapper graphicsWrapper)
                 {
-                    if (_previousPreviousPreviousPosition == null)
+                    if (_previousPreviousPreviousPreviousPosition == null)
                         return;
 
                     foreach (var pair in new[]
                     {
-                        new { Render = true, First = _currentPosition, Second = _previousPosition, Head = true},
-                        new { Render = true, First = _previousPosition, Second = _previousPreviousPosition, Head = false},
-                        new { Render = true, First = _previousPreviousPosition, Second = _previousPreviousPreviousPosition, Head = false}
+                        new { Render = true, First = _currentPosition, Second = _previousPosition, Third = _previousPreviousPosition, Head = true},
+                        new { Render = true, First = _previousPosition, Second = _previousPreviousPosition, Third = _previousPreviousPreviousPosition, Head = false},
+                        new { Render = true, First = _previousPreviousPosition, Second = _previousPreviousPreviousPosition, Third = _previousPreviousPreviousPreviousPosition, Head = false}
                     })
                     {
-                        var orientation = pair.Second.ZoneInfo.Point.OrientationTo(pair.First.ZoneInfo.Point);
+                        if (pair.Third.ZoneInfo.Point == pair.First.ZoneInfo.Point)
+                            continue;
 
-                        bool horizontal = orientation.HasFlag(Orientation.East) || orientation.HasFlag(Orientation.West);
+                        var orientation = pair.Third.ZoneInfo.Point.OrientationTo(pair.First.ZoneInfo.Point);
+
+                        var bitmap = MiscBitmaps.GetTrainBitmap(orientation);
 
                         if (pair.Render)
-                            graphicsWrapper
-                                .DrawImage(horizontal ? MiscBitmaps.TrainHorizontal : MiscBitmaps.TrainVertical
-                                ,pair.Second
-                                .GetRectangle()
-                                .InflateAndReturn(horizontal ? 0 : -10, !horizontal ? 0 : -10)
-                                .Relocate(currentLocation =>
-                                {
-                                    switch (orientation)
+                        {
+                            graphicsWrapper.DrawImage(
+                                bitmap: bitmap,
+                                rectangle: pair.Second
+                                    .GetRectangle()
+                                    .ChangeSize(bitmap.Size)
+                                    .Relocate(currentLocation =>
                                     {
-                                        case Orientation.East:
-                                            return new Point(currentLocation.X, currentLocation.Y + 6);
-                                        case Orientation.West:
-                                            return new Point(currentLocation.X, currentLocation.Y - 6);
-                                        case Orientation.North:
-                                            return new Point(currentLocation.X + 6, currentLocation.Y);
-                                        case Orientation.South:
-                                            return new Point(currentLocation.X - 6, currentLocation.Y);
+                                        if (orientation.HasFlag(Orientation.East))
+                                            currentLocation.Y += 16;
+                                        if (orientation.HasFlag(Orientation.West))
+                                            currentLocation.Y += 3;
+                                        if (orientation.HasFlag(Orientation.North))
+                                            currentLocation.X += 16;
+                                        if (orientation.HasFlag(Orientation.South))
+                                            currentLocation.X += 3;
+
+                                        bool multiple = !new[] { Orientation.North, Orientation.East, Orientation.South, Orientation.West }
+                                            .Any(x => x == orientation);
+
+                                        if (multiple)
+                                        {
+                                            if (orientation.HasFlag(Orientation.East))
+                                                currentLocation.X -= 3;
+                                            if (orientation.HasFlag(Orientation.West))
+                                                currentLocation.X -= 6;
+                                            //if (orientation.HasFlag(Orientation.North))
+                                            //    currentLocation.Y += 3;
+                                            if (orientation.HasFlag(Orientation.South))
+                                                currentLocation.Y -= 3;
+                                        }
+
+                                        return currentLocation;
                                     }
-                                    return currentLocation;
-                                }));
+                                )
+                            );
+
+                        }
                     }
                 }
 
@@ -366,6 +388,7 @@ namespace Mirage.Urbanization.WinForms
                             .FirstOrDefault(x => x != _previousPosition && x != _currentPosition)
                             ?? queryNext.FirstOrDefault();
 
+                        _previousPreviousPreviousPreviousPosition = _previousPreviousPreviousPosition;
                         _previousPreviousPreviousPosition = _previousPreviousPosition;
                         _previousPreviousPosition = _previousPosition;
 

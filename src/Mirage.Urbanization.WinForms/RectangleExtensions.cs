@@ -10,6 +10,11 @@ namespace Mirage.Urbanization.WinForms
             rectangle.Inflate(width, height);
             return rectangle;
         }
+        public static Rectangle ChangeSize(this Rectangle rectangle, Size size)
+        {
+            rectangle.Size = size;
+            return rectangle;
+        }
 
         public static Rectangle Relocate(this Rectangle rectangle, Func<Point, Point> relocateAction)
         {
