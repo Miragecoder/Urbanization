@@ -66,6 +66,8 @@ namespace Mirage.Urbanization
                 _directionQuery = directionQuery;
             }
 
+            protected override int SpeedInMilliseconds { get { return 200; } }
+
             public void Move()
             {
                 IfMustBeMoved(() =>
@@ -169,6 +171,8 @@ namespace Mirage.Urbanization
             {
             }
 
+            protected override int SpeedInMilliseconds { get { return 300; } }
+
             public void CrawlNetwork(ISet<IZoneInfo> trainNetwork)
             {
                 IfMustBeMoved(() =>
@@ -268,9 +272,11 @@ namespace Mirage.Urbanization
             }
         }
 
+        protected abstract int SpeedInMilliseconds { get; }
+
         protected void IfMustBeMoved(Action action)
         {
-            if (_lastChange > DateTime.Now.AddMilliseconds(-300))
+            if (_lastChange > DateTime.Now.AddMilliseconds(-SpeedInMilliseconds))
             {
                 return;
             }
