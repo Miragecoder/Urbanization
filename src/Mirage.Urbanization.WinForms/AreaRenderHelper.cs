@@ -56,9 +56,11 @@ namespace Mirage.Urbanization.WinForms
             return _zoneSelectionPanelBehaviour.HandleKeyCharAction(@char);
         }
 
-        private static void MoveScroll(ScrollProperties scrollProperties, int modifier)
+        private static void MoveScroll(Panel panel, Func<Panel, ScrollProperties> scrollPropertiesSelector, int modifier)
         {
-            var newValue = scrollProperties.Value + (modifier * 300);
+            var scrollProperties = scrollPropertiesSelector(panel);
+
+            int newValue = scrollProperties.Value + (((int)modifier * 300));
             if (newValue > scrollProperties.Minimum && newValue < scrollProperties.Maximum)
             {
                 scrollProperties.Value = newValue;
@@ -75,27 +77,27 @@ namespace Mirage.Urbanization.WinForms
             {
                 throw new InvalidOperationException();
             }
-
+            panel.ScrollControlIntoView(panel);
         }
 
         public void MoveRight()
         {
-            MoveScroll(_viewportPanel.HorizontalScroll, 1);
+            MoveScroll(_viewportPanel, x => x.HorizontalScroll, 1);
         }
 
         public void MoveLeft()
         {
-            MoveScroll(_viewportPanel.HorizontalScroll, -1);
+            MoveScroll(_viewportPanel, x => x.HorizontalScroll, -1);
         }
 
         public void MoveUp()
         {
-            MoveScroll(_viewportPanel.VerticalScroll, -1);
+            MoveScroll(_viewportPanel, x => x.VerticalScroll, -1);
         }
 
         public void MoveDown()
         {
-            MoveScroll(_viewportPanel.VerticalScroll, 1);
+            MoveScroll(_viewportPanel, x => x.VerticalScroll, 1);
         }
 
         public SimulationRenderHelper(Panel gamePanel, RenderZoneOptions renderZoneOptions, SimulationOptions options)
