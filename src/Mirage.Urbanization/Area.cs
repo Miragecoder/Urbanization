@@ -117,8 +117,10 @@ namespace Mirage.Urbanization
             });
 
             _areaOptions = options;
-            _trainController = new TrainController(() => _zoneInfoGrid.ZoneInfos.ToDictionary(x => x.Value as IReadOnlyZoneInfo, x => x.Value));
-            _airplaneController = new AirplaneController(() => _zoneInfoGrid.ZoneInfos.ToDictionary(x => x.Value as IReadOnlyZoneInfo, x => x.Value));
+            var zoneInfos = new HashSet<IZoneInfo>(_zoneInfoGrid.ZoneInfos.Values);
+
+            _trainController = new TrainController(() => zoneInfos);
+            _airplaneController = new AirplaneController(() => zoneInfos);
         }
 
         private WoodlandZoneConsumption CreateWoodlandZone() { return new WoodlandZoneConsumption(_createZoneInfoFinder()); }

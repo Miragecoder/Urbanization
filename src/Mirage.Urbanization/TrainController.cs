@@ -7,7 +7,7 @@ namespace Mirage.Urbanization
 {
     internal class AirplaneController : BaseVehicleController<IAirplane>
     {
-        public AirplaneController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+        public AirplaneController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
             : base(getZoneInfosFunc)
         {
 
@@ -24,7 +24,6 @@ namespace Mirage.Urbanization
         protected override void PerformMoveCycle()
         {
             var airports = GetZoneInfosFunc()
-                .Values
                 .Select(x => x.GetAsZoneCluster<AirportZoneClusterConsumption>())
                 .Where(x => x.HasMatch)
                 .Select(x => x.MatchingObject)
@@ -60,7 +59,7 @@ namespace Mirage.Urbanization
         {
             private readonly Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> _directionQuery;
 
-            public Airplane(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition,
+            public Airplane(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition,
                 Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> directionQuery)
                 : base(getZoneInfosFunc, currentPosition)
             {
@@ -85,9 +84,9 @@ namespace Mirage.Urbanization
 
     internal abstract class BaseVehicleController<TVehicle> : BaseVehicleController, IVehicleController<TVehicle> where TVehicle : IVehicle
     {
-        protected readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> GetZoneInfosFunc;
+        protected readonly Func<ISet<IZoneInfo>> GetZoneInfosFunc;
 
-        protected BaseVehicleController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+        protected BaseVehicleController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
         {
             GetZoneInfosFunc = getZoneInfosFunc;
         }
@@ -115,10 +114,10 @@ namespace Mirage.Urbanization
 
     internal class TrainController : BaseVehicleController<ITrain>
     {
-        public TrainController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+        public TrainController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
             : base(getZoneInfosFunc)
         {
-            _cachedNetworks = new SimpleCache<ISet<ISet<ZoneInfo>>>(GetRailwayNetworks, new TimeSpan(0, 0, 1));
+            _cachedNetworks = new SimpleCache<ISet<ISet<IZoneInfo>>>(GetRailwayNetworks, new TimeSpan(0, 0, 1));
         }
 
         protected override void PerformMoveCycle()
@@ -165,12 +164,12 @@ namespace Mirage.Urbanization
 
         private class Train : BaseVehicle, ITrain
         {
-            public Train(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc, ZoneInfo currentPosition)
+            public Train(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
                 : base(getZoneInfosFunc, currentPosition)
             {
             }
 
-            public void CrawlNetwork(ISet<ZoneInfo> trainNetwork)
+            public void CrawlNetwork(ISet<IZoneInfo> trainNetwork)
             {
                 IfMustBeMoved(() =>
                 {
@@ -186,7 +185,6 @@ namespace Mirage.Urbanization
                             .Where(x => x.HasMatch)
                             .Select(x => x.MatchingObject)
                             .Where(trainNetwork.Contains)
-                            .Select(x => GetZoneInfosFunc()[x])
                             .AsQueryable();
 
                         var next = queryNext
@@ -199,23 +197,22 @@ namespace Mirage.Urbanization
             }
         }
 
-        private readonly SimpleCache<ISet<ISet<ZoneInfo>>> _cachedNetworks;
+        private readonly SimpleCache<ISet<ISet<IZoneInfo>>> _cachedNetworks;
 
-        private ISet<ISet<ZoneInfo>> GetRailwayNetworks()
+        private ISet<ISet<IZoneInfo>> GetRailwayNetworks()
         {
-            var railwayNetworks = new HashSet<ISet<ZoneInfo>>();
+            var railwayNetworks = new HashSet<ISet<IZoneInfo>>();
             foreach (var railroadZoneInfo in GetZoneInfosFunc()
-                .Where(x => x.Key.ZoneConsumptionState.GetIsRailroadNetworkMember())
-                .Where(x => !railwayNetworks.SelectMany(y => y).Contains(x.Value)))
+                .Where(x => x.ZoneConsumptionState.GetIsRailroadNetworkMember())
+                .Where(x => !railwayNetworks.SelectMany(y => y).Contains(x)))
             {
-                var railwayNetwork = new HashSet<ZoneInfo> { railroadZoneInfo.Value };
+                var railwayNetwork = new HashSet<IZoneInfo> { railroadZoneInfo };
 
                 foreach (var member in railroadZoneInfo
-                    .Key
                     .CrawlAllDirections(x => x.ConsumptionState.GetIsRailroadNetworkMember())
                     )
                 {
-                    railwayNetwork.Add(GetZoneInfosFunc().First(x => x.Key == member).Value);
+                    railwayNetwork.Add(GetZoneInfosFunc().First(x => x == member));
                 }
 
                 railwayNetworks.Add(railwayNetwork);
@@ -236,9 +233,9 @@ namespace Mirage.Urbanization
 
     internal abstract class BaseVehicle : IVehicle
     {
-        protected readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> GetZoneInfosFunc;
+        protected readonly Func<ISet<IZoneInfo>> GetZoneInfosFunc;
 
-        protected BaseVehicle(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
+        protected BaseVehicle(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
         {
             GetZoneInfosFunc = getZoneInfosFunc;
             CurrentPosition = currentPosition;
@@ -284,7 +281,7 @@ namespace Mirage.Urbanization
 
     public interface ITrain : IVehicle
     {
-        void CrawlNetwork(ISet<ZoneInfo> network);
+        void CrawlNetwork(ISet<IZoneInfo> network);
     }
 
     public interface IAirplane : IVehicle
