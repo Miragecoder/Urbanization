@@ -69,6 +69,7 @@
     <Compile Include="RandomTerraformer.cs" />
     <Compile Include="ProcessOptions.cs" />
     <Compile Include="TerraformingOptions.cs" />
+    <Compile Include="TrainController.cs" />
     <Compile Include="ZoneConsumptionState.cs" />
     <Compile Include="ZoneConsumption\AirportZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\AreaZoneConsumptionOverrideInfoResult.cs" />
