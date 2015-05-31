@@ -33,7 +33,7 @@ namespace Mirage.Urbanization
             if (!airports.Any())
                 return;
 
-            int desiredAmountOfPlanes = airports.Count() * 1;
+            int desiredAmountOfPlanes = airports.Count() * 2;
 
             while (Vehicles.Count < desiredAmountOfPlanes)
             {
