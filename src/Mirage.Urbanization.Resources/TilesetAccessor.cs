@@ -160,6 +160,10 @@ namespace Mirage.Urbanization.Tilesets
                     {
                         selectedBitmap = BitmapAccessor.TrainStation;
                     }
+                    else if (parentConsumption is AirportZoneClusterConsumption)
+                    {
+                        selectedBitmap = BitmapAccessor.Airport;
+                    }
 
                     var baseGrowthZoneConsumption = parentConsumption as BaseGrowthZoneClusterConsumption;
 
