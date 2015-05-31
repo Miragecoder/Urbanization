@@ -18,7 +18,8 @@ namespace Mirage.Urbanization
         Task<IGrowthZoneStatistics> PerformGrowthSimulationCycle(CancellationToken cancellationToken);
         Task<IPowerGridStatistics> CalculatePowergridStatistics(CancellationToken cancellationToken);
 
-        ITrainController TrainController { get; }
+        IVehicleController<ITrain> TrainController { get; }
+        IVehicleController<IAirplane> AirplaneController { get; }
 
         event EventHandler<AreaMessageEventArgs> OnAreaMessage;
     }

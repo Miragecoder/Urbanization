@@ -18,13 +18,19 @@ namespace Mirage.Urbanization
         private readonly Func<ZoneInfoFinder> _createZoneInfoFinder;
         private readonly AreaOptions _areaOptions;
         private readonly TrainController _trainController;
+        private readonly AirplaneController _airplaneController;
 
-        public ITrainController TrainController
+        public IVehicleController<ITrain> TrainController
         {
             get
             {
                 return _trainController;
             }
+        }
+
+        public IVehicleController<IAirplane> AirplaneController
+        {
+            get { return _airplaneController; }
         }
 
         public Area(AreaOptions options)
@@ -112,6 +118,7 @@ namespace Mirage.Urbanization
 
             _areaOptions = options;
             _trainController = new TrainController(() => _zoneInfoGrid.ZoneInfos.ToDictionary(x => x.Value as IReadOnlyZoneInfo, x => x.Value));
+            _airplaneController = new AirplaneController(() => _zoneInfoGrid.ZoneInfos.ToDictionary(x => x.Value as IReadOnlyZoneInfo, x => x.Value));
         }
 
         private WoodlandZoneConsumption CreateWoodlandZone() { return new WoodlandZoneConsumption(_createZoneInfoFinder()); }

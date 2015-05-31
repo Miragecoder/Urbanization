@@ -184,6 +184,22 @@ namespace Mirage.Urbanization.Tilesets
             else 
                 throw new InvalidOperationException();
         }
+
+        public static Bitmap GetPlaneBitmap(Orientation orientation)
+        {
+            switch (orientation)
+            {
+                case Orientation.East:
+                    return BitmapAccessor.PlaneEast;
+                case Orientation.West:
+                    return BitmapAccessor.PlaneWest;
+                case Orientation.North:
+                    return BitmapAccessor.PlaneNorth;
+                case Orientation.South:
+                    return BitmapAccessor.PlaneSouth;
+            }
+            throw new InvalidOperationException();
+        }
     }
 
     internal static class BitmapAccessor
@@ -197,6 +213,11 @@ namespace Mirage.Urbanization.Tilesets
         public static readonly Bitmap TrainVertical = GetImage("train.png").Get90DegreesRotatedClone();
         public static readonly Bitmap TrainDiagonalNwSe = GetImage("train.png").RotateImage(45);
         public static readonly Bitmap TrainDiagonalNeSw = GetImage("train.png").RotateImage(135);
+
+        public static readonly Bitmap PlaneEast = GetImage("airplane.png");
+        public static readonly Bitmap PlaneSouth = GetImage("airplane.png").Get90DegreesRotatedClone();
+        public static readonly Bitmap PlaneWest = GetImage("airplane.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone();
+        public static readonly Bitmap PlaneNorth = GetImage("airplane.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
 
         public static readonly Bitmap Police = GetImage("police.png");
 

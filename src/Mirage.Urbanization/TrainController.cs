@@ -1,31 +1,127 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mirage.Urbanization.ZoneConsumption;
 
 namespace Mirage.Urbanization
 {
-    internal class TrainController : ITrainController
+    internal class AirplaneController : BaseVehicleController<IAirplane>
     {
-        private readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> _getZoneInfosFunc;
-
-        public TrainController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+        public AirplaneController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+            : base(getZoneInfosFunc)
         {
-            _getZoneInfosFunc = getZoneInfosFunc;
 
-            _cachedNetworks = new SimpleCache<ISet<ISet<ZoneInfo>>>(GetRailwayNetworks, new TimeSpan(0, 0, 1));
         }
 
-        public void ForEachActiveTrain(Action<ITrain> trainAction)
+        private static readonly Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>[] Directions =
         {
-            PerformTrainMovementCycle();
+            x => x.GetNorth(),
+            x => x.GetSouth(),
+            x => x.GetEast(),
+            x => x.GetWest()
+        };
 
-            foreach (var train in _trains)
+        protected override void PerformMoveCycle()
+        {
+            var airports = GetZoneInfosFunc()
+                .Values
+                .Select(x => x.GetAsZoneCluster<AirportZoneClusterConsumption>())
+                .Where(x => x.HasMatch)
+                .Select(x => x.MatchingObject)
+                .Distinct()
+                .ToArray();
+
+            if (!airports.Any())
+                return;
+
+            int desiredAmountOfPlanes = airports.Count() * 1;
+
+            while (Vehicles.Count < desiredAmountOfPlanes)
             {
-                trainAction(train);
+                var spawnPoint = airports.OrderBy(x => Random.Next()).First();
+                var centralCell = spawnPoint.ZoneClusterMembers.Single(y => y.IsCentralClusterMember);
+
+                centralCell.GetZoneInfo().WithResultIfHasMatch(z =>
+                {
+                    Vehicles.Add(new Airplane(GetZoneInfosFunc, z, Directions.OrderBy(d => Random.Next()).First()));
+                });
+
+            }
+
+            foreach (var plane in Vehicles)
+            {
+                plane.Move();
+            }
+
+            RemoveOrphanVehicles();
+        }
+
+        private class Airplane : BaseVehicle, IAirplane
+        {
+            private readonly Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> _directionQuery;
+
+            public Airplane(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition,
+                Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> directionQuery)
+                : base(getZoneInfosFunc, currentPosition)
+            {
+                _directionQuery = directionQuery;
+            }
+
+            public void Move()
+            {
+                IfMustBeMoved(() =>
+                {
+                    var result = _directionQuery(CurrentPosition);
+                    Move(result.MatchingObject);
+                });
+            }
+        }
+    }
+
+    internal abstract class BaseVehicleController
+    {
+        protected static readonly Random Random = new Random();
+    }
+
+    internal abstract class BaseVehicleController<TVehicle> : BaseVehicleController, IVehicleController<TVehicle> where TVehicle : IVehicle
+    {
+        protected readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> GetZoneInfosFunc;
+
+        protected BaseVehicleController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+        {
+            GetZoneInfosFunc = getZoneInfosFunc;
+        }
+
+        protected readonly HashSet<TVehicle> Vehicles = new HashSet<TVehicle>();
+
+        protected abstract void PerformMoveCycle();
+
+        public void ForEachActiveVehicle(Action<TVehicle> vehicleAction)
+        {
+            PerformMoveCycle();
+
+            foreach (var vehicle in Vehicles)
+            {
+                vehicleAction(vehicle);
             }
         }
 
-        private void PerformTrainMovementCycle()
+        protected void RemoveOrphanVehicles()
+        {
+            foreach (var orphanVehicle in Vehicles.Where(x => x.CanBeRemoved).ToArray())
+                Vehicles.Remove(orphanVehicle);
+        }
+    }
+
+    internal class TrainController : BaseVehicleController<ITrain>
+    {
+        public TrainController(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc)
+            : base(getZoneInfosFunc)
+        {
+            _cachedNetworks = new SimpleCache<ISet<ISet<ZoneInfo>>>(GetRailwayNetworks, new TimeSpan(0, 0, 1));
+        }
+
+        protected override void PerformMoveCycle()
         {
             var cachedNetworksEntry = _cachedNetworks.GetValue();
 
@@ -40,7 +136,7 @@ namespace Mirage.Urbanization
 
                 while (trainsInNetwork == null || trainsInNetwork.Count() < desiredAmountOfTrains)
                 {
-                    trainsInNetwork = _trains
+                    trainsInNetwork = Vehicles
                         .Where(x => network.Contains(x.CurrentPosition))
                         .ToList();
 
@@ -50,7 +146,7 @@ namespace Mirage.Urbanization
                     {
                         foreach (var iteration in Enumerable.Range(0, desiredAmountOfTrains - trainsInNetwork.Count))
                         {
-                            _trains.Add(new Train(_getZoneInfosFunc, network
+                            Vehicles.Add(new Train(GetZoneInfosFunc, network
                                 .OrderBy(x => Random.Next())
                                 .First()
                                 ));
@@ -64,82 +160,42 @@ namespace Mirage.Urbanization
                 }
             }
 
-            foreach (var orphanTrain in _trains.Where(x => x.CanBeRemoved).ToArray())
-                _trains.Remove(orphanTrain);
-
+            RemoveOrphanVehicles();
         }
 
-        private readonly HashSet<ITrain> _trains = new HashSet<ITrain>();
-
-        private static readonly Random Random = new Random();
-
-        private class Train : ITrain
+        private class Train : BaseVehicle, ITrain
         {
-            private ZoneInfo _currentPosition;
-            private ZoneInfo _previousPosition;
-            private ZoneInfo _previousPreviousPosition;
-            private ZoneInfo _previousPreviousPreviousPosition;
-            private ZoneInfo _previousPreviousPreviousPreviousPosition;
-
-            public ZoneInfo CurrentPosition { get { return _currentPosition; } }
-
-            public bool CanBeRemoved
-            {
-                get
-                {
-                    return _currentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
-                }
-            }
-
-            public ZoneInfo PreviousPreviousPreviousPreviousPosition { get { return _previousPreviousPreviousPreviousPosition; } }
-            public ZoneInfo PreviousPreviousPreviousPosition { get { return _previousPreviousPreviousPosition; } }
-            public ZoneInfo PreviousPreviousPosition { get { return _previousPreviousPosition; } }
-            public ZoneInfo PreviousPosition { get { return _previousPosition; } }
-
-            private readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> _getZoneInfosFunc;
-
             public Train(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc, ZoneInfo currentPosition)
+                : base(getZoneInfosFunc, currentPosition)
             {
-                _getZoneInfosFunc = getZoneInfosFunc;
-                _currentPosition = currentPosition;
             }
-
-            private DateTime _lastChange = DateTime.Now;
 
             public void CrawlNetwork(ISet<ZoneInfo> trainNetwork)
             {
-                if (_lastChange > DateTime.Now.AddMilliseconds(-300))
+                IfMustBeMoved(() =>
                 {
-                    return;
-                }
-                _lastChange = DateTime.Now;
-                if (!trainNetwork.Contains(_currentPosition))
-                {
-                    _currentPosition = trainNetwork.First();
-                }
-                else
-                {
-                    var queryNext = _currentPosition
-                        .GetNorthEastSouthWest()
-                        .OrderBy(x => Random.Next())
-                        .Where(x => x.HasMatch)
-                        .Select(x => x.MatchingObject)
-                        .Where(trainNetwork.Contains)
-                        .Select(x => _getZoneInfosFunc()[x])
-                        .AsQueryable();
+                    if (!trainNetwork.Contains(CurrentPosition))
+                    {
+                        CurrentPosition = trainNetwork.First();
+                    }
+                    else
+                    {
+                        var queryNext = CurrentPosition
+                            .GetNorthEastSouthWest()
+                            .OrderBy(x => Random.Next())
+                            .Where(x => x.HasMatch)
+                            .Select(x => x.MatchingObject)
+                            .Where(trainNetwork.Contains)
+                            .Select(x => GetZoneInfosFunc()[x])
+                            .AsQueryable();
 
-                    var next = queryNext
-                        .FirstOrDefault(x => x != _previousPosition && x != _currentPosition)
-                               ?? queryNext.FirstOrDefault();
+                        var next = queryNext
+                            .FirstOrDefault(x => x != PreviousPosition && x != CurrentPosition)
+                                   ?? queryNext.FirstOrDefault();
 
-                    _previousPreviousPreviousPreviousPosition = _previousPreviousPreviousPosition;
-                    _previousPreviousPreviousPosition = _previousPreviousPosition;
-                    _previousPreviousPosition = _previousPosition;
-
-                    _previousPosition = _currentPosition;
-
-                    _currentPosition = next;
-                }
+                        Move(next);
+                    }
+                });
             }
         }
 
@@ -148,7 +204,7 @@ namespace Mirage.Urbanization
         private ISet<ISet<ZoneInfo>> GetRailwayNetworks()
         {
             var railwayNetworks = new HashSet<ISet<ZoneInfo>>();
-            foreach (var railroadZoneInfo in _getZoneInfosFunc()
+            foreach (var railroadZoneInfo in GetZoneInfosFunc()
                 .Where(x => x.Key.ZoneConsumptionState.GetIsRailroadNetworkMember())
                 .Where(x => !railwayNetworks.SelectMany(y => y).Contains(x.Value)))
             {
@@ -159,7 +215,7 @@ namespace Mirage.Urbanization
                     .CrawlAllDirections(x => x.ConsumptionState.GetIsRailroadNetworkMember())
                     )
                 {
-                    railwayNetwork.Add(_getZoneInfosFunc().First(x => x.Key == member).Value);
+                    railwayNetwork.Add(GetZoneInfosFunc().First(x => x.Key == member).Value);
                 }
 
                 railwayNetworks.Add(railwayNetwork);
@@ -168,19 +224,76 @@ namespace Mirage.Urbanization
         }
     }
 
-    public interface ITrain
+    public interface IVehicle
     {
         bool CanBeRemoved { get; }
-        ZoneInfo CurrentPosition { get; }
-        void CrawlNetwork(ISet<ZoneInfo> network);
-        ZoneInfo PreviousPreviousPreviousPreviousPosition { get; }
-        ZoneInfo PreviousPreviousPreviousPosition { get; }
-        ZoneInfo PreviousPreviousPosition { get; }
-        ZoneInfo PreviousPosition { get; }
+        IZoneInfo CurrentPosition { get; }
+        IZoneInfo PreviousPreviousPreviousPreviousPosition { get; }
+        IZoneInfo PreviousPreviousPreviousPosition { get; }
+        IZoneInfo PreviousPreviousPosition { get; }
+        IZoneInfo PreviousPosition { get; }
     }
 
-    public interface ITrainController
+    internal abstract class BaseVehicle : IVehicle
     {
-        void ForEachActiveTrain(Action<ITrain> trainAction);
+        protected readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> GetZoneInfosFunc;
+
+        protected BaseVehicle(Func<IDictionary<IReadOnlyZoneInfo, ZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
+        {
+            GetZoneInfosFunc = getZoneInfosFunc;
+            CurrentPosition = currentPosition;
+        }
+
+        protected void Move(IZoneInfo next)
+        {
+            PreviousPreviousPreviousPreviousPosition = PreviousPreviousPreviousPosition;
+            PreviousPreviousPreviousPosition = PreviousPreviousPosition;
+            PreviousPreviousPosition = PreviousPosition;
+
+            PreviousPosition = CurrentPosition;
+
+            CurrentPosition = next;
+        }
+
+        public IZoneInfo PreviousPreviousPreviousPreviousPosition { get; protected set; }
+        public IZoneInfo PreviousPreviousPreviousPosition { get; protected set; }
+        public IZoneInfo PreviousPreviousPosition { get; protected set; }
+        public IZoneInfo PreviousPosition { get; protected set; }
+        public IZoneInfo CurrentPosition { get; protected set; }
+
+        private DateTime _lastChange = DateTime.Now;
+
+        public bool CanBeRemoved
+        {
+            get
+            {
+                return CurrentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
+            }
+        }
+
+        protected void IfMustBeMoved(Action action)
+        {
+            if (_lastChange > DateTime.Now.AddMilliseconds(-300))
+            {
+                return;
+            }
+            _lastChange = DateTime.Now;
+            action();
+        }
+    }
+
+    public interface ITrain : IVehicle
+    {
+        void CrawlNetwork(ISet<ZoneInfo> network);
+    }
+
+    public interface IAirplane : IVehicle
+    {
+        void Move();
+    }
+
+    public interface IVehicleController<out TVehicle> where TVehicle : IVehicle
+    {
+        void ForEachActiveVehicle(Action<TVehicle> vehicleAction);
     }
 }

@@ -197,7 +197,39 @@ namespace Mirage.Urbanization.WinForms
                     if (result != null) highlightAction = result;
                 }
 
-                _simulationSession.Area.TrainController.ForEachActiveTrain(train =>
+
+                _simulationSession.Area.AirplaneController.ForEachActiveVehicle(airplane =>
+                {
+                    if (airplane.PreviousPreviousPreviousPreviousPosition == null)
+                        return;
+
+                    foreach (var pair in new[]
+                    {
+                        new { Render = false, First = airplane.CurrentPosition, Second = airplane.PreviousPosition, Third = airplane.PreviousPreviousPosition, Head = true},
+                        new { Render = true, First = airplane.PreviousPosition, Second = airplane.PreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPosition, Head = false},
+                        new { Render = false, First = airplane.PreviousPreviousPosition, Second = airplane.PreviousPreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPreviousPosition, Head = false}
+                    })
+                    {
+                        if (pair.Third.Point == pair.First.Point)
+                            continue;
+
+                        var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
+
+                        var bitmap = MiscBitmaps.GetPlaneBitmap(orientation);
+
+                        if (pair.Render)
+                        {
+                            _graphicsManager.GetGraphicsWrapper().DrawImage(
+                                bitmap: bitmap,
+                                rectangle: _zoneRenderInfos[pair.Second]
+                                    .GetRectangle()
+                                    .ChangeSize(bitmap.Size)
+                                );
+                        }
+                    }
+                });
+
+                _simulationSession.Area.TrainController.ForEachActiveVehicle(train =>
                 {
                     if (train.PreviousPreviousPreviousPreviousPosition == null)
                         return;
