@@ -173,8 +173,6 @@ namespace Mirage.Urbanization.WinForms
                             renderZoneOptions: renderZoneOptions
                         ));
 
-            _trainRenderState = new TrainRenderState(() => _zoneRenderInfos);
-
             _graphicsManager = CreateGraphicsManagerWrapperWithFactory(renderZoneOptions.SelectedGraphicsManager.Factory);
         }
 
@@ -199,115 +197,30 @@ namespace Mirage.Urbanization.WinForms
                     if (result != null) highlightAction = result;
                 }
 
-                _trainRenderState.Render(_graphicsManager.GetGraphicsWrapper());
-
-                if (highlightAction != null)
+                _simulationSession.Area.TrainController.ForEachActiveTrain(train =>
                 {
-                    var consumption = _zoneSelectionPanelBehaviour.CreateNewCurrentZoneConsumption();
-                    highlightAction(consumption);
-                }
-            });
-        }
-
-        private readonly TrainRenderState _trainRenderState;
-
-        private class TrainRenderState
-        {
-            private readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> _getZoneRenderInfosFunc;
-
-            public TrainRenderState(Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> getZoneRenderInfosFunc)
-            {
-                _getZoneRenderInfosFunc = getZoneRenderInfosFunc;
-
-                _cachedNetworks = new SimpleCache<ISet<ISet<ZoneRenderInfo>>>(GetRailwayNetworks, new TimeSpan(0, 0, 1));
-            }
-
-            internal void Render(IGraphicsWrapper graphicsWrapper)
-            {
-                var cachedNetworksEntry = _cachedNetworks.GetValue();
-
-                if (!cachedNetworksEntry.SelectMany(x => x).Any())
-                    return;
-
-                foreach (var network in cachedNetworksEntry.Where(x => x.Count() > 20))
-                {
-                    var desiredAmountOfTrains = Math.Abs(network.Count() / 50) + 1;
-
-                    List<Train> trainsInNetwork = null;
-
-                    while (trainsInNetwork == null || trainsInNetwork.Count() < desiredAmountOfTrains)
-                    {
-                        trainsInNetwork = _trains
-                            .Where(x => network.Contains(x.CurrentPosition))
-                            .ToList();
-
-                        int desiredAdditionaTrains = desiredAmountOfTrains - trainsInNetwork.Count;
-
-                        if (desiredAdditionaTrains > 0)
-                        {
-                            foreach (var iteration in Enumerable.Range(0, desiredAmountOfTrains - trainsInNetwork.Count))
-                            {
-                                _trains.Add(new Train(_getZoneRenderInfosFunc, network
-                                    .OrderBy(x => Random.Next())
-                                    .First()
-                                ));
-                            }
-                        }
-                    }
-
-                    foreach (var train in trainsInNetwork)
-                    {
-                        train.CrawlNetwork(network);
-                    }
-                }
-
-                foreach (var orphanTrain in _trains.Where(x => x.CanBeRemoved).ToArray())
-                    _trains.Remove(orphanTrain);
-
-                foreach (var train in _trains)
-                {
-                    train.DrawInto(graphicsWrapper);
-                }
-            }
-
-            private readonly HashSet<Train> _trains = new HashSet<Train>();
-
-            private static readonly Random Random = new Random();
-
-            private class Train
-            {
-                private ZoneRenderInfo _currentPosition;
-                private ZoneRenderInfo _previousPosition;
-                private ZoneRenderInfo _previousPreviousPosition;
-                private ZoneRenderInfo _previousPreviousPreviousPosition;
-                private ZoneRenderInfo _previousPreviousPreviousPreviousPosition;
-
-                public ZoneRenderInfo CurrentPosition { get { return _currentPosition; } }
-
-                public void DrawInto(IGraphicsWrapper graphicsWrapper)
-                {
-                    if (_previousPreviousPreviousPreviousPosition == null)
+                    if (train.PreviousPreviousPreviousPreviousPosition == null)
                         return;
 
                     foreach (var pair in new[]
                     {
-                        new { Render = true, First = _currentPosition, Second = _previousPosition, Third = _previousPreviousPosition, Head = true},
-                        new { Render = true, First = _previousPosition, Second = _previousPreviousPosition, Third = _previousPreviousPreviousPosition, Head = false},
-                        new { Render = true, First = _previousPreviousPosition, Second = _previousPreviousPreviousPosition, Third = _previousPreviousPreviousPreviousPosition, Head = false}
+                        new { Render = true, First = train.CurrentPosition, Second = train.PreviousPosition, Third = train.PreviousPreviousPosition, Head = true},
+                        new { Render = true, First = train.PreviousPosition, Second = train.PreviousPreviousPosition, Third = train.PreviousPreviousPreviousPosition, Head = false},
+                        new { Render = true, First = train.PreviousPreviousPosition, Second = train.PreviousPreviousPreviousPosition, Third = train.PreviousPreviousPreviousPreviousPosition, Head = false}
                     })
                     {
-                        if (pair.Third.ZoneInfo.Point == pair.First.ZoneInfo.Point)
+                        if (pair.Third.Point == pair.First.Point)
                             continue;
 
-                        var orientation = pair.Third.ZoneInfo.Point.OrientationTo(pair.First.ZoneInfo.Point);
+                        var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
 
                         var bitmap = MiscBitmaps.GetTrainBitmap(orientation);
 
                         if (pair.Render)
                         {
-                            graphicsWrapper.DrawImage(
+                            _graphicsManager.GetGraphicsWrapper().DrawImage(
                                 bitmap: bitmap,
-                                rectangle: pair.Second
+                                rectangle: _zoneRenderInfos[pair.Second]
                                     .GetRectangle()
                                     .ChangeSize(bitmap.Size)
                                     .Relocate(currentLocation =>
@@ -343,87 +256,15 @@ namespace Mirage.Urbanization.WinForms
 
                         }
                     }
-                }
+                    
+                });
 
-                public bool CanBeRemoved
+                if (highlightAction != null)
                 {
-                    get
-                    {
-                        return _currentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
-                    }
+                    var consumption = _zoneSelectionPanelBehaviour.CreateNewCurrentZoneConsumption();
+                    highlightAction(consumption);
                 }
-
-                private readonly Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> _getZoneRenderInfosFunc;
-
-                public Train(Func<IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo>> getZoneRenderInfosFunc, ZoneRenderInfo currentPosition)
-                {
-                    _getZoneRenderInfosFunc = getZoneRenderInfosFunc;
-                    _currentPosition = currentPosition;
-                }
-
-                private DateTime _lastChange = DateTime.Now;
-
-                public void CrawlNetwork(ISet<ZoneRenderInfo> trainNetwork)
-                {
-                    if (_lastChange > DateTime.Now.AddMilliseconds(-300))
-                    {
-                        return;
-                    }
-                    _lastChange = DateTime.Now;
-                    if (!trainNetwork.Contains(_currentPosition))
-                    {
-                        _currentPosition = trainNetwork.First();
-                    }
-                    else
-                    {
-                        var queryNext = _currentPosition
-                            .ZoneInfo
-                            .GetNorthEastSouthWest()
-                            .OrderBy(x => Random.Next())
-                            .Where(x => x.HasMatch)
-                            .Select(x => x.MatchingObject)
-                            .Where(x => trainNetwork.Select(y => y.ZoneInfo).Contains(x))
-                            .Select(x => _getZoneRenderInfosFunc()[x])
-                            .AsQueryable();
-
-                        var next = queryNext
-                            .FirstOrDefault(x => x != _previousPosition && x != _currentPosition)
-                            ?? queryNext.FirstOrDefault();
-
-                        _previousPreviousPreviousPreviousPosition = _previousPreviousPreviousPosition;
-                        _previousPreviousPreviousPosition = _previousPreviousPosition;
-                        _previousPreviousPosition = _previousPosition;
-
-                        _previousPosition = _currentPosition;
-
-                        _currentPosition = next;
-                    }
-                }
-            }
-
-            private readonly SimpleCache<ISet<ISet<ZoneRenderInfo>>> _cachedNetworks;
-
-            private ISet<ISet<ZoneRenderInfo>> GetRailwayNetworks()
-            {
-                var railwayNetworks = new HashSet<ISet<ZoneRenderInfo>>();
-                foreach (var railroadZoneInfo in _getZoneRenderInfosFunc()
-                    .Where(x => x.Key.ZoneConsumptionState.GetIsRailroadNetworkMember())
-                    .Where(x => !railwayNetworks.SelectMany(y => y).Contains(x.Value)))
-                {
-                    var railwayNetwork = new HashSet<ZoneRenderInfo> { railroadZoneInfo.Value };
-
-                    foreach (var member in railroadZoneInfo
-                        .Key
-                        .CrawlAllDirections(x => x.ConsumptionState.GetIsRailroadNetworkMember())
-                        )
-                    {
-                        railwayNetwork.Add(_getZoneRenderInfosFunc().First(x => x.Key == member).Value);
-                    }
-
-                    railwayNetworks.Add(railwayNetwork);
-                }
-                return railwayNetworks;
-            }
+            });
         }
 
         public void ChangeRenderer(Func<Panel, Action, IGraphicsManagerWrapper> graphicsManagerWrapperFactory)
