@@ -197,6 +197,14 @@ namespace Mirage.Urbanization.Tilesets
                     return BitmapAccessor.PlaneNorth;
                 case Orientation.South:
                     return BitmapAccessor.PlaneSouth;
+                case Orientation.NorthEast:
+                    return BitmapAccessor.PlaneNorthEast;
+                case Orientation.NorthWest:
+                    return BitmapAccessor.PlaneNorthWest;
+                case Orientation.SouthEast:
+                    return BitmapAccessor.PlaneSouthEast;
+                case Orientation.SouthWest:
+                    return BitmapAccessor.PlaneSouthWest;
             }
             throw new InvalidOperationException();
         }
@@ -211,13 +219,18 @@ namespace Mirage.Urbanization.Tilesets
 
         public static readonly Bitmap TrainHorizontal = GetImage("train.png");
         public static readonly Bitmap TrainVertical = GetImage("train.png").Get90DegreesRotatedClone();
-        public static readonly Bitmap TrainDiagonalNwSe = GetImage("train.png").RotateImage(45);
-        public static readonly Bitmap TrainDiagonalNeSw = GetImage("train.png").RotateImage(135);
+        public static readonly Bitmap TrainDiagonalNwSe = GetImage("train.png").RotateTrainImage(45);
+        public static readonly Bitmap TrainDiagonalNeSw = GetImage("train.png").RotateTrainImage(135);
 
         public static readonly Bitmap PlaneEast = GetImage("airplane.png");
         public static readonly Bitmap PlaneSouth = GetImage("airplane.png").Get90DegreesRotatedClone();
         public static readonly Bitmap PlaneWest = GetImage("airplane.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone();
         public static readonly Bitmap PlaneNorth = GetImage("airplane.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
+
+        public static readonly Bitmap PlaneSouthEast = GetImage("airplane.png").RotateImage(45);
+        public static readonly Bitmap PlaneSouthWest = GetImage("airplane.png").RotateImage(45).Get90DegreesRotatedClone();
+        public static readonly Bitmap PlaneNorthWest = GetImage("airplane.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone();
+        public static readonly Bitmap PlaneNorthEast = GetImage("airplane.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
 
         public static readonly Bitmap Police = GetImage("police.png");
 
@@ -454,6 +467,20 @@ namespace Mirage.Urbanization.Tilesets
         }
 
         public static Bitmap RotateImage(this Bitmap bmp, float angle)
+        {
+            Bitmap rotatedImage = new Bitmap(bmp.Width, bmp.Height);
+            using (Graphics g = Graphics.FromImage(rotatedImage))
+            {
+                g.TranslateTransform(bmp.Width/2, bmp.Height/2); //set the rotation point as the center into the matrix
+                g.RotateTransform(angle); //rotate
+                g.TranslateTransform(-bmp.Width/2, -bmp.Height/2); //restore rotation point into the matrix
+                g.DrawImage(bmp, new Point(0, 0)); //draw the image on the new bitmap
+            }
+
+            return rotatedImage;
+        }
+
+        public static Bitmap RotateTrainImage(this Bitmap bmp, float angle)
         {
             Bitmap rotatedImage = new Bitmap(bmp.Width * 2, bmp.Height * 2);
             using (Graphics g = Graphics.FromImage(rotatedImage))

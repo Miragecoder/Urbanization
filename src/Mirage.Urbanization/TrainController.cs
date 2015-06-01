@@ -42,7 +42,14 @@ namespace Mirage.Urbanization
 
                 centralCell.GetZoneInfo().WithResultIfHasMatch(z =>
                 {
-                    Vehicles.Add(new Airplane(GetZoneInfosFunc, z, Directions.OrderBy(d => Random.Next()).First()));
+                    var steerDirection = Directions.OrderBy(d => Random.Next()).First();
+                    centralCell.GetZoneInfo().WithResultIfHasMatch(zoneInfo =>
+                    {
+                        var alternateDirection =
+                            zoneInfo.GetSteerDirections(steerDirection).OrderBy(x => Random.Next()).First();
+
+                        Vehicles.Add(new Airplane(GetZoneInfosFunc, z, steerDirection, alternateDirection, Random.Next(5, 10)));
+                    });
                 });
 
             }
@@ -58,12 +65,31 @@ namespace Mirage.Urbanization
         private class Airplane : BaseVehicle, IAirplane
         {
             private readonly Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> _directionQuery;
+            private readonly Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> _alternateDirectionQuery;
+            private readonly int _alternateRate;
+            private readonly IEnumerator<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> _directionEnumerator;
 
             public Airplane(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition,
-                Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> directionQuery)
+                Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> directionQuery,
+                Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> alternateDirectionQuery,
+                int alternateRate
+            )
                 : base(getZoneInfosFunc, currentPosition)
             {
                 _directionQuery = directionQuery;
+                _alternateDirectionQuery = alternateDirectionQuery;
+                _alternateRate = alternateRate;
+                _directionEnumerator = DirectionQuery().GetEnumerator();
+            }
+
+            private IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> DirectionQuery()
+            {
+                while (true)
+                {
+                    foreach (var iteration in Enumerable.Range(0, _alternateRate))
+                        yield return _directionQuery;
+                    yield return _alternateDirectionQuery;
+                }
             }
 
             protected override int SpeedInMilliseconds { get { return 200; } }
@@ -72,7 +98,8 @@ namespace Mirage.Urbanization
             {
                 IfMustBeMoved(() =>
                 {
-                    var result = _directionQuery(CurrentPosition);
+                    _directionEnumerator.MoveNext();
+                    var result = _directionEnumerator.Current(CurrentPosition);
                     Move(result.MatchingObject);
                 });
             }

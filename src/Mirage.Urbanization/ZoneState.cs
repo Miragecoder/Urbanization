@@ -135,13 +135,16 @@ namespace Mirage.Urbanization
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetSouth();
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetEast();
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetWest();
-        IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest();
         IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetSurroundingZoneInfosDiamond(int size);
         QueryResult<IQueryPollutionResult> QueryPollution();
         QueryResult<IPollutionBehaviour> GetPollutionBehaviour();
         QueryResult<ICrimeBehaviour> GetCrimeBehaviour();
         QueryResult<IQueryCrimeResult> QueryCrime();
         void WithZoneConsumptionIf<T>(Action<T> action) where T : BaseZoneConsumption;
+
+        IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> GetSteerDirections(
+            Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> expression
+            );
 
         QueryResult<TNetworkZoneConsumption> GetNetworkZoneConsumption<TNetworkZoneConsumption>()
             where TNetworkZoneConsumption : BaseNetworkZoneConsumption;
@@ -499,6 +502,25 @@ namespace Mirage.Urbanization
         public QueryResult<IQueryLandValueResult> GetLastLandValueResult()
         {
             return _lastQueryLandValueResult ?? QueryLandValue();
+        }
+
+
+        public IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> GetSteerDirections(Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> expression)
+        {
+            var result = expression(this);
+
+            if (result == GetNorth() || result == GetSouth())
+            {
+                yield return x => x.GetEast();
+                yield return x => x.GetWest();
+            }
+            else if (result == GetEast() || result == GetWest())
+            {
+                yield return x => x.GetNorth();
+                yield return x => x.GetSouth();
+            }
+            else
+                throw new InvalidOperationException();
         }
     }
 }
