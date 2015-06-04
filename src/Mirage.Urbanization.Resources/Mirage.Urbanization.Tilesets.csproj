@@ -312,8 +312,10 @@
   <ItemGroup>
     <EmbeddedResource Include="GrowthZones\Commercial\d2q1n2.png" />
     <EmbeddedResource Include="GrowthZones\Commercial\d2q1n3.png" />
+    <EmbeddedResource Include="GrowthZones\Commercial\d2q1n4.png" />
     <EmbeddedResource Include="GrowthZones\Residential\d2q1n2.png" />
     <EmbeddedResource Include="GrowthZones\Residential\d2q1n3.png" />
+    <EmbeddedResource Include="GrowthZones\Residential\d2q1n4.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\waternsroadew.png" />

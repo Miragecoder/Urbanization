@@ -93,7 +93,8 @@ namespace Mirage.Urbanization.Tilesets
                 new BitmapSelector(
                     BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n1.png"),
                     BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n2.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n3.png")
+                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n3.png"),
+                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n4.png")
                 )
             )
         );
@@ -141,7 +142,8 @@ namespace Mirage.Urbanization.Tilesets
                 new BitmapSelector(
                     BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n1.png"),
                     BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n2.png"), 
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n3.png")
+                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n3.png"), 
+                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n4.png")
                 )
             )
         );
