@@ -50,6 +50,12 @@ namespace Mirage.Urbanization.WinForms
                         Parent = _targetPanel
                     };
 
+                    if (_handleKeyCharActions.ContainsKey(sample.KeyChar))
+                    {
+                        throw new InvalidOperationException(string.Format("Could not use key char '{0}' as unique identifier for '{1}'.",
+                            sample.KeyChar, sample.Name));
+                    }
+
                     _handleKeyCharActions.Add(sample.KeyChar, () => button.PerformClick());
 
                     currentClickHandler = (sender, e) =>
