@@ -55,16 +55,12 @@ namespace Mirage.Urbanization
                 var spawnPoint = airports.OrderBy(x => Random.Next()).First();
                 var centralCell = spawnPoint.ZoneClusterMembers.Single(y => y.IsCentralClusterMember);
 
-                centralCell.GetZoneInfo().WithResultIfHasMatch(z =>
+                centralCell.GetZoneInfo().WithResultIfHasMatch(zoneInfo =>
                 {
                     var steerDirection = Directions.OrderBy(d => Random.Next()).First();
-                    centralCell.GetZoneInfo().WithResultIfHasMatch(zoneInfo =>
-                    {
-                        var alternateDirection =
-                            zoneInfo.GetSteerDirections(steerDirection).OrderBy(x => Random.Next()).First();
+                    var alternateDirection = zoneInfo.GetSteerDirections(steerDirection).OrderBy(x => Random.Next()).First();
 
-                        Vehicles.Add(new Airplane(GetZoneInfosFunc, z, steerDirection, alternateDirection, Random.Next(5, 10)));
-                    });
+                    Vehicles.Add(new Airplane(GetZoneInfosFunc, zoneInfo, steerDirection, alternateDirection, Random.Next(5, 10)));
                 });
 
             }
