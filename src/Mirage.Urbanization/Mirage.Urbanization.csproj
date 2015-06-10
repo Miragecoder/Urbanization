@@ -110,6 +110,7 @@
     <Compile Include="ZoneConsumption\Base\ZoneClusterMemberConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\ZoneNeighborNavigator.cs" />
     <Compile Include="ZoneConsumption\RubbishZoneConsumption.cs" />
+    <Compile Include="ZoneConsumption\SeaPortZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\TrafficDensity.cs" />
     <Compile Include="ZoneConsumption\TrainStationZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\WaterZoneConsumption.cs" />

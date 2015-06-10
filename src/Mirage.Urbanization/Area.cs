@@ -392,8 +392,11 @@ namespace Mirage.Urbanization
             yield return () => new ResidentialZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new CommercialZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new IndustrialZoneClusterConsumption(_createZoneInfoFinder);
+
             yield return () => new PoliceStationZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new CoalPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
+
+            yield return () => new SeaPortZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new AirportZoneClusterConsumption(_createZoneInfoFinder);
         }
 

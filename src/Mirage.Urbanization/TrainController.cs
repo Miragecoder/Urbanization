@@ -5,6 +5,21 @@ using Mirage.Urbanization.ZoneConsumption;
 
 namespace Mirage.Urbanization
 {
+    internal class ShipController : BaseVehicleController<IShip>
+    {
+        public ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
+            : base(getZoneInfosFunc)
+        {
+
+        }
+
+
+        protected override void PerformMoveCycle()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class AirplaneController : BaseVehicleController<IAirplane>
     {
         public AirplaneController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
@@ -318,6 +333,11 @@ namespace Mirage.Urbanization
     }
 
     public interface IAirplane : IVehicle
+    {
+        void Move();
+    }
+
+    public interface IShip : IVehicle
     {
         void Move();
     }
