@@ -198,36 +198,43 @@ namespace Mirage.Urbanization.WinForms
                 }
 
 
-                _simulationSession.Area.AirplaneController.ForEachActiveVehicle(airplane =>
+                foreach (var controller in new[]
                 {
-                    if (airplane.PreviousPreviousPreviousPreviousPosition == null)
-                        return;
+                    _simulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>, 
+                    _simulationSession.Area.ShipController
+                })
+                {
+                    controller.ForEachActiveVehicle(airplane =>
+                    {
+                        if (airplane.PreviousPreviousPreviousPreviousPosition == null)
+                            return;
 
-                    foreach (var pair in new[]
+                        foreach (var pair in new[]
                     {
                         new { Render = false, First = airplane.CurrentPosition, Second = airplane.PreviousPosition, Third = airplane.PreviousPreviousPosition, Head = true},
                         new { Render = true, First = airplane.PreviousPosition, Second = airplane.PreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPosition, Head = false},
                         new { Render = false, First = airplane.PreviousPreviousPosition, Second = airplane.PreviousPreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPreviousPosition, Head = false}
                     })
-                    {
-                        if (pair.Third.Point == pair.First.Point)
-                            continue;
-
-                        var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
-
-                        var bitmap = MiscBitmaps.GetPlaneBitmap(orientation);
-
-                        if (pair.Render)
                         {
-                            _graphicsManager.GetGraphicsWrapper().DrawImage(
-                                bitmap: bitmap,
-                                rectangle: _zoneRenderInfos[pair.Second]
-                                    .GetRectangle()
-                                    .ChangeSize(bitmap.Size)
-                                );
+                            if (pair.Third.Point == pair.First.Point)
+                                continue;
+
+                            var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
+
+                            var bitmap = airplane is IAirplane ? MiscBitmaps.GetPlaneBitmap(orientation) : MiscBitmaps.GetShipBitmap(orientation);
+
+                            if (pair.Render)
+                            {
+                                _graphicsManager.GetGraphicsWrapper().DrawImage(
+                                    bitmap: bitmap,
+                                    rectangle: _zoneRenderInfos[pair.Second]
+                                        .GetRectangle()
+                                        .ChangeSize(bitmap.Size)
+                                    );
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 _simulationSession.Area.TrainController.ForEachActiveVehicle(train =>
                 {

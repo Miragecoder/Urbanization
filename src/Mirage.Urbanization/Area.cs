@@ -19,6 +19,7 @@ namespace Mirage.Urbanization
         private readonly AreaOptions _areaOptions;
         private readonly TrainController _trainController;
         private readonly AirplaneController _airplaneController;
+        private readonly ShipController _shipController;
 
         public IVehicleController<ITrain> TrainController
         {
@@ -31,6 +32,11 @@ namespace Mirage.Urbanization
         public IVehicleController<IAirplane> AirplaneController
         {
             get { return _airplaneController; }
+        }
+
+        public IVehicleController<IShip> ShipController
+        {
+            get { return _shipController;}
         }
 
         public Area(AreaOptions options)
@@ -121,6 +127,7 @@ namespace Mirage.Urbanization
 
             _trainController = new TrainController(() => zoneInfos);
             _airplaneController = new AirplaneController(() => zoneInfos);
+            _shipController = new ShipController(() => zoneInfos);
         }
 
         private WoodlandZoneConsumption CreateWoodlandZone() { return new WoodlandZoneConsumption(_createZoneInfoFinder()); }

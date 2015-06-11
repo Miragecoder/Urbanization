@@ -17,6 +17,7 @@ namespace Mirage.Urbanization
         ZonePoint Point { get; }
         IReadOnlyZoneConsumptionState ZoneConsumptionState { get; }
         IGrowthAlgorithmHighlightState GrowthAlgorithmHighlightState { get; }
+        IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetSurroundingZoneInfosDiamond(int size);
 
         QueryResult<IQueryCrimeResult> GetLastQueryCrimeResult();
         QueryResult<IQueryPollutionResult> GetLastQueryPollutionResult();
@@ -135,7 +136,6 @@ namespace Mirage.Urbanization
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetSouth();
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetEast();
         QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetWest();
-        IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetSurroundingZoneInfosDiamond(int size);
         QueryResult<IQueryPollutionResult> QueryPollution();
         QueryResult<IPollutionBehaviour> GetPollutionBehaviour();
         QueryResult<ICrimeBehaviour> GetCrimeBehaviour();

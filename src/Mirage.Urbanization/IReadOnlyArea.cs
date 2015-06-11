@@ -20,6 +20,7 @@ namespace Mirage.Urbanization
 
         IVehicleController<ITrain> TrainController { get; }
         IVehicleController<IAirplane> AirplaneController { get; }
+        IVehicleController<IShip> ShipController { get; }
 
         event EventHandler<AreaMessageEventArgs> OnAreaMessage;
     }

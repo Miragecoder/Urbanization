@@ -2,25 +2,177 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption;
+using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
 {
-    internal class ShipController : BaseVehicleController<IShip>
+    internal class ShipController : BaseStructureVehicleController<IShip, SeaPortZoneClusterConsumption>
     {
         public ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
+            : base(getZoneInfosFunc)
+        {
+            _borderZoneInfosLazy = new Lazy<ISet<IZoneInfo>>(() =>
+            {
+                var zoneInfos = new HashSet<IZoneInfo>();
+
+                var minXSize = getZoneInfosFunc().Min(y => y.Point.X);
+                var minYSize = getZoneInfosFunc().Min(y => y.Point.X);
+
+                var minX = getZoneInfosFunc().Where(x => x.Point.X == minXSize);
+                var minY = getZoneInfosFunc().Where(x => x.Point.Y == minYSize);
+
+                var maxXSize = getZoneInfosFunc().Min(y => y.Point.X);
+                var maxYSize = getZoneInfosFunc().Min(y => y.Point.X);
+
+                var maxX = getZoneInfosFunc().Where(x => x.Point.X == maxXSize);
+                var maxY = getZoneInfosFunc().Where(x => x.Point.Y == maxYSize);
+
+                foreach (var borderingZoneSet in new[] { minX, minY, maxX, maxY })
+                {
+                    foreach (var borderingZone in borderingZoneSet)
+                        zoneInfos.Add(borderingZone);
+                }
+
+                return zoneInfos;
+            });
+        }
+
+        private readonly Lazy<ISet<IZoneInfo>> _borderZoneInfosLazy;
+
+        protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
+        {
+            int desiredAmountOfShips = structures.Count() * 2;
+
+            while (Vehicles.Count < desiredAmountOfShips)
+            {
+                var candidate = _borderZoneInfosLazy
+                    .Value
+                    .OrderBy(x => Random.Next())
+                    .Where(IsSuitableForShip)
+                    .FirstOrDefault();
+
+                if (candidate != null)
+                {
+                    Vehicles.Add(new Ship(GetZoneInfosFunc, candidate));
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+        }
+
+        private static bool IsSuitableForShip(IReadOnlyZoneInfo zoneInfo)
+        {
+            return zoneInfo
+                .GetSurroundingZoneInfosDiamond(2)
+                .All(x => x.HasNoMatch || x.MatchingObject.ConsumptionState.GetIsWater());
+        }
+
+        private class Ship : BaseVehicle, IShip
+        {
+            public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
+                : base(getZoneInfosFunc, currentPosition)
+            {
+                _directionEnumerator = EnumerateDirections().GetEnumerator();
+                _directionEnumerator.MoveNext();
+            }
+
+            private readonly Queue<IZoneInfo> _lastPositions = new Queue<IZoneInfo>();
+
+            public void Move()
+            {
+                IfMustBeMoved(() =>
+                {
+                    int attempts = 0;
+                    while (_directionEnumerator.Current(CurrentPosition).HasNoMatch
+                        || !IsSuitableForShip(_directionEnumerator.Current(CurrentPosition).MatchingObject)
+                        || _lastPositions.Contains(_directionEnumerator.Current(CurrentPosition).MatchingObject))
+                    {
+                        _directionEnumerator.MoveNext();
+                        if (attempts++ > 8)
+                        {
+                            Move(null);
+                            return;
+                        }
+                    }
+
+                    var next = _directionEnumerator.Current(CurrentPosition).MatchingObject;
+
+                    _lastPositions.Enqueue(next);
+
+                    Move(next);
+
+                    if (_lastPositions.Count > 5)
+                        _lastPositions.Dequeue();
+                });
+            }
+
+            private readonly IEnumerator<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> _directionEnumerator;
+
+            private IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> EnumerateDirections()
+            {
+                var random = new Random();
+                while (true)
+                {
+                    yield return x => x.GetNorth();
+                    if (random.Next(0, 100) > 50)
+                        yield return x => x.GetWest();
+                    else
+                        yield return x => x.GetEast();
+                    yield return x => x.GetSouth();
+                    if (random.Next(0, 100) > 50)
+                        yield return x => x.GetWest();
+                    else
+                        yield return x => x.GetEast();
+                }
+            }
+
+            protected override int SpeedInMilliseconds
+            {
+                get { return 500; }
+            }
+        }
+    }
+
+    internal abstract class BaseStructureVehicleController<TVehicle, TStructure> : BaseVehicleController<TVehicle>
+        where TVehicle : IMoveableVehicle
+        where TStructure : BaseZoneClusterConsumption
+    {
+        protected BaseStructureVehicleController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
             : base(getZoneInfosFunc)
         {
 
         }
 
-
-        protected override void PerformMoveCycle()
+        protected override sealed void PerformMoveCycle()
         {
-            throw new NotImplementedException();
+            PrepareVehiclesWithStructures(GetStructures());
+
+
+            foreach (var plane in Vehicles)
+            {
+                plane.Move();
+            }
+
+            RemoveOrphanVehicles();
+        }
+
+        protected abstract void PrepareVehiclesWithStructures(TStructure[] structures);
+
+        private TStructure[] GetStructures()
+        {
+            return GetZoneInfosFunc()
+                .Select(x => x.GetAsZoneCluster<TStructure>())
+                .Where(x => x.HasMatch)
+                .Select(x => x.MatchingObject)
+                .Distinct()
+                .ToArray();
         }
     }
 
-    internal class AirplaneController : BaseVehicleController<IAirplane>
+    internal class AirplaneController : BaseStructureVehicleController<IAirplane, AirportZoneClusterConsumption>
     {
         public AirplaneController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
             : base(getZoneInfosFunc)
@@ -36,23 +188,13 @@ namespace Mirage.Urbanization
             x => x.GetWest()
         };
 
-        protected override void PerformMoveCycle()
+        protected override void PrepareVehiclesWithStructures(AirportZoneClusterConsumption[] structures)
         {
-            var airports = GetZoneInfosFunc()
-                .Select(x => x.GetAsZoneCluster<AirportZoneClusterConsumption>())
-                .Where(x => x.HasMatch)
-                .Select(x => x.MatchingObject)
-                .Distinct()
-                .ToArray();
-
-            if (!airports.Any())
-                return;
-
-            int desiredAmountOfPlanes = airports.Count() * 2;
+            int desiredAmountOfPlanes = structures.Count() * 2;
 
             while (Vehicles.Count < desiredAmountOfPlanes)
             {
-                var spawnPoint = airports.OrderBy(x => Random.Next()).First();
+                var spawnPoint = structures.OrderBy(x => Random.Next()).First();
                 var centralCell = spawnPoint.ZoneClusterMembers.Single(y => y.IsCentralClusterMember);
 
                 centralCell.GetZoneInfo().WithResultIfHasMatch(zoneInfo =>
@@ -62,15 +204,7 @@ namespace Mirage.Urbanization
 
                     Vehicles.Add(new Airplane(GetZoneInfosFunc, zoneInfo, steerDirection, alternateDirection, Random.Next(5, 10)));
                 });
-
             }
-
-            foreach (var plane in Vehicles)
-            {
-                plane.Move();
-            }
-
-            RemoveOrphanVehicles();
         }
 
         private class Airplane : BaseVehicle, IAirplane
@@ -328,14 +462,17 @@ namespace Mirage.Urbanization
         void CrawlNetwork(ISet<IZoneInfo> network);
     }
 
-    public interface IAirplane : IVehicle
+    public interface IMoveableVehicle : IVehicle
     {
         void Move();
     }
 
-    public interface IShip : IVehicle
+    public interface IAirplane : IMoveableVehicle
     {
-        void Move();
+    }
+
+    public interface IShip : IMoveableVehicle
+    {
     }
 
     public interface IVehicleController<out TVehicle> where TVehicle : IVehicle
