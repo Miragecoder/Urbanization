@@ -79,16 +79,25 @@ namespace Mirage.Urbanization
                 _directionEnumerator.MoveNext();
             }
 
-            private readonly Queue<IZoneInfo> _lastPositions = new Queue<IZoneInfo>();
+            private readonly Queue<IZoneInfo> _previousPositions = new Queue<IZoneInfo>();
+
+            private bool IsBackTracking
+            {
+                get
+                {
+                    return _previousPositions.GroupBy(x => x).Count(x => x.Count() > 1) == 2;
+                }
+            }
 
             public void Move()
             {
                 IfMustBeMoved(() =>
                 {
+                    _previousPositions.Enqueue(CurrentPosition);
                     int attempts = 0;
                     while (_directionEnumerator.Current(CurrentPosition).HasNoMatch
                         || !IsSuitableForShip(_directionEnumerator.Current(CurrentPosition).MatchingObject)
-                        || _lastPositions.Contains(_directionEnumerator.Current(CurrentPosition).MatchingObject))
+                        || IsBackTracking)
                     {
                         _directionEnumerator.MoveNext();
                         if (attempts++ > 8)
@@ -100,12 +109,10 @@ namespace Mirage.Urbanization
 
                     var next = _directionEnumerator.Current(CurrentPosition).MatchingObject;
 
-                    _lastPositions.Enqueue(next);
-
                     Move(next);
 
-                    if (_lastPositions.Count > 5)
-                        _lastPositions.Dequeue();
+                    if (_previousPositions.Count > 10)
+                        _previousPositions.Dequeue();
                 });
             }
 
@@ -113,19 +120,18 @@ namespace Mirage.Urbanization
 
             private IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> EnumerateDirections()
             {
-                var random = new Random();
                 while (true)
                 {
-                    yield return x => x.GetNorth();
-                    if (random.Next(0, 100) > 50)
-                        yield return x => x.GetWest();
-                    else
-                        yield return x => x.GetEast();
-                    yield return x => x.GetSouth();
-                    if (random.Next(0, 100) > 50)
-                        yield return x => x.GetWest();
-                    else
-                        yield return x => x.GetEast();
+                    foreach (var direction in new Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>[]
+                    {
+                        x => x.GetNorth(),
+                        x => x.GetSouth(),
+                        x => x.GetEast(),
+                        x => x.GetWest()
+                    }.OrderBy(x => Random.Next()))
+                    {
+                        yield return direction;
+                    }
                 }
             }
 

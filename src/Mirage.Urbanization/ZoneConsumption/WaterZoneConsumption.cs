@@ -24,6 +24,12 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return System.Drawing.Color.DarkBlue; }
         }
 
+        protected override bool GetIsOrientatableNeighbor(QueryResult<IZoneInfo, RelativeZoneInfoQuery> consumptionQueryResult)
+        {
+            return base.GetIsOrientatableNeighbor(consumptionQueryResult) ||
+                consumptionQueryResult.HasMatch && consumptionQueryResult.MatchingObject.GetAsZoneCluster<SeaPortZoneClusterConsumption>().HasMatch;
+        }
+
         public override IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)
         {
             if (consumption is RoadZoneConsumption)

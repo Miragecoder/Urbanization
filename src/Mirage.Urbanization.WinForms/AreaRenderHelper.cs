@@ -217,10 +217,9 @@ namespace Mirage.Urbanization.WinForms
                         new { Render = (airplane is ITrain), First = airplane.PreviousPreviousPosition, Second = airplane.PreviousPreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPreviousPosition, Head = false}
                     })
                         {
-                            if (pair.Third.Point == pair.First.Point)
-                                continue;
-
-                            var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
+                            var orientation = (pair.Third.Point != pair.First.Point)
+                                ? pair.Third.Point.OrientationTo(pair.First.Point)
+                                : pair.Second.Point.OrientationTo(pair.First.Point);
 
                             Bitmap bitmap;
 
