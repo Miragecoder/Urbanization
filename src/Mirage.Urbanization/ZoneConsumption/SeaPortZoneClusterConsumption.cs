@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public SeaPortZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
             : base(
             createZoneInfoFinderFunc: createZoneInfoFinderFunc,
-            electricityBehaviour: new ElectricitySupplierBehaviour(960),
+            electricityBehaviour: new ElectricityConsumerBehaviour(60),
             pollutionInUnits: 90,
             color: Color.Navy,
             widthInZones: 4,
