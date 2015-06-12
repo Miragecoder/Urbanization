@@ -16,9 +16,9 @@ namespace Mirage.Urbanization.Tilesets
         private readonly object[] _objects;
 
         internal BitmapSelector(params Bitmap[] bitmaps)
-            :this(bitmaps, null)
+            : this(bitmaps, null)
         {
-            
+
         }
 
         internal BitmapSelector(Bitmap[] bitmaps = null, AnimatedBitmap[] animatedBitmaps = null)
@@ -81,7 +81,7 @@ namespace Mirage.Urbanization.Tilesets
     {
         internal static readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> CommercialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity == 0,
-                new BitmapSelector(new [] { BitmapAccessor.GetImage("GrowthZones.Commercial.empty.png") })
+                new BitmapSelector(new[] { BitmapAccessor.GetImage("GrowthZones.Commercial.empty.png") })
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity > 0 && x.PopulationDensity < 25,
                 new BitmapSelector(
@@ -141,8 +141,8 @@ namespace Mirage.Urbanization.Tilesets
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity >= 25,
                 new BitmapSelector(
                     BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n1.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n2.png"), 
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n3.png"), 
+                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n2.png"),
+                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n3.png"),
                     BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n4.png")
                 )
             )
@@ -168,94 +168,62 @@ namespace Mirage.Urbanization.Tilesets
 
     public static class MiscBitmaps
     {
-        public static Bitmap TrainHorizontal { get { return BitmapAccessor.TrainHorizontal; } }
-        public static Bitmap TrainVertical { get { return BitmapAccessor.TrainVertical; } }
-        public static Bitmap TrainDiagonalNwSe { get { return BitmapAccessor.TrainDiagonalNwSe; } }
-        public static Bitmap TrainDiagonalNeSw { get { return BitmapAccessor.TrainDiagonalNeSw; } }
+        public static readonly DirectionalBitmap Plane = new DirectionalBitmap(BitmapAccessor.GetImage("airplane.png"));
+        public static readonly DirectionalBitmap Train = new DirectionalBitmap(BitmapAccessor.GetImage("train.png"));
 
-        public static Bitmap GetTrainBitmap(Orientation orientation)
+        public static DirectionalBitmap GetShipBitmapFrame()
         {
-            if (orientation == Orientation.East || orientation == Orientation.West)
-                return TrainHorizontal;
-            else if (orientation == Orientation.North || orientation == Orientation.South)
-                return TrainVertical;
-            else if (orientation == Orientation.NorthWest || orientation == Orientation.SouthEast)
-                return TrainDiagonalNwSe;
-            else if (orientation == Orientation.NorthEast || orientation == Orientation.SouthWest)
-                return TrainDiagonalNeSw;
-            else 
-                throw new InvalidOperationException();
+            return DateTime.Now.Millisecond % 400 > 200 ? ShipFrameOne : ShipFrameTwo;
         }
 
-        public static Bitmap GetPlaneBitmap(Orientation orientation)
+        public static readonly DirectionalBitmap ShipFrameOne = new DirectionalBitmap(BitmapAccessor.GetImage("shipanim1.png"));
+        public static readonly DirectionalBitmap ShipFrameTwo = new DirectionalBitmap(BitmapAccessor.GetImage("shipanim2.png"));
+    }
+
+    public class DirectionalBitmap
+    {
+        private readonly Bitmap _bitmapEast
+            , _bitmapNorth,
+            _bitmapWest,
+            _bitmapSouth,
+            _southEast,
+            _southWest,
+            _northWest,
+            _northEast;
+
+        public DirectionalBitmap(Bitmap bitmapEast)
+        {
+            _bitmapEast = bitmapEast;
+            _bitmapSouth = _bitmapEast.Get90DegreesRotatedClone();
+            _bitmapWest = _bitmapSouth.Get90DegreesRotatedClone();
+            _bitmapNorth = _bitmapWest.Get90DegreesRotatedClone();
+
+            _southEast = _bitmapEast.RotateImage(45);
+            _southWest = _southEast.Get90DegreesRotatedClone();
+            _northWest = _southWest.Get90DegreesRotatedClone();
+            _northEast = _northWest.Get90DegreesRotatedClone();
+        }
+
+        public Bitmap GetBitmap(Orientation orientation)
         {
             switch (orientation)
             {
                 case Orientation.East:
-                    return BitmapAccessor.PlaneEast;
+                    return _bitmapEast;
                 case Orientation.West:
-                    return BitmapAccessor.PlaneWest;
+                    return _bitmapWest;
                 case Orientation.North:
-                    return BitmapAccessor.PlaneNorth;
+                    return _bitmapNorth;
                 case Orientation.South:
-                    return BitmapAccessor.PlaneSouth;
+                    return _bitmapSouth;
                 case Orientation.NorthEast:
-                    return BitmapAccessor.PlaneNorthEast;
+                    return _northEast;
                 case Orientation.NorthWest:
-                    return BitmapAccessor.PlaneNorthWest;
+                    return _northWest;
                 case Orientation.SouthEast:
-                    return BitmapAccessor.PlaneSouthEast;
+                    return _southEast;
                 case Orientation.SouthWest:
-                    return BitmapAccessor.PlaneSouthWest;
-            }
-            throw new InvalidOperationException();
-        }
-        public static Bitmap GetShipBitmap(Orientation orientation)
-        {
-            if (DateTime.Now.Millisecond > 500)
-            {
-                switch (orientation)
-                {
-                    case Orientation.East:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipEast;
-                    case Orientation.West:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipWest;
-                    case Orientation.North:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipNorth;
-                    case Orientation.South:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipSouth;
-                    case Orientation.NorthEast:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipNorthEast;
-                    case Orientation.NorthWest:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipNorthWest;
-                    case Orientation.SouthEast:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipSouthEast;
-                    case Orientation.SouthWest:
-                        return BitmapAccessor.ShipFrames.FrameOne.ShipSouthWest;
-                }
-            }
-            else
-            {
-                switch (orientation)
-                {
-                    case Orientation.East:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipEast;
-                    case Orientation.West:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipWest;
-                    case Orientation.North:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipNorth;
-                    case Orientation.South:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipSouth;
-                    case Orientation.NorthEast:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipNorthEast;
-                    case Orientation.NorthWest:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipNorthWest;
-                    case Orientation.SouthEast:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipSouthEast;
-                    case Orientation.SouthWest:
-                        return BitmapAccessor.ShipFrames.FrameTwo.ShipSouthWest;
-                }
-                
+                    return _southWest;
             }
             throw new InvalidOperationException();
         }
@@ -267,49 +235,6 @@ namespace Mirage.Urbanization.Tilesets
 
         public static readonly Bitmap TrainStation = GetImage("trainstation.png");
         public static readonly Bitmap Airport = GetImage("airport.png");
-
-        public static readonly Bitmap TrainHorizontal = GetImage("train.png");
-        public static readonly Bitmap TrainVertical = GetImage("train.png").Get90DegreesRotatedClone();
-        public static readonly Bitmap TrainDiagonalNwSe = GetImage("train.png").RotateTrainImage(45);
-        public static readonly Bitmap TrainDiagonalNeSw = GetImage("train.png").RotateTrainImage(135);
-
-        public static readonly Bitmap PlaneEast = GetImage("airplane.png");
-        public static readonly Bitmap PlaneSouth = GetImage("airplane.png").Get90DegreesRotatedClone();
-        public static readonly Bitmap PlaneWest = GetImage("airplane.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-        public static readonly Bitmap PlaneNorth = GetImage("airplane.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-
-        public static readonly Bitmap PlaneSouthEast = GetImage("airplane.png").RotateImage(45);
-        public static readonly Bitmap PlaneSouthWest = GetImage("airplane.png").RotateImage(45).Get90DegreesRotatedClone();
-        public static readonly Bitmap PlaneNorthWest = GetImage("airplane.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-        public static readonly Bitmap PlaneNorthEast = GetImage("airplane.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-
-        public static class ShipFrames
-        {
-            public static class FrameOne
-            {
-                public static readonly Bitmap ShipEast = GetImage("shipanim1.png");
-                public static readonly Bitmap ShipSouth = GetImage("shipanim1.png").Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipWest = GetImage("shipanim1.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipNorth = GetImage("shipanim1.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-
-                public static readonly Bitmap ShipSouthEast = GetImage("shipanim1.png").RotateImage(45);
-                public static readonly Bitmap ShipSouthWest = GetImage("shipanim1.png").RotateImage(45).Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipNorthWest = GetImage("shipanim1.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipNorthEast = GetImage("shipanim1.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-            }
-            public static class FrameTwo
-            {
-                public static readonly Bitmap ShipEast = GetImage("shipanim2.png");
-                public static readonly Bitmap ShipSouth = GetImage("shipanim2.png").Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipWest = GetImage("shipanim2.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipNorth = GetImage("shipanim2.png").Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-
-                public static readonly Bitmap ShipSouthEast = GetImage("shipanim2.png").RotateImage(45);
-                public static readonly Bitmap ShipSouthWest = GetImage("shipanim2.png").RotateImage(45).Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipNorthWest = GetImage("shipanim2.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-                public static readonly Bitmap ShipNorthEast = GetImage("shipanim2.png").RotateImage(45).Get90DegreesRotatedClone().Get90DegreesRotatedClone().Get90DegreesRotatedClone();
-            }
-        }
 
         public static readonly Bitmap Police = GetImage("police.png");
 
@@ -342,7 +267,7 @@ namespace Mirage.Urbanization.Tilesets
 
             public static readonly Bitmap PowerNorthSouthWaterEastWest = GetImage("NetworkZones.powernswaterew.png");
             public static readonly Lazy<Bitmap> WaterNorthSouthPowerEastWest = new Lazy<Bitmap>(() =>
-                PowerNorthSouthWaterEastWest.Get90DegreesRotatedClone()); 
+                PowerNorthSouthWaterEastWest.Get90DegreesRotatedClone());
 
 
             public static readonly Bitmap RailNorthSouthPowerEastWest = GetImage("NetworkZones.railnspowerew.png");
@@ -439,10 +364,10 @@ namespace Mirage.Urbanization.Tilesets
                     public static readonly AnimatedRoadNetworkZoneTileset Low = new AnimatedRoadNetworkZoneTileset(
                         frameTileSets: EnumerateLowFrames()
                             .Select(frameName => GenerateNetworkZoneTileSet(frameName + ".road{0}.png"))
-                            .ToArray(), 
+                            .ToArray(),
                         powerNorthSouthRoadEastWestFrames: EnumerateLowFrames()
                             .Select(frameName => GetImage(frameName + ".powernsroadew.png"))
-                            .ToArray(), 
+                            .ToArray(),
                         railNorthSouthRoadEastWestFrames: EnumerateLowFrames()
                             .Select(frameName => GetImage(frameName + ".railnsroadew.png"))
                             .ToArray(),
@@ -463,7 +388,7 @@ namespace Mirage.Urbanization.Tilesets
                             .ToArray(),
                         waterNorthSouthRoadEastWestFrames: EnumerateHighFrames()
                             .Select(frameName => GetImage(frameName + ".waternsroadew.png"))
-                            .ToArray(), 
+                            .ToArray(),
                         cycler: Cycler
                     );
 
@@ -550,9 +475,9 @@ namespace Mirage.Urbanization.Tilesets
             Bitmap rotatedImage = new Bitmap(bmp.Width, bmp.Height);
             using (Graphics g = Graphics.FromImage(rotatedImage))
             {
-                g.TranslateTransform(bmp.Width/2, bmp.Height/2); //set the rotation point as the center into the matrix
+                g.TranslateTransform(bmp.Width / 2, bmp.Height / 2); //set the rotation point as the center into the matrix
                 g.RotateTransform(angle); //rotate
-                g.TranslateTransform(-bmp.Width/2, -bmp.Height/2); //restore rotation point into the matrix
+                g.TranslateTransform(-bmp.Width / 2, -bmp.Height / 2); //restore rotation point into the matrix
                 g.DrawImage(bmp, new Point(0, 0)); //draw the image on the new bitmap
             }
 

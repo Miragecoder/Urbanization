@@ -329,7 +329,8 @@ namespace Mirage.Urbanization
 
                 foreach (var train in trainsInNetwork)
                 {
-                    train.CrawlNetwork(network);
+                    train.SetTrainNetwork(network);
+                    train.Move();
                 }
             }
 
@@ -345,13 +346,20 @@ namespace Mirage.Urbanization
 
             protected override int SpeedInMilliseconds { get { return 300; } }
 
-            public void CrawlNetwork(ISet<IZoneInfo> trainNetwork)
+            public void SetTrainNetwork(ISet<IZoneInfo> trainNetwork)
+            {
+                _currentTrainNetwork = trainNetwork;
+            }
+
+            private ISet<IZoneInfo> _currentTrainNetwork;
+
+            public void Move()
             {
                 IfMustBeMoved(() =>
                 {
-                    if (!trainNetwork.Contains(CurrentPosition))
+                    if (!_currentTrainNetwork.Contains(CurrentPosition))
                     {
-                        CurrentPosition = trainNetwork.First();
+                        CurrentPosition = _currentTrainNetwork.First();
                     }
                     else
                     {
@@ -360,7 +368,7 @@ namespace Mirage.Urbanization
                             .OrderBy(x => Random.Next())
                             .Where(x => x.HasMatch)
                             .Select(x => x.MatchingObject)
-                            .Where(trainNetwork.Contains)
+                            .Where(_currentTrainNetwork.Contains)
                             .AsQueryable();
 
                         var next = queryNext
@@ -457,9 +465,9 @@ namespace Mirage.Urbanization
         }
     }
 
-    public interface ITrain : IVehicle
+    public interface ITrain : IMoveableVehicle
     {
-        void CrawlNetwork(ISet<IZoneInfo> network);
+        void SetTrainNetwork(ISet<IZoneInfo> trainNetwork);
     }
 
     public interface IMoveableVehicle : IVehicle

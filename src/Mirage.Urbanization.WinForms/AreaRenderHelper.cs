@@ -200,8 +200,9 @@ namespace Mirage.Urbanization.WinForms
 
                 foreach (var controller in new[]
                 {
-                    _simulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>, 
-                    _simulationSession.Area.ShipController
+                    _simulationSession.Area.ShipController,
+                    _simulationSession.Area.TrainController,
+                    _simulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>
                 })
                 {
                     controller.ForEachActiveVehicle(airplane =>
@@ -211,9 +212,9 @@ namespace Mirage.Urbanization.WinForms
 
                         foreach (var pair in new[]
                     {
-                        new { Render = false, First = airplane.CurrentPosition, Second = airplane.PreviousPosition, Third = airplane.PreviousPreviousPosition, Head = true},
+                        new { Render = (airplane is ITrain), First = airplane.CurrentPosition, Second = airplane.PreviousPosition, Third = airplane.PreviousPreviousPosition, Head = true},
                         new { Render = true, First = airplane.PreviousPosition, Second = airplane.PreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPosition, Head = false},
-                        new { Render = false, First = airplane.PreviousPreviousPosition, Second = airplane.PreviousPreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPreviousPosition, Head = false}
+                        new { Render = (airplane is ITrain), First = airplane.PreviousPreviousPosition, Second = airplane.PreviousPreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPreviousPosition, Head = false}
                     })
                         {
                             if (pair.Third.Point == pair.First.Point)
@@ -221,7 +222,16 @@ namespace Mirage.Urbanization.WinForms
 
                             var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
 
-                            var bitmap = airplane is IAirplane ? MiscBitmaps.GetPlaneBitmap(orientation) : MiscBitmaps.GetShipBitmap(orientation);
+                            Bitmap bitmap;
+
+                            if (airplane is IAirplane)
+                                bitmap = MiscBitmaps.Plane.GetBitmap(orientation);
+                            else if (airplane is ITrain)
+                                bitmap = MiscBitmaps.Train.GetBitmap(orientation);
+                            else if (airplane is IShip)
+                                bitmap = MiscBitmaps.GetShipBitmapFrame().GetBitmap(orientation);
+                            else 
+                                throw new InvalidOperationException();
 
                             if (pair.Render)
                             {
@@ -235,68 +245,6 @@ namespace Mirage.Urbanization.WinForms
                         }
                     });
                 }
-
-                _simulationSession.Area.TrainController.ForEachActiveVehicle(train =>
-                {
-                    if (train.PreviousPreviousPreviousPreviousPosition == null)
-                        return;
-
-                    foreach (var pair in new[]
-                    {
-                        new { Render = true, First = train.CurrentPosition, Second = train.PreviousPosition, Third = train.PreviousPreviousPosition, Head = true},
-                        new { Render = true, First = train.PreviousPosition, Second = train.PreviousPreviousPosition, Third = train.PreviousPreviousPreviousPosition, Head = false},
-                        new { Render = true, First = train.PreviousPreviousPosition, Second = train.PreviousPreviousPreviousPosition, Third = train.PreviousPreviousPreviousPreviousPosition, Head = false}
-                    })
-                    {
-                        if (pair.Third.Point == pair.First.Point)
-                            continue;
-
-                        var orientation = pair.Third.Point.OrientationTo(pair.First.Point);
-
-                        var bitmap = MiscBitmaps.GetTrainBitmap(orientation);
-
-                        if (pair.Render)
-                        {
-                            _graphicsManager.GetGraphicsWrapper().DrawImage(
-                                bitmap: bitmap,
-                                rectangle: _zoneRenderInfos[pair.Second]
-                                    .GetRectangle()
-                                    .ChangeSize(bitmap.Size)
-                                    .Relocate(currentLocation =>
-                                    {
-                                        if (orientation.HasFlag(Orientation.East))
-                                            currentLocation.Y += 16;
-                                        if (orientation.HasFlag(Orientation.West))
-                                            currentLocation.Y += 3;
-                                        if (orientation.HasFlag(Orientation.North))
-                                            currentLocation.X += 16;
-                                        if (orientation.HasFlag(Orientation.South))
-                                            currentLocation.X += 3;
-
-                                        bool multiple = !new[] { Orientation.North, Orientation.East, Orientation.South, Orientation.West }
-                                            .Any(x => x == orientation);
-
-                                        if (multiple)
-                                        {
-                                            if (orientation.HasFlag(Orientation.East))
-                                                currentLocation.X -= 3;
-                                            if (orientation.HasFlag(Orientation.West))
-                                                currentLocation.X -= 6;
-                                            //if (orientation.HasFlag(Orientation.North))
-                                            //    currentLocation.Y += 3;
-                                            if (orientation.HasFlag(Orientation.South))
-                                                currentLocation.Y -= 3;
-                                        }
-
-                                        return currentLocation;
-                                    }
-                                )
-                            );
-
-                        }
-                    }
-                    
-                });
 
                 if (highlightAction != null)
                 {
