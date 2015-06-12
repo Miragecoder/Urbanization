@@ -27,7 +27,8 @@ namespace Mirage.Urbanization.ZoneConsumption
         protected override bool GetIsOrientatableNeighbor(QueryResult<IZoneInfo, RelativeZoneInfoQuery> consumptionQueryResult)
         {
             return base.GetIsOrientatableNeighbor(consumptionQueryResult) ||
-                consumptionQueryResult.HasMatch && consumptionQueryResult.MatchingObject.GetAsZoneCluster<SeaPortZoneClusterConsumption>().HasMatch;
+                (consumptionQueryResult.HasMatch && consumptionQueryResult.MatchingObject.GetAsZoneCluster<SeaPortZoneClusterConsumption>().HasMatch)
+                || consumptionQueryResult.HasNoMatch;
         }
 
         public override IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)
