@@ -170,7 +170,9 @@ namespace Mirage.Urbanization
                     _distance = distance;
                     _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => _currentZoneInfo
                         .GetNorthEastSouthWest()
-                        .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject) && !seenPaths.Contains(x.MatchingObject))
+                        .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject))
+                        .OrderBy(x => CalculateDistance(x.MatchingObject.Point, _rootZoneInfo.Point))
+                        .Where(x => !seenPaths.Contains(x.MatchingObject))
                         .Select(x =>
                             new ShipPathNode(
                                 rootZoneInfo: rootZoneInfo,
