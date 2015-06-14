@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
@@ -11,12 +12,20 @@ namespace Mirage.Urbanization
         public ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
             : base(getZoneInfosFunc)
         {
-
+            _candidatesCache = new SimpleCache<ISet<IZoneInfo>>(() => new HashSet<IZoneInfo>(GetZoneInfosFunc()
+                    .Where(IsSuitableForShip)), new TimeSpan(0, 1, 0));
         }
+
+        private readonly SimpleCache<ISet<IZoneInfo>> _candidatesCache;
 
         protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
         {
             int desiredAmountOfShips = structures.Count() * 2;
+
+            var candidates = _candidatesCache.GetValue();
+
+            if (candidates == null)
+                return;
 
             while (Vehicles.Count < desiredAmountOfShips)
             {
@@ -34,7 +43,6 @@ namespace Mirage.Urbanization
                     return;
                 }
             }
-
         }
 
         private static bool IsSuitableForShip(IReadOnlyZoneInfo zoneInfo)
@@ -49,34 +57,39 @@ namespace Mirage.Urbanization
             public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
                 : base(getZoneInfosFunc, currentPosition)
             {
+                _pathEnumeratorTask = new Task<IEnumerator<ShipPathNode>>(() =>
+                {
+                    var pathNode = new ShipPathNode(CurrentPosition);
 
+                    var enumerator = pathNode
+                        .EnumerateAllChildPathNodes()
+                        .GroupBy(x => CalculateDistance(CurrentPosition.Point, x.CurrentZoneInfo.Point))
+                        .OrderByDescending(x => x.Key)
+                        .First()
+                        .OrderBy(x => x.Distance)
+                        .First()
+                        .EnumeratePathBackwards()
+                        .GetEnumerator();
+
+                    enumerator.MoveNext();
+
+                    return enumerator;
+                });
+                _pathEnumeratorTask.Start();
             }
 
-            private IEnumerator<ShipPathNode> _pathEnumerator; 
+            private readonly Task<IEnumerator<ShipPathNode>> _pathEnumeratorTask;
 
             public void Move()
             {
+                if (!_pathEnumeratorTask.IsCompleted)
+                    return;
                 IfMustBeMoved(() =>
                 {
-                    if (_pathEnumerator == null || !_pathEnumerator.MoveNext())
-                    {
-                        var pathNode = new ShipPathNode(CurrentPosition);
-
-                        _pathEnumerator = pathNode
-                            .EnumerateAllChildPathNodes()
-                            .GroupBy(x => CalculateDistance(CurrentPosition.Point, x.CurrentZoneInfo.Point))
-                            .OrderByDescending(x => x.Key)
-                            .First()
-                            .OrderBy(x => x.Distance)
-                            .First()
-                            .EnumeratePathBackwards()
-                            .GetEnumerator();
-
-                        _pathEnumerator.MoveNext();
-                    }
-
-                    var current = _pathEnumerator.Current;
+                    var current = _pathEnumeratorTask.Result.Current;
                     Move(current != null ? current.CurrentZoneInfo : null);
+
+                    _pathEnumeratorTask.Result.MoveNext();
                 });
             }
 
@@ -84,7 +97,7 @@ namespace Mirage.Urbanization
             {
                 int x1 = x.X, x2 = y.X, y1 = x.Y, y2 = y.Y;
 
-                return ((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+                return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
             }
 
             protected override int SpeedInMilliseconds
@@ -153,16 +166,16 @@ namespace Mirage.Urbanization
                         throw new ArgumentException("'currentZoneInfo' was already added to this path.", "currentZoneInfo");
 
                     _preceedingShipPathNode = preceedingShipPathNode;
-                    
+
                     _distance = distance;
                     _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => _currentZoneInfo
                         .GetNorthEastSouthWest()
                         .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject) && !seenPaths.Contains(x.MatchingObject))
-                        .Select(x => 
+                        .Select(x =>
                             new ShipPathNode(
-                                rootZoneInfo: rootZoneInfo, 
+                                rootZoneInfo: rootZoneInfo,
                                 currentZoneInfo: x.MatchingObject,
-                                preceedingShipPathNode: this, 
+                                preceedingShipPathNode: this,
                                 seenPaths: seenPaths,
                                 distance: _distance + 1
                             )
