@@ -11,33 +11,8 @@ namespace Mirage.Urbanization
         public ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
             : base(getZoneInfosFunc)
         {
-            _borderZoneInfosLazy = new Lazy<ISet<IZoneInfo>>(() =>
-            {
-                var zoneInfos = new HashSet<IZoneInfo>();
 
-                var minXSize = getZoneInfosFunc().Min(y => y.Point.X);
-                var minYSize = getZoneInfosFunc().Min(y => y.Point.X);
-
-                var minX = getZoneInfosFunc().Where(x => x.Point.X == minXSize);
-                var minY = getZoneInfosFunc().Where(x => x.Point.Y == minYSize);
-
-                var maxXSize = getZoneInfosFunc().Min(y => y.Point.X);
-                var maxYSize = getZoneInfosFunc().Min(y => y.Point.X);
-
-                var maxX = getZoneInfosFunc().Where(x => x.Point.X == maxXSize);
-                var maxY = getZoneInfosFunc().Where(x => x.Point.Y == maxYSize);
-
-                foreach (var borderingZoneSet in new[] { minX, minY, maxX, maxY })
-                {
-                    foreach (var borderingZone in borderingZoneSet)
-                        zoneInfos.Add(borderingZone);
-                }
-
-                return zoneInfos;
-            });
         }
-
-        private readonly Lazy<ISet<IZoneInfo>> _borderZoneInfosLazy;
 
         protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
         {
@@ -45,10 +20,9 @@ namespace Mirage.Urbanization
 
             while (Vehicles.Count < desiredAmountOfShips)
             {
-                var candidate = _borderZoneInfosLazy
-                    .Value
-                    .OrderBy(x => Random.Next())
+                var candidate = GetZoneInfosFunc()
                     .Where(IsSuitableForShip)
+                    .OrderBy(x => Random.Next())
                     .FirstOrDefault();
 
                 if (candidate != null)
@@ -75,69 +49,126 @@ namespace Mirage.Urbanization
             public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
                 : base(getZoneInfosFunc, currentPosition)
             {
-                _directionEnumerator = EnumerateDirections().GetEnumerator();
-                _directionEnumerator.MoveNext();
+
             }
 
-            private readonly Queue<IZoneInfo> _previousPositions = new Queue<IZoneInfo>();
-
-            private bool IsBackTracking
-            {
-                get
-                {
-                    return _previousPositions.GroupBy(x => x).Count(x => x.Count() > 1) == 2;
-                }
-            }
+            private IEnumerator<ShipPathNode> _pathEnumerator; 
 
             public void Move()
             {
                 IfMustBeMoved(() =>
                 {
-                    _previousPositions.Enqueue(CurrentPosition);
-                    int attempts = 0;
-                    while (_directionEnumerator.Current(CurrentPosition).HasNoMatch
-                        || !IsSuitableForShip(_directionEnumerator.Current(CurrentPosition).MatchingObject)
-                        || IsBackTracking)
+                    if (_pathEnumerator == null || !_pathEnumerator.MoveNext())
                     {
-                        _directionEnumerator.MoveNext();
-                        if (attempts++ > 8)
-                        {
-                            Move(null);
-                            return;
-                        }
+                        var pathNode = new ShipPathNode(CurrentPosition);
+
+                        _pathEnumerator = pathNode
+                            .EnumerateAllChildPathNodes()
+                            .GroupBy(x => CalculateDistance(CurrentPosition.Point, x.CurrentZoneInfo.Point))
+                            .OrderByDescending(x => x.Key)
+                            .First()
+                            .OrderBy(x => x.Distance)
+                            .First()
+                            .EnumeratePathBackwards()
+                            .GetEnumerator();
+
+                        _pathEnumerator.MoveNext();
                     }
 
-                    var next = _directionEnumerator.Current(CurrentPosition).MatchingObject;
-
-                    Move(next);
-
-                    if (_previousPositions.Count > 10)
-                        _previousPositions.Dequeue();
+                    var current = _pathEnumerator.Current;
+                    Move(current != null ? current.CurrentZoneInfo : null);
                 });
             }
 
-            private readonly IEnumerator<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> _directionEnumerator;
-
-            private IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> EnumerateDirections()
+            private static double CalculateDistance(ZonePoint x, ZonePoint y)
             {
-                while (true)
-                {
-                    foreach (var direction in new Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>[]
-                    {
-                        x => x.GetNorth(),
-                        x => x.GetSouth(),
-                        x => x.GetEast(),
-                        x => x.GetWest()
-                    }.OrderBy(x => Random.Next()))
-                    {
-                        yield return direction;
-                    }
-                }
+                int x1 = x.X, x2 = y.X, y1 = x.Y, y2 = y.Y;
+
+                return ((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
             }
 
             protected override int SpeedInMilliseconds
             {
                 get { return 500; }
+            }
+
+            private class ShipPathNode
+            {
+                private readonly IZoneInfo _rootZoneInfo;
+                private readonly IZoneInfo _currentZoneInfo;
+                private readonly ShipPathNode _preceedingShipPathNode;
+
+                private readonly Lazy<IEnumerable<ShipPathNode>> _childrenLazy;
+
+                public ShipPathNode(IZoneInfo zoneInfo)
+                    : this(
+                    rootZoneInfo: zoneInfo,
+                    currentZoneInfo: zoneInfo,
+                    preceedingShipPathNode: null,
+                    seenPaths: new HashSet<IZoneInfo>(),
+                    distance: 0
+                )
+                {
+
+                }
+
+                public IEnumerable<ShipPathNode> EnumerateAllChildPathNodes()
+                {
+                    foreach (var x in _childrenLazy.Value)
+                    {
+                        yield return x;
+                        foreach (var t in x.EnumerateAllChildPathNodes())
+                            yield return t;
+                    }
+                }
+
+                public IZoneInfo CurrentZoneInfo { get { return _currentZoneInfo; } }
+
+                public IEnumerable<ShipPathNode> EnumeratePathBackwards()
+                {
+                    yield return this;
+                    if (_preceedingShipPathNode != null)
+                        foreach (var x in _preceedingShipPathNode.EnumeratePathBackwards())
+                            yield return x;
+                }
+
+                public int Distance { get { return _distance; } }
+
+                private readonly int _distance;
+
+                private ShipPathNode(
+                    IZoneInfo rootZoneInfo,
+                    IZoneInfo currentZoneInfo,
+                    ShipPathNode preceedingShipPathNode,
+                    ISet<IZoneInfo> seenPaths,
+                    int distance
+                )
+                {
+                    if (rootZoneInfo == null) throw new ArgumentNullException("rootZoneInfo");
+                    _rootZoneInfo = rootZoneInfo;
+                    if (currentZoneInfo == null) throw new ArgumentNullException("currentZoneInfo");
+                    _currentZoneInfo = currentZoneInfo;
+
+                    if (!seenPaths.Add(currentZoneInfo))
+                        throw new ArgumentException("'currentZoneInfo' was already added to this path.", "currentZoneInfo");
+
+                    _preceedingShipPathNode = preceedingShipPathNode;
+                    
+                    _distance = distance;
+                    _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => _currentZoneInfo
+                        .GetNorthEastSouthWest()
+                        .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject) && !seenPaths.Contains(x.MatchingObject))
+                        .Select(x => 
+                            new ShipPathNode(
+                                rootZoneInfo: rootZoneInfo, 
+                                currentZoneInfo: x.MatchingObject,
+                                preceedingShipPathNode: this, 
+                                seenPaths: seenPaths,
+                                distance: _distance + 1
+                            )
+                        )
+                    );
+                }
             }
         }
     }
