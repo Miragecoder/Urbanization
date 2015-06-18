@@ -93,6 +93,9 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             {
                 if ((consumption as IIntersectingZoneConsumption).GetIntersectingTypes().Any(x => x == GetType()))
                 {
+                    if (GetType() == typeof (WaterZoneConsumption))
+                        return true;
+
                     var intersection = (consumption as IIntersectingZoneConsumption);
 
                     if (consumptionQueryResult.QueryObject.RelativeX == 0 &&
