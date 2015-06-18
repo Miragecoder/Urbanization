@@ -9,5 +9,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         BaseInfrastructureNetworkZoneConsumption EastWestZoneConsumption { get; }
         BaseInfrastructureNetworkZoneConsumption NorthSouthZoneConsumption { get; }
+
+        BaseInfrastructureNetworkZoneConsumption GetZoneConsumptionOfType<TBaseInfrastructureNetworkZoneConsumption>()
+            where TBaseInfrastructureNetworkZoneConsumption : BaseInfrastructureNetworkZoneConsumption;
     }
 }

@@ -89,7 +89,8 @@ namespace Mirage.Urbanization
                     var current = _pathEnumeratorTask.Result.Current;
                     Move(current != null ? current.CurrentZoneInfo : null);
 
-                    _pathEnumeratorTask.Result.MoveNext();
+                    if (!_pathEnumeratorTask.Result.MoveNext())
+                        Move(null);
                 });
             }
 
@@ -171,7 +172,7 @@ namespace Mirage.Urbanization
                     _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => _currentZoneInfo
                         .GetNorthEastSouthWest()
                         .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject))
-                        .OrderBy(x => CalculateDistance(x.MatchingObject.Point, _rootZoneInfo.Point))
+                        .OrderByDescending(x => CalculateDistance(x.MatchingObject.Point, _rootZoneInfo.Point))
                         .Where(x => !seenPaths.Contains(x.MatchingObject))
                         .Select(x =>
                             new ShipPathNode(

@@ -308,7 +308,16 @@ namespace Mirage.Urbanization.Tilesets
                     }
                 }
 
-                public static Bitmap GetBitmapFor(IIntersectingZoneConsumption intersection)
+                public static BitmapLayer GetBitmapLayerFor(IIntersectingZoneConsumption intersection)
+                {
+                    if (intersection.GetIntersectingTypes().Any(x => x == typeof (WaterZoneConsumption)))
+                    {
+                        return new BitmapLayer(Water.WaterNorthWestEastSouth, GetBitmapFor(intersection));
+                    }
+                    return new BitmapLayer(GetBitmapFor(intersection));
+                }
+
+                private static Bitmap GetBitmapFor(IIntersectingZoneConsumption intersection)
                 {
                     if (intersection.EastWestZoneConsumption is RoadZoneConsumption ^
                         intersection.NorthSouthZoneConsumption is RoadZoneConsumption)

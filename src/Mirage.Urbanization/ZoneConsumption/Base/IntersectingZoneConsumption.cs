@@ -96,5 +96,17 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
             return density;
         }
+
+
+        public BaseInfrastructureNetworkZoneConsumption GetZoneConsumptionOfType<TBaseInfrastructureNetworkZoneConsumption>() 
+            where TBaseInfrastructureNetworkZoneConsumption : BaseInfrastructureNetworkZoneConsumption
+        {
+            if (NorthSouthZoneConsumption is TBaseInfrastructureNetworkZoneConsumption)
+                return NorthSouthZoneConsumption;
+            else if (EastWestZoneConsumption is TBaseInfrastructureNetworkZoneConsumption)
+                return EastWestZoneConsumption;
+            else
+                throw new InvalidOperationException();
+        }
     }
 }
