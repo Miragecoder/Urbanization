@@ -75,7 +75,11 @@ namespace Mirage.Urbanization.Tilesets
 
             _networkTilesetEnumerator = frameTileSets.GetInfiniteEnumerator();
 
-            foreach (var x in GetEnumerators()) cycler.LoadEnumerator(x);
+            foreach (var x in GetEnumerators())
+            {
+                cycler.LoadEnumerator(x);
+                x.MoveNext();
+            }
 
             _networkTilesetEnumerator.MoveNext();
         }
