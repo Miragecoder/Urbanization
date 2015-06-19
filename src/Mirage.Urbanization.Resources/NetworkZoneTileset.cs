@@ -109,7 +109,7 @@ namespace Mirage.Urbanization.Tilesets
             }
             else
                 return _bitmapNoDirection;
-            return null;
+            throw new InvalidOperationException();
         }
     }
 }

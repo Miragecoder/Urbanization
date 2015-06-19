@@ -12,6 +12,34 @@ using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.WinForms
 {
+    public class RenderZoneContinuation
+    {
+        private readonly Action _drawSecondLayerAction;
+        private readonly Action<IAreaConsumption> _drawHighligterAction;
+
+        public void DrawSecondLayer()
+        {
+            if (_drawSecondLayerAction != null)
+                _drawSecondLayerAction();
+        }
+
+        public void DrawHighlighter(IAreaConsumption consumption)
+        {
+            if (_drawHighligterAction != null)
+                _drawHighligterAction(consumption);
+        }
+
+        public bool HasDrawHighlighterDelegate { get { return _drawHighligterAction != null; } }
+
+        public bool HasDrawSecondLayerDelegate { get { return _drawSecondLayerAction != null; } }
+
+        public RenderZoneContinuation(Action drawSecondLayerAction, Action<IAreaConsumption> drawHighligterAction)
+        {
+            _drawSecondLayerAction = drawSecondLayerAction;
+            _drawHighligterAction = drawHighligterAction;
+        }
+    }
+
     public class ZoneRenderInfo
     {
         private readonly IReadOnlyZoneInfo _zoneInfo;
@@ -34,7 +62,7 @@ namespace Mirage.Urbanization.WinForms
             _renderZoneOptions = renderZoneOptions;
         }
 
-        public Action<IAreaConsumption> RenderZoneInto(IGraphicsWrapper graphics, bool isHighlighted)
+        public RenderZoneContinuation RenderZoneInto(IGraphicsWrapper graphics, bool isHighlighted)
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
 
@@ -42,10 +70,15 @@ namespace Mirage.Urbanization.WinForms
 
             var consumption = ZoneInfo.ZoneConsumptionState.GetZoneConsumption();
 
-            Bitmap bitmap;
-            if (_tilesetAccessor.TryGetBitmapFor(consumption, out bitmap))
+            Action drawSecondLayerAction = null;
+
+            BitmapLayer bitmapLayer;
+            if (_tilesetAccessor.TryGetBitmapFor(consumption, out bitmapLayer))
             {
-                graphics.DrawImage(bitmap, rectangle);
+                graphics.DrawImage(bitmapLayer.LayerOne, rectangle);
+
+                if (bitmapLayer.IsLayerTwoSpecified)
+                    drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.LayerTwo, rectangle); };
 
                 if (_renderZoneOptions.ShowGrowthPathFinding)
                 {
@@ -135,7 +168,10 @@ namespace Mirage.Urbanization.WinForms
 
             if (isHighlighted)
             {
-                return (areaConsumption) =>
+                return new RenderZoneContinuation(
+                    drawSecondLayerAction,
+
+                (areaConsumption) =>
                 {
                     if (areaConsumption is IAreaZoneClusterConsumption)
                     {
@@ -159,9 +195,9 @@ namespace Mirage.Urbanization.WinForms
 
                     var pen = (DateTime.Now.Millisecond % 400) > 200 ? BrushManager.BluePen : BrushManager.RedPen;
                     graphics.DrawRectangle(pen, rectangle);
-                };
+                });
             }
-            return null;
+            return new RenderZoneContinuation(drawSecondLayerAction, null);
         }
     }
 }

@@ -182,8 +182,6 @@ namespace Mirage.Urbanization.WinForms
         {
             return graphicsManagerWrapper(_canvasPanel, () =>
             {
-                Action<IAreaConsumption> highlightAction = null;
-
                 Point currentCursorPoint = new Point() { X = -100, Y = -100 };
 
                 _canvasPanel.BeginInvoke(new MethodInvoker(() =>
@@ -191,12 +189,9 @@ namespace Mirage.Urbanization.WinForms
                     currentCursorPoint = _canvasPanel.PointToClient(Cursor.Position);
                 }));
 
-                foreach (var rect in GetToBeRenderedAreas())
-                {
-                    var result = rect.RenderZoneInto(_graphicsManager.GetGraphicsWrapper(), rect.GetRectangle().Contains(currentCursorPoint));
-                    if (result != null) highlightAction = result;
-                }
-
+                var continuations = GetToBeRenderedAreas()
+                    .Select(rect => rect.RenderZoneInto(_graphicsManager.GetGraphicsWrapper(), rect.GetRectangle().Contains(currentCursorPoint)))
+                    .ToArray();
 
                 foreach (var controller in new[]
                 {
@@ -205,6 +200,12 @@ namespace Mirage.Urbanization.WinForms
                     _simulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>
                 })
                 {
+                    if (controller == _simulationSession.Area.TrainController)
+                    {
+                        foreach (var continuation in continuations.Where(x => x.HasDrawSecondLayerDelegate))
+                            continuation.DrawSecondLayer();
+                    }
+                    
                     controller.ForEachActiveVehicle(airplane =>
                     {
                         if (airplane.PreviousPreviousPreviousPreviousPosition == null)
@@ -229,7 +230,7 @@ namespace Mirage.Urbanization.WinForms
                                 bitmap = MiscBitmaps.Train.GetBitmap(orientation);
                             else if (airplane is IShip)
                                 bitmap = MiscBitmaps.GetShipBitmapFrame().GetBitmap(orientation);
-                            else 
+                            else
                                 throw new InvalidOperationException();
 
                             if (pair.Render)
@@ -245,10 +246,12 @@ namespace Mirage.Urbanization.WinForms
                     });
                 }
 
-                if (highlightAction != null)
+                var highlightaction = continuations.FirstOrDefault(x => x.HasDrawHighlighterDelegate);
+
+                if (highlightaction != null)
                 {
                     var consumption = _zoneSelectionPanelBehaviour.CreateNewCurrentZoneConsumption();
-                    highlightAction(consumption);
+                    highlightaction.DrawHighlighter(consumption);
                 }
             });
         }

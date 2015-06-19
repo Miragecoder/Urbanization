@@ -18,6 +18,10 @@ namespace Mirage.Urbanization
 
         private readonly SimpleCache<ISet<IZoneInfo>> _candidatesCache;
 
+        private DateTime _lastShipInsertion = DateTime.Now;
+
+        private bool NewShipCanBeInserted { get { return DateTime.Now.AddSeconds(-5) > _lastShipInsertion; } }
+
         protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
         {
             int desiredAmountOfShips = structures.Count() * 2;
@@ -27,7 +31,7 @@ namespace Mirage.Urbanization
             if (candidates == null)
                 return;
 
-            while (Vehicles.Count < desiredAmountOfShips)
+            while (NewShipCanBeInserted && Vehicles.Count < desiredAmountOfShips)
             {
                 var candidate = GetZoneInfosFunc()
                     .Where(IsSuitableForShip)
@@ -37,6 +41,7 @@ namespace Mirage.Urbanization
                 if (candidate != null)
                 {
                     Vehicles.Add(new Ship(GetZoneInfosFunc, candidate));
+                    _lastShipInsertion = DateTime.Now;
                 }
                 else
                 {
@@ -89,7 +94,8 @@ namespace Mirage.Urbanization
                     var current = _pathEnumeratorTask.Result.Current;
                     Move(current != null ? current.CurrentZoneInfo : null);
 
-                    _pathEnumeratorTask.Result.MoveNext();
+                    if (!_pathEnumeratorTask.Result.MoveNext())
+                        Move(null);
                 });
             }
 
