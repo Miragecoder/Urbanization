@@ -48,6 +48,7 @@
     <Compile Include="IYearAndMonth.cs" />
     <Compile Include="MiscCityStatisticsExtensions.cs" />
     <Compile Include="PersistedCityStatistics.cs" />
+    <Compile Include="PersistedCityStatisticsCollection.cs" />
     <Compile Include="PersistedNumberSummary.cs" />
     <Compile Include="Persistence\PersistedSimulation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

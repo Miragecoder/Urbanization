@@ -17,6 +17,9 @@ namespace Mirage.Urbanization
         bool GetIsPowerGridMember();
         bool GetIsRoadNetworkMember();
         bool GetIsZoneClusterMember();
+        bool GetIsNetworkMember<TBaseNetworkZoneConsumption>()
+            where TBaseNetworkZoneConsumption : BaseInfrastructureNetworkZoneConsumption;
+
         bool GetIsWater();
         QueryResult<ZoneClusterMemberConsumption> QueryAsZoneClusterMember();
 
@@ -58,7 +61,7 @@ namespace Mirage.Urbanization
             return GetIsNetworkMember<WaterZoneConsumption>();
         }
 
-        private bool GetIsNetworkMember<TBaseNetworkZoneConsumption>()
+        public bool GetIsNetworkMember<TBaseNetworkZoneConsumption>()
             where TBaseNetworkZoneConsumption : BaseInfrastructureNetworkZoneConsumption
         {
             var consumptionState = GetZoneConsumption();

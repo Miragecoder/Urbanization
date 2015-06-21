@@ -76,6 +76,19 @@ namespace Mirage.Urbanization.Test
             return result.Success;
         }
 
+        public bool ConsumeZonePointWithNetwork<T>(ZonePoint point)
+            where T : BaseInfrastructureNetworkZoneConsumption
+        {
+            var zoneInfo = point.GetZoneInfoOn(_area).MatchingObject;
+
+            if (zoneInfo.ConsumptionState.GetIsNetworkMember<T>())
+            {
+                return true;
+            }
+
+            return ConsumeZonePointWith<T>(point);
+        }
+
         public void BuildIndustrialZone()
         {
             Assert.IsTrue(ConsumeZonePointWith<IndustrialZoneClusterConsumption>(IndustrialZonePoint));
@@ -92,17 +105,21 @@ namespace Mirage.Urbanization.Test
 
             foreach (var point in Enumerable.Range(1, 30).Select(x => new ZonePoint() {X = 1, Y = x}))
             {
-                Assert.IsTrue(ConsumeZonePointWith<PowerLineConsumption>(point));
+                Assert.IsTrue(ConsumeZonePointWithNetwork<PowerLineConsumption>(point));
             }
             foreach (var point in Enumerable.Range(0, 8).Select(x => new ZonePoint() {X = x, Y = 11}))
             {
-                Assert.IsTrue(ConsumeZonePointWith<PowerLineConsumption>(point));
+                Assert.IsTrue(ConsumeZonePointWithNetwork<PowerLineConsumption>(point));
             }
             foreach (var point in Enumerable.Range(0, 8).Select(x => new ZonePoint() { X = x, Y = 6 }))
             {
-                Assert.IsTrue(ConsumeZonePointWith<PowerLineConsumption>(point));
+                point.GetZoneInfoOn(Area).WithResultIfHasMatch(x =>
+                {
+                    if (x.ConsumptionState.GetZoneConsumption() is ZoneClusterMemberConsumption)
+                        return;
+                    Assert.IsTrue(ConsumeZonePointWithNetwork<PowerLineConsumption>(point));
+                });
             }
-            Assert.IsTrue(ConsumeZonePointWith<PowerLineConsumption>(new ZonePoint { X = 9, Y = 8}));
 
             Assert.IsTrue(_area.CalculatePowergridStatistics(new CancellationToken()).Result.PowerGridNetworkStatistics.Any());
 
@@ -122,7 +139,7 @@ namespace Mirage.Urbanization.Test
         {
             foreach (var point in Enumerable.Range(3, 20).Select(x => new ZonePoint() { X = 5, Y = x }))
             {
-                Assert.IsTrue(ConsumeZonePointWith<RoadZoneConsumption>(point));
+                Assert.IsTrue(ConsumeZonePointWithNetwork<RoadZoneConsumption>(point));
             }
         }
 
@@ -144,7 +161,7 @@ namespace Mirage.Urbanization.Test
                 Assert.IsTrue(ConsumeZonePointWith<RailRoadZoneConsumption>(new ZonePoint { X = i, Y = 5 }));
             }
 
-            foreach (var i in Enumerable.Range(2, 4))
+            foreach (var i in Enumerable.Range(2, 3))
             {
                 Assert.IsTrue(ConsumeZonePointWith<RoadZoneConsumption>(new ZonePoint { X = i, Y = 8 }));
             }
