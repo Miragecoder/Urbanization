@@ -96,6 +96,8 @@ namespace Mirage.Urbanization.Simulation
         {
             _area = new Area(simulationOptions.GetAreaOptions());
 
+            _area.OnAreaMessage += OnAreaMessage;
+
             simulationOptions.WithPersistedSimulation(persistedSimulation =>
             {
                 if (persistedSimulation.PersistedCityStatistics == null)
@@ -231,5 +233,7 @@ namespace Mirage.Urbanization.Simulation
         {
             return _persistedCityStatistics.ToList();
         }
+
+        public event EventHandler<AreaMessageEventArgs> OnAreaMessage;
     }
 }

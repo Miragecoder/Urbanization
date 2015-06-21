@@ -189,7 +189,7 @@ namespace Mirage.Urbanization.WinForms
                        );
 
 
-            _areaRenderHelper.SimulationSession.Area.OnAreaMessage +=
+            _areaRenderHelper.SimulationSession.OnAreaMessage +=
                 (_sender, _e) =>
                     statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message.Message; }));
 
