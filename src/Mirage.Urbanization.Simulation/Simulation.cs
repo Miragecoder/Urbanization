@@ -15,60 +15,6 @@ using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Simulation
 {
-    public static class MiscCityStatisticsExtensions
-    {
-        public static PersistedCityStatistics Convert(this ICityStatistics cityStatistics)
-        {
-            return new PersistedCityStatistics
-            {
-                CrimeNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.CrimeNumbers),
-                PollutionNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.PollutionNumbers),
-                LandValueNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.LandValueNumbers),
-                TrafficNumbers = new PersistedNumberSummary(cityStatistics.GrowthZoneStatistics.RoadInfrastructureStatistics.TrafficNumbers),
-
-                NumberOfRoadZones = cityStatistics.GrowthZoneStatistics.RoadInfrastructureStatistics.NumberOfRoadZones,
-
-                NumberOfRailRoadZones = cityStatistics.GrowthZoneStatistics.RailroadInfrastructureStatistics.NumberOfRailRoadZones,
-                NumberOfTrainStations = cityStatistics.GrowthZoneStatistics.RailroadInfrastructureStatistics.NumberOfTrainStations,
-
-                PowerAmountOfConsumers = cityStatistics.PowerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.AmountOfConsumers),
-                PowerAmountOfSuppliers = cityStatistics.PowerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.AmountOfSuppliers),
-                PowerConsumptionInUnits = cityStatistics.PowerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.ConsumptionInUnits),
-                PowerSupplyInUnits = cityStatistics.PowerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.SupplyInUnits),
-
-                CommercialZonePopulationStatistics = new PersistedNumberSummary(cityStatistics.GrowthZoneStatistics.CommercialZonePopulationNumbers),
-                IndustrialZonePopulationStatistics = new PersistedNumberSummary(cityStatistics.GrowthZoneStatistics.IndustrialZonePopulationNumbers),
-                ResidentialZonePopulationStatistics = new PersistedNumberSummary(cityStatistics.GrowthZoneStatistics.ResidentialZonePopulationNumbers),
-                GlobalZonePopulationStatistics = new PersistedNumberSummary(cityStatistics.GrowthZoneStatistics.GlobalZonePopulationNumbers),
-
-                TimeCode = cityStatistics.TimeCode,
-            };
-        }
-    }
-
-    public class PersistedNumberSummary
-    {
-        public PersistedNumberSummary()
-        {
-
-        }
-
-        public PersistedNumberSummary(INumberSummary summary)
-        {
-            Count = summary.Count;
-            Sum = summary.Sum;
-            Max = summary.Highest;
-            Min = summary.Lowest;
-            Average = summary.Average;
-        }
-
-        public int Count { get; set; }
-        public int Sum { get; set; }
-        public int Max { get; set; }
-        public int Min { get; set; }
-        public int Average { get; set; }
-    }
-
     public class SimulationSession : ISimulationSession
     {
         private readonly IList<PersistedCityStatistics> _persistedCityStatistics = new List<PersistedCityStatistics>();
@@ -287,36 +233,6 @@ namespace Mirage.Urbanization.Simulation
 
         private readonly CityBudget _cityBudget = new CityBudget();
 
-
         public event EventHandler<SimulationSessionMessageEventArgs> OnAreaHotMessage;
-    }
-
-    public class CityBudgetValueChangedEventArgs : EventArgs
-    {
-        private readonly int _newValue;
-
-        public CityBudgetValueChangedEventArgs(int newValue)
-        {
-            _newValue = newValue;
-        }
-
-        public int NewValue { get { return _newValue; } }
-    }
-
-    internal class CityBudget
-    {
-        private int _currentAmount = 50000;
-
-        public int CurrentAmount { get { return _currentAmount; } }
-
-        public void Add(int amount)
-        {
-            Interlocked.Add(ref _currentAmount, amount);
-        }
-
-        public void Subtract(int amount)
-        {
-            Interlocked.Add(ref _currentAmount, -amount);
-        }
     }
 }
