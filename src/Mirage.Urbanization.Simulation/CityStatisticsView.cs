@@ -17,19 +17,7 @@ namespace Mirage.Urbanization.Simulation
 
         public string CityCategory
         {
-            get
-            {
-                if (Population < 2000)
-                    return "Village";
-                else if (Population < 10000)
-                    return "Town";
-                else if (Population < 50000)
-                    return "City";
-                else if (Population < 100000)
-                    return "Capital";
-                else
-                    return "Metropolis";
-            }
+            get { return CityCategoryDefinition.GetForPopulation(Population).Name; }
         }
     }
 }

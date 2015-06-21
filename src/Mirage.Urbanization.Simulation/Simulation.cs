@@ -38,17 +38,19 @@ namespace Mirage.Urbanization.Simulation
             get { return (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null); }
         }
 
-        private readonly HashSet<string> _seenCityStates = new HashSet<string>(); 
+        private readonly HashSet<CityCategoryDefinition> _seenCityStates = new HashSet<CityCategoryDefinition>();
 
         private void OnWeekPass()
         {
             var recent = GetRecentStatistics();
             if (recent.HasMatch)
             {
-                var view = new CityStatisticsView(recent.MatchingObject);
-                if (_seenCityStates.Add(view.CityCategory))
+                var category = CityCategoryDefinition
+                    .GetForPopulation(recent.MatchingObject.GlobalZonePopulationStatistics.Sum);
+                if (_seenCityStates.Add(category)
+                    && _seenCityStates.OrderByDescending(x => x.MinimumPopulation).First() != category)
                 {
-                    RaiseAreaMessageEvent("Congratulations! Your city has grown into a " + view.CityCategory + "!", true);
+                    RaiseAreaHotMessageEvent("Your city has grown!", "Congratulations! Your city has grown into a " + category.Name + "!");
                 }
             }
         }
@@ -212,11 +214,17 @@ namespace Mirage.Urbanization.Simulation
             RaiseAreaMessageEvent(e.AreaConsumptionResult.Message);
         }
 
-        private void RaiseAreaMessageEvent(string message, bool hotMessage = false)
+        private void RaiseAreaHotMessageEvent(string title, string message)
         {
-            var onOnAreaMessage = hotMessage
-                ? OnAreaHotMessage 
-                : OnAreaMessage;
+            var onOnAreaHotMessage = OnAreaHotMessage;
+            if (onOnAreaHotMessage == null)
+                return;
+            onOnAreaHotMessage(this, new SimulationSessionHotMessageEventArgs(title, message));
+        }
+
+        private void RaiseAreaMessageEvent(string message)
+        {
+            var onOnAreaMessage = OnAreaMessage;
             if (onOnAreaMessage == null)
                 return;
             onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
@@ -233,6 +241,6 @@ namespace Mirage.Urbanization.Simulation
 
         private readonly CityBudget _cityBudget = new CityBudget();
 
-        public event EventHandler<SimulationSessionMessageEventArgs> OnAreaHotMessage;
+        public event EventHandler<SimulationSessionHotMessageEventArgs> OnAreaHotMessage;
     }
 }

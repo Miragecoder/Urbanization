@@ -42,6 +42,7 @@
     <Compile Include="AggregateExceptionExtensions.cs" />
     <Compile Include="CityBudget.cs" />
     <Compile Include="CityBudgetValueChangedEventArgs.cs" />
+    <Compile Include="CityCategoryDefinition.cs" />
     <Compile Include="CityStatisticsView.cs" />
     <Compile Include="EventArgsWithData.cs" />
     <Compile Include="ISimulationSession.cs" />
