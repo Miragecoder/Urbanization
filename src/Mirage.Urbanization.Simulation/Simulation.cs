@@ -92,6 +92,21 @@ namespace Mirage.Urbanization.Simulation
             get { return (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null); }
         }
 
+        private readonly HashSet<string> _seenCityStates = new HashSet<string>(); 
+
+        private void OnWeekPass()
+        {
+            var recent = GetRecentStatistics();
+            if (recent.HasMatch)
+            {
+                var view = new CityStatisticsView(recent.MatchingObject);
+                if (_seenCityStates.Add(view.CityCategory))
+                {
+                    RaiseAreaMessageEvent("Congratulations! Your city has grown into a " + view.CityCategory + "!", true);
+                }
+            }
+        }
+
         public SimulationSession(SimulationOptions simulationOptions)
         {
             _area = new Area(simulationOptions.GetAreaOptions());
@@ -134,6 +149,7 @@ namespace Mirage.Urbanization.Simulation
                             if (eventCapture != null)
                                 eventCapture(this, new CityStatisticsUpdatedEventArgs(statistics));
                             _yearAndMonth.AddWeek();
+                            OnWeekPass();
                         }
                         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                         Task.Delay(2000).Wait();
@@ -187,6 +203,9 @@ namespace Mirage.Urbanization.Simulation
             _powerTask.Start();
             _growthSimulationTask.Start();
             _crimeAndPollutionTask.Start();
+
+            RaiseAreaMessageEvent("Ready");
+            RaiseCityBudgetValueChangedEvent();
         }
 
         public void Dispose()
@@ -228,37 +247,48 @@ namespace Mirage.Urbanization.Simulation
 
         public event EventHandler<CityStatisticsUpdatedEventArgs> CityStatisticsUpdated;
 
-
         public IReadOnlyCollection<PersistedCityStatistics> GetAllCityStatistics()
         {
             return _persistedCityStatistics.ToList();
         }
 
         public event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
-        public event EventHandler<AreaConsumptionResultEventArgs> OnAreaMessage;
+        public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
 
         private void HandleAreaMessage(object sender, AreaConsumptionResultEventArgs e)
         {
-            var onOnAreaMessage = OnAreaMessage;
-            if (onOnAreaMessage == null)
-                return;
-
             if (e.AreaConsumptionResult.Success)
             {
                 var cost = e.AreaConsumptionResult.AreaConsumption.Cost;
                 _cityBudget.Subtract(cost);
-
-                var onCityBudgetValueChanged = OnCityBudgetValueChanged;
-                if (onCityBudgetValueChanged != null)
-                {
-                    onCityBudgetValueChanged(this, new CityBudgetValueChangedEventArgs(_cityBudget.CurrentAmount));
-                }
+                RaiseCityBudgetValueChangedEvent();
             }
+            RaiseAreaMessageEvent(e.AreaConsumptionResult.Message);
+        }
 
-            onOnAreaMessage(sender, e);
+        private void RaiseAreaMessageEvent(string message, bool hotMessage = false)
+        {
+            var onOnAreaMessage = hotMessage
+                ? OnAreaHotMessage 
+                : OnAreaMessage;
+            if (onOnAreaMessage == null)
+                return;
+            onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
+        }
+
+        private void RaiseCityBudgetValueChangedEvent()
+        {
+            var onCityBudgetValueChanged = OnCityBudgetValueChanged;
+            if (onCityBudgetValueChanged != null)
+            {
+                onCityBudgetValueChanged(this, new CityBudgetValueChangedEventArgs(_cityBudget.CurrentAmount));
+            }
         }
 
         private readonly CityBudget _cityBudget = new CityBudget();
+
+
+        public event EventHandler<SimulationSessionMessageEventArgs> OnAreaHotMessage;
     }
 
     public class CityBudgetValueChangedEventArgs : EventArgs
@@ -275,7 +305,7 @@ namespace Mirage.Urbanization.Simulation
 
     internal class CityBudget
     {
-        private int _currentAmount = 10000;
+        private int _currentAmount = 50000;
 
         public int CurrentAmount { get { return _currentAmount; } }
 

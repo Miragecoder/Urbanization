@@ -17,6 +17,18 @@ namespace Mirage.Urbanization
         IAreaConsumption AreaConsumption { get; }
     }
 
+    public class SimulationSessionMessageEventArgs : EventArgs
+    {
+        private readonly string _message;
+
+        public SimulationSessionMessageEventArgs(string message)
+        {
+            _message = message;
+        }
+
+        public string Message { get { return _message; } }
+    }
+
     public class AreaConsumptionResultEventArgs : EventArgs
     {
         private readonly IAreaConsumptionResult _areaConsumptionResult;

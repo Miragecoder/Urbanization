@@ -191,7 +191,10 @@ namespace Mirage.Urbanization.WinForms
 
             _areaRenderHelper.SimulationSession.OnAreaMessage +=
                 (_sender, _e) =>
-                    statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.AreaConsumptionResult.Message; }));
+                    statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message; }));
+
+            _areaRenderHelper.SimulationSession.OnAreaHotMessage +=
+                (_sender, _e) => MessageBox.Show(_e.Message);
 
             _areaRenderHelper.SimulationSession.OnCityBudgetValueChanged +=
                 (_sender, _e) =>
