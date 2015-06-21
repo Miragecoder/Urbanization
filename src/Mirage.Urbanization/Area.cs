@@ -36,7 +36,7 @@ namespace Mirage.Urbanization
 
         public IVehicleController<IShip> ShipController
         {
-            get { return _shipController;}
+            get { return _shipController; }
         }
 
         public Area(AreaOptions options)
@@ -165,7 +165,7 @@ namespace Mirage.Urbanization
 
             var onAreaMessage = OnAreaMessage;
             if (onAreaMessage != null)
-                onAreaMessage(this, new AreaMessageEventArgs(result));
+                onAreaMessage(this, new AreaConsumptionResultEventArgs(result));
 
             return result;
         }
@@ -206,7 +206,11 @@ namespace Mirage.Urbanization
                         });
 
                         if (consumeAreaOperations == null) throw new InvalidOperationException();
-                        return new AreaConsumptionResult(consumeAreaOperations.First().Description, true);
+                        return new AreaConsumptionResult(
+                            areaConsumption: consumption,
+                            success: true,
+                            message: consumeAreaOperations.First().Description
+                        );
                     }
 
                     var consumptionOperation = zoneInfo
@@ -216,7 +220,11 @@ namespace Mirage.Urbanization
                     if (consumptionOperation.CanOverrideWithResult.WillSucceed)
                         consumptionOperation.Apply();
 
-                    return new AreaConsumptionResult(consumptionOperation.Description, true);
+                    return new AreaConsumptionResult(
+                        areaConsumption: consumption,
+                        success: consumptionOperation.CanOverrideWithResult.WillSucceed,
+                        message: consumptionOperation.Description
+                    );
                 }
                 else if (consumption is IAreaZoneClusterConsumption)
                 {
@@ -237,7 +245,11 @@ namespace Mirage.Urbanization
                         .ToArray();
 
                     if (queryResults.Any(x => x.QueryResult.HasNoMatch))
-                        return new AreaConsumptionResult("Cannot build across map boundaries.", false);
+                        return new AreaConsumptionResult(
+                            areaConsumption: consumption, 
+                            success: true, 
+                            message: "Cannot build across map boundaries."
+                        );
 
                     var consumeAreaOperations = queryResults
                         .Select(x => x
@@ -252,12 +264,20 @@ namespace Mirage.Urbanization
                     {
                         foreach (var consumeAreaOperation in consumeAreaOperations)
                             consumeAreaOperation.Apply();
-                        return new AreaConsumptionResult(consumeAreaOperations.First().Description, true);
+                        return new AreaConsumptionResult(
+                            areaConsumption: consumption, 
+                            success: true, 
+                            message: consumeAreaOperations.First().Description
+                        );
                     }
-                    return new AreaConsumptionResult(String.Join(", ", consumeAreaOperations
-                        .Where(x => !x.CanOverrideWithResult.WillSucceed)
-                        .Select(x => x.Description)
-                        .Distinct()), false
+                    return new AreaConsumptionResult(
+                        areaConsumption: consumption, 
+                        success: false, 
+                        message: string.Join(", ", consumeAreaOperations
+                            .Where(x => !x.CanOverrideWithResult.WillSucceed)
+                            .Select(x => x.Description)
+                            .Distinct()
+                        )
                     );
                 }
                 else throw new InvalidOperationException();
@@ -409,7 +429,7 @@ namespace Mirage.Urbanization
 
         IEnumerable<IReadOnlyZoneInfo> IReadOnlyArea.EnumerateZoneInfos() { return EnumerateZoneInfos(); }
 
-        public event EventHandler<AreaMessageEventArgs> OnAreaMessage;
+        public event EventHandler<AreaConsumptionResultEventArgs> OnAreaMessage;
 
         public PersistedArea GeneratePersistenceSnapshot()
         {

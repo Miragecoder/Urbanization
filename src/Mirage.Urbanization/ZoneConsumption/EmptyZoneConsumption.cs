@@ -17,6 +17,8 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return DefaultColor; }
         }
 
+        public override int Cost { get { return 10; } }
+
         public static Color DefaultColor = System.Drawing.Color.BurlyWood;
 
         public override IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)

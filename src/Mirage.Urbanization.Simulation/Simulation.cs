@@ -50,7 +50,7 @@ namespace Mirage.Urbanization.Simulation
     {
         public PersistedNumberSummary()
         {
-            
+
         }
 
         public PersistedNumberSummary(INumberSummary summary)
@@ -96,7 +96,7 @@ namespace Mirage.Urbanization.Simulation
         {
             _area = new Area(simulationOptions.GetAreaOptions());
 
-            _area.OnAreaMessage += OnAreaMessage;
+            _area.OnAreaMessage += HandleAreaMessage;
 
             simulationOptions.WithPersistedSimulation(persistedSimulation =>
             {
@@ -195,7 +195,7 @@ namespace Mirage.Urbanization.Simulation
 
             _cancellationTokenSource.Cancel();
 
-            foreach (var task in new[] {_powerTask, _growthSimulationTask, _crimeAndPollutionTask})
+            foreach (var task in new[] { _powerTask, _growthSimulationTask, _crimeAndPollutionTask })
             {
                 try
                 {
@@ -234,6 +234,59 @@ namespace Mirage.Urbanization.Simulation
             return _persistedCityStatistics.ToList();
         }
 
-        public event EventHandler<AreaMessageEventArgs> OnAreaMessage;
+        public event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
+        public event EventHandler<AreaConsumptionResultEventArgs> OnAreaMessage;
+
+        private void HandleAreaMessage(object sender, AreaConsumptionResultEventArgs e)
+        {
+            var onOnAreaMessage = OnAreaMessage;
+            if (onOnAreaMessage == null)
+                return;
+
+            if (e.AreaConsumptionResult.Success)
+            {
+                var cost = e.AreaConsumptionResult.AreaConsumption.Cost;
+                _cityBudget.Subtract(cost);
+
+                var onCityBudgetValueChanged = OnCityBudgetValueChanged;
+                if (onCityBudgetValueChanged != null)
+                {
+                    onCityBudgetValueChanged(this, new CityBudgetValueChangedEventArgs(_cityBudget.CurrentAmount));
+                }
+            }
+
+            onOnAreaMessage(sender, e);
+        }
+
+        private readonly CityBudget _cityBudget = new CityBudget();
+    }
+
+    public class CityBudgetValueChangedEventArgs : EventArgs
+    {
+        private readonly int _newValue;
+
+        public CityBudgetValueChangedEventArgs(int newValue)
+        {
+            _newValue = newValue;
+        }
+
+        public int NewValue { get { return _newValue; } }
+    }
+
+    internal class CityBudget
+    {
+        private int _currentAmount = 10000;
+
+        public int CurrentAmount { get { return _currentAmount; } }
+
+        public void Add(int amount)
+        {
+            Interlocked.Add(ref _currentAmount, amount);
+        }
+
+        public void Subtract(int amount)
+        {
+            Interlocked.Add(ref _currentAmount, -amount);
+        }
     }
 }

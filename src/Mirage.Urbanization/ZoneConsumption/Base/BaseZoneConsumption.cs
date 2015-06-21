@@ -10,6 +10,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract Color Color { get; }
         public abstract char KeyChar { get; }
 
+        public abstract int Cost { get; }
+
         public abstract IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption);
     }
 

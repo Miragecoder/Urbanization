@@ -7,5 +7,6 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     {
         string Name { get; }
         char KeyChar { get; }
+        int Cost { get; }
     }
 }

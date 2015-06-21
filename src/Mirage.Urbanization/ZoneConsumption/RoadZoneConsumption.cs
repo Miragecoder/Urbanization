@@ -37,6 +37,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         }
 
         public override char KeyChar { get { return 'r'; } }
+        public override int Cost { get { return 25; } }
 
         public override string Name
         {

@@ -24,6 +24,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
                 new DynamicPollutionBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationPollutionFactor));
             _crimeBehaviour = new DynamicCrimeBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationCrimeFactor));
         }
+        public override int Cost { get { return 100; } }
 
         public override IPollutionBehaviour PollutionBehaviour
         {

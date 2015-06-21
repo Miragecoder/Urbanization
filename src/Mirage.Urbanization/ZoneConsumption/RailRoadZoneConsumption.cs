@@ -21,6 +21,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         {
             get { return false; }
         }
+        public override int Cost { get { return 50; } }
 
         public override Color Color
         {

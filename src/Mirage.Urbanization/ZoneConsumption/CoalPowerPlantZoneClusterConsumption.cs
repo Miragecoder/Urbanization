@@ -27,5 +27,6 @@ namespace Mirage.Urbanization.ZoneConsumption
         private readonly ICrimeBehaviour _crimeBehaviour = new DynamicCrimeBehaviour(() => 0);
         public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
         public override int Value { get { return 15000; } }
+        public override int Cost { get { return Value; } }
     }
 }

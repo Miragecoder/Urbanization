@@ -32,6 +32,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public BaseInfrastructureNetworkZoneConsumption EastWestZoneConsumption { get { return _eastWestZoneConsumption; } }
         public BaseInfrastructureNetworkZoneConsumption NorthSouthZoneConsumption { get { return _northSouthZoneConsumption; } }
 
+        public int Cost { get { throw new InvalidOperationException(); } }
+
         public IEnumerable<BaseInfrastructureNetworkZoneConsumption> GetIntersectingZoneConsumptions()
         {
             yield return EastWestZoneConsumption;
@@ -98,7 +100,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         }
 
 
-        public BaseInfrastructureNetworkZoneConsumption GetZoneConsumptionOfType<TBaseInfrastructureNetworkZoneConsumption>() 
+        public BaseInfrastructureNetworkZoneConsumption GetZoneConsumptionOfType<TBaseInfrastructureNetworkZoneConsumption>()
             where TBaseInfrastructureNetworkZoneConsumption : BaseInfrastructureNetworkZoneConsumption
         {
             if (NorthSouthZoneConsumption is TBaseInfrastructureNetworkZoneConsumption)

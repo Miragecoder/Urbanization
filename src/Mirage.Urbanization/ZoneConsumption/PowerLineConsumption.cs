@@ -13,6 +13,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         {
             get { return "Power line"; }
         }
+        public override int Cost { get { return 10; } }
 
         public override char KeyChar { get { return 'l'; } }
 

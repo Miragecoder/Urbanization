@@ -38,6 +38,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public int RelativeToParentCenterX { get { return _relativeToParentCenterX; } }
         public int RelativeToParentCenterY { get { return _relativeToParentCenterY; } }
 
+        public override int Cost { get { throw new InvalidOperationException(); } }
+
 
         public bool IsCentralClusterMember
         {
@@ -47,7 +49,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public bool IsMemberOf<T>()
             where T : BaseZoneClusterConsumption
         {
-            return ParentBaseZoneClusterConsumption.GetType() == typeof (T);
+            return ParentBaseZoneClusterConsumption.GetType() == typeof(T);
         }
 
         public BaseZoneClusterConsumption ParentBaseZoneClusterConsumption { get { return _parentBaseZoneClusterConsumption; } }
@@ -90,11 +92,11 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public ZoneClusterMemberConsumption(
             BaseZoneClusterConsumption parentBaseZoneClusterConsumption,
             Func<ZoneInfoFinder> createZoneInfoFinderFunc,
-            string name, 
-            int relativeToParentCenterX, 
-            int relativeToParentCenterY, 
-            Color color, 
-            int positionInClusterX, 
+            string name,
+            int relativeToParentCenterX,
+            int relativeToParentCenterY,
+            Color color,
+            int positionInClusterX,
             int positionInClusterY
         )
         {
@@ -130,7 +132,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
                 from heightIndex in Enumerable.Range(0, heightInZones)
                 select
                     new ZoneClusterMemberConsumption(
-                        createZoneInfoFinderFunc:createZoneInfoFinderFunc,
+                        createZoneInfoFinderFunc: createZoneInfoFinderFunc,
                         parentBaseZoneClusterConsumption: parent,
                         name: parent.Name,
                         relativeToParentCenterX: (widthIndex - widthOffset),

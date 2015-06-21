@@ -20,8 +20,8 @@ namespace Mirage.Urbanization.Simulation
         event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;
         PersistedSimulation GeneratePersistedArea();
 
-        event EventHandler<AreaMessageEventArgs> OnAreaMessage;
-
+        event EventHandler<AreaConsumptionResultEventArgs> OnAreaMessage;
+        event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
         event EventHandler<CityStatisticsUpdatedEventArgs> CityStatisticsUpdated;
     }
 

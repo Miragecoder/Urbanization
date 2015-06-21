@@ -191,7 +191,11 @@ namespace Mirage.Urbanization.WinForms
 
             _areaRenderHelper.SimulationSession.OnAreaMessage +=
                 (_sender, _e) =>
-                    statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message.Message; }));
+                    statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.AreaConsumptionResult.Message; }));
+
+            _areaRenderHelper.SimulationSession.OnCityBudgetValueChanged +=
+                (_sender, _e) =>
+                    statusStrip1.BeginInvoke(new MethodInvoker(() => { cityBudgetLabel.Text = _e.NewValue.ToString("C"); }));
 
             _areaRenderHelper.SimulationSession.OnYearAndOrMonthChanged +=
                 (_sender, _e) =>
@@ -249,6 +253,7 @@ namespace Mirage.Urbanization.WinForms
             {
                 Text += " - " + cityName;
             }
+            cityBudgetLabel.Text = monthAndYearLabel.Text = toolStripStatusLabel1.Text = string.Empty;
         }
 
         private class CitySaveStateController

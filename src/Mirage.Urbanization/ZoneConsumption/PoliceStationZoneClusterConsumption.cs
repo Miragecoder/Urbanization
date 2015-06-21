@@ -15,6 +15,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override char KeyChar { get { return 'u'; } }
 
         public override int Value { get { return 500; } }
+        public override int Cost { get { return Value; } }
 
         public PoliceStationZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc) : base(
             createZoneInfoFinderFunc: createZoneInfoFinderFunc,

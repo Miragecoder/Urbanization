@@ -37,6 +37,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.evaluationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showPollution = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,10 +58,10 @@
             this.showGrowthPathfindingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cityBudgetLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
-            this.evaluationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -157,6 +158,14 @@
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.viewToolStripMenuItem.Text = "View";
+            // 
+            // evaluationToolStripMenuItem
+            // 
+            this.evaluationToolStripMenuItem.Name = "evaluationToolStripMenuItem";
+            this.evaluationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.evaluationToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
+            this.evaluationToolStripMenuItem.Text = "Evaluation...";
+            this.evaluationToolStripMenuItem.Click += new System.EventHandler(this.evaluationToolStripMenuItem_Click);
             // 
             // statisticsToolStripMenuItem
             // 
@@ -286,25 +295,35 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.monthAndYearLabel,
+            this.cityBudgetLabel,
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 528);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 524);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(782, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(782, 29);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // monthAndYearLabel
             // 
-            this.monthAndYearLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.monthAndYearLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.monthAndYearLabel.Name = "monthAndYearLabel";
             this.monthAndYearLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.monthAndYearLabel.Size = new System.Drawing.Size(4, 20);
+            this.monthAndYearLabel.Size = new System.Drawing.Size(148, 24);
+            this.monthAndYearLabel.Text = "monthAndYearLabel";
+            // 
+            // cityBudgetLabel
+            // 
+            this.cityBudgetLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.cityBudgetLabel.Name = "cityBudgetLabel";
+            this.cityBudgetLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cityBudgetLabel.Size = new System.Drawing.Size(120, 24);
+            this.cityBudgetLabel.Text = "cityBudgetLabel";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(50, 20);
-            this.toolStripStatusLabel1.Text = "Ready";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 24);
+            this.toolStripStatusLabel1.Text = "messageLabel";
             // 
             // saveCityDialog
             // 
@@ -316,14 +335,6 @@
             // 
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
-            // 
-            // evaluationToolStripMenuItem
-            // 
-            this.evaluationToolStripMenuItem.Name = "evaluationToolStripMenuItem";
-            this.evaluationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.evaluationToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
-            this.evaluationToolStripMenuItem.Text = "Evaluation...";
-            this.evaluationToolStripMenuItem.Click += new System.EventHandler(this.evaluationToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -381,6 +392,7 @@
         private System.Windows.Forms.ToolStripMenuItem showLandValueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem evaluationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel cityBudgetLabel;
     }
 }
 

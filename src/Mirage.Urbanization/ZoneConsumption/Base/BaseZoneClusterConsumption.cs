@@ -11,6 +11,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public abstract char KeyChar { get; }
 
+        public abstract int Cost { get; }
+
         public abstract IPollutionBehaviour PollutionBehaviour { get; }
         public abstract ICrimeBehaviour CrimeBehaviour { get; }
         public IElectricityBehaviour ElectricityBehaviour { get { return _electricityBehaviour; } }
