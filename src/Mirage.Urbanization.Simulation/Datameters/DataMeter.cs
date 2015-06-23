@@ -6,9 +6,11 @@ namespace Mirage.Urbanization.Simulation.Datameters
 {
     public class DataMeter
     {
+        public static readonly DataMeter CrimeDataMeter = new DataMeter(200, "Crime", x => x.CrimeNumbers.Average);
+
         private static readonly IReadOnlyCollection<DataMeter> DataMeters = new[]
         {
-            new DataMeter(200, "Crime", x => x.CrimeNumbers.Average),
+            CrimeDataMeter,
             new DataMeter(300, "Pollution", x => x.PollutionNumbers.Average),
             new DataMeter(350, "Traffic", x => x.TrafficNumbers.Average)
         };
@@ -47,7 +49,11 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         public DataMeterResult GetDataMeterResult(PersistedCityStatistics statistics)
         {
-            var amount = _getValue(statistics);
+            return GetDataMeterResult(_getValue(statistics));
+        }
+
+        public DataMeterResult GetDataMeterResult(int amount)
+        {
             return new DataMeterResult(_name, GetPercentageScore(amount), GetScoreCategory(amount));
         }
 

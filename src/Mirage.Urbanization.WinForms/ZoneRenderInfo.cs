@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Threading;
 using System.Windows.Forms;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.WinForms.Rendering;
 using Mirage.Urbanization.ZoneConsumption;
@@ -97,8 +98,7 @@ namespace Mirage.Urbanization.WinForms
             {
                 graphics.FillRectangle(BrushManager.Instance.GetBrushFor(consumption), rectangle);
             }
-
-
+            
             if (_renderZoneOptions.RenderPollutionValues)
             {
                 var pollution = ZoneInfo.GetLastQueryPollutionResult();
@@ -140,6 +140,13 @@ namespace Mirage.Urbanization.WinForms
                             crime.MatchingObject.CrimeInUnits > 0 ? BrushManager.RedSolidBrush : BrushManager.BlackSolidBrush,
                             rectangle);
                 }
+
+                ZoneInfo.GetLastQueryCrimeResult().WithResultIfHasMatch(crimeValue =>
+                {
+                    var brush = BrushManager.Instance.GetBrushFor(DataMeter.CrimeDataMeter.GetDataMeterResult(crimeValue.CrimeInUnits).ValueCategory);
+                    if (brush.HasMatch)
+                        graphics.FillRectangle(brush.MatchingObject, rectangle);
+                });
             }
 
             if (_renderZoneOptions.RenderLandValueValues)
