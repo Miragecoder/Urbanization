@@ -38,7 +38,10 @@ namespace Mirage.Urbanization.Simulation
             get { return (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null); }
         }
 
-        private readonly HashSet<CityCategoryDefinition> _seenCityStates = new HashSet<CityCategoryDefinition>();
+        private readonly HashSet<CityCategoryDefinition> _seenCityStates = new HashSet<CityCategoryDefinition>
+        {
+            CityCategoryDefinition.Village
+        };
 
         private void OnWeekPass()
         {
@@ -52,6 +55,8 @@ namespace Mirage.Urbanization.Simulation
                 {
                     RaiseAreaHotMessageEvent("Your city has grown!", "Congratulations! Your city has grown into a " + category.Name + "!");
                 }
+
+                _cityBudget.AddProjectedIncome(recent.MatchingObject.LandValueNumbers.Sum);
             }
         }
 
@@ -144,16 +149,26 @@ namespace Mirage.Urbanization.Simulation
                     Task.Delay(2000).Wait();
                 }
             }, _cancellationTokenSource.Token);
+
+            _cityBudget = new CityBudget(_yearAndMonth);
+            _cityBudget.OnCityBudgetValueChanged += _cityBudget_OnCityBudgetValueChanged;
+        }
+
+        void _cityBudget_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
+        {
+            var onCityBudgetValueChanged = OnCityBudgetValueChanged;
+            if (onCityBudgetValueChanged != null)
+                onCityBudgetValueChanged(this, e);
         }
 
         public void StartSimulation()
         {
+            _cityBudget.AddProjectedIncome(0);
             _powerTask.Start();
             _growthSimulationTask.Start();
             _crimeAndPollutionTask.Start();
 
             RaiseAreaMessageEvent("Ready");
-            RaiseCityBudgetValueChangedEvent();
         }
 
         public void Dispose()
@@ -209,7 +224,6 @@ namespace Mirage.Urbanization.Simulation
             {
                 var cost = e.AreaConsumptionResult.AreaConsumption.Cost;
                 _cityBudget.Subtract(cost);
-                RaiseCityBudgetValueChangedEvent();
             }
             RaiseAreaMessageEvent(e.AreaConsumptionResult.Message);
         }
@@ -230,16 +244,7 @@ namespace Mirage.Urbanization.Simulation
             onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
         }
 
-        private void RaiseCityBudgetValueChangedEvent()
-        {
-            var onCityBudgetValueChanged = OnCityBudgetValueChanged;
-            if (onCityBudgetValueChanged != null)
-            {
-                onCityBudgetValueChanged(this, new CityBudgetValueChangedEventArgs(_cityBudget.CurrentAmount));
-            }
-        }
-
-        private readonly CityBudget _cityBudget = new CityBudget();
+        private readonly CityBudget _cityBudget;
 
         public event EventHandler<SimulationSessionHotMessageEventArgs> OnAreaHotMessage;
     }

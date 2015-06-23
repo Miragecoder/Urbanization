@@ -198,7 +198,14 @@ namespace Mirage.Urbanization.WinForms
 
             _areaRenderHelper.SimulationSession.OnCityBudgetValueChanged +=
                 (_sender, _e) =>
-                    statusStrip1.BeginInvoke(new MethodInvoker(() => { cityBudgetLabel.Text = _e.NewValue.ToString("C"); }));
+                    statusStrip1.BeginInvoke(new MethodInvoker(() =>
+                    {
+                        cityBudgetLabel.Text = string.Format(
+                            "Current funds: {0} (Projected income: {1})", 
+                            _e.EventData.CurrentAmount.ToString("C"),
+                            _e.EventData.ProjectedIncome.ToString("C"))
+                            ;
+                    }));
 
             _areaRenderHelper.SimulationSession.OnYearAndOrMonthChanged +=
                 (_sender, _e) =>

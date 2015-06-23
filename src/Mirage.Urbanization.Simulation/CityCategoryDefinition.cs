@@ -25,9 +25,11 @@ namespace Mirage.Urbanization.Simulation
                 .First();
         }
 
+        public static CityCategoryDefinition Village = new CityCategoryDefinition("Village", 0);
+
         private static readonly IReadOnlyCollection<CityCategoryDefinition> Definitions = new[]
         {
-            new CityCategoryDefinition("Village", 0),
+            Village,
             new CityCategoryDefinition("Town", 2000), 
             new CityCategoryDefinition("City", 10000), 
             new CityCategoryDefinition("Capital", 50000), 

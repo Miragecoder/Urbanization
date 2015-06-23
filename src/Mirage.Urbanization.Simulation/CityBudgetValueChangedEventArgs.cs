@@ -2,15 +2,12 @@ using System;
 
 namespace Mirage.Urbanization.Simulation
 {
-    public class CityBudgetValueChangedEventArgs : EventArgs
+    public class CityBudgetValueChangedEventArgs : EventArgsWithData<ICityBudget>
     {
-        private readonly int _newValue;
-
-        public CityBudgetValueChangedEventArgs(int newValue)
+        public CityBudgetValueChangedEventArgs(ICityBudget cityBudget)
+            : base(cityBudget)
         {
-            _newValue = newValue;
-        }
 
-        public int NewValue { get { return _newValue; } }
+        }
     }
 }

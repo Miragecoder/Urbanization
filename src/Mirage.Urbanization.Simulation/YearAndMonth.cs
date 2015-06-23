@@ -3,6 +3,16 @@ using System.Globalization;
 
 namespace Mirage.Urbanization.Simulation
 {
+    public class YearAndMonthWeekElapsedEventArgs : EventArgsWithData<IYearAndMonth>
+    {
+        public YearAndMonthWeekElapsedEventArgs(IYearAndMonth data)
+            : base(data)
+        {
+            
+        }
+
+    }
+
     internal sealed class YearAndMonth : IYearAndMonth
     {
         private int _currentYear = 1900;
@@ -11,12 +21,22 @@ namespace Mirage.Urbanization.Simulation
 
         public string GetCurrentDescription() { return CurrentMonth + ' ' + _currentYear + " (Week: " + _currentWeek + ")"; }
 
+        public bool IsAtBeginningOfNewYear
+        {
+            get { return IsAtBeginningOfMonth && _currentWeek == 1; }
+        }
+
+        public bool IsAtBeginningOfMonth
+        {
+            get { return _currentMonth == 1; }
+        }
+
         public int TimeCode
         {
             get
             {
-                return (_currentYear*10000) +
-                       (_currentMonth*100) +
+                return (_currentYear * 10000) +
+                       (_currentMonth * 100) +
                        _currentWeek;
             }
         }
@@ -54,6 +74,7 @@ namespace Mirage.Urbanization.Simulation
             {
                 throw new InvalidOperationException();
             }
+            RaiseOnWeekElapsed();
         }
 
         private void AddMonth()
@@ -72,5 +93,14 @@ namespace Mirage.Urbanization.Simulation
                 throw new InvalidOperationException();
             }
         }
+
+        private void RaiseOnWeekElapsed()
+        {
+            var onWeekElapsed = OnWeekElapsed;
+            if (onWeekElapsed != null)
+                onWeekElapsed(this, new YearAndMonthWeekElapsedEventArgs(this));
+        }
+
+        public event EventHandler<YearAndMonthWeekElapsedEventArgs> OnWeekElapsed;
     }
 }
