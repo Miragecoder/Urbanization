@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.WinForms.Rendering;
 
@@ -9,20 +10,30 @@ namespace Mirage.Urbanization.WinForms.Overlay
     public class OverlayOption : IToolstripMenuOption
     {
         private readonly string _name;
+        private readonly Func<bool> _toggleShowNumbersFunc;
         private readonly QueryResult<Func<ZoneInfoDataMeter>> _getDataMeterFunc;
 
-        private static readonly IReadOnlyCollection<OverlayOption> OverlayOptionInstances = new[]
+        public static IEnumerable<OverlayOption> CreateOverlayOptionInstances(Func<bool> toggleShowNumbersFunc)
         {
-            new OverlayOption("None", null),
-            new OverlayOption("Crime", () => DataMeterInstances.CrimeDataMeter),
-            new OverlayOption("Pollution", () => DataMeterInstances.PollutionDataMeter)
-        };
+            return new[]
+            {
+                new OverlayOption("None", null, toggleShowNumbersFunc)
+            }
+              .Concat(DataMeterInstances
+                  .DataMeters
+                  .Select(x =>
+                  {
+                      var localX = x;
+                      return new OverlayOption(localX.Name, () => localX, toggleShowNumbersFunc);
+                  })
+              )
+              .ToList();
+        }
 
-        public static IReadOnlyCollection<OverlayOption> OverlayOptions { get { return OverlayOptionInstances; } }
-
-        public OverlayOption(string name, Func<ZoneInfoDataMeter> getDataMeterFunc)
+        public OverlayOption(string name, Func<ZoneInfoDataMeter> getDataMeterFunc, Func<bool> toggleShowNumbersFunc)
         {
             _name = name;
+            _toggleShowNumbersFunc = toggleShowNumbersFunc;
             _getDataMeterFunc = new QueryResult<Func<ZoneInfoDataMeter>>(getDataMeterFunc);
         }
 
@@ -33,6 +44,16 @@ namespace Mirage.Urbanization.WinForms.Overlay
                 var brush = BrushManager.Instance.GetBrushFor(f().GetDataMeterResult(zoneInfo).ValueCategory);
                 if (brush.HasMatch)
                     graphics.FillRectangle(brush.MatchingObject, rectangle);
+
+                if (_toggleShowNumbersFunc())
+                {
+                    var amount = f().GetDataMeterResult(zoneInfo).Amount;
+                    if (amount != 0)
+                        graphics.DrawString(amount.ToString(),
+                            BrushManager.ZoneInfoFont,
+                            amount > 0 ? BrushManager.RedSolidBrush : BrushManager.BlackSolidBrush,
+                            rectangle);
+                }
             });
         }
 

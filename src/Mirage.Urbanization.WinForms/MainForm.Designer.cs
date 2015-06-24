@@ -40,6 +40,7 @@
             this.evaluationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.overlayMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomFullMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomHalfMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,19 +52,16 @@
             this.showGrowthPathfindingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.displayNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showPollution = new System.Windows.Forms.ToolStripMenuItem();
-            this.showCrime = new System.Windows.Forms.ToolStripMenuItem();
             this.showTravelDistancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLandValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showPopulationDensityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTrafficStats = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.cityBudgetLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
-            this.overlayMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPopulationDensityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -176,6 +174,12 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
             // 
+            // overlayMenuItem
+            // 
+            this.overlayMenuItem.Name = "overlayMenuItem";
+            this.overlayMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.overlayMenuItem.Text = "Overlay";
+            // 
             // zoomToolStripMenuItem
             // 
             this.zoomToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -229,6 +233,7 @@
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showGrowthPathfindingToolStripMenuItem,
             this.toolStripSeparator5,
+            this.toggleOverlayNumbers,
             this.displayNumbersToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
@@ -249,29 +254,12 @@
             // displayNumbersToolStripMenuItem
             // 
             this.displayNumbersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showPollution,
-            this.showCrime,
             this.showTravelDistancesToolStripMenuItem,
             this.showLandValueToolStripMenuItem,
-            this.showPopulationDensityToolStripMenuItem,
-            this.showTrafficStats});
+            this.showPopulationDensityToolStripMenuItem});
             this.displayNumbersToolStripMenuItem.Name = "displayNumbersToolStripMenuItem";
             this.displayNumbersToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
             this.displayNumbersToolStripMenuItem.Text = "Display numbers";
-            // 
-            // showPollution
-            // 
-            this.showPollution.CheckOnClick = true;
-            this.showPollution.Name = "showPollution";
-            this.showPollution.Size = new System.Drawing.Size(243, 24);
-            this.showPollution.Text = "Show Pollution";
-            // 
-            // showCrime
-            // 
-            this.showCrime.CheckOnClick = true;
-            this.showCrime.Name = "showCrime";
-            this.showCrime.Size = new System.Drawing.Size(243, 24);
-            this.showCrime.Text = "Show Crime";
             // 
             // showTravelDistancesToolStripMenuItem
             // 
@@ -286,20 +274,6 @@
             this.showLandValueToolStripMenuItem.Name = "showLandValueToolStripMenuItem";
             this.showLandValueToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
             this.showLandValueToolStripMenuItem.Text = "Show Land Value";
-            // 
-            // showPopulationDensityToolStripMenuItem
-            // 
-            this.showPopulationDensityToolStripMenuItem.CheckOnClick = true;
-            this.showPopulationDensityToolStripMenuItem.Name = "showPopulationDensityToolStripMenuItem";
-            this.showPopulationDensityToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
-            this.showPopulationDensityToolStripMenuItem.Text = "Show Population Density";
-            // 
-            // showTrafficStats
-            // 
-            this.showTrafficStats.CheckOnClick = true;
-            this.showTrafficStats.Name = "showTrafficStats";
-            this.showTrafficStats.Size = new System.Drawing.Size(243, 24);
-            this.showTrafficStats.Text = "Show Traffic Stats";
             // 
             // statusStrip1
             // 
@@ -347,11 +321,19 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
-            // overlayMenuItem
+            // toggleOverlayNumbers
             // 
-            this.overlayMenuItem.Name = "overlayMenuItem";
-            this.overlayMenuItem.Size = new System.Drawing.Size(206, 24);
-            this.overlayMenuItem.Text = "Overlay";
+            this.toggleOverlayNumbers.CheckOnClick = true;
+            this.toggleOverlayNumbers.Name = "toggleOverlayNumbers";
+            this.toggleOverlayNumbers.Size = new System.Drawing.Size(246, 24);
+            this.toggleOverlayNumbers.Text = "Toggle overlay numbers";
+            // 
+            // showPopulationDensityToolStripMenuItem
+            // 
+            this.showPopulationDensityToolStripMenuItem.CheckOnClick = true;
+            this.showPopulationDensityToolStripMenuItem.Name = "showPopulationDensityToolStripMenuItem";
+            this.showPopulationDensityToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
+            this.showPopulationDensityToolStripMenuItem.Text = "Show Population Density";
             // 
             // MainForm
             // 
@@ -405,13 +387,11 @@
         private System.Windows.Forms.ToolStripStatusLabel cityBudgetLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem displayNumbersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showPollution;
-        private System.Windows.Forms.ToolStripMenuItem showCrime;
         private System.Windows.Forms.ToolStripMenuItem showTravelDistancesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showLandValueToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showPopulationDensityToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showTrafficStats;
         private System.Windows.Forms.ToolStripMenuItem overlayMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleOverlayNumbers;
+        private System.Windows.Forms.ToolStripMenuItem showPopulationDensityToolStripMenuItem;
     }
 }
 

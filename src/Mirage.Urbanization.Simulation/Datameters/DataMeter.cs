@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mirage.Urbanization.ZoneConsumption;
 
 namespace Mirage.Urbanization.Simulation.Datameters
 {
@@ -26,17 +27,31 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
     public static class DataMeterInstances
     {
-        public static readonly ZoneInfoDataMeter CrimeDataMeter = new ZoneInfoDataMeter(200,
-            "Crime",
-            x => x.CrimeNumbers.Average,
-            x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.CrimeInUnits)
-        ), PollutionDataMeter = new ZoneInfoDataMeter(300, "Pollution", x => x.PollutionNumbers.Average, x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.PollutionInUnits));
+        public static readonly ZoneInfoDataMeter
+            CrimeDataMeter = new ZoneInfoDataMeter(200,
+                "Crime",
+                x => x.CrimeNumbers.Average,
+                x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.CrimeInUnits)
+                ),
+            PollutionDataMeter = new ZoneInfoDataMeter(300,
+                "Pollution",
+                x => x.PollutionNumbers.Average,
+                x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.PollutionInUnits)
+                ),
+            TrafficDataMeter = new ZoneInfoDataMeter(
+                350, 
+                "Traffic", 
+                x => x.TrafficNumbers.Average, 
+                x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
+                    .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt())
+                )
+            ;
 
-        private static readonly IReadOnlyCollection<DataMeter> DataMeters = new[]
+        public static readonly IReadOnlyCollection<ZoneInfoDataMeter> DataMeters = new[]
         {
             CrimeDataMeter,
             PollutionDataMeter,
-            new DataMeter(350, "Traffic", x => x.TrafficNumbers.Average)
+            TrafficDataMeter
         };
 
         public static IEnumerable<DataMeterResult> GetDataMeterResults(PersistedCityStatistics statistics)
@@ -54,6 +69,8 @@ namespace Mirage.Urbanization.Simulation.Datameters
         private readonly IReadOnlyCollection<Threshold> _thresholds;
 
         private readonly Lazy<int> _measureUnitSumLazy;
+
+        public string Name { get { return _name; } }
 
         public DataMeter(int measureUnit, string name, Func<PersistedCityStatistics, int> getValue)
         {
@@ -82,7 +99,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         public DataMeterResult GetDataMeterResult(int amount)
         {
-            return new DataMeterResult(_name, GetPercentageScore(amount), GetScoreCategory(amount));
+            return new DataMeterResult(_name, amount, GetPercentageScore(amount), GetScoreCategory(amount));
         }
 
         private DataMeterValueCategory GetScoreCategory(int amount)

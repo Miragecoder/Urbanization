@@ -104,7 +104,7 @@ namespace Mirage.Urbanization.WinForms
             _graphicsManagerSelection = new GraphicsManagerSelection(rendererToolStripMenuItem);
             _graphicsManagerSelection.OnSelectionChanged += (sender, e) => WithAreaRenderHelper(helper => helper.ChangeRenderer(e.ToolstripMenuOption.Factory));
 
-            _overlaySelection = new OverlaySelection(overlayMenuItem);
+            _overlaySelection = new OverlaySelection(overlayMenuItem, () => toggleOverlayNumbers.Checked);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -180,9 +180,7 @@ namespace Mirage.Urbanization.WinForms
             _areaRenderHelper = new SimulationRenderHelper(
                            gamePanel: _gamePanel,
                            renderZoneOptions: new RenderZoneOptions(
-                               renderDebugPollutionValues: () => showPollution.Checked,
-                               renderDebugCrimeValues: () => showCrime.Checked,
-                               showDebugTrafficStatistics: () => showTrafficStats.Checked,
+                               renderDebugPollutionValues: () => toggleOverlayNumbers.Checked,
                                showDebugGrowthPathFinding: () => showGrowthPathfindingToolStripMenuItem.Checked,
                                showDebugAverageTravelDistances: () => showTravelDistancesToolStripMenuItem.Checked,
                                showDebugPopulationDensity: () => showPopulationDensityToolStripMenuItem.Checked,
