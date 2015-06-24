@@ -183,12 +183,10 @@ namespace Mirage.Urbanization.WinForms
                                renderDebugPollutionValues: () => toggleOverlayNumbers.Checked,
                                showDebugGrowthPathFinding: () => showGrowthPathfindingToolStripMenuItem.Checked,
                                selectedGraphicsManagerFunc: () => _graphicsManagerSelection.GetCurrentOption(),
-                               renderDebugLandValueValues: () => showLandValueToolStripMenuItem.Checked,
                                getCurrentOverlayOptionFunc: () => _overlaySelection.GetCurrentOption()
                            ),
                            options: areaOptions
                        );
-
 
             _areaRenderHelper.SimulationSession.OnAreaMessage +=
                 (_sender, _e) =>

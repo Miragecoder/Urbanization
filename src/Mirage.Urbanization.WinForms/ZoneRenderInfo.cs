@@ -103,16 +103,6 @@ namespace Mirage.Urbanization.WinForms
             if (overlayOption != null)
                 overlayOption.Render(ZoneInfo, rectangle, graphics);
 
-            if (_renderZoneOptions.RenderDebugLandValueValues)
-            {
-                var landValue = ZoneInfo.GetLastLandValueResult();
-                if (landValue.HasMatch && landValue.MatchingObject.LandValueInUnits != 0)
-                    graphics.DrawString(landValue.MatchingObject.LandValueInUnits.ToString(),
-                        BrushManager.ZoneInfoFont,
-                        BrushManager.BlackSolidBrush,
-                        rectangle);
-            }
-
             if (isHighlighted)
             {
                 return new RenderZoneContinuation(

@@ -51,8 +51,6 @@
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGrowthPathfindingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.displayNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showLandValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.cityBudgetLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -231,8 +229,7 @@
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showGrowthPathfindingToolStripMenuItem,
             this.toolStripSeparator5,
-            this.toggleOverlayNumbers,
-            this.displayNumbersToolStripMenuItem});
+            this.toggleOverlayNumbers});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -248,21 +245,6 @@
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(243, 6);
-            // 
-            // displayNumbersToolStripMenuItem
-            // 
-            this.displayNumbersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showLandValueToolStripMenuItem});
-            this.displayNumbersToolStripMenuItem.Name = "displayNumbersToolStripMenuItem";
-            this.displayNumbersToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
-            this.displayNumbersToolStripMenuItem.Text = "Display numbers";
-            // 
-            // showLandValueToolStripMenuItem
-            // 
-            this.showLandValueToolStripMenuItem.CheckOnClick = true;
-            this.showLandValueToolStripMenuItem.Name = "showLandValueToolStripMenuItem";
-            this.showLandValueToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
-            this.showLandValueToolStripMenuItem.Text = "Show Land Value";
             // 
             // statusStrip1
             // 
@@ -368,8 +350,6 @@
         private System.Windows.Forms.ToolStripMenuItem evaluationToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel cityBudgetLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem displayNumbersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showLandValueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem overlayMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleOverlayNumbers;
     }
