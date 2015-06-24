@@ -10,6 +10,7 @@ namespace Mirage.Urbanization.WinForms
     {
         protected ToolstripMenuInitializer(ToolStripMenuItem targetToopToolStripMenuItem, IEnumerable<TOption> options)
         {
+            ToolStripMenuItem first = null;
             foreach (var option in options)
             {
                 var localOption = option;
@@ -25,8 +26,10 @@ namespace Mirage.Urbanization.WinForms
                 };
 
                 targetToopToolStripMenuItem.DropDownItems.Add(item);
-                item.PerformClick();
+                if (first == null)
+                    first = item;
             }
+            first.PerformClick();
         }
 
         public event EventHandler<ToolstripMenuOptionChangedEventArgs<TOption>> OnSelectionChanged;
