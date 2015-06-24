@@ -61,7 +61,6 @@
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
             this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
-            this.showPopulationDensityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -255,8 +254,7 @@
             // 
             this.displayNumbersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showTravelDistancesToolStripMenuItem,
-            this.showLandValueToolStripMenuItem,
-            this.showPopulationDensityToolStripMenuItem});
+            this.showLandValueToolStripMenuItem});
             this.displayNumbersToolStripMenuItem.Name = "displayNumbersToolStripMenuItem";
             this.displayNumbersToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
             this.displayNumbersToolStripMenuItem.Text = "Display numbers";
@@ -328,13 +326,6 @@
             this.toggleOverlayNumbers.Size = new System.Drawing.Size(246, 24);
             this.toggleOverlayNumbers.Text = "Toggle overlay numbers";
             // 
-            // showPopulationDensityToolStripMenuItem
-            // 
-            this.showPopulationDensityToolStripMenuItem.CheckOnClick = true;
-            this.showPopulationDensityToolStripMenuItem.Name = "showPopulationDensityToolStripMenuItem";
-            this.showPopulationDensityToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
-            this.showPopulationDensityToolStripMenuItem.Text = "Show Population Density";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -391,7 +382,6 @@
         private System.Windows.Forms.ToolStripMenuItem showLandValueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem overlayMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleOverlayNumbers;
-        private System.Windows.Forms.ToolStripMenuItem showPopulationDensityToolStripMenuItem;
     }
 }
 

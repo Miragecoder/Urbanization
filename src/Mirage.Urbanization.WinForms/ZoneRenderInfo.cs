@@ -113,16 +113,6 @@ namespace Mirage.Urbanization.WinForms
                         rectangle);
             }
 
-            if (_renderZoneOptions.ShowDebugPopulationDensity)
-            {
-                var populationDensity = ZoneInfo.GetPopulationDensity();
-                if (populationDensity != 0)
-                    graphics.DrawString(populationDensity.ToString(),
-                        BrushManager.ZoneInfoFont,
-                        BrushManager.BlackSolidBrush,
-                        rectangle);
-            }
-
             if (_renderZoneOptions.RenderDebugLandValueValues)
             {
                 var landValue = ZoneInfo.GetLastLandValueResult();
