@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Persistence;
+using Mirage.Urbanization.WinForms.Overlay;
 
 namespace Mirage.Urbanization.WinForms
 {

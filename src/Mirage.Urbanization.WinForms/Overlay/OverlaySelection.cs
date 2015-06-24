@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Mirage.Urbanization.WinForms
+namespace Mirage.Urbanization.WinForms.Overlay
 {
     public class OverlaySelection : ToolstripMenuInitializer<OverlayOption>
     {

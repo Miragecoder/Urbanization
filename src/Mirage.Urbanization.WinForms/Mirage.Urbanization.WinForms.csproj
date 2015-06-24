@@ -74,8 +74,8 @@
     <Compile Include="NewCityForm.Designer.cs">
       <DependentUpon>NewCityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OverlayOption.cs" />
-    <Compile Include="OverlaySelection.cs" />
+    <Compile Include="Overlay\OverlayOption.cs" />
+    <Compile Include="Overlay\OverlaySelection.cs" />
     <Compile Include="RectangleExtensions.cs" />
     <Compile Include="Rendering\BufferedGraphics\BufferedGraphicsManagerWrapper.cs" />
     <Compile Include="Rendering\GraphicsManagerWrapperOption.cs" />

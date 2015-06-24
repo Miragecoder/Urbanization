@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Mirage.Urbanization.WinForms.Overlay;
 using Mirage.Urbanization.WinForms.Rendering;
 
 namespace Mirage.Urbanization.WinForms

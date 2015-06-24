@@ -4,7 +4,7 @@ using System.Drawing;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.WinForms.Rendering;
 
-namespace Mirage.Urbanization.WinForms
+namespace Mirage.Urbanization.WinForms.Overlay
 {
     public class OverlayOption : IToolstripMenuOption
     {
