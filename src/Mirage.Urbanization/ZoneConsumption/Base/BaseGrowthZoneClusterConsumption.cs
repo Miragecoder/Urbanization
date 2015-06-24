@@ -45,8 +45,6 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             get { return PopulationDensity * 3; }
         }
 
-        public override sealed bool LandValueAffectedBySurroundings { get { return true; } }
-
         private const int MaximumPopulation = 50;
 
         public bool CanGrow
@@ -62,14 +60,6 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public bool IsPopulated
         {
             get { return PopulationDensity > 0; }
-        }
-
-        public override int Value
-        {
-            get
-            {
-                return 100 + (PopulationDensity * 20);
-            }
         }
 
         public int AverageTravelDistance { get; private set; }

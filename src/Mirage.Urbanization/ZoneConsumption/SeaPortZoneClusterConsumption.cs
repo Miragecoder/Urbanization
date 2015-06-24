@@ -25,8 +25,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
 
 
-        public override int Cost { get { return Value; } }
-        public override int Value { get { return 5000; } }
+        public override int Cost { get { return 5000; } }
         public override string Name { get { return "Sea port"; } }
     }
 }

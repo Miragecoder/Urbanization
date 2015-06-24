@@ -14,8 +14,6 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             get { return _pollutionBehaviour; }
         }
 
-        public override sealed bool LandValueAffectedBySurroundings { get { return false; } }
-
         protected StaticZoneClusterConsumption(
             Func<ZoneInfoFinder> createZoneInfoFinderFunc,
             IElectricityBehaviour electricityBehaviour,

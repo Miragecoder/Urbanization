@@ -26,6 +26,13 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             get { return _positionInClusterY; }
         }
 
+        public int SingleCellCost
+        {
+            get
+            {
+                return ParentBaseZoneClusterConsumption.Cost / ParentBaseZoneClusterConsumption.ZoneClusterMembers.Count;
+            }
+        }
 
         public int PositionInClusterX
         {

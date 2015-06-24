@@ -32,7 +32,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public BaseInfrastructureNetworkZoneConsumption EastWestZoneConsumption { get { return _eastWestZoneConsumption; } }
         public BaseInfrastructureNetworkZoneConsumption NorthSouthZoneConsumption { get { return _northSouthZoneConsumption; } }
 
-        public int Cost { get { throw new InvalidOperationException(); } }
+        public int Cost { get { return EastWestZoneConsumption.Cost + NorthSouthZoneConsumption.Cost; } }
 
         public IEnumerable<BaseInfrastructureNetworkZoneConsumption> GetIntersectingZoneConsumptions()
         {

@@ -17,23 +17,6 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract ICrimeBehaviour CrimeBehaviour { get; }
         public IElectricityBehaviour ElectricityBehaviour { get { return _electricityBehaviour; } }
 
-        public abstract int Value { get; }
-
-        public abstract bool LandValueAffectedBySurroundings { get; }
-
-        public int CellValue
-        {
-            get
-            {
-                if (Value > 0 && ZoneClusterMembers.Count > 0)
-                    return Value / ZoneClusterMembers.Count;
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-
         protected BaseZoneClusterConsumption(IElectricityBehaviour electricityBehaviour)
         {
             _electricityBehaviour = electricityBehaviour;

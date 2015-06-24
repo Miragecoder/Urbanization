@@ -12,18 +12,45 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         public QueryResult<IQueryLandValueResult> GetFor(IReadOnlyZoneInfo zoneInfo)
         {
-            var consumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
+            var score = GetScoreFor(zoneInfo);
 
-            if (consumption != null)
+            var newScore = DataMeterInstances
+                .DataMeters
+                .Where(x => x.RepresentsIssue)
+                .Select(x => x.GetDataMeterResult(zoneInfo))
+                .Where(x => x.PercentageScore > 0)
+                .Select(x => x.PercentageScore)
+                .Aggregate(
+                    (decimal)score,
+                    (currentScore, percentageScore) => currentScore / (1 + percentageScore)
+                );
+
+            return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult((int)Math.Round(newScore)));
+        }
+
+        private int GetScoreFor(IReadOnlyZoneInfo zoneInfo)
+        {
+            var consumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption();
+
+            if (consumption is ZoneClusterMemberConsumption)
             {
-                var parent = consumption.ParentBaseZoneClusterConsumption;
+                var clusterMemberConsumption = consumption as ZoneClusterMemberConsumption;
 
-                var cellValue = parent.CellValue;
+                int multiplier = 1;
 
-                return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult(cellValue));
+                var parentAsGrowthZone = clusterMemberConsumption.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption;
+                if (parentAsGrowthZone != null)
+                {
+                    multiplier = parentAsGrowthZone.PopulationDensity;
+                }
+
+                return clusterMemberConsumption.SingleCellCost * multiplier;
             }
 
-            return QueryResult<IQueryLandValueResult>.Empty;
+            if (consumption is EmptyZoneConsumption || consumption is WoodlandZoneConsumption || consumption is WaterZoneConsumption)
+                return 0;
+
+            return consumption.Cost;
         }
     }
 
@@ -57,7 +84,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 true
                 ),
-            PollutionDataMeter = new ZoneInfoDataMeter(300,
+            PollutionDataMeter = new ZoneInfoDataMeter(200,
                 "Pollution",
                 x => x.PollutionNumbers.Average,
                 x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.ValueInUnits),
@@ -162,7 +189,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private decimal GetPercentageScore(int amount)
         {
-            return Math.Round(((decimal)amount / _measureUnitSumLazy.Value), 2) * 100;
+            return Math.Round(((decimal)amount / _measureUnitSumLazy.Value), 2);
         }
 
         private class Threshold
