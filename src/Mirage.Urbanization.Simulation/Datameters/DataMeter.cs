@@ -78,20 +78,20 @@ namespace Mirage.Urbanization.Simulation.Datameters
     public static class DataMeterInstances
     {
         private static readonly ZoneInfoDataMeter
-            CrimeDataMeter = new ZoneInfoDataMeter(200,
+            CrimeDataMeter = new ZoneInfoDataMeter(100,
                 "Crime",
                 x => x.CrimeNumbers.Average,
                 x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 true
                 ),
-            PollutionDataMeter = new ZoneInfoDataMeter(200,
+            PollutionDataMeter = new ZoneInfoDataMeter(150,
                 "Pollution",
                 x => x.PollutionNumbers.Average,
                 x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 true
                 ),
             TrafficDataMeter = new ZoneInfoDataMeter(
-                350,
+                100,
                 "Traffic",
                 x => x.TrafficNumbers.Average,
                 x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)

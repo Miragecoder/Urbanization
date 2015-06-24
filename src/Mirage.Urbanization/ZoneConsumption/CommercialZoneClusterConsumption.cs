@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         protected override decimal PopulationPollutionFactor
         {
-            get { return 0.5M; }
+            get { return 0.9M; }
         }
 
         protected override decimal PopulationCrimeFactor
