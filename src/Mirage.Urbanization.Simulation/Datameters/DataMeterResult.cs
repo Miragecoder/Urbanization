@@ -7,7 +7,12 @@ namespace Mirage.Urbanization.Simulation.Datameters
         private readonly int _amount;
         private readonly DataMeterValueCategory _valueCategory;
 
-        public DataMeterResult(string name, int amount, decimal percentageScore, DataMeterValueCategory valueCategory)
+        public DataMeterResult(
+            string name, 
+            int amount, 
+            decimal percentageScore, 
+            DataMeterValueCategory valueCategory
+        )
         {
             _name = name;
             _percentageScore = percentageScore;

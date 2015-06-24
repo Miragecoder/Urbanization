@@ -9,13 +9,14 @@ namespace Mirage.Urbanization.Simulation.Datameters
     {
         private readonly Func<IReadOnlyZoneInfo, int> _getValueCategoryFunc;
         public ZoneInfoDataMeter(
-            int measureUnit, 
-            string name, 
+            int measureUnit,
+            string name,
             Func<PersistedCityStatistics, int> getValue,
-            Func<IReadOnlyZoneInfo, int> getValueCategoryFunc
-        ) :base(measureUnit, name, getValue)
+            Func<IReadOnlyZoneInfo, int> getValueCategoryFunc,
+            bool representsIssue
+        )
+            : base(measureUnit, name, getValue, representsIssue)
         {
-            
             _getValueCategoryFunc = getValueCategoryFunc;
         }
 
@@ -27,36 +28,45 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
     public static class DataMeterInstances
     {
-        public static readonly ZoneInfoDataMeter
+        private static readonly ZoneInfoDataMeter
             CrimeDataMeter = new ZoneInfoDataMeter(200,
                 "Crime",
                 x => x.CrimeNumbers.Average,
-                x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.CrimeInUnits)
+                x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.CrimeInUnits), 
+                true
                 ),
             PollutionDataMeter = new ZoneInfoDataMeter(300,
                 "Pollution",
                 x => x.PollutionNumbers.Average,
-                x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.PollutionInUnits)
+                x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.PollutionInUnits), 
+                true
                 ),
             TrafficDataMeter = new ZoneInfoDataMeter(
-                350, 
-                "Traffic", 
-                x => x.TrafficNumbers.Average, 
+                350,
+                "Traffic",
+                x => x.TrafficNumbers.Average,
                 x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
-                    .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt())
-                )
-            ;
+                    .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt()), 
+                true
+                ),
+            PopulationDataMeter = new ZoneInfoDataMeter(
+                10, "Population",
+                x => x.GlobalZonePopulationStatistics.Average,
+                x => x.GetPopulationDensity(),
+                false
+            );
 
         public static readonly IReadOnlyCollection<ZoneInfoDataMeter> DataMeters = new[]
         {
             CrimeDataMeter,
             PollutionDataMeter,
-            TrafficDataMeter
+            TrafficDataMeter,
+            PopulationDataMeter
         };
 
-        public static IEnumerable<DataMeterResult> GetDataMeterResults(PersistedCityStatistics statistics)
+        public static IEnumerable<DataMeterResult> GetDataMeterResults(PersistedCityStatistics statistics, Func<DataMeter, bool> predicate)
         {
-            return DataMeters.Select(meter => meter.GetDataMeterResult(statistics));
+            return DataMeters.Where(predicate).Select(meter => meter.GetDataMeterResult(statistics));
         }
     }
 
@@ -65,17 +75,20 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private readonly string _name;
         private readonly Func<PersistedCityStatistics, int> _getValue;
+        private readonly bool _representsIssue;
 
         private readonly IReadOnlyCollection<Threshold> _thresholds;
 
         private readonly Lazy<int> _measureUnitSumLazy;
 
         public string Name { get { return _name; } }
+        public bool RepresentsIssue { get { return _representsIssue; } }
 
-        public DataMeter(int measureUnit, string name, Func<PersistedCityStatistics, int> getValue)
+        public DataMeter(int measureUnit, string name, Func<PersistedCityStatistics, int> getValue, bool representsIssue)
         {
             _name = name;
             _getValue = getValue;
+            _representsIssue = representsIssue;
 
             _thresholds = Enumerable.Range(0, 5)
                 .Select(i => new Threshold(i * measureUnit, (DataMeterValueCategory)i))
