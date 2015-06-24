@@ -41,18 +41,23 @@ namespace Mirage.Urbanization.WinForms.Overlay
         {
             _getDataMeterFunc.WithResultIfHasMatch(f =>
             {
-                var brush = BrushManager.Instance.GetBrushFor(f().GetDataMeterResult(zoneInfo).ValueCategory);
+                var dataMeterResult = f().GetDataMeterResult(zoneInfo);
+
+                var brush = BrushManager.Instance.GetBrushFor(dataMeterResult.ValueCategory);
                 if (brush.HasMatch)
                     graphics.FillRectangle(brush.MatchingObject, rectangle);
 
                 if (_toggleShowNumbersFunc())
                 {
-                    var amount = f().GetDataMeterResult(zoneInfo).Amount;
+                    var amount = dataMeterResult.Amount;
                     if (amount != 0)
+                    {
+                        graphics.FillRectangle(BrushManager.DarkNumberSurfaceBrush, rectangle);
                         graphics.DrawString(amount.ToString(),
                             BrushManager.ZoneInfoFont,
-                            amount > 0 ? BrushManager.RedSolidBrush : BrushManager.BlackSolidBrush,
+                            BrushManager.RedSolidBrush,
                             rectangle);
+                    }
                 }
             });
         }

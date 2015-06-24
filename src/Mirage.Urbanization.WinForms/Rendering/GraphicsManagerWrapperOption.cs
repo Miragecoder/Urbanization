@@ -26,8 +26,8 @@ namespace Mirage.Urbanization.WinForms.Rendering
 
         public static IEnumerable<GraphicsManagerWrapperOption> GetOptions()
         {
-            yield return new GraphicsManagerWrapperOption("Direct2D", (panel, action) => new SharpDxGraphicsManagerWrapper(panel, action));
             yield return new GraphicsManagerWrapperOption("Buffered graphics", (panel, action) => new BufferedGraphicsManagerWrapper(panel, action));
+            yield return new GraphicsManagerWrapperOption("Direct2D", (panel, action) => new SharpDxGraphicsManagerWrapper(panel, action));
         }
     }
 }

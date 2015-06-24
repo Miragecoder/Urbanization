@@ -42,6 +42,8 @@ namespace Mirage.Urbanization.WinForms
             { DataMeterValueCategory.VeryHigh, new SolidBrush(Color.FromArgb(190, 250, 0, 50))}
         };
 
+        public static readonly SolidBrush DarkNumberSurfaceBrush = new SolidBrush(Color.FromArgb(120, 0,0,0));
+
         public QueryResult<SolidBrush> GetBrushFor(DataMeterValueCategory dataMeterValueCategory)
         {
             if (DataMeterValueBrushes.ContainsKey(dataMeterValueCategory))
