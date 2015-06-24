@@ -20,6 +20,11 @@ namespace Mirage.Urbanization
             if (HasMatch) action(MatchingObject);
         }
 
+        public R WithResultIfHasMatch<R>(Func<T, R> actionIfHasMatch, R @default = default(R))
+        {
+            return HasMatch ? actionIfHasMatch(_matchingObject) : @default;
+        }
+
         public static readonly QueryResult<T> Empty = new QueryResult<T>();
     }
 

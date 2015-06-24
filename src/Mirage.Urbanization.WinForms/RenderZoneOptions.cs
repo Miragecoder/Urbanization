@@ -6,40 +6,44 @@ namespace Mirage.Urbanization.WinForms
 {
     public class RenderZoneOptions
     {
-        private readonly Func<bool> _renderPollutionValues, _renderCrimeValues;
-        private readonly Func<bool> _renderLandValueValues;
-        private readonly Func<bool> _showTrafficStatistics, _showGrowthPathFinding, _showPopulationDensity;
-        private readonly Func<bool> _showAverageTravelDistances;
+        private readonly Func<bool> _renderDebugPollutionValues, _renderDebugCrimeValues;
+        private readonly Func<bool> _renderDebugLandValueValues;
+        private readonly Func<bool> _showDebugTrafficStatistics, _showDebugGrowthPathFinding, _showDebugPopulationDensity;
+        private readonly Func<bool> _showDebugAverageTravelDistances;
         private readonly Func<GraphicsManagerWrapperOption> _selectedGraphicsManagerFunc;
+        private readonly Func<OverlayOption> _getCurrentOverlayOptionFunc;
 
-        public bool ShowTrafficStatistics { get { return _showTrafficStatistics(); } }
-        public bool RenderLandValueValues { get { return _renderLandValueValues(); } }
-        public bool RenderCrimeValues { get { return _renderCrimeValues(); } }
-        public bool RenderPollutionValues { get { return _renderPollutionValues(); } }
-        public bool ShowGrowthPathFinding { get { return _showGrowthPathFinding(); } }
-        public bool ShowAverageTravelDistances { get { return _showAverageTravelDistances(); } }
-        public bool ShowPopulationDensity { get { return _showPopulationDensity(); } }
+        public OverlayOption CurrentOverlayOption { get { return _getCurrentOverlayOptionFunc(); } }
+        public bool ShowDebugTrafficStatistics { get { return _showDebugTrafficStatistics(); } }
+        public bool RenderDebugLandValueValues { get { return _renderDebugLandValueValues(); } }
+        public bool RenderDebugCrimeValues { get { return _renderDebugCrimeValues(); } }
+        public bool RenderDebugPollutionValues { get { return _renderDebugPollutionValues(); } }
+        public bool ShowDebugGrowthPathFinding { get { return _showDebugGrowthPathFinding(); } }
+        public bool ShowDebugAverageTravelDistances { get { return _showDebugAverageTravelDistances(); } }
+        public bool ShowDebugPopulationDensity { get { return _showDebugPopulationDensity(); } }
         public GraphicsManagerWrapperOption SelectedGraphicsManager { get { return _selectedGraphicsManagerFunc(); } }
 
         public RenderZoneOptions(
-            Func<bool> renderPollutionValues, 
-            Func<bool> renderCrimeValues, 
-            Func<bool> renderLandValueValues,
-            Func<bool> showTrafficStatistics, 
-            Func<bool> showGrowthPathFinding,
-            Func<bool> showAverageTravelDistances,
-            Func<bool> showPopulationDensity,
-            Func<GraphicsManagerWrapperOption> selectedGraphicsManagerFunc
+            Func<bool> renderDebugPollutionValues, 
+            Func<bool> renderDebugCrimeValues, 
+            Func<bool> renderDebugLandValueValues,
+            Func<bool> showDebugTrafficStatistics, 
+            Func<bool> showDebugGrowthPathFinding,
+            Func<bool> showDebugAverageTravelDistances,
+            Func<bool> showDebugPopulationDensity,
+            Func<GraphicsManagerWrapperOption> selectedGraphicsManagerFunc,
+            Func<OverlayOption> getCurrentOverlayOptionFunc 
             )
         {
-            _renderPollutionValues = renderPollutionValues;
-            _renderCrimeValues = renderCrimeValues;
-            _renderLandValueValues = renderLandValueValues;
-            _showTrafficStatistics = showTrafficStatistics;
+            _renderDebugPollutionValues = renderDebugPollutionValues;
+            _renderDebugCrimeValues = renderDebugCrimeValues;
+            _renderDebugLandValueValues = renderDebugLandValueValues;
+            _showDebugTrafficStatistics = showDebugTrafficStatistics;
             _selectedGraphicsManagerFunc = selectedGraphicsManagerFunc;
-            _showPopulationDensity = showPopulationDensity;
-            _showGrowthPathFinding = showGrowthPathFinding;
-            _showAverageTravelDistances = showAverageTravelDistances;
+            _getCurrentOverlayOptionFunc = getCurrentOverlayOptionFunc;
+            _showDebugPopulationDensity = showDebugPopulationDensity;
+            _showDebugGrowthPathFinding = showDebugGrowthPathFinding;
+            _showDebugAverageTravelDistances = showDebugAverageTravelDistances;
         }
     }
 }

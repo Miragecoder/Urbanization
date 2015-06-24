@@ -4,14 +4,38 @@ using System.Linq;
 
 namespace Mirage.Urbanization.Simulation.Datameters
 {
-    public class DataMeter
+    public class ZoneInfoDataMeter : DataMeter
     {
-        public static readonly DataMeter CrimeDataMeter = new DataMeter(200, "Crime", x => x.CrimeNumbers.Average);
+        private readonly Func<IReadOnlyZoneInfo, int> _getValueCategoryFunc;
+        public ZoneInfoDataMeter(
+            int measureUnit, 
+            string name, 
+            Func<PersistedCityStatistics, int> getValue,
+            Func<IReadOnlyZoneInfo, int> getValueCategoryFunc
+        ) :base(measureUnit, name, getValue)
+        {
+            
+            _getValueCategoryFunc = getValueCategoryFunc;
+        }
+
+        public DataMeterResult GetDataMeterResult(IReadOnlyZoneInfo zoneInfo)
+        {
+            return GetDataMeterResult(_getValueCategoryFunc(zoneInfo));
+        }
+    }
+
+    public static class DataMeterInstances
+    {
+        public static readonly ZoneInfoDataMeter CrimeDataMeter = new ZoneInfoDataMeter(200,
+            "Crime",
+            x => x.CrimeNumbers.Average,
+            x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.CrimeInUnits)
+        ), PollutionDataMeter = new ZoneInfoDataMeter(300, "Pollution", x => x.PollutionNumbers.Average, x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.PollutionInUnits));
 
         private static readonly IReadOnlyCollection<DataMeter> DataMeters = new[]
         {
             CrimeDataMeter,
-            new DataMeter(300, "Pollution", x => x.PollutionNumbers.Average),
+            PollutionDataMeter,
             new DataMeter(350, "Traffic", x => x.TrafficNumbers.Average)
         };
 
@@ -19,6 +43,10 @@ namespace Mirage.Urbanization.Simulation.Datameters
         {
             return DataMeters.Select(meter => meter.GetDataMeterResult(statistics));
         }
+    }
+
+    public class DataMeter
+    {
 
         private readonly string _name;
         private readonly Func<PersistedCityStatistics, int> _getValue;
@@ -27,7 +55,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private readonly Lazy<int> _measureUnitSumLazy;
 
-        private DataMeter(int measureUnit, string name, Func<PersistedCityStatistics, int> getValue)
+        public DataMeter(int measureUnit, string name, Func<PersistedCityStatistics, int> getValue)
         {
             _name = name;
             _getValue = getValue;

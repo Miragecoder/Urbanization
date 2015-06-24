@@ -8,7 +8,7 @@ using Mirage.Urbanization.WinForms.Rendering.SharpDx;
 
 namespace Mirage.Urbanization.WinForms.Rendering
 {
-    public class GraphicsManagerWrapperOption
+    public class GraphicsManagerWrapperOption : IToolstripMenuOption
     {
         private readonly string _name;
 

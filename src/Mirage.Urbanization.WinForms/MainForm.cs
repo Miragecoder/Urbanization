@@ -22,6 +22,7 @@ namespace Mirage.Urbanization.WinForms
         private Panel _gamePanel;
         private SimulationRenderHelper _areaRenderHelper;
         private readonly GraphicsManagerSelection _graphicsManagerSelection;
+        private readonly OverlaySelection _overlaySelection;
 
         private readonly CitySaveStateController _citySaveStateController;
 
@@ -100,7 +101,9 @@ namespace Mirage.Urbanization.WinForms
             );
 
             _graphicsManagerSelection = new GraphicsManagerSelection(rendererToolStripMenuItem);
-            _graphicsManagerSelection.OnSelectionChanged += (sender, e) => WithAreaRenderHelper(helper => helper.ChangeRenderer(e.GraphicsManagerWrapperOption.Factory));
+            _graphicsManagerSelection.OnSelectionChanged += (sender, e) => WithAreaRenderHelper(helper => helper.ChangeRenderer(e.ToolstripMenuOption.Factory));
+
+            _overlaySelection = new OverlaySelection(overlayMenuItem);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -176,14 +179,15 @@ namespace Mirage.Urbanization.WinForms
             _areaRenderHelper = new SimulationRenderHelper(
                            gamePanel: _gamePanel,
                            renderZoneOptions: new RenderZoneOptions(
-                               renderPollutionValues: () => showPollution.Checked,
-                               renderCrimeValues: () => showCrime.Checked,
-                               showTrafficStatistics: () => showTrafficStats.Checked,
-                               showGrowthPathFinding: () => showGrowthPathfindingToolStripMenuItem.Checked,
-                               showAverageTravelDistances: () => showTravelDistancesToolStripMenuItem.Checked,
-                               showPopulationDensity: () => showPopulationDensityToolStripMenuItem.Checked,
+                               renderDebugPollutionValues: () => showPollution.Checked,
+                               renderDebugCrimeValues: () => showCrime.Checked,
+                               showDebugTrafficStatistics: () => showTrafficStats.Checked,
+                               showDebugGrowthPathFinding: () => showGrowthPathfindingToolStripMenuItem.Checked,
+                               showDebugAverageTravelDistances: () => showTravelDistancesToolStripMenuItem.Checked,
+                               showDebugPopulationDensity: () => showPopulationDensityToolStripMenuItem.Checked,
                                selectedGraphicsManagerFunc: () => _graphicsManagerSelection.GetCurrentOption(),
-                               renderLandValueValues: () => showLandValueToolStripMenuItem.Checked
+                               renderDebugLandValueValues: () => showLandValueToolStripMenuItem.Checked,
+                               getCurrentOverlayOptionFunc: () => _overlaySelection.GetCurrentOption()
                            ),
                            options: areaOptions
                        );

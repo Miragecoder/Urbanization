@@ -81,7 +81,7 @@ namespace Mirage.Urbanization.WinForms
                 if (bitmapLayer.IsLayerTwoSpecified)
                     drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.LayerTwo, rectangle); };
 
-                if (_renderZoneOptions.ShowGrowthPathFinding)
+                if (_renderZoneOptions.ShowDebugGrowthPathFinding)
                 {
                     switch (_zoneInfo.GrowthAlgorithmHighlightState.Current)
                     {
@@ -98,8 +98,12 @@ namespace Mirage.Urbanization.WinForms
             {
                 graphics.FillRectangle(BrushManager.Instance.GetBrushFor(consumption), rectangle);
             }
+
+            var overlayOption = _renderZoneOptions.CurrentOverlayOption;
+            if (overlayOption != null)
+                overlayOption.Render(ZoneInfo, rectangle, graphics);
             
-            if (_renderZoneOptions.RenderPollutionValues)
+            if (_renderZoneOptions.RenderDebugPollutionValues)
             {
                 var pollution = ZoneInfo.GetLastQueryPollutionResult();
                 if (pollution.HasMatch && pollution.MatchingObject.PollutionInUnits != 0)
@@ -109,7 +113,7 @@ namespace Mirage.Urbanization.WinForms
                         rectangle);
             }
 
-            if (_renderZoneOptions.ShowAverageTravelDistances)
+            if (_renderZoneOptions.ShowDebugAverageTravelDistances)
             {
                 var averageTravelDistance = ZoneInfo.GetLastAverageTravelDistance();
                 if (averageTravelDistance != 0)
@@ -119,7 +123,7 @@ namespace Mirage.Urbanization.WinForms
                         rectangle);
             }
 
-            if (_renderZoneOptions.ShowPopulationDensity)
+            if (_renderZoneOptions.ShowDebugPopulationDensity)
             {
                 var populationDensity = ZoneInfo.GetPopulationDensity();
                 if (populationDensity != 0)
@@ -129,7 +133,7 @@ namespace Mirage.Urbanization.WinForms
                         rectangle);
             }
 
-            if (_renderZoneOptions.RenderCrimeValues)
+            if (_renderZoneOptions.RenderDebugCrimeValues)
             {
                 var crime = ZoneInfo.GetLastQueryCrimeResult();
                 if (crime.HasMatch)
@@ -143,13 +147,13 @@ namespace Mirage.Urbanization.WinForms
 
                 ZoneInfo.GetLastQueryCrimeResult().WithResultIfHasMatch(crimeValue =>
                 {
-                    var brush = BrushManager.Instance.GetBrushFor(DataMeter.CrimeDataMeter.GetDataMeterResult(crimeValue.CrimeInUnits).ValueCategory);
+                    var brush = BrushManager.Instance.GetBrushFor(DataMeterInstances.CrimeDataMeter.GetDataMeterResult(crimeValue.CrimeInUnits).ValueCategory);
                     if (brush.HasMatch)
                         graphics.FillRectangle(brush.MatchingObject, rectangle);
                 });
             }
 
-            if (_renderZoneOptions.RenderLandValueValues)
+            if (_renderZoneOptions.RenderDebugLandValueValues)
             {
                 var landValue = ZoneInfo.GetLastLandValueResult();
                 if (landValue.HasMatch && landValue.MatchingObject.LandValueInUnits != 0)
@@ -159,7 +163,7 @@ namespace Mirage.Urbanization.WinForms
                         rectangle);
             }
 
-            if (_renderZoneOptions.ShowTrafficStatistics)
+            if (_renderZoneOptions.ShowDebugTrafficStatistics)
             {
                 var road = ZoneInfo.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic;
 

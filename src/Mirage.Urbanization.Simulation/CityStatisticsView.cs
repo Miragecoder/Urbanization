@@ -14,7 +14,7 @@ namespace Mirage.Urbanization.Simulation
         {
             if (cityStatistics == null) throw new ArgumentNullException("cityStatistics");
             _cityStatistics = cityStatistics;
-            _dataMeterResultsLazy = new Lazy<IList<DataMeterResult>>(() => DataMeter.GetDataMeterResults(cityStatistics).ToList());
+            _dataMeterResultsLazy = new Lazy<IList<DataMeterResult>>(() => DataMeterInstances.GetDataMeterResults(cityStatistics).ToList());
         }
 
         public int Population { get { return _cityStatistics.GlobalZonePopulationStatistics.Sum; } }

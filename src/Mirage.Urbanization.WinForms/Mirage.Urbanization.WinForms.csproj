@@ -67,12 +67,15 @@
       <DependentUpon>EvaluationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GraphicsManagerSelection.cs" />
+    <Compile Include="IToolstripMenuOption.cs" />
     <Compile Include="NewCityForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NewCityForm.Designer.cs">
       <DependentUpon>NewCityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OverlayOption.cs" />
+    <Compile Include="OverlaySelection.cs" />
     <Compile Include="RectangleExtensions.cs" />
     <Compile Include="Rendering\BufferedGraphics\BufferedGraphicsManagerWrapper.cs" />
     <Compile Include="Rendering\GraphicsManagerWrapperOption.cs" />
@@ -96,6 +99,8 @@
     <Compile Include="StatisticsForm.Designer.cs">
       <DependentUpon>StatisticsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolstripMenuInitializer.cs" />
+    <Compile Include="ToolstripMenuOptionChangedEventArgs.cs" />
     <Compile Include="ZoneRenderInfo.cs" />
     <Compile Include="ZoneSelectionPanelCreator.cs" />
     <Compile Include="ZoomMode.cs" />
