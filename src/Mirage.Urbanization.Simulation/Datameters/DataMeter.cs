@@ -48,7 +48,14 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
                     .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt()), 
                 true
-                ),
+            ),
+            TravelDistanceDataMeter = new ZoneInfoDataMeter(
+                20,
+                "Travel distance",
+                x => x.AverageTravelDistanceStatistics.Average,
+                x => x.GetLastAverageTravelDistance() ?? 0, 
+                true
+            ),
             PopulationDataMeter = new ZoneInfoDataMeter(
                 10, "Population",
                 x => x.GlobalZonePopulationStatistics.Average,
@@ -61,7 +68,8 @@ namespace Mirage.Urbanization.Simulation.Datameters
             CrimeDataMeter,
             PollutionDataMeter,
             TrafficDataMeter,
-            PopulationDataMeter
+            PopulationDataMeter,
+            TravelDistanceDataMeter
         };
 
         public static IEnumerable<DataMeterResult> GetDataMeterResults(PersistedCityStatistics statistics, Func<DataMeter, bool> predicate)

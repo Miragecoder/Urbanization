@@ -11,6 +11,7 @@ namespace Mirage.Urbanization.Statistics
         INumberSummary CrimeNumbers { get; }
         INumberSummary LandValueNumbers { get; }
         INumberSummary PollutionNumbers { get; }
+        INumberSummary TravelDistanceNumbers { get; }
     }
 
     public class MiscCityStatistics : IMiscCityStatistics
@@ -18,20 +19,24 @@ namespace Mirage.Urbanization.Statistics
         private readonly INumberSummary _crimeNumbers;
         private readonly INumberSummary _landValueNumbers;
         private readonly INumberSummary _pollutionNumbers;
+        private readonly INumberSummary _travelDistanceNumbers;
 
         public MiscCityStatistics(
             IEnumerable<IQueryCrimeResult> queryCrimeResults,
             IEnumerable<IQueryLandValueResult> queryLandValueResults,
-            IEnumerable<IQueryPollutionResult> queryPollutionResults
+            IEnumerable<IQueryPollutionResult> queryPollutionResults,
+            IEnumerable<int> queryTravelDistanceResults 
         )
         {
             if (queryCrimeResults == null) throw new ArgumentNullException("queryCrimeResults");
             if (queryLandValueResults == null) throw new ArgumentNullException("queryLandValueResults");
             if (queryPollutionResults == null) throw new ArgumentNullException("queryPollutionResults");
+            if (queryTravelDistanceResults == null) throw new ArgumentNullException("queryTravelDistanceResults");
 
             _crimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.CrimeInUnits));
             _landValueNumbers = new NumberSummary(queryLandValueResults.Select(x => x.LandValueInUnits));
             _pollutionNumbers = new NumberSummary(queryPollutionResults.Select(x => x.PollutionInUnits));
+            _travelDistanceNumbers = new NumberSummary(queryTravelDistanceResults);
         }
 
         public INumberSummary CrimeNumbers
@@ -47,6 +52,11 @@ namespace Mirage.Urbanization.Statistics
         public INumberSummary PollutionNumbers
         {
             get { return _pollutionNumbers; }
+        }
+
+        public INumberSummary TravelDistanceNumbers
+        {
+            get { return _travelDistanceNumbers; }
         }
     }
 

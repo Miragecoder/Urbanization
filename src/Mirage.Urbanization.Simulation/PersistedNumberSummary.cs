@@ -4,6 +4,8 @@ namespace Mirage.Urbanization.Simulation
 {
     public class PersistedNumberSummary
     {
+        public static readonly PersistedNumberSummary EmptyInstance = new PersistedNumberSummary();
+
         public PersistedNumberSummary()
         {
 

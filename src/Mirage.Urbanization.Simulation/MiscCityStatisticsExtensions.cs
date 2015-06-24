@@ -16,6 +16,8 @@ namespace Mirage.Urbanization.Simulation
 
                 NumberOfRoadZones = cityStatistics.GrowthZoneStatistics.RoadInfrastructureStatistics.NumberOfRoadZones,
 
+                AverageTravelDistanceStatistics = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.TravelDistanceNumbers),
+
                 NumberOfRailRoadZones = cityStatistics.GrowthZoneStatistics.RailroadInfrastructureStatistics.NumberOfRailRoadZones,
                 NumberOfTrainStations = cityStatistics.GrowthZoneStatistics.RailroadInfrastructureStatistics.NumberOfTrainStations,
 

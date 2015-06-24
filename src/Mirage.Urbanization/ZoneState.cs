@@ -23,7 +23,7 @@ namespace Mirage.Urbanization
         QueryResult<IQueryPollutionResult> GetLastQueryPollutionResult();
         QueryResult<IQueryLandValueResult> GetLastLandValueResult();
 
-        int GetLastAverageTravelDistance();
+        int? GetLastAverageTravelDistance();
         IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest();
         IEnumerable<IZoneInfo> CrawlAllDirections(Func<IZoneInfo, bool> predicate);
         int GetPopulationDensity();
@@ -429,9 +429,9 @@ namespace Mirage.Urbanization
             });
         }
 
-        public int GetLastAverageTravelDistance()
+        public int? GetLastAverageTravelDistance()
         {
-            var returnValue = default(int);
+            var returnValue = default(int?);
             WithZoneClusterIf<BaseGrowthZoneClusterConsumption>(cluster =>
             {
                 returnValue = cluster.AverageTravelDistance;

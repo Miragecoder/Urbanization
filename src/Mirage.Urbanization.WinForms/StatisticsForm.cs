@@ -90,6 +90,7 @@ namespace Mirage.Urbanization.WinForms
                 .Concat(GetNumbarSummaryGraphs(x => x.PollutionNumbers, "Pollution", Color.Green, Color.DarkOliveGreen))
                 .Concat(GetNumbarSummaryGraphs(x => x.TrafficNumbers, "Traffic", Color.Blue, Color.DarkBlue))
                 .Concat(GetNumbarSummaryGraphs(x => x.LandValueNumbers, "Land value", Color.Yellow, Color.GreenYellow))
+                .Concat(GetNumbarSummaryGraphs(x => x.AverageTravelDistanceStatistics, "Travel distances", Color.Blue, Color.DarkBlue))
                 )
                 yield return x;
 
@@ -124,9 +125,12 @@ namespace Mirage.Urbanization.WinForms
 
         private static IEnumerable<GraphDefinition> GetNumbarSummaryGraphs(Func<PersistedCityStatistics,PersistedNumberSummary> getNumberSummary, string title, Color primaryColor, Color secondaryColor)
         {
+            Func<PersistedCityStatistics, PersistedNumberSummary> getNumberSummarySafeFunc =
+                x => getNumberSummary(x) ?? PersistedNumberSummary.EmptyInstance;
+            
             yield return new GraphDefinition("Total " + title,
                 new GraphSeries(
-                    x => getNumberSummary(x).Sum,
+                    x => getNumberSummarySafeFunc(x).Sum,
                     "Total",
                     primaryColor
                 )
@@ -134,12 +138,12 @@ namespace Mirage.Urbanization.WinForms
 
             yield return new GraphDefinition("Average " + title,
                 new GraphSeries(
-                    x => getNumberSummary(x).Average,
+                    x => getNumberSummarySafeFunc(x).Average,
                     "Average", 
                     secondaryColor
                 ),
                 new GraphSeries(
-                    x => getNumberSummary(x).Max,
+                    x => getNumberSummarySafeFunc(x).Max,
                     "Highest",
                     primaryColor
                 )

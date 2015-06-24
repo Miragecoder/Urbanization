@@ -22,5 +22,6 @@ namespace Mirage.Urbanization.Simulation
         public PersistedNumberSummary PollutionNumbers { get; set; }
         public PersistedNumberSummary LandValueNumbers { get; set; }
         public PersistedNumberSummary TrafficNumbers { get; set; }
+        public PersistedNumberSummary AverageTravelDistanceStatistics { get; set; }
     }
 }

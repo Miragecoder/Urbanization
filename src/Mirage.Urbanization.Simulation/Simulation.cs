@@ -142,7 +142,22 @@ namespace Mirage.Urbanization.Simulation
 
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-                    _lastMiscCityStatistics = new MiscCityStatistics(queryCrimeResults, queryLandValueResults, queryPollutionResults);
+                    var travelDistances = new HashSet<BaseGrowthZoneClusterConsumption>(
+                            _area
+                            .EnumerateZoneInfos()
+                            .Select(x => x.ConsumptionState.GetZoneConsumption())
+                            .OfType<ZoneClusterMemberConsumption>()
+                            .Where(x => x.IsCentralClusterMember)
+                            .Select(x => x.ParentBaseZoneClusterConsumption)
+                            .OfType<BaseGrowthZoneClusterConsumption>()
+                        )
+                        .Select(x => x.ZoneClusterMembers.First(y => y.IsCentralClusterMember))
+                        .Select(x => x.GetZoneInfo())
+                        .Select(x => x.WithResultIfHasMatch(y => y.GetLastAverageTravelDistance()))
+                        .Where(x => x.HasValue)
+                        .Select(x => x.Value);
+
+                    _lastMiscCityStatistics = new MiscCityStatistics(queryCrimeResults, queryLandValueResults, queryPollutionResults, travelDistances);
 
                     Console.WriteLine("Crime and pollution scan completed. (Took: '{0}')", stopwatch.Elapsed);
 
