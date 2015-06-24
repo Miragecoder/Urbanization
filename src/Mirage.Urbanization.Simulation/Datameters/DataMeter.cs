@@ -61,6 +61,12 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 x => x.GlobalZonePopulationStatistics.Average,
                 x => x.GetPopulationDensity(),
                 false
+            ),
+            LandValueDataMeter = new ZoneInfoDataMeter(
+                10, "Land value",
+                x => x.LandValueNumbers.Average,
+                x => x.GetLastLandValueResult().WithResultIfHasMatch(y => y.LandValueInUnits),
+                false
             );
 
         public static readonly IReadOnlyCollection<ZoneInfoDataMeter> DataMeters = new[]
@@ -69,7 +75,8 @@ namespace Mirage.Urbanization.Simulation.Datameters
             PollutionDataMeter,
             TrafficDataMeter,
             PopulationDataMeter,
-            TravelDistanceDataMeter
+            TravelDistanceDataMeter,
+            LandValueDataMeter
         };
 
         public static IEnumerable<DataMeterResult> GetDataMeterResults(PersistedCityStatistics statistics, Func<DataMeter, bool> predicate)
@@ -80,7 +87,6 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
     public class DataMeter
     {
-
         private readonly string _name;
         private readonly Func<PersistedCityStatistics, int> _getValue;
         private readonly bool _representsIssue;
