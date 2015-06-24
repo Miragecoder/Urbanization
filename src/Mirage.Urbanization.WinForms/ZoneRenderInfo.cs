@@ -103,16 +103,6 @@ namespace Mirage.Urbanization.WinForms
             if (overlayOption != null)
                 overlayOption.Render(ZoneInfo, rectangle, graphics);
 
-            if (_renderZoneOptions.ShowDebugAverageTravelDistances)
-            {
-                var averageTravelDistance = ZoneInfo.GetLastAverageTravelDistance();
-                if (averageTravelDistance != 0)
-                    graphics.DrawString(averageTravelDistance.ToString(),
-                        BrushManager.ZoneInfoFont,
-                        averageTravelDistance > 0 ? BrushManager.RedSolidBrush : BrushManager.BlackSolidBrush,
-                        rectangle);
-            }
-
             if (_renderZoneOptions.RenderDebugLandValueValues)
             {
                 var landValue = ZoneInfo.GetLastLandValueResult();

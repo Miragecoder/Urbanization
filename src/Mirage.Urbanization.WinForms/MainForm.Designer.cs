@@ -52,7 +52,6 @@
             this.showGrowthPathfindingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.displayNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTravelDistancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLandValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -253,18 +252,10 @@
             // displayNumbersToolStripMenuItem
             // 
             this.displayNumbersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showTravelDistancesToolStripMenuItem,
             this.showLandValueToolStripMenuItem});
             this.displayNumbersToolStripMenuItem.Name = "displayNumbersToolStripMenuItem";
             this.displayNumbersToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
             this.displayNumbersToolStripMenuItem.Text = "Display numbers";
-            // 
-            // showTravelDistancesToolStripMenuItem
-            // 
-            this.showTravelDistancesToolStripMenuItem.CheckOnClick = true;
-            this.showTravelDistancesToolStripMenuItem.Name = "showTravelDistancesToolStripMenuItem";
-            this.showTravelDistancesToolStripMenuItem.Size = new System.Drawing.Size(243, 24);
-            this.showTravelDistancesToolStripMenuItem.Text = "Show Travel Distances";
             // 
             // showLandValueToolStripMenuItem
             // 
@@ -378,7 +369,6 @@
         private System.Windows.Forms.ToolStripStatusLabel cityBudgetLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem displayNumbersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showTravelDistancesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showLandValueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem overlayMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleOverlayNumbers;

@@ -182,7 +182,6 @@ namespace Mirage.Urbanization.WinForms
                            renderZoneOptions: new RenderZoneOptions(
                                renderDebugPollutionValues: () => toggleOverlayNumbers.Checked,
                                showDebugGrowthPathFinding: () => showGrowthPathfindingToolStripMenuItem.Checked,
-                               showDebugAverageTravelDistances: () => showTravelDistancesToolStripMenuItem.Checked,
                                selectedGraphicsManagerFunc: () => _graphicsManagerSelection.GetCurrentOption(),
                                renderDebugLandValueValues: () => showLandValueToolStripMenuItem.Checked,
                                getCurrentOverlayOptionFunc: () => _overlaySelection.GetCurrentOption()

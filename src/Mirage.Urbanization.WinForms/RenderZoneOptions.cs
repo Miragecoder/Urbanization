@@ -10,7 +10,6 @@ namespace Mirage.Urbanization.WinForms
         private readonly Func<bool> _renderDebugPollutionValues;
         private readonly Func<bool> _renderDebugLandValueValues;
         private readonly Func<bool> _showDebugGrowthPathFinding;
-        private readonly Func<bool> _showDebugAverageTravelDistances;
         private readonly Func<GraphicsManagerWrapperOption> _selectedGraphicsManagerFunc;
         private readonly Func<OverlayOption> _getCurrentOverlayOptionFunc;
 
@@ -18,14 +17,12 @@ namespace Mirage.Urbanization.WinForms
         public bool RenderDebugLandValueValues { get { return _renderDebugLandValueValues(); } }
         public bool RenderDebugPollutionValues { get { return _renderDebugPollutionValues(); } }
         public bool ShowDebugGrowthPathFinding { get { return _showDebugGrowthPathFinding(); } }
-        public bool ShowDebugAverageTravelDistances { get { return _showDebugAverageTravelDistances(); } }
         public GraphicsManagerWrapperOption SelectedGraphicsManager { get { return _selectedGraphicsManagerFunc(); } }
 
         public RenderZoneOptions(
             Func<bool> renderDebugPollutionValues, 
             Func<bool> renderDebugLandValueValues,
             Func<bool> showDebugGrowthPathFinding,
-            Func<bool> showDebugAverageTravelDistances,
             Func<GraphicsManagerWrapperOption> selectedGraphicsManagerFunc,
             Func<OverlayOption> getCurrentOverlayOptionFunc 
             )
@@ -35,7 +32,6 @@ namespace Mirage.Urbanization.WinForms
             _selectedGraphicsManagerFunc = selectedGraphicsManagerFunc;
             _getCurrentOverlayOptionFunc = getCurrentOverlayOptionFunc;
             _showDebugGrowthPathFinding = showDebugGrowthPathFinding;
-            _showDebugAverageTravelDistances = showDebugAverageTravelDistances;
         }
     }
 }
