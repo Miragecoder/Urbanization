@@ -44,7 +44,7 @@ namespace Mirage.Urbanization
             _createZoneInfoFinder = () => new ZoneInfoFinder(
                 (queryObject) => _zoneInfoGrid
                     .GetZoneInfoFor(queryObject));
-            _zoneInfoGrid = new ZoneInfoGrid(options.GetZoneWidthAndHeight());
+            _zoneInfoGrid = new ZoneInfoGrid(options.GetZoneWidthAndHeight(), options.LandValueCalculator);
 
             options.WithTerraformingOptions(terraFormingOptions =>
             {

@@ -23,9 +23,10 @@ namespace Mirage.Urbanization.Test
             terraFormingOptions.SetWoodlands(0);
 
             return persistedArea != null ?
-                new Area(new AreaOptions(persistedArea, ProcessOptions))
+                new Area(new AreaOptions(FakeLandValueCalculator.Instance, persistedArea, ProcessOptions))
                 : new Area(
                     options: new AreaOptions(
+                        landValueCalculator: FakeLandValueCalculator.Instance, 
                         terraformingOptions: terraFormingOptions,
                         processOptions: ProcessOptions
                         )

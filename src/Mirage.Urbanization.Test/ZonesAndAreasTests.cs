@@ -9,6 +9,16 @@ using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Test
 {
+    public class FakeLandValueCalculator : ILandValueCalculator
+    {
+        public static readonly FakeLandValueCalculator Instance = new FakeLandValueCalculator();
+
+        public QueryResult<IQueryLandValueResult> GetFor(IReadOnlyZoneInfo zoneInfo)
+        {
+            return QueryResult<IQueryLandValueResult>.Empty;
+        }
+    }
+
     [TestClass]
     public class ZonesAndAreasTests
     {
@@ -17,7 +27,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(terraFormingOptions, TestCity.ProcessOptions);
+            var options = new AreaOptions(FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions);
 
             var area = new Area(options);
 
@@ -33,7 +43,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(terraFormingOptions, TestCity.ProcessOptions);
+            var options = new AreaOptions(FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions);
 
             var area = new Area(options);
 
@@ -53,7 +63,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(terraFormingOptions, TestCity.ProcessOptions);
+            var options = new AreaOptions(FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions);
             var area = new Area(options);
 
             var predicate = new Func<IZoneInfo, bool>(x => x.Point.X == 2 && x.Point.Y == 4);
@@ -70,7 +80,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(terraFormingOptions, TestCity.ProcessOptions);
+            var options = new AreaOptions(FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions);
             var area = new Area(options);
 
             var predicate = new Func<IZoneInfo, bool>(x => x.Point.X == 2 && x.Point.Y == 4);

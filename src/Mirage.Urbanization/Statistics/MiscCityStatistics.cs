@@ -33,9 +33,9 @@ namespace Mirage.Urbanization.Statistics
             if (queryPollutionResults == null) throw new ArgumentNullException("queryPollutionResults");
             if (queryTravelDistanceResults == null) throw new ArgumentNullException("queryTravelDistanceResults");
 
-            _crimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.CrimeInUnits));
-            _landValueNumbers = new NumberSummary(queryLandValueResults.Select(x => x.LandValueInUnits));
-            _pollutionNumbers = new NumberSummary(queryPollutionResults.Select(x => x.PollutionInUnits));
+            _crimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.ValueInUnits));
+            _landValueNumbers = new NumberSummary(queryLandValueResults.Select(x => x.ValueInUnits));
+            _pollutionNumbers = new NumberSummary(queryPollutionResults.Select(x => x.ValueInUnits));
             _travelDistanceNumbers = new NumberSummary(queryTravelDistanceResults);
         }
 

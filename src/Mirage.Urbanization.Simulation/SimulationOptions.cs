@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Simulation.Persistence;
+using Mirage.Urbanization.Simulation.Datameters;
 
 namespace Mirage.Urbanization.Simulation
 {
@@ -35,9 +36,9 @@ namespace Mirage.Urbanization.Simulation
         public AreaOptions GetAreaOptions()
         {
             if (_terraformingOptions != null && _persistedSimulation == null)
-                return new AreaOptions(_terraformingOptions, _processOptions);
+                return new AreaOptions(LandValueCalculator.Instance, _terraformingOptions, _processOptions);
             else if (_persistedSimulation != null && _terraformingOptions == null)
-                return new AreaOptions(_persistedSimulation.PersistedArea, _processOptions);
+                return new AreaOptions(LandValueCalculator.Instance, _persistedSimulation.PersistedArea, _processOptions);
             else 
                 throw new InvalidOperationException();
         }

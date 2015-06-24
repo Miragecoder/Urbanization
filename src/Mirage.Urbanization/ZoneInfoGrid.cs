@@ -15,7 +15,7 @@ namespace Mirage.Urbanization
 
         public int ZoneWidthAndHeight { get { return _zoneWidthAndHeight; } }
 
-        public ZoneInfoGrid(int zoneWidthAndHeight)
+        public ZoneInfoGrid(int zoneWidthAndHeight, ILandValueCalculator landValueCalculator)
         {
             _zoneWidthAndHeight = zoneWidthAndHeight;
             _zoneInfos = (from x in Enumerable.Range(0, zoneWidthAndHeight)
@@ -42,7 +42,9 @@ namespace Mirage.Urbanization
                                       return new QueryResult<IZoneInfo, RelativeZoneInfoQuery>(query, matchingZoneInfo);
                                   }
                                   return new QueryResult<IZoneInfo, RelativeZoneInfoQuery>(query);
-                              })
+                              },
+                              landValueCalculator: landValueCalculator
+                        )
                 ).ToDictionary(x => x.Point, x => x);
         }
 

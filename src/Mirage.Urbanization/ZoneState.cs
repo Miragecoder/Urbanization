@@ -12,62 +12,40 @@ using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
 namespace Mirage.Urbanization
 {
-    public interface IReadOnlyZoneInfo
+    public interface IQueryCellValueResult
     {
-        ZonePoint Point { get; }
-        IReadOnlyZoneConsumptionState ZoneConsumptionState { get; }
-        IGrowthAlgorithmHighlightState GrowthAlgorithmHighlightState { get; }
-        IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetSurroundingZoneInfosDiamond(int size);
-
-        QueryResult<IQueryCrimeResult> GetLastQueryCrimeResult();
-        QueryResult<IQueryPollutionResult> GetLastQueryPollutionResult();
-        QueryResult<IQueryLandValueResult> GetLastLandValueResult();
-
-        int? GetLastAverageTravelDistance();
-        IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest();
-        IEnumerable<IZoneInfo> CrawlAllDirections(Func<IZoneInfo, bool> predicate);
-        int GetPopulationDensity();
+        int ValueInUnits { get; }
     }
 
-    public interface IQueryPollutionResult
+    public abstract class QueryCellValueResult : IQueryCellValueResult
     {
-        int PollutionInUnits { get; }
-        decimal LandValueMultiplier { get; }
+        private readonly int _valueInUnits;
+        protected QueryCellValueResult(int valueInUnits)
+        {
+            _valueInUnits = valueInUnits;
+        }
+        public int ValueInUnits { get { return _valueInUnits; } }
     }
 
-    internal class QueryPollutionResult : IQueryPollutionResult
-    {
-        private readonly int _pollutionInUnits;
-        public QueryPollutionResult(int pollutionInUnits) { _pollutionInUnits = pollutionInUnits; }
-        public int PollutionInUnits { get { return _pollutionInUnits > 0 ? _pollutionInUnits : 0; } }
+    public interface IQueryPollutionResult : IQueryCellValueResult { }
 
-        public decimal LandValueMultiplier { get { return (1000M - PollutionInUnits) / 1000M; } }
+    internal class QueryPollutionResult : QueryCellValueResult, IQueryPollutionResult
+    {
+        public QueryPollutionResult(int valueInUnits) : base(valueInUnits) { }
     }
 
-    public interface IQueryCrimeResult
+    public interface IQueryCrimeResult : IQueryCellValueResult { }
+
+    internal class QueryCrimeResult : QueryCellValueResult, IQueryCrimeResult
     {
-        int CrimeInUnits { get; }
-        decimal LandValueMultiplier { get; }
+        public QueryCrimeResult(int valueInUnits) : base(valueInUnits) { }
     }
 
-    internal class QueryCrimeResult : IQueryCrimeResult
-    {
-        private readonly int _crimeInUnits;
-        public QueryCrimeResult(int crimeInUnits) { _crimeInUnits = crimeInUnits; }
-        public int CrimeInUnits { get { return _crimeInUnits > 0 ? _crimeInUnits : 0; } }
-        public decimal LandValueMultiplier { get { return (1000M - CrimeInUnits) / 1000M; } }
-    }
+    public interface IQueryLandValueResult : IQueryCellValueResult { }
 
-    public interface IQueryLandValueResult
+    public class QueryLandValueResult : QueryCellValueResult, IQueryLandValueResult
     {
-        int LandValueInUnits { get; }
-    }
-
-    internal class QueryLandValueResult : IQueryLandValueResult
-    {
-        private readonly int _landValueInUnits;
-        public QueryLandValueResult(int landValueInUnits) { _landValueInUnits = landValueInUnits; }
-        public int LandValueInUnits { get { return _landValueInUnits > 0 ? _landValueInUnits : 0; } }
+        public QueryLandValueResult(int valueInUnits) : base(valueInUnits) { }
     }
 
     public class RelativeZoneInfoQuery
@@ -164,6 +142,7 @@ namespace Mirage.Urbanization
         private readonly IZoneConsumptionState _zoneState;
         private readonly ZonePoint _zonePoint;
         private readonly GetRelativeZoneInfoDelegate _getRelativeZoneInfo;
+        private readonly ILandValueCalculator _landValueCalculator;
         private readonly GrowthAlgorithmHighlightState _highlightState = new GrowthAlgorithmHighlightState();
 
         public IGrowthAlgorithmHighlightState GrowthAlgorithmHighlightState { get { return _highlightState; } }
@@ -173,14 +152,18 @@ namespace Mirage.Urbanization
 
         public ZoneInfo(
             ZonePoint zonePoint,
-            GetRelativeZoneInfoDelegate getRelativeZoneInfo)
+            GetRelativeZoneInfoDelegate getRelativeZoneInfo,
+            ILandValueCalculator landValueCalculator
+        )
         {
             if (zonePoint == null) throw new ArgumentNullException("zonePoint");
             if (getRelativeZoneInfo == null) throw new ArgumentNullException("getRelativeZoneInfo");
+            if (landValueCalculator == null) throw new ArgumentNullException("landValueCalculator");
 
             _zoneState = new ZoneConsumptionState();
             _zonePoint = zonePoint;
             _getRelativeZoneInfo = getRelativeZoneInfo;
+            _landValueCalculator = landValueCalculator;
         }
 
         public QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetRelativeZoneInfo(RelativeZoneInfoQuery relativeZoneInfoQuery)
@@ -452,49 +435,7 @@ namespace Mirage.Urbanization
 
         public QueryResult<IQueryLandValueResult> QueryLandValue()
         {
-            var consumption = ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
-
-            if (consumption == null)
-            {
-                return QueryResult<IQueryLandValueResult>.Empty;
-            }
-
-            if (consumption.ParentBaseZoneClusterConsumption.LandValueAffectedBySurroundings)
-            {
-                var currentCrime = GetLastQueryCrimeResult();
-                var currentPollution = GetLastQueryPollutionResult();
-
-                var list = GetSurroundingZoneInfosDiamond(20)
-                    .Where(x => x.HasMatch)
-                    .Select(x => x.MatchingObject.ConsumptionState)
-                    .Select(x => x.QueryAsZoneClusterMember())
-                    .Where(x => x.HasMatch)
-                    .Select(x => x.MatchingObject.QueryParentAsBaseGrowthZoneClusterConsumption())
-                    .Where(x => x.HasMatch)
-                    .ToList();
-
-                var travelDistance = 0;
-
-                if (list.Any())
-                    travelDistance = Convert.ToInt32(Math.Ceiling(list.Average(x => x.MatchingObject.AverageTravelDistance)));
-
-                if (travelDistance == 0)
-                    travelDistance = 100;
-
-                var averageMultiplier = new[]
-                {
-                    (currentCrime.HasMatch ? currentCrime.MatchingObject.LandValueMultiplier : 1M),
-                    (currentPollution.HasMatch ? currentPollution.MatchingObject.LandValueMultiplier : 1M),
-                    (100M - travelDistance) / 100M
-                }.Average();
-
-                var score = Convert.ToInt32(consumption.ParentBaseZoneClusterConsumption.CellValue * averageMultiplier);
-
-                _lastQueryLandValueResult = new QueryResult<IQueryLandValueResult>(new QueryLandValueResult(score));
-
-                return _lastQueryLandValueResult;
-            }
-            return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult(consumption.ParentBaseZoneClusterConsumption.CellValue));
+            return _lastQueryLandValueResult = _landValueCalculator.GetFor(this);
         }
 
         private QueryResult<IQueryLandValueResult> _lastQueryLandValueResult;
@@ -503,7 +444,6 @@ namespace Mirage.Urbanization
         {
             return _lastQueryLandValueResult ?? QueryLandValue();
         }
-
 
         public IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> GetSteerDirections(Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> expression)
         {

@@ -2,9 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption;
+using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Simulation.Datameters
 {
+    public class LandValueCalculator : ILandValueCalculator
+    {
+        public static readonly LandValueCalculator Instance = new LandValueCalculator();
+
+        public QueryResult<IQueryLandValueResult> GetFor(IReadOnlyZoneInfo zoneInfo)
+        {
+            var consumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
+
+            if (consumption != null)
+            {
+                var parent = consumption.ParentBaseZoneClusterConsumption;
+
+                var cellValue = parent.CellValue;
+
+                return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult(cellValue));
+            }
+
+            return QueryResult<IQueryLandValueResult>.Empty;
+        }
+    }
+
     public class ZoneInfoDataMeter : DataMeter
     {
         private readonly Func<IReadOnlyZoneInfo, int> _getValueCategoryFunc;
@@ -32,13 +54,13 @@ namespace Mirage.Urbanization.Simulation.Datameters
             CrimeDataMeter = new ZoneInfoDataMeter(200,
                 "Crime",
                 x => x.CrimeNumbers.Average,
-                x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.CrimeInUnits), 
+                x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 true
                 ),
             PollutionDataMeter = new ZoneInfoDataMeter(300,
                 "Pollution",
                 x => x.PollutionNumbers.Average,
-                x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.PollutionInUnits), 
+                x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 true
                 ),
             TrafficDataMeter = new ZoneInfoDataMeter(
@@ -46,14 +68,14 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 "Traffic",
                 x => x.TrafficNumbers.Average,
                 x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
-                    .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt()), 
+                    .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt()),
                 true
             ),
             TravelDistanceDataMeter = new ZoneInfoDataMeter(
                 20,
                 "Travel distance",
                 x => x.AverageTravelDistanceStatistics.Average,
-                x => x.GetLastAverageTravelDistance() ?? 0, 
+                x => x.GetLastAverageTravelDistance() ?? 0,
                 true
             ),
             PopulationDataMeter = new ZoneInfoDataMeter(
@@ -65,7 +87,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
             LandValueDataMeter = new ZoneInfoDataMeter(
                 10, "Land value",
                 x => x.LandValueNumbers.Average,
-                x => x.GetLastLandValueResult().WithResultIfHasMatch(y => y.LandValueInUnits),
+                x => x.GetLastLandValueResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 false
             );
 
