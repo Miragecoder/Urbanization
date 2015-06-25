@@ -225,6 +225,7 @@ namespace Mirage.Urbanization
                 .Select(x => x.GetAsZoneCluster<TStructure>())
                 .Where(x => x.HasMatch)
                 .Select(x => x.MatchingObject)
+                .Where(x => x.HasPower)
                 .Distinct()
                 .ToArray();
         }
