@@ -51,12 +51,12 @@ namespace Mirage.Urbanization.Simulation
                 var category = CityCategoryDefinition
                     .GetForPopulation(recent.MatchingObject.GlobalZonePopulationStatistics.Sum);
                 if (_seenCityStates.Add(category)
-                    && _seenCityStates.OrderByDescending(x => x.MinimumPopulation).First() != category)
+                    && _seenCityStates.OrderByDescending(x => x.MinimumPopulation).First() == category)
                 {
                     RaiseAreaHotMessageEvent("Your city has grown!", "Congratulations! Your city has grown into a " + category.Name + "!");
                 }
 
-                _cityBudget.AddProjectedIncome(recent.MatchingObject.LandValueNumbers.Sum);
+                _cityBudget.AddProjectedIncome(recent.MatchingObject.GlobalZonePopulationStatistics.Sum);
             }
         }
 
