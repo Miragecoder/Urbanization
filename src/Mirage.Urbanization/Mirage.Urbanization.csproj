@@ -43,6 +43,8 @@
     <Compile Include="Area.cs" />
     <Compile Include="AreaConsumptionResult.cs" />
     <Compile Include="AreaOptions.cs" />
+    <Compile Include="GrowthZoneDemandThreshold.cs" />
+    <Compile Include="IGrowthZoneDemandThreshold.cs" />
     <Compile Include="ILandValueCalculator.cs" />
     <Compile Include="IReadOnlyZoneInfo.cs" />
     <Compile Include="SimpleCache.cs" />

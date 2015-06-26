@@ -64,7 +64,8 @@ namespace Mirage.Urbanization.Simulation
         {
             _area = new Area(simulationOptions.GetAreaOptions());
 
-            _area.OnAreaMessage += HandleAreaMessage;
+            _area.OnAreaConsumptionResult += HandleAreaConsumptionResult;
+            _area.OnAreaMessage += (s, e) => RaiseAreaMessageEvent(e.Message);
 
             simulationOptions.WithPersistedSimulation(persistedSimulation =>
             {
@@ -231,9 +232,8 @@ namespace Mirage.Urbanization.Simulation
         }
 
         public event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
-        public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
 
-        private void HandleAreaMessage(object sender, AreaConsumptionResultEventArgs e)
+        private void HandleAreaConsumptionResult(object sender, AreaConsumptionResultEventArgs e)
         {
             if (e.AreaConsumptionResult.Success)
             {
@@ -251,6 +251,7 @@ namespace Mirage.Urbanization.Simulation
             onOnAreaHotMessage(this, new SimulationSessionHotMessageEventArgs(title, message));
         }
 
+        public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
         private void RaiseAreaMessageEvent(string message)
         {
             var onOnAreaMessage = OnAreaMessage;

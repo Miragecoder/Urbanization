@@ -163,7 +163,7 @@ namespace Mirage.Urbanization
         {
             var result = ConsumeZoneAtPrivate(readOnlyZoneInfo, consumption);
 
-            var onAreaMessage = OnAreaMessage;
+            var onAreaMessage = OnAreaConsumptionResult;
             if (onAreaMessage != null)
                 onAreaMessage(this, new AreaConsumptionResultEventArgs(result));
 
@@ -246,8 +246,8 @@ namespace Mirage.Urbanization
 
                     if (queryResults.Any(x => x.QueryResult.HasNoMatch))
                         return new AreaConsumptionResult(
-                            areaConsumption: consumption, 
-                            success: true, 
+                            areaConsumption: consumption,
+                            success: true,
                             message: "Cannot build across map boundaries."
                         );
 
@@ -265,14 +265,14 @@ namespace Mirage.Urbanization
                         foreach (var consumeAreaOperation in consumeAreaOperations)
                             consumeAreaOperation.Apply();
                         return new AreaConsumptionResult(
-                            areaConsumption: consumption, 
-                            success: true, 
+                            areaConsumption: consumption,
+                            success: true,
                             message: consumeAreaOperations.First().Description
                         );
                     }
                     return new AreaConsumptionResult(
-                        areaConsumption: consumption, 
-                        success: false, 
+                        areaConsumption: consumption,
+                        success: false,
                         message: string.Join(", ", consumeAreaOperations
                             .Where(x => !x.CanOverrideWithResult.WillSucceed)
                             .Select(x => x.Description)
@@ -300,6 +300,20 @@ namespace Mirage.Urbanization
 
         private readonly Random _random = new Random();
 
+        private ISet<TBaseZoneClusterConsumption> GetZoneClusterConsumptions<TBaseZoneClusterConsumption>()
+            where TBaseZoneClusterConsumption : BaseZoneClusterConsumption
+        {
+            return new HashSet<TBaseZoneClusterConsumption>(_zoneInfoGrid
+                .ZoneInfos
+                .Values
+                .Select(x => x.ConsumptionState.GetZoneConsumption())
+                .OfType<ZoneClusterMemberConsumption>()
+                .Where(x => x.IsCentralClusterMember)
+                .Select(x => x.ParentBaseZoneClusterConsumption)
+                .OfType<TBaseZoneClusterConsumption>()
+            );
+        }
+
         public Task<IGrowthZoneStatistics> PerformGrowthSimulationCycle(CancellationToken cancellationToken)
         {
             if (cancellationToken == null) throw new ArgumentNullException("cancellationToken");
@@ -309,14 +323,9 @@ namespace Mirage.Urbanization
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                var growthZones = new HashSet<BaseGrowthZoneClusterConsumption>(_zoneInfoGrid
-                    .ZoneInfos
-                    .Values
-                    .Select(x => x.ConsumptionState.GetZoneConsumption())
-                    .OfType<ZoneClusterMemberConsumption>()
-                    .Where(x => x.IsCentralClusterMember)
-                    .Select(x => x.ParentBaseZoneClusterConsumption)
-                    .OfType<BaseGrowthZoneClusterConsumption>());
+                var growthZones = GetZoneClusterConsumptions<BaseGrowthZoneClusterConsumption>();
+
+
 
                 var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
 
@@ -337,13 +346,6 @@ namespace Mirage.Urbanization
                     }
                 }
 
-                var poweredClusters = growthZones
-                    .SelectMany(x => x.ZoneClusterMembers)
-                    .Where(
-                        x =>
-                            x.IsCentralClusterMember &&
-                            x.ParentBaseZoneClusterConsumption.ElectricityBehaviour.IsPowered);
-
                 Action<ZoneClusterMemberConsumption> body = clusterMemberConsumption =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -358,8 +360,27 @@ namespace Mirage.Urbanization
                         );
                 };
 
-                foreach (var poweredCluster in poweredClusters)
+                var thresholds = new[]
                 {
+                    new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
+                        GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), "Industry requires seaport", 40) as IGrowthZoneDemandThreshold,
+                    new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
+                        GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50)
+                };
+
+                foreach (var poweredCluster in growthZones
+                    .SelectMany(x => x.ZoneClusterMembers)
+                    .Where(x => x.IsCentralClusterMember && x.ParentBaseZoneClusterConsumption.ElectricityBehaviour.IsPowered)
+                )
+                {
+                    var violatedThreshold = thresholds
+                        .SingleOrDefault(x => x.DecrementAvailableConsumption(poweredCluster.ParentBaseZoneClusterConsumption));
+
+                    if (violatedThreshold != null && violatedThreshold.AvailableConsumptionsExceeded)
+                    {
+                        RaiseAreaMessageEvent(violatedThreshold.OnExceededMessage);
+                        continue;
+                    }
                     if (_areaOptions.ProcessOptions.GetStepByStepGrowthCyclingToggled())
                         Thread.Sleep(500);
                     body(poweredCluster);
@@ -429,7 +450,16 @@ namespace Mirage.Urbanization
 
         IEnumerable<IReadOnlyZoneInfo> IReadOnlyArea.EnumerateZoneInfos() { return EnumerateZoneInfos(); }
 
-        public event EventHandler<AreaConsumptionResultEventArgs> OnAreaMessage;
+        public event EventHandler<AreaConsumptionResultEventArgs> OnAreaConsumptionResult;
+
+        public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
+        private void RaiseAreaMessageEvent(string message)
+        {
+            var onOnAreaMessage = OnAreaMessage;
+            if (onOnAreaMessage == null)
+                return;
+            onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
+        }
 
         public PersistedArea GeneratePersistenceSnapshot()
         {

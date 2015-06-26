@@ -215,7 +215,7 @@ namespace Mirage.Urbanization
             return new RoadInfrastructureStatistics(_roadZonesAndTraffic.Keys);
         }
 
-        public void DecreasePopulation(HashSet<BaseGrowthZoneClusterConsumption> growthZones)
+        public void DecreasePopulation(ISet<BaseGrowthZoneClusterConsumption> growthZones)
         {
             foreach (var growthZone in
                 from growthZone in growthZones
