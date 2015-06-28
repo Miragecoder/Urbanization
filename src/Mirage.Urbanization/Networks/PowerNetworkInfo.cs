@@ -88,7 +88,7 @@ namespace Mirage.Urbanization.Networks
                 powerConsumer.TogglePowered((availableContributionUnits > 0));
                 powerConsumer.ToggleConnected(suppliers.Any());
 
-                if (availableContributionUnits <= 0)
+                if (availableContributionUnits <= 0 && suppliers.Any())
                     _onBrownoutsMessageFunc("Brownouts. Build another power plant.");
             }
             return new PowerGridNetworkStatistics(
