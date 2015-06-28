@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.Statistics;
@@ -8,13 +9,19 @@ namespace Mirage.Urbanization.Networks
 {
     internal class PowerNetworkInfo : BaseZoneNetworkInfo
     {
-        private PowerNetworkInfo(IEnumerable<IZoneInfo> memberZoneInfos)
+        private readonly Action<string> _onBrownoutsMessageFunc;
+
+        private PowerNetworkInfo(IEnumerable<IZoneInfo> memberZoneInfos, Action<string> onBrownoutsMessageFunc)
             : base(memberZoneInfos)
         {
-
+            if (onBrownoutsMessageFunc == null) throw new ArgumentNullException("onBrownoutsMessageFunc");
+            _onBrownoutsMessageFunc = onBrownoutsMessageFunc;
         }
 
-        public static IEnumerable<PowerNetworkInfo> GenerateFrom(IReadOnlyDictionary<ZonePoint, ZoneInfo> zoneInfos)
+        public static IEnumerable<PowerNetworkInfo> GenerateFrom(
+            IReadOnlyDictionary<ZonePoint, ZoneInfo> zoneInfos,
+            Action<string> onBrownoutsMessageFunc 
+        )
         {
             var members = CollectZoneInfoNetworkSets(
                 zoneInfos: zoneInfos,
@@ -24,7 +31,7 @@ namespace Mirage.Urbanization.Networks
                 );
 
             return members
-                .Select(network => new PowerNetworkInfo(network));
+                .Select(network => new PowerNetworkInfo(network, onBrownoutsMessageFunc));
         }
 
         private IEnumerable<TElectricityBehaviour> GetElectricityBehaviours<TElectricityBehaviour>()
@@ -80,6 +87,9 @@ namespace Mirage.Urbanization.Networks
                 availableContributionUnits -= powerConsumer.ConsumptionInUnits;
                 powerConsumer.TogglePowered((availableContributionUnits > 0));
                 powerConsumer.ToggleConnected(suppliers.Any());
+
+                if (availableContributionUnits <= 0)
+                    _onBrownoutsMessageFunc("Brownouts. Build another power plant.");
             }
             return new PowerGridNetworkStatistics(
                 amountOfSuppliers: suppliers.Count,

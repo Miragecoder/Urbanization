@@ -288,7 +288,7 @@ namespace Mirage.Urbanization
         {
             var powerTask = new Task<IPowerGridStatistics>(() => new PowerGridStatistics(
                 PowerNetworkInfo
-                    .GenerateFrom(_zoneInfoGrid.ZoneInfos)
+                    .GenerateFrom(_zoneInfoGrid.ZoneInfos, RaiseAreaMessageEvent)
                     .Select(x => x.PerformSurge())
                 ), cancellationToken
             );
