@@ -234,8 +234,12 @@ namespace Mirage.Urbanization.Tilesets
                     }
                     else
                     {
-                        bitmapOne = bitmapSegmenter.GetSegment(selectedBitmap, zoneClusterMemberConsumption.PositionInClusterX,
-                            zoneClusterMemberConsumption.PositionInClusterY, TileWidthAndSizeInPixels);
+                        bitmapOne = bitmapSegmenter.GetSegment(
+                            image: selectedBitmap, 
+                            x: zoneClusterMemberConsumption.PositionInClusterX, 
+                            y: zoneClusterMemberConsumption.PositionInClusterY, 
+                            multiplier: DefaultTileWidthAndSizeInPixels
+                        );
                     }
                 }
             }

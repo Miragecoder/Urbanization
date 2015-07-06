@@ -45,7 +45,7 @@ namespace Mirage.Urbanization.WinForms
                     _tilesetAccessor.TileWidthAndSizeInPixels = 12;
                     break;
                 default:
-                    throw new ArgumentException(String.Format("The given '{0}' is currently not supported.", mode), "mode");
+                    throw new ArgumentException(string.Format("The given '{0}' is currently not supported.", mode), "mode");
             }
             _canvasPanel.Size = _tilesetAccessor.GetAreaSize(_simulationSession.Area);
             _zoomStateChanged = true;
