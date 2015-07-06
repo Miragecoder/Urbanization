@@ -15,4 +15,18 @@ namespace Mirage.Urbanization.ZoneConsumption.Base.Behaviours
             return GetAmountInUnits(relativeZoneInfoQuery);
         }
     }
+
+    internal class DynamicFireHazardBehaviour : BaseDynamicBehaviour, IFireHazardBehaviour
+    {
+        public DynamicFireHazardBehaviour(Func<int> getCrimeInUnits)
+            : base(getCrimeInUnits)
+        {
+
+        }
+
+        public int GetFireHazardInUnits(RelativeZoneInfoQuery relativeZoneInfoQuery)
+        {
+            return GetAmountInUnits(relativeZoneInfoQuery);
+        }
+    }
 }

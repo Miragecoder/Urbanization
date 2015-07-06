@@ -19,6 +19,7 @@ namespace Mirage.Urbanization.Simulation
         public int NumberOfTrainStations { get; set; }
 
         public PersistedNumberSummary CrimeNumbers { get; set; }
+        public PersistedNumberSummary FireHazardNumbers { get; set; }
         public PersistedNumberSummary PollutionNumbers { get; set; }
         public PersistedNumberSummary LandValueNumbers { get; set; }
         public PersistedNumberSummary TrafficNumbers { get; set; }

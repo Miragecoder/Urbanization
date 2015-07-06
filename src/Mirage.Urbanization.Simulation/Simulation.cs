@@ -140,6 +140,9 @@ namespace Mirage.Urbanization.Simulation
 
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                     var queryPollutionResults = new HashSet<IQueryPollutionResult>(_area.EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+               
+                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                    var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(_area.EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
 
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
@@ -158,7 +161,13 @@ namespace Mirage.Urbanization.Simulation
                         .Where(x => x.HasValue)
                         .Select(x => x.Value);
 
-                    _lastMiscCityStatistics = new MiscCityStatistics(queryCrimeResults, queryLandValueResults, queryPollutionResults, travelDistances);
+                    _lastMiscCityStatistics = new MiscCityStatistics(
+                        queryCrimeResults: queryCrimeResults, 
+                        queryFireHazardResults: queryFireHazardResults, 
+                        queryLandValueResults: queryLandValueResults, 
+                        queryPollutionResults: queryPollutionResults, 
+                        queryTravelDistanceResults: travelDistances
+                    );
 
                     Console.WriteLine("Crime and pollution scan completed. (Took: '{0}')", stopwatch.Elapsed);
 

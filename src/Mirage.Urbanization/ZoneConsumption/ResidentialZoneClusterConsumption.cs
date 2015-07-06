@@ -28,6 +28,11 @@ namespace Mirage.Urbanization.ZoneConsumption
             get { return 0.5M; }
         }
 
+        protected override decimal PopulationFireHazardFactor
+        {
+            get { return 0.5M; }
+        }
+
         public override string Name { get { return "Residential zone"; } }
 
         public bool RenderAsHouse(ZoneClusterMemberConsumption zoneClusterMember)

@@ -104,6 +104,7 @@
     <Compile Include="ZoneConsumption\Base\IConsumeAreaOperation.cs" />
     <Compile Include="ZoneConsumption\Base\IGetCanOverrideWithResult.cs" />
     <Compile Include="ZoneConsumption\Base\IIntersectingZoneConsumption.cs" />
+    <Compile Include="ZoneConsumption\FireStationZoneclusterConsumption.cs" />
     <Compile Include="ZoneConsumption\IndustrialZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\IntersectingZoneConsumption.cs" />
     <Compile Include="ZoneConsumption\PoliceStationZoneClusterConsumption.cs" />

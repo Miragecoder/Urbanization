@@ -87,6 +87,7 @@ namespace Mirage.Urbanization.WinForms
 
             foreach (var x in
                 GetNumbarSummaryGraphs(x => x.CrimeNumbers, "Crime", Color.Red, Color.DarkRed)
+                .Concat(GetNumbarSummaryGraphs(x => x.FireHazardNumbers, "Fire hazard", Color.Red, Color.DarkRed))
                 .Concat(GetNumbarSummaryGraphs(x => x.PollutionNumbers, "Pollution", Color.Green, Color.DarkOliveGreen))
                 .Concat(GetNumbarSummaryGraphs(x => x.TrafficNumbers, "Traffic", Color.Blue, Color.DarkBlue))
                 .Concat(GetNumbarSummaryGraphs(x => x.LandValueNumbers, "Land value", Color.Yellow, Color.GreenYellow))

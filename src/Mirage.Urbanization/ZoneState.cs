@@ -41,6 +41,13 @@ namespace Mirage.Urbanization
         public QueryCrimeResult(int valueInUnits) : base(valueInUnits) { }
     }
 
+    public interface IQueryFireHazardResult : IQueryCellValueResult { }
+
+    internal class QueryFireHazardResult : QueryCellValueResult, IQueryFireHazardResult
+    {
+        public QueryFireHazardResult(int valueInUnits) : base(valueInUnits) { }
+    }
+
     public interface IQueryLandValueResult : IQueryCellValueResult { }
 
     public class QueryLandValueResult : QueryCellValueResult, IQueryLandValueResult
@@ -117,6 +124,7 @@ namespace Mirage.Urbanization
         QueryResult<IQueryPollutionResult> QueryPollution();
         QueryResult<IPollutionBehaviour> GetPollutionBehaviour();
         QueryResult<ICrimeBehaviour> GetCrimeBehaviour();
+        QueryResult<IFireHazardBehaviour> GetFireHazardBehaviour();
         QueryResult<IQueryCrimeResult> QueryCrime();
         void WithZoneConsumptionIf<T>(Action<T> action) where T : BaseZoneConsumption;
 
@@ -352,6 +360,46 @@ namespace Mirage.Urbanization
         public QueryResult<IQueryCrimeResult> GetLastQueryCrimeResult()
         {
             return _lastQueryCrimeResult ?? QueryCrime();
+        }
+
+        public QueryResult<IFireHazardBehaviour> GetFireHazardBehaviour()
+        {
+            var consumptionState = ConsumptionState.GetZoneConsumption();
+            IFireHazardBehaviour FireHazardBehaviour = null;
+
+            if (consumptionState is ZoneClusterMemberConsumption)
+            {
+                FireHazardBehaviour =
+                    (consumptionState as ZoneClusterMemberConsumption).ParentBaseZoneClusterConsumption.FireHazardBehaviour;
+            }
+            return new QueryResult<IFireHazardBehaviour>(FireHazardBehaviour);
+        }
+
+        private QueryResult<IQueryFireHazardResult> _lastQueryFireHazardResult;
+        public QueryResult<IQueryFireHazardResult> QueryFireHazard()
+        {
+            if (!this.ConsumptionState.GetIsZoneClusterMember())
+            {
+                return _lastQueryFireHazardResult = new QueryResult<IQueryFireHazardResult>();
+            }
+
+            int FireHazardInUnits = (from match in GetSurroundingZoneInfosDiamond(20)
+                    .Where(x => x.HasMatch)
+                                let FireHazardBehaviourResult = match
+                                    .MatchingObject
+                                    .GetFireHazardBehaviour()
+                                where FireHazardBehaviourResult.HasMatch
+                                select FireHazardBehaviourResult
+                                    .MatchingObject
+                                    .GetFireHazardInUnits(match.QueryObject)
+                    ).Sum();
+
+            return _lastQueryFireHazardResult = new QueryResult<IQueryFireHazardResult>(new QueryFireHazardResult(FireHazardInUnits));
+        }
+
+        public QueryResult<IQueryFireHazardResult> GetLastQueryFireHazardResult()
+        {
+            return _lastQueryFireHazardResult ?? QueryFireHazard();
         }
 
         public void WithZoneConsumptionIf<T>(Action<T> action) where T : BaseZoneConsumption

@@ -9,6 +9,7 @@ namespace Mirage.Urbanization.Statistics
     public interface IMiscCityStatistics
     {
         INumberSummary CrimeNumbers { get; }
+        INumberSummary FireHazardNumbers { get; }
         INumberSummary LandValueNumbers { get; }
         INumberSummary PollutionNumbers { get; }
         INumberSummary TravelDistanceNumbers { get; }
@@ -16,6 +17,7 @@ namespace Mirage.Urbanization.Statistics
 
     public class MiscCityStatistics : IMiscCityStatistics
     {
+        private readonly INumberSummary _fireHazardNumbers;
         private readonly INumberSummary _crimeNumbers;
         private readonly INumberSummary _landValueNumbers;
         private readonly INumberSummary _pollutionNumbers;
@@ -23,16 +25,19 @@ namespace Mirage.Urbanization.Statistics
 
         public MiscCityStatistics(
             IEnumerable<IQueryCrimeResult> queryCrimeResults,
+            IEnumerable<IQueryFireHazardResult> queryFireHazardResults,
             IEnumerable<IQueryLandValueResult> queryLandValueResults,
             IEnumerable<IQueryPollutionResult> queryPollutionResults,
             IEnumerable<int> queryTravelDistanceResults 
         )
         {
             if (queryCrimeResults == null) throw new ArgumentNullException("queryCrimeResults");
+            if (queryFireHazardResults == null) throw new ArgumentNullException("queryFireHazardResults");
             if (queryLandValueResults == null) throw new ArgumentNullException("queryLandValueResults");
             if (queryPollutionResults == null) throw new ArgumentNullException("queryPollutionResults");
             if (queryTravelDistanceResults == null) throw new ArgumentNullException("queryTravelDistanceResults");
 
+            _fireHazardNumbers = new NumberSummary(queryFireHazardResults.Select(x => x.ValueInUnits));
             _crimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.ValueInUnits));
             _landValueNumbers = new NumberSummary(queryLandValueResults.Select(x => x.ValueInUnits));
             _pollutionNumbers = new NumberSummary(queryPollutionResults.Select(x => x.ValueInUnits));
@@ -57,6 +62,11 @@ namespace Mirage.Urbanization.Statistics
         public INumberSummary TravelDistanceNumbers
         {
             get { return _travelDistanceNumbers; }
+        }
+
+        public INumberSummary FireHazardNumbers
+        {
+            get { return _fireHazardNumbers; }
         }
     }
 

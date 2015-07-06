@@ -9,4 +9,9 @@
     {
         int GetCrimeInUnits(RelativeZoneInfoQuery relativeZoneInfoQuery);
     }
+
+    public interface IFireHazardBehaviour : IBehaviour
+    {
+        int GetFireHazardInUnits(RelativeZoneInfoQuery relativeZoneInfoQuery);
+    }
 }

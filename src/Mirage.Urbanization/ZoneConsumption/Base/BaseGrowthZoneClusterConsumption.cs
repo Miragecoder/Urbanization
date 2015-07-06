@@ -15,14 +15,25 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         private static readonly Random Random = new Random();
         private readonly ICrimeBehaviour _crimeBehaviour;
         private readonly IPollutionBehaviour _pollutionBehaviour;
+        private readonly IFireHazardBehaviour _fireHazardBehaviour;
+        public override IFireHazardBehaviour FireHazardBehaviour { get { return _fireHazardBehaviour; } }
         private int _id = Random.Next(0, int.MaxValue);
 
-        protected BaseGrowthZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc, Color color)
-            : base(createZoneInfoFinderFunc, new ElectricityConsumerBehaviour(15), color, 3, 3)
+        protected BaseGrowthZoneClusterConsumption(
+            Func<ZoneInfoFinder> createZoneInfoFinderFunc, 
+            Color color)
+            : base(
+            createZoneInfoFinderFunc: createZoneInfoFinderFunc, 
+            electricityBehaviour: new ElectricityConsumerBehaviour(15), 
+            color: color, 
+            widthInZones: 3, 
+            heightInZones: 3
+        )
         {
             _pollutionBehaviour =
                 new DynamicPollutionBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationPollutionFactor));
             _crimeBehaviour = new DynamicCrimeBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationCrimeFactor));
+            _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => Convert.ToInt32(PopulationDensity * PopulationCrimeFactor));
         }
         public override int Cost { get { return 100; } }
 
@@ -38,6 +49,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         protected abstract decimal PopulationPollutionFactor { get; }
         protected abstract decimal PopulationCrimeFactor { get; }
+        protected abstract decimal PopulationFireHazardFactor { get; }
         public int PopulationDensity { get; private set; }
 
         public int PopulationStatistics

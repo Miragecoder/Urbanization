@@ -161,6 +161,10 @@ namespace Mirage.Urbanization.Tilesets
                     {
                         selectedBitmap = BitmapAccessor.Police;
                     }
+                    else if (parentConsumption is FireStationZoneclusterConsumption)
+                    {
+                        selectedBitmap = BitmapAccessor.FireStation;
+                    }
                     else if (parentConsumption is TrainStationZoneClusterConsumption)
                     {
                         selectedBitmap = BitmapAccessor.TrainStation;

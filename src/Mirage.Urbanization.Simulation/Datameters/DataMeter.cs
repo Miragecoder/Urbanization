@@ -84,6 +84,12 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 true
                 ),
+            FireHazardDataMeter = new ZoneInfoDataMeter(120,
+                "Fire hazard",
+                x => x.FireHazardNumbers.Average,
+                x => x.GetLastQueryFireHazardResult().WithResultIfHasMatch(y => y.ValueInUnits),
+                true
+            ),
             PollutionDataMeter = new ZoneInfoDataMeter(150,
                 "Pollution",
                 x => x.PollutionNumbers.Average,
@@ -121,6 +127,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
         public static readonly IReadOnlyCollection<ZoneInfoDataMeter> DataMeters = new[]
         {
             CrimeDataMeter,
+            FireHazardDataMeter,
             PollutionDataMeter,
             TrafficDataMeter,
             PopulationDataMeter,

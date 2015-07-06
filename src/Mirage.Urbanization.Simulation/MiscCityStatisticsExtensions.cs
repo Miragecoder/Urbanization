@@ -10,6 +10,7 @@ namespace Mirage.Urbanization.Simulation
             return new PersistedCityStatistics
             {
                 CrimeNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.CrimeNumbers),
+                FireHazardNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.FireHazardNumbers),
                 PollutionNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.PollutionNumbers),
                 LandValueNumbers = new PersistedNumberSummary(cityStatistics.MiscCityStatistics.LandValueNumbers),
                 TrafficNumbers = new PersistedNumberSummary(cityStatistics.GrowthZoneStatistics.RoadInfrastructureStatistics.TrafficNumbers),

@@ -11,6 +11,7 @@ namespace Mirage.Urbanization
         IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetSurroundingZoneInfosDiamond(int size);
 
         QueryResult<IQueryCrimeResult> GetLastQueryCrimeResult();
+        QueryResult<IQueryFireHazardResult> GetLastQueryFireHazardResult();
         QueryResult<IQueryPollutionResult> GetLastQueryPollutionResult();
         QueryResult<IQueryLandValueResult> GetLastLandValueResult();
 

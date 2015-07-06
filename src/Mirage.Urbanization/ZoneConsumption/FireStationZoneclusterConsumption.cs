@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
 namespace Mirage.Urbanization.ZoneConsumption
 {
-    public class PoliceStationZoneClusterConsumption : StaticZoneClusterConsumption
+    public class FireStationZoneclusterConsumption : StaticZoneClusterConsumption
     {
         public override string Name
         {
-            get { return "Police station"; }
+            get { return "Fire station"; }
         }
 
-        public override char KeyChar { get { return 'u'; } }
+        public override char KeyChar { get { return 'f'; } }
 
         public override int Cost { get { return 500; } }
 
-        public PoliceStationZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
+        public FireStationZoneclusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
             : base(
                 createZoneInfoFinderFunc: createZoneInfoFinderFunc,
                 electricityBehaviour: new ElectricityConsumerBehaviour(10),
@@ -25,12 +25,13 @@ namespace Mirage.Urbanization.ZoneConsumption
                 widthInZones: 3,
                 heightInZones: 3)
         {
-            _crimeBehaviour = new DynamicCrimeBehaviour(() => HasPower ? -500 : -50);
+            _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => HasPower ? -900 : -90);
         }
-        private readonly ICrimeBehaviour _crimeBehaviour;
+
+        private readonly ICrimeBehaviour _crimeBehaviour = new DynamicCrimeBehaviour(() => 0);
         public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
 
-        private readonly IFireHazardBehaviour _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => 20);
+        private readonly IFireHazardBehaviour _fireHazardBehaviour;
         public override IFireHazardBehaviour FireHazardBehaviour { get { return _fireHazardBehaviour; } }
     }
 }
