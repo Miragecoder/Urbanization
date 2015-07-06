@@ -10,11 +10,22 @@ namespace Mirage.Urbanization.Tilesets
 {
     public class TilesetAccessor : ITilesetAccessor
     {
-        private int _tileWidthAndSizeInPixels = 25;
+        private const int DefaultTileWidthAndSizeInPixels = 25;
+
+        private int _tileWidthAndSizeInPixels = DefaultTileWidthAndSizeInPixels;
         public int TileWidthAndSizeInPixels
         {
             get { return _tileWidthAndSizeInPixels; }
             set { _tileWidthAndSizeInPixels = value; }
+        }
+
+        public Size ResizeToTileWidthAndSize(Size size)
+        {
+            decimal resizeMultiplier = (decimal)TileWidthAndSizeInPixels / 25;
+            return new Size(
+                Convert.ToInt32(Math.Round(size.Width * resizeMultiplier)),
+                Convert.ToInt32(Math.Round(size.Height * resizeMultiplier))
+            );
         }
 
         private readonly INetworkZoneTileset _woodNetworkZoneTileset = new NetworkZoneTileset(

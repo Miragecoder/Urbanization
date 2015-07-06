@@ -239,7 +239,7 @@ namespace Mirage.Urbanization.WinForms
                                     bitmap: bitmap,
                                     rectangle: _zoneRenderInfos[pair.Second]
                                         .GetRectangle()
-                                        .ChangeSize(bitmap.Size)
+                                        .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size))
                                     );
                             }
                         }

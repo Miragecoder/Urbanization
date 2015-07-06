@@ -8,6 +8,7 @@ namespace Mirage.Urbanization.Tilesets
     {
         int TileWidthAndSizeInPixels { get; set; }
         bool TryGetBitmapFor(IAreaZoneConsumption areaZoneConsumption, out BitmapLayer bitmap);
+        Size ResizeToTileWidthAndSize(Size size);
 
         Size GetAreaSize(IReadOnlyArea area);
     }
