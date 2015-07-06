@@ -443,7 +443,9 @@ namespace Mirage.Urbanization
 
             yield return () => new PoliceStationZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new FireStationZoneclusterConsumption(_createZoneInfoFinder);
+
             yield return () => new CoalPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
+            yield return () => new NuclearPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
 
             yield return () => new SeaPortZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new AirportZoneClusterConsumption(_createZoneInfoFinder);

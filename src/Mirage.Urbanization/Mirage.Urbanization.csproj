@@ -107,6 +107,7 @@
     <Compile Include="ZoneConsumption\FireStationZoneclusterConsumption.cs" />
     <Compile Include="ZoneConsumption\IndustrialZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\IntersectingZoneConsumption.cs" />
+    <Compile Include="ZoneConsumption\NuclearPowerPlantZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\PoliceStationZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\PowerLineConsumption.cs" />
     <Compile Include="ZoneConsumption\RailRoadZoneConsumption.cs" />

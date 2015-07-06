@@ -168,6 +168,10 @@ namespace Mirage.Urbanization.Tilesets
                     {
                         selectedBitmap = BitmapAccessor.PowerPlant.GetCurrentBitmapFrame();
                     }
+                    else if (parentConsumption is NuclearPowerPlantZoneClusterConsumption)
+                    {
+                        selectedBitmap = BitmapAccessor.NuclearPowerplant;
+                    }
                     else if (parentConsumption is PoliceStationZoneClusterConsumption)
                     {
                         selectedBitmap = BitmapAccessor.Police;
