@@ -1,12 +1,9 @@
 using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Threading;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.GrowthPathFinding
 {
     class GrowthZoneInfoPathNode : ZoneInfoPathNode
     {

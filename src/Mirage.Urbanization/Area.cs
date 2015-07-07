@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mirage.Urbanization.GrowthPathFinding;
 using Mirage.Urbanization.Networks;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Statistics;

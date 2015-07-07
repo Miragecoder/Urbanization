@@ -1,6 +1,6 @@
 using System;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.GrowthPathFinding
 {
     internal class GrowthAlgorithmHighlightState : IGrowthAlgorithmHighlightState
     {

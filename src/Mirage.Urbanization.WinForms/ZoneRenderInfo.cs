@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Threading;
 using System.Windows.Forms;
+using Mirage.Urbanization.GrowthPathFinding;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.WinForms.Rendering;

@@ -1,4 +1,4 @@
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.GrowthPathFinding
 {
     public interface IGrowthAlgorithmHighlightState
     {
