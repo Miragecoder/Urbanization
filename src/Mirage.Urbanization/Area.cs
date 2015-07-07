@@ -367,7 +367,9 @@ namespace Mirage.Urbanization
                     new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
                         GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), "Industry requires seaport", 40) as IGrowthZoneDemandThreshold,
                     new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50)
+                        GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50),
+                    new GrowthZoneDemandThreshold<ResidentialZoneClusterConsumption, StadiumZoneClusterConsumption>(
+                        GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(), "Citizens demand stadium", 30)
                 };
 
                 foreach (var poweredCluster in growthZones
@@ -449,6 +451,7 @@ namespace Mirage.Urbanization
             yield return () => new CoalPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new NuclearPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
 
+            yield return () => new StadiumZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new SeaPortZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new AirportZoneClusterConsumption(_createZoneInfoFinder);
         }

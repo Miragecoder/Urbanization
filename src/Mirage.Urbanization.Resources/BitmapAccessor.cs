@@ -240,6 +240,7 @@ namespace Mirage.Urbanization.Tilesets
         public static readonly Bitmap Police = GetImage("police.png");
         public static readonly Bitmap FireStation = GetImage("firestation.png");
         public static readonly Bitmap SeaPort = GetImage("seaport.png");
+        public static readonly Bitmap Stadium = GetImage("stadium.png");
 
         public static class GrowthZones
         {

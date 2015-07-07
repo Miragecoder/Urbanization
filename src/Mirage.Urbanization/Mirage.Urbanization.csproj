@@ -59,6 +59,7 @@
     <Compile Include="IGrowthZoneDemandThreshold.cs" />
     <Compile Include="ILandValueCalculator.cs" />
     <Compile Include="Vehicles\IMoveableVehicle.cs" />
+    <Compile Include="ZoneConsumption\StadiumZoneClusterConsumption.cs" />
     <Compile Include="ZoneStatisticsQuerying\IQueryCellValueResult.cs" />
     <Compile Include="ZoneStatisticsQuerying\IQueryCrimeResult.cs" />
     <Compile Include="ZoneStatisticsQuerying\IQueryFireHazardResult.cs" />
