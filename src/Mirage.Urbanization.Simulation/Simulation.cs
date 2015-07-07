@@ -12,6 +12,7 @@ using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Simulation.Persistence;
 using Mirage.Urbanization.Statistics;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.Simulation
 {

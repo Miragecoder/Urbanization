@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Mirage.Urbanization.Statistics;
 using Mirage.Urbanization.ZoneConsumption;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Statistics
 {
     public class RoadInfrastructureStatistics : IRoadInfrastructureStatistics
     {

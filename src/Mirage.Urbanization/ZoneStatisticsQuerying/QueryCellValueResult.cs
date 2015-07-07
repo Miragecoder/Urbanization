@@ -1,9 +1,4 @@
-﻿using System.Drawing.Text;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Collections;
-
-namespace Mirage.Urbanization
+﻿namespace Mirage.Urbanization.ZoneStatisticsQuerying
 {
     public abstract class QueryCellValueResult : IQueryCellValueResult
     {

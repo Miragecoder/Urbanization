@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.ZoneStatisticsQuerying
 {
     public class QueryResult<T>
         where T : class

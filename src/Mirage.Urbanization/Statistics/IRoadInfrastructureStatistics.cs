@@ -1,6 +1,4 @@
-using Mirage.Urbanization.Statistics;
-
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Statistics
 {
     public interface IRoadInfrastructureStatistics
     {

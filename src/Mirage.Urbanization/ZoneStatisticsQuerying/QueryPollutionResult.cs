@@ -1,4 +1,4 @@
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.ZoneStatisticsQuerying
 {
     internal class QueryPollutionResult : QueryCellValueResult, IQueryPollutionResult
     {

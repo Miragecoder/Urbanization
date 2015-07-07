@@ -1,4 +1,5 @@
 ﻿using System;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base
 {

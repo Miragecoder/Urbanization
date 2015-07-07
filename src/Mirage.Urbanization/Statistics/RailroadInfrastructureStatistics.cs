@@ -1,4 +1,4 @@
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Statistics
 {
     public class RailroadInfrastructureStatistics : IRailroadInfrastructureStatistics
     {

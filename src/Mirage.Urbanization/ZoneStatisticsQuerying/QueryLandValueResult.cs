@@ -1,4 +1,4 @@
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.ZoneStatisticsQuerying
 {
     public class QueryLandValueResult : QueryCellValueResult, IQueryLandValueResult
     {

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security.Policy;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization
 {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization
 {

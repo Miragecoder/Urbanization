@@ -2,6 +2,7 @@
 using System.Drawing;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.WinForms
 {
