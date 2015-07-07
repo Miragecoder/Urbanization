@@ -362,14 +362,23 @@ namespace Mirage.Urbanization
                         );
                 };
 
-                var thresholds = new[]
+                var growthZoneDemandThresholds = new IGrowthZoneDemandThreshold[]
                 {
                     new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), "Industry requires seaport", 40) as IGrowthZoneDemandThreshold,
+                        currentlyOffered: GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), 
+                        onExceededMessage: "Industry requires seaport",
+                        growthFactor: 40
+                    ),
                     new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50),
+                        currentlyOffered: GetZoneClusterConsumptions<AirportZoneClusterConsumption>(),
+                        onExceededMessage: "Commerce requires airport", 
+                        growthFactor: 50
+                    ),
                     new GrowthZoneDemandThreshold<ResidentialZoneClusterConsumption, StadiumZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(), "Citizens demand stadium", 30)
+                        currentlyOffered: GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(),
+                        onExceededMessage: "Citizens demand stadium",
+                        growthFactor: 30
+                    )
                 };
 
                 foreach (var poweredCluster in growthZones
@@ -377,7 +386,7 @@ namespace Mirage.Urbanization
                     .Where(x => x.IsCentralClusterMember && x.ParentBaseZoneClusterConsumption.ElectricityBehaviour.IsPowered)
                 )
                 {
-                    var violatedThreshold = thresholds
+                    var violatedThreshold = growthZoneDemandThresholds
                         .SingleOrDefault(x => x.DecrementAvailableConsumption(poweredCluster.ParentBaseZoneClusterConsumption));
 
                     if (violatedThreshold != null && violatedThreshold.AvailableConsumptionsExceeded)
