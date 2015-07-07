@@ -13,6 +13,7 @@ using Mirage.Urbanization.WinForms.Rendering.BufferedGraphics;
 using Mirage.Urbanization.WinForms.Rendering.SharpDx;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Tilesets;
+using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.WinForms.Rendering;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;

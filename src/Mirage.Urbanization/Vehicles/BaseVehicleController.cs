@@ -1,6 +1,6 @@
 using System;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Vehicles
 {
     internal abstract class BaseVehicleController
     {

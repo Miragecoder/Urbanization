@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Vehicles
 {
     internal abstract class BaseStructureVehicleController<TVehicle, TStructure> : BaseVehicleController<TVehicle>
         where TVehicle : IMoveableVehicle

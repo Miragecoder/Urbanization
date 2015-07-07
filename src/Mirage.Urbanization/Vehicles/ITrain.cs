@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Vehicles
 {
     public interface ITrain : IMoveableVehicle
     {

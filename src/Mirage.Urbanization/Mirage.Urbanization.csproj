@@ -40,25 +40,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AirplaneController.cs" />
+    <Compile Include="Vehicles\AirplaneController.cs" />
     <Compile Include="Area.cs" />
     <Compile Include="AreaConsumptionResult.cs" />
     <Compile Include="AreaConsumptionResultEventArgs.cs" />
     <Compile Include="AreaOptions.cs" />
-    <Compile Include="BaseStructureVehicleController.cs" />
-    <Compile Include="BaseVehicle.cs" />
-    <Compile Include="BaseVehicleController.cs" />
+    <Compile Include="Vehicles\BaseStructureVehicleController.cs" />
+    <Compile Include="Vehicles\BaseVehicle.cs" />
+    <Compile Include="Vehicles\BaseVehicleController.cs" />
     <Compile Include="GetRelativeZoneInfoDelegate.cs" />
     <Compile Include="GrowthAlgorithmHighlightState.cs" />
     <Compile Include="GrowthZoneDemandThreshold.cs" />
     <Compile Include="HighlightState.cs" />
-    <Compile Include="IAirplane.cs" />
+    <Compile Include="Vehicles\IAirplane.cs" />
     <Compile Include="IAreaConsumptionResult.cs" />
     <Compile Include="IAreaMessage.cs" />
     <Compile Include="IGrowthAlgorithmHighlightState.cs" />
     <Compile Include="IGrowthZoneDemandThreshold.cs" />
     <Compile Include="ILandValueCalculator.cs" />
-    <Compile Include="IMoveableVehicle.cs" />
+    <Compile Include="Vehicles\IMoveableVehicle.cs" />
     <Compile Include="IQueryCellValueResult.cs" />
     <Compile Include="IQueryCrimeResult.cs" />
     <Compile Include="IQueryFireHazardResult.cs" />
@@ -68,10 +68,10 @@
     <Compile Include="IReadOnlyZoneConsumptionState.cs" />
     <Compile Include="IReadOnlyZoneInfo.cs" />
     <Compile Include="IRoadInfrastructureStatistics.cs" />
-    <Compile Include="IShip.cs" />
-    <Compile Include="ITrain.cs" />
-    <Compile Include="IVehicle.cs" />
-    <Compile Include="IVehicleController.cs" />
+    <Compile Include="Vehicles\IShip.cs" />
+    <Compile Include="Vehicles\ITrain.cs" />
+    <Compile Include="Vehicles\IVehicle.cs" />
+    <Compile Include="Vehicles\IVehicleController.cs" />
     <Compile Include="IZoneConsumptionState.cs" />
     <Compile Include="IZoneInfo.cs" />
     <Compile Include="IZoneInfoPathNode.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="RailroadInfrastructureStatistics.cs" />
     <Compile Include="RelativeZoneInfoQuery.cs" />
     <Compile Include="RoadInfrastructureStatistics.cs" />
-    <Compile Include="ShipController.cs" />
+    <Compile Include="Vehicles\ShipController.cs" />
     <Compile Include="SimpleCache.cs" />
     <Compile Include="SimulationSessionHotMessageEventArgs.cs" />
     <Compile Include="SimulationSessionMessageEventArgs.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="RandomTerraformer.cs" />
     <Compile Include="ProcessOptions.cs" />
     <Compile Include="TerraformingOptions.cs" />
-    <Compile Include="TrainController.cs" />
+    <Compile Include="Vehicles\TrainController.cs" />
     <Compile Include="ZoneConsumptionCompletedResult.cs" />
     <Compile Include="ZoneConsumptionFailedResult.cs" />
     <Compile Include="ZoneConsumptionState.cs" />

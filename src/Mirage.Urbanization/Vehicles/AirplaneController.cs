@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Vehicles
 {
     internal class AirplaneController : BaseStructureVehicleController<IAirplane, AirportZoneClusterConsumption>
     {

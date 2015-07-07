@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mirage.Urbanization.ZoneConsumption;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Vehicles
 {
     internal class ShipController : BaseStructureVehicleController<IShip, SeaPortZoneClusterConsumption>
     {

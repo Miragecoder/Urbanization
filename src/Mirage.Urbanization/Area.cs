@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Mirage.Urbanization.Networks;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Statistics;
+using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mirage.Urbanization
+namespace Mirage.Urbanization.Vehicles
 {
     internal abstract class BaseVehicle : IVehicle
     {

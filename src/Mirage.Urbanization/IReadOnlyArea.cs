@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Mirage.Urbanization.Statistics;
+using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
