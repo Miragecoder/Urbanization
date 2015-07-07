@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Mirage.Urbanization.Statistics;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
@@ -228,64 +227,6 @@ namespace Mirage.Urbanization
             {
                 growthZone.DecreasePopulation();
             }
-        }
-    }
-
-    public interface IRoadInfrastructureStatistics
-    {
-        int NumberOfRoadZones { get; }
-        INumberSummary TrafficNumbers { get; }
-    }
-
-    public interface IRailroadInfrastructureStatistics
-    {
-        int NumberOfTrainStations { get; }
-        int NumberOfRailRoadZones { get; }
-    }
-
-    public class RailroadInfrastructureStatistics : IRailroadInfrastructureStatistics
-    {
-        private readonly int _numberOfTrainStations;
-        private readonly int _numberOfRailRoadZones;
-
-        public RailroadInfrastructureStatistics(int numberOfTrainStations, int numberOfRailRoadZones)
-        {
-            _numberOfTrainStations = numberOfTrainStations;
-            _numberOfRailRoadZones = numberOfRailRoadZones;
-        }
-
-        public int NumberOfTrainStations
-        {
-            get { return _numberOfTrainStations; }
-        }
-
-        public int NumberOfRailRoadZones
-        {
-            get { return _numberOfRailRoadZones; }
-        }
-    }
-
-    public class RoadInfrastructureStatistics : IRoadInfrastructureStatistics
-    {
-        private readonly int _numberOfRoadZones;
-        private readonly INumberSummary _trafficNumbers;
-
-        public RoadInfrastructureStatistics(IEnumerable<RoadZoneConsumption> roadZoneConsumptions)
-        {
-            var capturedRoadZoneConsumptions = roadZoneConsumptions.ToList();
-
-            _numberOfRoadZones = capturedRoadZoneConsumptions.Count();
-            _trafficNumbers = new NumberSummary(capturedRoadZoneConsumptions.Select(x => x.GetTrafficDensityAsInt()));
-        }
-
-        public int NumberOfRoadZones
-        {
-            get { return _numberOfRoadZones; }
-        }
-
-        public INumberSummary TrafficNumbers
-        {
-            get { return _trafficNumbers; }
         }
     }
 }

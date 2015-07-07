@@ -1,8 +1,4 @@
-﻿using System.Drawing.Text;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,138 +8,6 @@ using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
 namespace Mirage.Urbanization
 {
-    public interface IQueryCellValueResult
-    {
-        int ValueInUnits { get; }
-    }
-
-    public abstract class QueryCellValueResult : IQueryCellValueResult
-    {
-        private readonly int _valueInUnits;
-        protected QueryCellValueResult(int valueInUnits)
-        {
-            _valueInUnits = valueInUnits > 0 ? valueInUnits : 0;
-        }
-        public int ValueInUnits { get { return _valueInUnits; } }
-    }
-
-    public interface IQueryPollutionResult : IQueryCellValueResult { }
-
-    internal class QueryPollutionResult : QueryCellValueResult, IQueryPollutionResult
-    {
-        public QueryPollutionResult(int valueInUnits) : base(valueInUnits) { }
-    }
-
-    public interface IQueryCrimeResult : IQueryCellValueResult { }
-
-    internal class QueryCrimeResult : QueryCellValueResult, IQueryCrimeResult
-    {
-        public QueryCrimeResult(int valueInUnits) : base(valueInUnits) { }
-    }
-
-    public interface IQueryFireHazardResult : IQueryCellValueResult { }
-
-    internal class QueryFireHazardResult : QueryCellValueResult, IQueryFireHazardResult
-    {
-        public QueryFireHazardResult(int valueInUnits) : base(valueInUnits) { }
-    }
-
-    public interface IQueryLandValueResult : IQueryCellValueResult { }
-
-    public class QueryLandValueResult : QueryCellValueResult, IQueryLandValueResult
-    {
-        public QueryLandValueResult(int valueInUnits) : base(valueInUnits) { }
-    }
-
-    public class RelativeZoneInfoQuery
-    {
-        private readonly int _relativeX, _relativeY;
-
-        public RelativeZoneInfoQuery(int relativeX, int relativeY)
-        {
-            _relativeX = relativeX;
-            _relativeY = relativeY;
-        }
-
-        public int Distance
-        {
-            get { return Math.Abs(RelativeX) + Math.Abs(RelativeY); }
-        }
-
-        public int RelativeY { get { return _relativeY; } }
-        public int RelativeX { get { return _relativeX; } }
-    }
-
-    public delegate QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetRelativeZoneInfoDelegate(RelativeZoneInfoQuery relativeZoneInfoQuery);
-
-    internal class GrowthAlgorithmHighlightState : IGrowthAlgorithmHighlightState
-    {
-        private DateTime _lastChange = DateTime.Now;
-
-        private HighlightState _lastHighlightState;
-
-        public HighlightState Current
-        {
-            get
-            {
-                return _lastChange > DateTime.Now.AddMilliseconds(-40)
-                    ? _lastHighlightState
-                    : HighlightState.None;
-            }
-        }
-
-        public void SetState(HighlightState highlightState)
-        {
-            _lastHighlightState = highlightState;
-            _lastChange = DateTime.Now;
-        }
-    }
-
-    public enum HighlightState
-    {
-        None,
-        Examined,
-        UsedAsPath
-    }
-
-    public interface IGrowthAlgorithmHighlightState
-    {
-        HighlightState Current { get; }
-        void SetState(HighlightState highlightState);
-    }
-
-    public interface IZoneInfo : IReadOnlyZoneInfo
-    {
-        IZoneConsumptionState ConsumptionState { get; }
-        QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetRelativeZoneInfo(RelativeZoneInfoQuery relativeZoneInfoQuery);
-        int GetDistanceScoreBasedOnConsumption();
-        QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetNorth();
-        QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetSouth();
-        QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetEast();
-        QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetWest();
-        QueryResult<IQueryPollutionResult> QueryPollution();
-        QueryResult<IPollutionBehaviour> GetPollutionBehaviour();
-        QueryResult<ICrimeBehaviour> GetCrimeBehaviour();
-        QueryResult<IFireHazardBehaviour> GetFireHazardBehaviour();
-        QueryResult<IQueryCrimeResult> QueryCrime();
-        void WithZoneConsumptionIf<T>(Action<T> action) where T : BaseZoneConsumption;
-
-        IEnumerable<Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>>> GetSteerDirections(
-            Func<IZoneInfo, QueryResult<IZoneInfo, RelativeZoneInfoQuery>> expression
-            );
-
-        QueryResult<TNetworkZoneConsumption> GetNetworkZoneConsumption<TNetworkZoneConsumption>()
-            where TNetworkZoneConsumption : BaseNetworkZoneConsumption;
-
-        void WithNetworkConsumptionIf<TNetworkZoneConsumption>(Action<TNetworkZoneConsumption> action)
-            where TNetworkZoneConsumption : BaseNetworkZoneConsumption;
-
-        bool IsGrowthZoneClusterOfType<T>() where T : BaseGrowthZoneClusterConsumption;
-        QueryResult<T> GetAsZoneCluster<T>() where T : BaseZoneClusterConsumption;
-        void WithZoneClusterIf<T>(Action<T> action) where T : BaseZoneClusterConsumption;
-        QueryResult<IQueryLandValueResult> QueryLandValue();
-    }
-
     [DebuggerDisplay("Zone info: (X: {Point.X}, Y: {Point.Y})")]
     public class ZoneInfo : IZoneInfo
     {
@@ -162,7 +26,7 @@ namespace Mirage.Urbanization
             ZonePoint zonePoint,
             GetRelativeZoneInfoDelegate getRelativeZoneInfo,
             ILandValueCalculator landValueCalculator
-        )
+            )
         {
             if (zonePoint == null) throw new ArgumentNullException("zonePoint");
             if (getRelativeZoneInfo == null) throw new ArgumentNullException("getRelativeZoneInfo");
@@ -192,7 +56,7 @@ namespace Mirage.Urbanization
         {
             return _north ?? (_north = _getRelativeZoneInfo(
                 new RelativeZoneInfoQuery(relativeX: 0, relativeY: -1)
-            ));
+                ));
         }
 
         private QueryResult<IZoneInfo, RelativeZoneInfoQuery> _south;
@@ -200,7 +64,7 @@ namespace Mirage.Urbanization
         {
             return _south ?? (_south = _getRelativeZoneInfo(
                 new RelativeZoneInfoQuery(relativeX: 0, relativeY: 1)
-            ));
+                ));
         }
 
         private QueryResult<IZoneInfo, RelativeZoneInfoQuery> _east;
@@ -208,7 +72,7 @@ namespace Mirage.Urbanization
         {
             return _east ?? (_east = _getRelativeZoneInfo(
                 new RelativeZoneInfoQuery(relativeX: 1, relativeY: 0)
-            ));
+                ));
         }
 
         private QueryResult<IZoneInfo, RelativeZoneInfoQuery> _west;
@@ -216,7 +80,7 @@ namespace Mirage.Urbanization
         {
             return _west ?? (_west = _getRelativeZoneInfo(
                 new RelativeZoneInfoQuery(relativeX: -1, relativeY: 0)
-            ));
+                ));
         }
 
         public IEnumerable<QueryResult<IZoneInfo, RelativeZoneInfoQuery>> GetNorthEastSouthWest()
@@ -308,7 +172,7 @@ namespace Mirage.Urbanization
             if (consumptionState is ZoneClusterMemberConsumption)
             {
                 pollutionBehaviour = (consumptionState as ZoneClusterMemberConsumption).ParentBaseZoneClusterConsumption
-                        .PollutionBehaviour;
+                    .PollutionBehaviour;
             }
             else if (consumptionState is WoodlandZoneConsumption)
             {
@@ -344,15 +208,15 @@ namespace Mirage.Urbanization
             }
 
             int crimeInUnits = (from match in GetSurroundingZoneInfosDiamond(20)
-                    .Where(x => x.HasMatch)
-                                let crimeBehaviourResult = match
-                                    .MatchingObject
-                                    .GetCrimeBehaviour()
-                                where crimeBehaviourResult.HasMatch
-                                select crimeBehaviourResult
-                                    .MatchingObject
-                                    .GetCrimeInUnits(match.QueryObject)
-                    ).Sum();
+                .Where(x => x.HasMatch)
+                let crimeBehaviourResult = match
+                    .MatchingObject
+                    .GetCrimeBehaviour()
+                where crimeBehaviourResult.HasMatch
+                select crimeBehaviourResult
+                    .MatchingObject
+                    .GetCrimeInUnits(match.QueryObject)
+                ).Sum();
 
             return _lastQueryCrimeResult = new QueryResult<IQueryCrimeResult>(new QueryCrimeResult(crimeInUnits));
         }
@@ -384,15 +248,15 @@ namespace Mirage.Urbanization
             }
 
             int FireHazardInUnits = (from match in GetSurroundingZoneInfosDiamond(20)
-                    .Where(x => x.HasMatch)
-                                let FireHazardBehaviourResult = match
-                                    .MatchingObject
-                                    .GetFireHazardBehaviour()
-                                where FireHazardBehaviourResult.HasMatch
-                                select FireHazardBehaviourResult
-                                    .MatchingObject
-                                    .GetFireHazardInUnits(match.QueryObject)
-                    ).Sum();
+                .Where(x => x.HasMatch)
+                let FireHazardBehaviourResult = match
+                    .MatchingObject
+                    .GetFireHazardBehaviour()
+                where FireHazardBehaviourResult.HasMatch
+                select FireHazardBehaviourResult
+                    .MatchingObject
+                    .GetFireHazardInUnits(match.QueryObject)
+                ).Sum();
 
             return _lastQueryFireHazardResult = new QueryResult<IQueryFireHazardResult>(new QueryFireHazardResult(FireHazardInUnits));
         }
@@ -423,7 +287,7 @@ namespace Mirage.Urbanization
                     .GetIntersectingZoneConsumptions()
                     .OfType<TNetworkZoneConsumption>()
                     .SingleOrDefault()
-                );
+                    );
             }
             return new QueryResult<TNetworkZoneConsumption>();
         }

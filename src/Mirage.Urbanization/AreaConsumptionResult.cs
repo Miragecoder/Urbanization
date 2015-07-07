@@ -1,56 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
 {
-    public interface IAreaMessage
-    {
-        string Message { get; }
-    }
-
-    public interface IAreaConsumptionResult : IAreaMessage
-    {
-        bool Success { get; }
-        IAreaConsumption AreaConsumption { get; }
-    }
-
-    public class SimulationSessionHotMessageEventArgs : SimulationSessionMessageEventArgs
-    {
-        private readonly string _title;
-        public string Title { get { return _title; } }
-        public SimulationSessionHotMessageEventArgs(string title, string message)
-            :base(message)
-        {
-            _title = title;
-        }
-    }
-
-    public class SimulationSessionMessageEventArgs : EventArgs
-    {
-        private readonly string _message;
-
-        public SimulationSessionMessageEventArgs(string message)
-        {
-            _message = message;
-        }
-
-        public string Message { get { return _message; } }
-    }
-
-    public class AreaConsumptionResultEventArgs : EventArgs
-    {
-        private readonly IAreaConsumptionResult _areaConsumptionResult;
-        public IAreaConsumptionResult AreaConsumptionResult { get { return _areaConsumptionResult; } }
-        public AreaConsumptionResultEventArgs(IAreaConsumptionResult areaConsumptionResult)
-        {
-            if (areaConsumptionResult == null) throw new ArgumentNullException("areaConsumptionResult");
-            _areaConsumptionResult = areaConsumptionResult;
-        }
-    }
-
     internal class AreaConsumptionResult : IAreaConsumptionResult
     {
         private readonly IAreaConsumption _areaConsumption;

@@ -4,14 +4,4 @@
     {
 
     }
-
-    class ZoneConsumptionCompletedResult : ZoneConsumptionResult
-    {
-        
-    }
-
-    class ZoneConsumptionFailedResult : ZoneConsumptionResult
-    {
-        
-    }
 }
