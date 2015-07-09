@@ -8,7 +8,12 @@ namespace Mirage.Urbanization.Simulation
     {
         public PersistedCityStatistics() { }
 
-        public PersistedCityStatistics(int timeCode, IPowerGridStatistics powerGridStatistics, IGrowthZoneStatistics growthZoneStatistics, IMiscCityStatistics miscCityStatistics)
+        public PersistedCityStatistics(
+            int timeCode, 
+            IPowerGridStatistics powerGridStatistics, 
+            IGrowthZoneStatistics growthZoneStatistics, 
+            IMiscCityStatistics miscCityStatistics
+        )
         {
             if (timeCode == default(int)) throw new ArgumentOutOfRangeException("timeCode");
             if (powerGridStatistics == null) throw new ArgumentNullException("powerGridStatistics");
@@ -39,6 +44,12 @@ namespace Mirage.Urbanization.Simulation
             ResidentialZonePopulationStatistics = new PersistedNumberSummary(growthZoneStatistics.ResidentialZonePopulationNumbers);
             GlobalZonePopulationStatistics = new PersistedNumberSummary(growthZoneStatistics.GlobalZonePopulationNumbers);
 
+            NumberOfStadiums = growthZoneStatistics.CityServicesStatistics.NumberOfStadiums;
+            NumberOfAirports = growthZoneStatistics.CityServicesStatistics.NumberOfAirports;
+            NumberOfSeaPorts = growthZoneStatistics.CityServicesStatistics.NumberOfSeaports;
+            NumberOfPoliceStations = growthZoneStatistics.CityServicesStatistics.NumberOfPoliceStations;
+            NumberOfFireStations = growthZoneStatistics.CityServicesStatistics.NumberOfFireStations;
+
             TimeCode = TimeCode;
         }
 
@@ -57,6 +68,12 @@ namespace Mirage.Urbanization.Simulation
         public int NumberOfRoadZones { get; set; }
         public int NumberOfRailRoadZones { get; set; }
         public int NumberOfTrainStations { get; set; }
+
+        public int NumberOfStadiums { get; set; }
+        public int NumberOfAirports { get; set; }
+        public int NumberOfSeaPorts { get; set; }
+        public int NumberOfPoliceStations { get; set; }
+        public int NumberOfFireStations { get; set; }
 
         public PersistedNumberSummary CrimeNumbers { get; set; }
         public PersistedNumberSummary FireHazardNumbers { get; set; }

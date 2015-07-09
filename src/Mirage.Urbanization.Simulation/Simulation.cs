@@ -97,7 +97,14 @@ namespace Mirage.Urbanization.Simulation
                             var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
                             if (onYearAndOrMonthChanged != null) onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
 
-                            _persistedCityStatisticsCollection.Add(new PersistedCityStatistics(_yearAndMonth.TimeCode, _lastPowerGridStatistics, growthZoneStatistics, _lastMiscCityStatistics));
+                            _persistedCityStatisticsCollection.Add(
+                                    new PersistedCityStatistics(
+                                    timeCode: _yearAndMonth.TimeCode, 
+                                    powerGridStatistics: _lastPowerGridStatistics, 
+                                    growthZoneStatistics: growthZoneStatistics, 
+                                    miscCityStatistics: _lastMiscCityStatistics
+                                )
+                            );
 
                             var eventCapture = CityStatisticsUpdated;
                             if (eventCapture != null)

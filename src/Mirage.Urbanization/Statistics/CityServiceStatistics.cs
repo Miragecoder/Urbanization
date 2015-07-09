@@ -6,21 +6,21 @@ namespace Mirage.Urbanization.Statistics
             int numberOfPoliceStations, 
             int numberOfFireStations, 
             int numberOfStadiums, 
-            int numberOfHarbours, 
+            int numberOfSeaports, 
             int numberOfAirports
             )
         {
             NumberOfPoliceStations = numberOfPoliceStations;
             NumberOfFireStations = numberOfFireStations;
             NumberOfStadiums = numberOfStadiums;
-            NumberOfHarbours = numberOfHarbours;
+            NumberOfSeaports = numberOfSeaports;
             NumberOfAirports = numberOfAirports;
         }
 
         public int NumberOfPoliceStations { get; private set; }
         public int NumberOfFireStations { get; private set; }
         public int NumberOfStadiums { get; private set; }
-        public int NumberOfHarbours { get; private set; }
+        public int NumberOfSeaports { get; private set; }
         public int NumberOfAirports { get; private set; }
     }
 }

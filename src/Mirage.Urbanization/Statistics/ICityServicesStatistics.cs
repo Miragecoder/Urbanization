@@ -6,7 +6,7 @@ namespace Mirage.Urbanization.Statistics
         int NumberOfFireStations { get; }
 
         int NumberOfStadiums { get; }
-        int NumberOfHarbours { get; }
+        int NumberOfSeaports { get; }
         int NumberOfAirports { get; }
     }
 }

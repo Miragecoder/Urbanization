@@ -432,7 +432,7 @@ namespace Mirage.Urbanization
                         numberOfPoliceStations: zoneClusters.OfType<PoliceStationZoneClusterConsumption>().Count(),
                         numberOfFireStations: zoneClusters.OfType<FireStationZoneclusterConsumption>().Count(),
                         numberOfStadiums: zoneClusters.OfType<StadiumZoneClusterConsumption>().Count(),
-                        numberOfHarbours: zoneClusters.OfType<SeaPortZoneClusterConsumption>().Count(),
+                        numberOfSeaports: zoneClusters.OfType<SeaPortZoneClusterConsumption>().Count(),
                         numberOfAirports: zoneClusters.OfType<AirportZoneClusterConsumption>().Count()
                     )
                 ) as IGrowthZoneStatistics;
