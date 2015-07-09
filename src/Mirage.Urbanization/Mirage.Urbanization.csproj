@@ -91,12 +91,10 @@
     <Compile Include="SimulationSessionMessageEventArgs.cs" />
     <Compile Include="Statistics\BaseStatisticsCollection.cs" />
     <Compile Include="Networks\BaseZoneNetworkInfo.cs" />
-    <Compile Include="Statistics\CityStatistics.cs" />
     <Compile Include="GrowthPathFinding\GrowthZoneConnector.cs" />
     <Compile Include="GrowthPathFinding\GrowthZoneInfoPathNode.cs" />
     <Compile Include="Statistics\GrowthZoneNetworkStatistics.cs" />
     <Compile Include="Statistics\GrowthZoneStatistics.cs" />
-    <Compile Include="Statistics\ICityStatistics.cs" />
     <Compile Include="Statistics\IGrowthZoneNetworkStatistics.cs" />
     <Compile Include="Statistics\IGrowthZoneStatistics.cs" />
     <Compile Include="Statistics\INetworkStatistics.cs" />

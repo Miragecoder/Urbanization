@@ -50,7 +50,6 @@
     <Compile Include="EventArgsWithData.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
-    <Compile Include="MiscCityStatisticsExtensions.cs" />
     <Compile Include="PersistedCityStatistics.cs" />
     <Compile Include="PersistedCityStatisticsCollection.cs" />
     <Compile Include="PersistedNumberSummary.cs" />

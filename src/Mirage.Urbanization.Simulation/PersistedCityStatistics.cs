@@ -1,7 +1,47 @@
+using System;
+using System.Linq;
+using Mirage.Urbanization.Statistics;
+
 namespace Mirage.Urbanization.Simulation
 {
     public class PersistedCityStatistics
     {
+        public PersistedCityStatistics() { }
+
+        public PersistedCityStatistics(int timeCode, IPowerGridStatistics powerGridStatistics, IGrowthZoneStatistics growthZoneStatistics, IMiscCityStatistics miscCityStatistics)
+        {
+            if (timeCode == default(int)) throw new ArgumentOutOfRangeException("timeCode");
+            if (powerGridStatistics == null) throw new ArgumentNullException("powerGridStatistics");
+            if (growthZoneStatistics == null) throw new ArgumentNullException("growthZoneStatistics");
+            if (miscCityStatistics == null) throw new ArgumentNullException("miscCityStatistics");
+
+            TimeCode = timeCode;
+            CrimeNumbers = new PersistedNumberSummary(miscCityStatistics.CrimeNumbers);
+            FireHazardNumbers = new PersistedNumberSummary(miscCityStatistics.FireHazardNumbers);
+            PollutionNumbers = new PersistedNumberSummary(miscCityStatistics.PollutionNumbers);
+            LandValueNumbers = new PersistedNumberSummary(miscCityStatistics.LandValueNumbers);
+            TrafficNumbers = new PersistedNumberSummary(growthZoneStatistics.RoadInfrastructureStatistics.TrafficNumbers);
+
+            NumberOfRoadZones = growthZoneStatistics.RoadInfrastructureStatistics.NumberOfRoadZones;
+
+            AverageTravelDistanceStatistics = new PersistedNumberSummary(miscCityStatistics.TravelDistanceNumbers);
+
+            NumberOfRailRoadZones = growthZoneStatistics.RailroadInfrastructureStatistics.NumberOfRailRoadZones;
+            NumberOfTrainStations = growthZoneStatistics.RailroadInfrastructureStatistics.NumberOfTrainStations;
+
+            PowerAmountOfConsumers = powerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.AmountOfConsumers);
+            PowerAmountOfSuppliers = powerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.AmountOfSuppliers);
+            PowerConsumptionInUnits = powerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.ConsumptionInUnits);
+            PowerSupplyInUnits = powerGridStatistics.PowerGridNetworkStatistics.Sum(x => x.SupplyInUnits);
+
+            CommercialZonePopulationStatistics = new PersistedNumberSummary(growthZoneStatistics.CommercialZonePopulationNumbers);
+            IndustrialZonePopulationStatistics = new PersistedNumberSummary(growthZoneStatistics.IndustrialZonePopulationNumbers);
+            ResidentialZonePopulationStatistics = new PersistedNumberSummary(growthZoneStatistics.ResidentialZonePopulationNumbers);
+            GlobalZonePopulationStatistics = new PersistedNumberSummary(growthZoneStatistics.GlobalZonePopulationNumbers);
+
+            TimeCode = TimeCode;
+        }
+
         public int TimeCode { get; set; }
 
         public int PowerAmountOfConsumers { get; set; }

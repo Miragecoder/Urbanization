@@ -29,16 +29,5 @@ namespace Mirage.Urbanization.Simulation
 
     public class CityStatisticsUpdatedEventArgs : EventArgs
     {
-        private readonly ICityStatistics _cityStatistics;
-
-        public CityStatisticsUpdatedEventArgs(ICityStatistics cityStatistics)
-        {
-            _cityStatistics = cityStatistics;
-        }
-
-        public ICityStatistics CityStatistics
-        {
-            get { return _cityStatistics; }
-        }
     }
 }
