@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.Simulation.Datameters;
+using Mirage.Urbanization.Simulation.Persistence;
 
 namespace Mirage.Urbanization.Simulation
 {

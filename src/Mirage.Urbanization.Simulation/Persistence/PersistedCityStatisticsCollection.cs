@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
 
-namespace Mirage.Urbanization.Simulation
+namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatisticsCollection
     {

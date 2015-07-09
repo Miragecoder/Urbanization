@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Mirage.Urbanization.Statistics;
 
-namespace Mirage.Urbanization.Simulation
+namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatistics
     {

@@ -20,23 +20,13 @@ namespace Mirage.Urbanization.Simulation
 
         public int ProjectedIncome { get { return _projectedIncome; } }
 
-        public CityBudget(IYearAndMonth yearAndMonth)
-        {
-            if (yearAndMonth == null) throw new ArgumentNullException("yearAndMonth");
-            yearAndMonth.OnWeekElapsed += (sender, e) =>
-            {
-                if (e.EventData.IsAtBeginningOfNewYear)
-                    AddProjectedIncomeToCurrentAmount();
-            };
-        }
-
         public void AddProjectedIncome(int amount)
         {
             Interlocked.Add(ref _projectedIncome, amount);
             RaiseCityBudgetValueChangedEvent();
         }
 
-        private void AddProjectedIncomeToCurrentAmount()
+        public void AddProjectedIncomeToCurrentAmount()
         {
             Interlocked.Add(ref _currentAmount, Interlocked.Exchange(ref _projectedIncome, 0));
             RaiseCityBudgetValueChangedEvent();

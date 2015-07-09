@@ -108,6 +108,8 @@ namespace Mirage.Urbanization.Simulation
                             if (eventCapture != null)
                                 eventCapture(this, new CityStatisticsUpdatedEventArgs());
                             _yearAndMonth.AddWeek();
+                            if (_yearAndMonth.IsAtBeginningOfNewYear)
+                                _cityBudget.AddProjectedIncomeToCurrentAmount();
                         }
                         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                         Task.Delay(2000).Wait();
@@ -179,17 +181,15 @@ namespace Mirage.Urbanization.Simulation
                 }
             }, _cancellationTokenSource.Token);
 
-            _cityBudget = new CityBudget(_yearAndMonth);
-            _cityBudget.OnCityBudgetValueChanged += _cityBudget_OnCityBudgetValueChanged;
+            _cityBudget = new CityBudget();
+            _cityBudget.OnCityBudgetValueChanged += (sender, e) =>
+            {
+                var onCityBudgetValueChanged = OnCityBudgetValueChanged;
+                if (onCityBudgetValueChanged != null)
+                    onCityBudgetValueChanged(this, e);
+            };
 
             _yearAndMonth.OnWeekElapsed += OnWeekPass;
-        }
-
-        void _cityBudget_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
-        {
-            var onCityBudgetValueChanged = OnCityBudgetValueChanged;
-            if (onCityBudgetValueChanged != null)
-                onCityBudgetValueChanged(this, e);
         }
 
         public void StartSimulation()

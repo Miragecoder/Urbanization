@@ -14,6 +14,7 @@ using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Mirage.Urbanization.Statistics;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.Simulation.Persistence;
 using Image = System.Drawing.Image;
 
 namespace Mirage.Urbanization.WinForms

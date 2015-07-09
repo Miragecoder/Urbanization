@@ -50,9 +50,9 @@
     <Compile Include="EventArgsWithData.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
-    <Compile Include="PersistedCityStatistics.cs" />
-    <Compile Include="PersistedCityStatisticsCollection.cs" />
-    <Compile Include="PersistedNumberSummary.cs" />
+    <Compile Include="Persistence\PersistedCityStatistics.cs" />
+    <Compile Include="Persistence\PersistedCityStatisticsCollection.cs" />
+    <Compile Include="Persistence\PersistedNumberSummary.cs" />
     <Compile Include="Persistence\PersistedSimulation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulation.cs" />

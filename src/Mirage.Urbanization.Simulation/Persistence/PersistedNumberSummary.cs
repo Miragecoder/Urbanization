@@ -1,6 +1,6 @@
 ﻿using Mirage.Urbanization.Statistics;
 
-namespace Mirage.Urbanization.Simulation
+namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedNumberSummary
     {
