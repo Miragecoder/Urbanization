@@ -8,6 +8,7 @@ namespace Mirage.Urbanization.Statistics
     {
         private readonly IRoadInfrastructureStatistics _roadInfraStructureStatistics;
         private readonly IRailroadInfrastructureStatistics _railroadInfrastructureStatistics;
+        private readonly ICityServicesStatistics _cityServicesStatistics;
 
         public IRoadInfrastructureStatistics RoadInfrastructureStatistics
         {
@@ -22,10 +23,13 @@ namespace Mirage.Urbanization.Statistics
             IRailroadInfrastructureStatistics railroadInfrastructureStatistics, 
             ICollection<int> residentialZonePopulationNumbers,
             ICollection<int> commercialZonePopulationNumbers,
-            ICollection<int> industrialZonePopulationNumbers)
+            ICollection<int> industrialZonePopulationNumbers, 
+            ICityServicesStatistics cityServicesStatistics
+        )
         {
             _roadInfraStructureStatistics = roadInfraStructureStatistics;
             _railroadInfrastructureStatistics = railroadInfrastructureStatistics;
+            _cityServicesStatistics = cityServicesStatistics;
 
             _residentialZonePopulationNumbers = new NumberSummary(residentialZonePopulationNumbers);
             _commercialZonePopulationNumbers = new NumberSummary(commercialZonePopulationNumbers);
@@ -62,6 +66,11 @@ namespace Mirage.Urbanization.Statistics
         public INumberSummary GlobalZonePopulationNumbers
         {
             get { return _globalZonePopulationNumbers; }
+        }
+
+        public ICityServicesStatistics CityServicesStatistics
+        {
+            get { return _cityServicesStatistics; }
         }
     }
 }

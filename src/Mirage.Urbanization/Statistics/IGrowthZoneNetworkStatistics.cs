@@ -9,5 +9,6 @@ namespace Mirage.Urbanization.Statistics
 
         IRoadInfrastructureStatistics RoadInfrastructureStatistics { get; }
         IRailroadInfrastructureStatistics RailroadInfrastructureStatistics { get; }
+        ICityServicesStatistics CityServicesStatistics { get; }
     }
 }

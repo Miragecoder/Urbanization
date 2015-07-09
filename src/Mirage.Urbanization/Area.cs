@@ -325,9 +325,9 @@ namespace Mirage.Urbanization
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                var growthZones = GetZoneClusterConsumptions<BaseGrowthZoneClusterConsumption>();
+                var zoneClusters = GetZoneClusterConsumptions<BaseZoneClusterConsumption>();
 
-
+                var growthZones = new HashSet<BaseGrowthZoneClusterConsumption>(zoneClusters.OfType<BaseGrowthZoneClusterConsumption>());
 
                 var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
 
@@ -427,7 +427,14 @@ namespace Mirage.Urbanization
                             ),
                     residentialZonePopulationNumbers: growthZones.OfType<ResidentialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
                     commercialZonePopulationNumbers: growthZones.OfType<CommercialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
-                    industrialZonePopulationNumbers: growthZones.OfType<IndustrialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList()
+                    industrialZonePopulationNumbers: growthZones.OfType<IndustrialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
+                    cityServicesStatistics: new CityServiceStatistics(
+                        numberOfPoliceStations: zoneClusters.OfType<PoliceStationZoneClusterConsumption>().Count(),
+                        numberOfFireStations: zoneClusters.OfType<FireStationZoneclusterConsumption>().Count(),
+                        numberOfStadiums: zoneClusters.OfType<StadiumZoneClusterConsumption>().Count(),
+                        numberOfHarbours: zoneClusters.OfType<SeaPortZoneClusterConsumption>().Count(),
+                        numberOfAirports: zoneClusters.OfType<AirportZoneClusterConsumption>().Count()
+                    )
                 ) as IGrowthZoneStatistics;
             }, cancellationToken: cancellationToken);
         }
