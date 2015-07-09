@@ -73,9 +73,15 @@ namespace Mirage.Urbanization.Simulation
                 foreach (var x in persistedSimulation.PersistedCityStatistics)
                     _persistedCityStatisticsCollection.Add(x);
 
-                _yearAndMonth.LoadTimeCode(persistedSimulation.PersistedCityStatistics.OrderByDescending(x => x.PersistedCityStatistics.TimeCode).First().PersistedCityStatistics.TimeCode);
+                var last =
+                    persistedSimulation.PersistedCityStatistics.OrderByDescending(
+                        x => x.PersistedCityStatistics.TimeCode).First();
+
+                _yearAndMonth.LoadTimeCode(last.PersistedCityStatistics.TimeCode);
 
                 _yearAndMonth.AddWeek();
+
+                _cityBudget.RestoreFrom(last);
             });
 
             _growthSimulationTask = new Task(() =>
@@ -183,7 +189,7 @@ namespace Mirage.Urbanization.Simulation
                 }
             }, _cancellationTokenSource.Token);
 
-            _cityBudget = new CityBudget();
+
             _cityBudget.OnCityBudgetValueChanged += (sender, e) =>
             {
                 var onCityBudgetValueChanged = OnCityBudgetValueChanged;
@@ -278,7 +284,7 @@ namespace Mirage.Urbanization.Simulation
             onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
         }
 
-        private readonly ICityBudget _cityBudget;
+        private readonly ICityBudget _cityBudget = new CityBudget();
 
         public event EventHandler<SimulationSessionHotMessageEventArgs> OnAreaHotMessage;
     }

@@ -12,6 +12,8 @@ namespace Mirage.Urbanization.Simulation
         event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
         void RaiseCityBudgetValueChangedEvent();
 
+        void RestoreFrom(PersistedCityStatisticsWithFinancialData persistedCityStatisticsWithFinancialData);
+
         void Handle(IAreaConsumptionResult areaConsumptionResult);
     }
 }

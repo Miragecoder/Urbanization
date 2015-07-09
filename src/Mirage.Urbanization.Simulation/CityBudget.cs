@@ -62,5 +62,10 @@ namespace Mirage.Urbanization.Simulation
                 Subtract(areaConsumptionResult.AreaConsumption.Cost);
             }
         }
+
+        public void RestoreFrom(PersistedCityStatisticsWithFinancialData persistedCityStatisticsWithFinancialData)
+        {
+            _currentAmount = persistedCityStatisticsWithFinancialData.CurrentAmountOfFunds;
+        }
     }
 }
