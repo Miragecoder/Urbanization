@@ -4,7 +4,10 @@ namespace Mirage.Urbanization.Simulation.Persistence
     {
         public PersistedCityStatisticsWithFinancialData() { }
 
-        public PersistedCityStatisticsWithFinancialData(PersistedCityStatistics persistedCityStatistics, int currentAmountOfFunds)
+        public PersistedCityStatisticsWithFinancialData(
+            PersistedCityStatistics persistedCityStatistics, 
+            int currentAmountOfFunds
+        )
         {
             PersistedCityStatistics = persistedCityStatistics;
             CurrentAmountOfFunds = currentAmountOfFunds;

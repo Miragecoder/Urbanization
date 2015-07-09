@@ -50,7 +50,10 @@ namespace Mirage.Urbanization.Simulation
 
         public PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics)
         {
-            return new PersistedCityStatisticsWithFinancialData(persistedCityStatistics, CurrentAmount);
+            return new PersistedCityStatisticsWithFinancialData(
+                persistedCityStatistics: persistedCityStatistics, 
+                currentAmountOfFunds: CurrentAmount
+            );
         }
 
         public event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
