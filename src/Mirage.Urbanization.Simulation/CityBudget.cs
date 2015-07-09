@@ -27,12 +27,6 @@ namespace Mirage.Urbanization.Simulation
             RaiseCityBudgetValueChangedEvent();
         }
 
-        private void Add(int amount)
-        {
-            Interlocked.Add(ref _currentAmount, amount);
-            RaiseCityBudgetValueChangedEvent();
-        }
-
         private void Subtract(int amount)
         {
             Interlocked.Add(ref _currentAmount, -amount);
@@ -50,10 +44,14 @@ namespace Mirage.Urbanization.Simulation
 
         public PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics)
         {
-            return new PersistedCityStatisticsWithFinancialData(
+            var financialData = new PersistedCityStatisticsWithFinancialData(
                 persistedCityStatistics: persistedCityStatistics, 
                 currentAmountOfFunds: CurrentAmount
             );
+
+            AddProjectedIncome(financialData.GetTotal());
+
+            return financialData;
         }
 
         public event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;

@@ -69,6 +69,17 @@ namespace Mirage.Urbanization.WinForms
             yield return new GraphDefinition("Amount of funds",
                 new GraphSeries(x => x.CurrentAmountOfFunds, "Current amount of funds", Color.Red));
 
+            yield return new GraphDefinition("Tax income",
+                new GraphSeries(x => x.ResidentialTaxIncome, "Residential zones", Color.Green),
+                new GraphSeries(x => x.CommercialTaxIncome, "Commercial zones", Color.Blue),
+                new GraphSeries(x => x.IndustrialTaxIncome, "Industrial zones", Color.Goldenrod));
+
+            yield return new GraphDefinition("Public sector expenses",
+                new GraphSeries(x => x.PoliceServiceExpenses, "Police force", Color.Blue),
+                new GraphSeries(x => x.FireServiceExpenses, "Fire fighters", Color.Red),
+                new GraphSeries(x => x.RoadInfrastructureExpenses, "Infrastructure (Road)", Color.Gray),
+                new GraphSeries(x => x.RailroadInfrastructureExpenses, "Infrastructure (Railroad)", Color.Yellow));
+
             yield return new GraphDefinition("Population",
                 new GraphSeries(
                     x => x.PersistedCityStatistics.ResidentialZonePopulationStatistics.Sum,
