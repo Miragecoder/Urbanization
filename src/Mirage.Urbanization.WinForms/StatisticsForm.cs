@@ -34,7 +34,7 @@ namespace Mirage.Urbanization.WinForms
             helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
         }
 
-        public void UpdateCharts(IReadOnlyCollection<PersistedCityStatistics> statistics)
+        public void UpdateCharts(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
         {
             if (!IsHandleCreated) return;
             this.BeginInvoke(new MethodInvoker(() =>
@@ -48,65 +48,68 @@ namespace Mirage.Urbanization.WinForms
         {
             yield return new GraphDefinition("Amount of zones",
                 new GraphSeries(
-                    x => x.ResidentialZonePopulationStatistics.Count,
+                    x => x.PersistedCityStatistics.ResidentialZonePopulationStatistics.Count,
                     "Residential",
                     Color.Green
                 ), new GraphSeries(
-                    x => x.CommercialZonePopulationStatistics.Count,
+                    x => x.PersistedCityStatistics.CommercialZonePopulationStatistics.Count,
                     "Commercial",
                     Color.Blue
                 ), new GraphSeries(
-                    x => x.IndustrialZonePopulationStatistics.Count,
+                    x => x.PersistedCityStatistics.IndustrialZonePopulationStatistics.Count,
                     "Industrial",
                     Color.Goldenrod
                 ), new GraphSeries(
-                    x => x.GlobalZonePopulationStatistics.Count,
+                    x => x.PersistedCityStatistics.GlobalZonePopulationStatistics.Count,
                     "Global",
                     Color.DarkRed
                 )
             );
 
+            yield return new GraphDefinition("Amount of funds",
+                new GraphSeries(x => x.CurrentAmountOfFunds, "Current amount of funds", Color.Red));
+
             yield return new GraphDefinition("Population",
                 new GraphSeries(
-                    x => x.ResidentialZonePopulationStatistics.Sum,
+                    x => x.PersistedCityStatistics.ResidentialZonePopulationStatistics.Sum,
                     "Residential",
                     Color.Green
                 ), new GraphSeries(
-                    x => x.CommercialZonePopulationStatistics.Sum,
+                    x => x.PersistedCityStatistics.CommercialZonePopulationStatistics.Sum,
                     "Commercial",
                     Color.Blue
                 ), new GraphSeries(
-                    x => x.IndustrialZonePopulationStatistics.Sum,
+                    x => x.PersistedCityStatistics.IndustrialZonePopulationStatistics.Sum,
                     "Industrial",
                     Color.Goldenrod
                 ), new GraphSeries(
-                    x => x.GlobalZonePopulationStatistics.Sum,
+                    x => x.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum,
                     "Global",
                     Color.DarkRed
                 )
             );
 
             foreach (var x in
-                GetNumbarSummaryGraphs(x => x.CrimeNumbers, "Crime", Color.Red, Color.DarkRed)
-                .Concat(GetNumbarSummaryGraphs(x => x.FireHazardNumbers, "Fire hazard", Color.Red, Color.DarkRed))
-                .Concat(GetNumbarSummaryGraphs(x => x.PollutionNumbers, "Pollution", Color.Green, Color.DarkOliveGreen))
-                .Concat(GetNumbarSummaryGraphs(x => x.TrafficNumbers, "Traffic", Color.Blue, Color.DarkBlue))
-                .Concat(GetNumbarSummaryGraphs(x => x.LandValueNumbers, "Land value", Color.Yellow, Color.GreenYellow))
-                .Concat(GetNumbarSummaryGraphs(x => x.AverageTravelDistanceStatistics, "Travel distances", Color.Blue, Color.DarkBlue))
+                GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.CrimeNumbers, "Crime", Color.Red, Color.DarkRed)
+                .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.FireHazardNumbers, "Fire hazard", Color.Red, Color.DarkRed))
+                .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.PollutionNumbers, "Pollution", Color.Green, Color.DarkOliveGreen))
+                .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.TrafficNumbers, "Traffic", Color.Blue, Color.DarkBlue))
+                .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.LandValueNumbers, "Land value", Color.Yellow, Color.GreenYellow))
+                .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.AverageTravelDistanceStatistics, "Travel distances", Color.Blue, Color.DarkBlue))
                 )
                 yield return x;
 
             yield return new GraphDefinition("Power grid",
                 new GraphSeries(
-                    x => x.PowerSupplyInUnits,
+                    x => x.PersistedCityStatistics.PowerSupplyInUnits,
                     "Power supply (Total)",
                     Color.Green
                 ), new GraphSeries(
-                    x => x.PowerConsumptionInUnits,
+                    x => x.PersistedCityStatistics.PowerConsumptionInUnits,
                     "Consumption",
                     Color.Yellow
                 ), new GraphSeries(
-                    x => x.PowerSupplyInUnits - x.PowerConsumptionInUnits,
+                    x => x.PersistedCityStatistics.PowerSupplyInUnits - x.PersistedCityStatistics.PowerConsumptionInUnits,
                     "Power supply (Remaining)",
                     Color.Red
                 )
@@ -114,20 +117,24 @@ namespace Mirage.Urbanization.WinForms
 
             yield return new GraphDefinition("Infastructure size",
                 new GraphSeries(
-                    x => x.NumberOfRoadZones,
+                    x => x.PersistedCityStatistics.NumberOfRoadZones,
                     "Total amount of road zones",
                     Color.Blue
                 ), new GraphSeries(
-                    x => x.NumberOfRailRoadZones,
+                    x => x.PersistedCityStatistics.NumberOfRailRoadZones,
                     "Total amount of railroad zones",
                     Color.Goldenrod
                 )
             );
         }
 
-        private static IEnumerable<GraphDefinition> GetNumbarSummaryGraphs(Func<PersistedCityStatistics,PersistedNumberSummary> getNumberSummary, string title, Color primaryColor, Color secondaryColor)
+        private static IEnumerable<GraphDefinition> GetNumbarSummaryGraphs(
+            Func<PersistedCityStatisticsWithFinancialData,PersistedNumberSummary> getNumberSummary, 
+            string title, 
+            Color primaryColor, 
+            Color secondaryColor)
         {
-            Func<PersistedCityStatistics, PersistedNumberSummary> getNumberSummarySafeFunc =
+            Func<PersistedCityStatisticsWithFinancialData, PersistedNumberSummary> getNumberSummarySafeFunc =
                 x => getNumberSummary(x) ?? PersistedNumberSummary.EmptyInstance;
             
             yield return new GraphDefinition("Total " + title,
@@ -178,7 +185,7 @@ namespace Mirage.Urbanization.WinForms
                 get { return _tabPage; }
             }
 
-            public Action ProduceRenderAction(IReadOnlyCollection<PersistedCityStatistics> statistics)
+            public Action ProduceRenderAction(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
             {
                 return () =>
                 {
@@ -207,7 +214,7 @@ namespace Mirage.Urbanization.WinForms
                             foreach (var col in chartDef.GraphSeriesSet)
                             {
                                 dataTable.Rows.Add(col.Label, col.GetValue(statistic),
-                                    statistic.TimeCode.ToString(CultureInfo.InvariantCulture));
+                                    statistic.PersistedCityStatistics.TimeCode.ToString(CultureInfo.InvariantCulture));
                             }
                         }
 
@@ -267,18 +274,18 @@ namespace Mirage.Urbanization.WinForms
 
         private class GraphSeries
         {
-            private readonly Func<PersistedCityStatistics, int> valueGetterFunc;
+            private readonly Func<PersistedCityStatisticsWithFinancialData, int> valueGetterFunc;
             private readonly string _label;
             private readonly Color _color;
 
-            public GraphSeries(Func<PersistedCityStatistics, int> valueGetterFunc, string label, Color color)
+            public GraphSeries(Func<PersistedCityStatisticsWithFinancialData, int> valueGetterFunc, string label, Color color)
             {
                 this.valueGetterFunc = valueGetterFunc;
                 _label = label;
                 _color = color;
             }
 
-            public int GetValue(PersistedCityStatistics citytStatistics)
+            public int GetValue(PersistedCityStatisticsWithFinancialData citytStatistics)
             {
                 return valueGetterFunc(citytStatistics);
             }

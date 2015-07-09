@@ -50,7 +50,7 @@ namespace Mirage.Urbanization.Simulation
             if (recent.HasMatch)
             {
                 var category = CityCategoryDefinition
-                    .GetForPopulation(recent.MatchingObject.GlobalZonePopulationStatistics.Sum);
+                    .GetForPopulation(recent.MatchingObject.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum);
                 if (_seenCityStates.Add(category)
                     && _seenCityStates.OrderByDescending(x => x.MinimumPopulation).First() == category)
                 {
@@ -73,7 +73,7 @@ namespace Mirage.Urbanization.Simulation
                 foreach (var x in persistedSimulation.PersistedCityStatistics)
                     _persistedCityStatisticsCollection.Add(x);
 
-                _yearAndMonth.LoadTimeCode(persistedSimulation.PersistedCityStatistics.OrderByDescending(x => x.TimeCode).First().TimeCode);
+                _yearAndMonth.LoadTimeCode(persistedSimulation.PersistedCityStatistics.OrderByDescending(x => x.PersistedCityStatistics.TimeCode).First().PersistedCityStatistics.TimeCode);
 
                 _yearAndMonth.AddWeek();
             });
@@ -93,14 +93,16 @@ namespace Mirage.Urbanization.Simulation
                         {
                             var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token).Result;
                             var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
-                            if (onYearAndOrMonthChanged != null) onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
+                            if (onYearAndOrMonthChanged != null) 
+                                onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
 
                             _persistedCityStatisticsCollection.Add(
-                                    new PersistedCityStatistics(
-                                    timeCode: _yearAndMonth.TimeCode, 
-                                    powerGridStatistics: _lastPowerGridStatistics, 
-                                    growthZoneStatistics: growthZoneStatistics, 
-                                    miscCityStatistics: _lastMiscCityStatistics
+                                   _cityBudget.ProcessFinances(new PersistedCityStatistics(
+                                        timeCode: _yearAndMonth.TimeCode, 
+                                        powerGridStatistics: _lastPowerGridStatistics, 
+                                        growthZoneStatistics: growthZoneStatistics, 
+                                        miscCityStatistics: _lastMiscCityStatistics
+                                    )
                                 )
                             );
 
@@ -194,7 +196,7 @@ namespace Mirage.Urbanization.Simulation
 
         public void StartSimulation()
         {
-            _cityBudget.AddProjectedIncome(0);
+            _cityBudget.RaiseCityBudgetValueChangedEvent();
             _powerTask.Start();
             _growthSimulationTask.Start();
             _crimeAndPollutionTask.Start();
@@ -223,9 +225,14 @@ namespace Mirage.Urbanization.Simulation
             Console.WriteLine("Simulation killed.");
         }
 
-        public QueryResult<PersistedCityStatistics> GetRecentStatistics()
+        public QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics()
         {
-            return new QueryResult<PersistedCityStatistics>(_persistedCityStatisticsCollection.GetAll().OrderByDescending(x => x.TimeCode).FirstOrDefault());
+            return new QueryResult<PersistedCityStatisticsWithFinancialData>(
+                _persistedCityStatisticsCollection
+                .GetAll()
+                .OrderByDescending(x => x.PersistedCityStatistics.TimeCode)
+                .FirstOrDefault()
+            );
         }
 
         public event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;
@@ -241,7 +248,7 @@ namespace Mirage.Urbanization.Simulation
 
         public event EventHandler<CityStatisticsUpdatedEventArgs> CityStatisticsUpdated;
 
-        public IReadOnlyCollection<PersistedCityStatistics> GetAllCityStatistics()
+        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics()
         {
             return _persistedCityStatisticsCollection.GetAll();
         }
@@ -250,11 +257,7 @@ namespace Mirage.Urbanization.Simulation
 
         private void HandleAreaConsumptionResult(object sender, AreaConsumptionResultEventArgs e)
         {
-            if (e.AreaConsumptionResult.Success)
-            {
-                var cost = e.AreaConsumptionResult.AreaConsumption.Cost;
-                _cityBudget.Subtract(cost);
-            }
+            _cityBudget.Handle(e.AreaConsumptionResult);
             RaiseAreaMessageEvent(e.AreaConsumptionResult.Message);
         }
 
@@ -275,7 +278,7 @@ namespace Mirage.Urbanization.Simulation
             onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
         }
 
-        private readonly CityBudget _cityBudget;
+        private readonly ICityBudget _cityBudget;
 
         public event EventHandler<SimulationSessionHotMessageEventArgs> OnAreaHotMessage;
     }

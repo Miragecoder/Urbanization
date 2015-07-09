@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Runtime.Remoting.Channels;
 using System.Threading;
+using Mirage.Urbanization.Simulation.Persistence;
 
 namespace Mirage.Urbanization.Simulation
 {
-    public interface ICityBudget
-    {
-        int CurrentAmount { get; }
-        int ProjectedIncome { get; }
-    }
-
     internal class CityBudget : ICityBudget
     {
         private int _currentAmount = 50000;
@@ -20,7 +15,7 @@ namespace Mirage.Urbanization.Simulation
 
         public int ProjectedIncome { get { return _projectedIncome; } }
 
-        public void AddProjectedIncome(int amount)
+        private void AddProjectedIncome(int amount)
         {
             Interlocked.Add(ref _projectedIncome, amount);
             RaiseCityBudgetValueChangedEvent();
@@ -32,19 +27,19 @@ namespace Mirage.Urbanization.Simulation
             RaiseCityBudgetValueChangedEvent();
         }
 
-        public void Add(int amount)
+        private void Add(int amount)
         {
             Interlocked.Add(ref _currentAmount, amount);
             RaiseCityBudgetValueChangedEvent();
         }
 
-        public void Subtract(int amount)
+        private void Subtract(int amount)
         {
             Interlocked.Add(ref _currentAmount, -amount);
             RaiseCityBudgetValueChangedEvent();
         }
 
-        private void RaiseCityBudgetValueChangedEvent()
+        public void RaiseCityBudgetValueChangedEvent()
         {
             var onCityBudgetValueChanged = OnCityBudgetValueChanged;
             if (onCityBudgetValueChanged != null)
@@ -53,6 +48,19 @@ namespace Mirage.Urbanization.Simulation
             }
         }
 
+        public PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics)
+        {
+            return new PersistedCityStatisticsWithFinancialData(persistedCityStatistics, CurrentAmount);
+        }
+
         public event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
+        
+        public void Handle(IAreaConsumptionResult areaConsumptionResult)
+        {
+            if (areaConsumptionResult.Success)
+            {
+                Subtract(areaConsumptionResult.AreaConsumption.Cost);
+            }
+        }
     }
 }

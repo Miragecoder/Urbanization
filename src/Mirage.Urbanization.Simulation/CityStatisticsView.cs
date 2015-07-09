@@ -8,18 +8,18 @@ namespace Mirage.Urbanization.Simulation
 {
     public class CityStatisticsView
     {
-        private readonly PersistedCityStatistics _cityStatistics;
+        private readonly PersistedCityStatisticsWithFinancialData _cityStatistics;
         private readonly Lazy<IList<DataMeterResult>> _issueDataMeterResultsLazy; 
 
-        public CityStatisticsView(PersistedCityStatistics cityStatistics)
+        public CityStatisticsView(PersistedCityStatisticsWithFinancialData cityStatistics)
         {
             if (cityStatistics == null) throw new ArgumentNullException("cityStatistics");
             _cityStatistics = cityStatistics;
             _issueDataMeterResultsLazy = new Lazy<IList<DataMeterResult>>(() => DataMeterInstances.GetDataMeterResults(cityStatistics, x => x.RepresentsIssue).ToList());
         }
 
-        public int Population { get { return _cityStatistics.GlobalZonePopulationStatistics.Sum; } }
-        public decimal AssessdValue { get { return _cityStatistics.LandValueNumbers.Sum; } }
+        public int Population { get { return _cityStatistics.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum; } }
+        public decimal AssessdValue { get { return _cityStatistics.PersistedCityStatistics.LandValueNumbers.Sum; } }
 
         public string CityCategory
         {

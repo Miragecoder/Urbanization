@@ -6,13 +6,13 @@ namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatisticsCollection
     {
-        private readonly IList<PersistedCityStatistics> _persistedCityStatistics = new List<PersistedCityStatistics>();
+        private readonly IList<PersistedCityStatisticsWithFinancialData> _persistedCityStatistics = new List<PersistedCityStatisticsWithFinancialData>();
 
-        private PersistedCityStatistics _mostRecentStatistics;
+        private PersistedCityStatisticsWithFinancialData _mostRecentStatistics;
 
         private readonly object _locker = new object();
 
-        public void Add(PersistedCityStatistics statistics)
+        public void Add(PersistedCityStatisticsWithFinancialData statistics)
         {
             lock (_locker)
             {
@@ -21,12 +21,12 @@ namespace Mirage.Urbanization.Simulation.Persistence
             }
         }
 
-        public QueryResult<PersistedCityStatistics> GetMostRecentPersistedCityStatistics()
+        public QueryResult<PersistedCityStatisticsWithFinancialData> GetMostRecentPersistedCityStatistics()
         {
-            return new QueryResult<PersistedCityStatistics>(_mostRecentStatistics);
+            return new QueryResult<PersistedCityStatisticsWithFinancialData>(_mostRecentStatistics);
         }
 
-        public IReadOnlyCollection<PersistedCityStatistics> GetAll()
+        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAll()
         {
             return _persistedCityStatistics.ToList();
         }

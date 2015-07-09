@@ -3,16 +3,6 @@ using System.Globalization;
 
 namespace Mirage.Urbanization.Simulation
 {
-    public class YearAndMonthWeekElapsedEventArgs : EventArgsWithData<IYearAndMonth>
-    {
-        public YearAndMonthWeekElapsedEventArgs(IYearAndMonth data)
-            : base(data)
-        {
-            
-        }
-
-    }
-
     internal sealed class YearAndMonth : IYearAndMonth
     {
         private int _currentYear = 1900;

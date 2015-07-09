@@ -43,21 +43,28 @@
     <Compile Include="CityBudget.cs" />
     <Compile Include="CityBudgetValueChangedEventArgs.cs" />
     <Compile Include="CityCategoryDefinition.cs" />
+    <Compile Include="CityStatisticsUpdatedEventArgs.cs" />
     <Compile Include="CityStatisticsView.cs" />
     <Compile Include="Datameters\DataMeter.cs" />
+    <Compile Include="Datameters\DataMeterInstances.cs" />
     <Compile Include="Datameters\DataMeterResult.cs" />
     <Compile Include="Datameters\DataMeterValueCategory.cs" />
+    <Compile Include="Datameters\LandValueCalculator.cs" />
+    <Compile Include="Datameters\ZoneInfoDataMeter.cs" />
     <Compile Include="EventArgsWithData.cs" />
+    <Compile Include="ICityBudget.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
     <Compile Include="Persistence\PersistedCityStatistics.cs" />
     <Compile Include="Persistence\PersistedCityStatisticsCollection.cs" />
+    <Compile Include="Persistence\PersistedCityStatisticsWithFinancialData.cs" />
     <Compile Include="Persistence\PersistedNumberSummary.cs" />
     <Compile Include="Persistence\PersistedSimulation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Simulation.cs" />
+    <Compile Include="SimulationSession.cs" />
     <Compile Include="SimulationOptions.cs" />
     <Compile Include="YearAndMonth.cs" />
+    <Compile Include="YearAndMonthWeekElapsedEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">

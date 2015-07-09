@@ -14,9 +14,9 @@ namespace Mirage.Urbanization.Simulation
         IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption);
         void StartSimulation();
 
-        QueryResult<PersistedCityStatistics> GetRecentStatistics();
+        QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics();
 
-        IReadOnlyCollection<PersistedCityStatistics> GetAllCityStatistics(); 
+        IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics(); 
 
         event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;
         PersistedSimulation GeneratePersistedArea();
@@ -25,9 +25,5 @@ namespace Mirage.Urbanization.Simulation
         event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
         event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;
         event EventHandler<CityStatisticsUpdatedEventArgs> CityStatisticsUpdated;
-    }
-
-    public class CityStatisticsUpdatedEventArgs : EventArgs
-    {
     }
 }
