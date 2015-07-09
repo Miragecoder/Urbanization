@@ -119,7 +119,7 @@ namespace Mirage.Urbanization.WinForms
                 var statistics = helper.SimulationSession.GetAllCityStatistics();
 
                 _currentStatisticsForm = new StatisticsForm(helper);
-                _currentStatisticsForm.UpdateGrid(statistics);
+                _currentStatisticsForm.UpdateCharts(statistics);
                 _currentStatisticsForm.Show();
             });
         }

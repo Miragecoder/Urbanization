@@ -27,19 +27,19 @@ namespace Mirage.Urbanization.WinForms
             foreach (var tabPage in _graphControlDefinitions)
                 tabControl1.TabPages.Add(tabPage.TabPage);
 
-            this.tabControl1.TabIndexChanged += (sender, e) => UpdateGrid(helper.SimulationSession.GetAllCityStatistics());
-            this.SizeChanged += (sender, e) => UpdateGrid(helper.SimulationSession.GetAllCityStatistics());
+            this.tabControl1.TabIndexChanged += (sender, e) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
+            this.SizeChanged += (sender, e) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
 
-            helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdateGrid(helper.SimulationSession.GetAllCityStatistics());
+            helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
         }
 
-        public void UpdateGrid(IReadOnlyCollection<PersistedCityStatistics> statistics)
+        public void UpdateCharts(IReadOnlyCollection<PersistedCityStatistics> statistics)
         {
             if (!IsHandleCreated) return;
             this.BeginInvoke(new MethodInvoker(() =>
             {
-                foreach (var x in _graphControlDefinitions)
-                    x.ProduceRenderAction(statistics)();
+                foreach (var graphControlDefinition in _graphControlDefinitions)
+                    graphControlDefinition.ProduceRenderAction(statistics)();
             }));
         }
 

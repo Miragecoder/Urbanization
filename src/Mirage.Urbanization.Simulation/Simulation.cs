@@ -44,7 +44,7 @@ namespace Mirage.Urbanization.Simulation
             CityCategoryDefinition.Village
         };
 
-        private void OnWeekPass()
+        private void OnWeekPass(object sender, YearAndMonthWeekElapsedEventArgs e)
         {
             var recent = GetRecentStatistics();
             if (recent.HasMatch)
@@ -56,8 +56,6 @@ namespace Mirage.Urbanization.Simulation
                 {
                     RaiseAreaHotMessageEvent("Your city has grown!", "Congratulations! Your city has grown into a " + category.Name + "!");
                 }
-
-                _cityBudget.AddProjectedIncome(recent.MatchingObject.GlobalZonePopulationStatistics.Sum);
             }
         }
 
@@ -110,7 +108,6 @@ namespace Mirage.Urbanization.Simulation
                             if (eventCapture != null)
                                 eventCapture(this, new CityStatisticsUpdatedEventArgs());
                             _yearAndMonth.AddWeek();
-                            OnWeekPass();
                         }
                         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                         Task.Delay(2000).Wait();
@@ -184,6 +181,8 @@ namespace Mirage.Urbanization.Simulation
 
             _cityBudget = new CityBudget(_yearAndMonth);
             _cityBudget.OnCityBudgetValueChanged += _cityBudget_OnCityBudgetValueChanged;
+
+            _yearAndMonth.OnWeekElapsed += OnWeekPass;
         }
 
         void _cityBudget_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
