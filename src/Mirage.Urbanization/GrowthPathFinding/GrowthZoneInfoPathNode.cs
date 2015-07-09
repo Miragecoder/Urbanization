@@ -119,7 +119,14 @@ namespace Mirage.Urbanization.GrowthPathFinding
                         // And the previous zone was a trainstation zone...
                         matchingPath
                             .ZoneInfo
-                            .WithZoneClusterIf<TrainStationZoneClusterConsumption>(res => assignIsSuccessOverrideFuncAction("RailRoadZoneConsumption/TrainStationZoneClusterConsumption", () => true));
+                            .WithZoneClusterIf<TrainStationZoneClusterConsumption>(res =>
+                            {
+                                if (res.HasPower)
+                                    assignIsSuccessOverrideFuncAction(
+                                    "RailRoadZoneConsumption/TrainStationZoneClusterConsumption", 
+                                    () => true
+                                );
+                            });
                     });
 
                 // If the current zone is a trainstation zone...
@@ -127,6 +134,9 @@ namespace Mirage.Urbanization.GrowthPathFinding
                     .MatchingObject
                     .WithZoneClusterIf<TrainStationZoneClusterConsumption>(growthZone =>
                     {
+                        if (!growthZone.HasPower)
+                            return;
+
                         // And the previous zone was part of the same trainstation...
                         matchingPath
                             .ZoneInfo
