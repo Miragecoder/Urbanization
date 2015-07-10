@@ -40,7 +40,7 @@
             this.targetPanel.Location = new System.Drawing.Point(0, 0);
             this.targetPanel.Name = "targetPanel";
             this.targetPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.targetPanel.Size = new System.Drawing.Size(882, 753);
+            this.targetPanel.Size = new System.Drawing.Size(682, 403);
             this.targetPanel.TabIndex = 0;
             // 
             // tabControl1
@@ -49,16 +49,18 @@
             this.tabControl1.Location = new System.Drawing.Point(10, 10);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(862, 733);
+            this.tabControl1.Size = new System.Drawing.Size(662, 383);
             this.tabControl1.TabIndex = 1;
             // 
             // StatisticsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 753);
+            this.ClientSize = new System.Drawing.Size(682, 403);
+            this.ControlBox = false;
             this.Controls.Add(this.targetPanel);
             this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "StatisticsForm";

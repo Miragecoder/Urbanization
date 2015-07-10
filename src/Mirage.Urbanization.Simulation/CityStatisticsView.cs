@@ -19,7 +19,10 @@ namespace Mirage.Urbanization.Simulation
         }
 
         public int Population { get { return _cityStatistics.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum; } }
-        public decimal AssessdValue { get { return _cityStatistics.PersistedCityStatistics.LandValueNumbers.Sum; } }
+        public decimal AssessedValue { get { return _cityStatistics.PersistedCityStatistics.LandValueNumbers.Sum; } }
+
+        public int CurrentAmountOfFunds { get { return _cityStatistics.CurrentAmountOfFunds; } }
+        public int CurrentProjectedAmountOfFunds { get { return _cityStatistics.CurrentProjectedAmountOfFunds; } }
 
         public string CityCategory
         {

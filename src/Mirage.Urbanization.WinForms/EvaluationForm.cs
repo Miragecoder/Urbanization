@@ -19,9 +19,11 @@ namespace Mirage.Urbanization.WinForms
         {
             InitializeComponent();
 
-            AddLabelValue("Population", cityStatistics.Population.ToString());
-            AddLabelValue("Assessed value", cityStatistics.AssessdValue.ToString("C0"));
+            AddLabelValue("Population", cityStatistics.Population.ToString("N0"));
+            AddLabelValue("Assessed value", cityStatistics.AssessedValue.ToString("C"));
             AddLabelValue("Category", cityStatistics.CityCategory);
+            AddLabelValue("Current amount of funds", cityStatistics.CurrentAmountOfFunds.ToString("C"));
+            AddLabelValue("Projected income", cityStatistics.CurrentProjectedAmountOfFunds.ToString("C"));
 
             listBox1.DataSource = cityStatistics
                 .DataMeterResults

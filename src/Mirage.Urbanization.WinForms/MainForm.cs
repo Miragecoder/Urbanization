@@ -120,7 +120,9 @@ namespace Mirage.Urbanization.WinForms
 
                 _currentStatisticsForm = new StatisticsForm(helper);
                 _currentStatisticsForm.UpdateCharts(statistics);
-                _currentStatisticsForm.Show();
+
+                _currentStatisticsForm.StartPosition = FormStartPosition.CenterParent;
+                _currentStatisticsForm.ShowDialog(this);
             });
         }
 
@@ -332,7 +334,12 @@ namespace Mirage.Urbanization.WinForms
                     .GetRecentStatistics()
                     .WithResultIfHasMatch(statistics =>
                     {
-                        new EvaluationForm(new CityStatisticsView(statistics)).Show(this);
+                        new EvaluationForm(new CityStatisticsView(statistics))
+                        {
+                            StartPosition = FormStartPosition.CenterParent,
+                            ControlBox = false,
+                            FormBorderStyle = FormBorderStyle.FixedDialog
+                        }.ShowDialog(this);
                     }
                 );
             });

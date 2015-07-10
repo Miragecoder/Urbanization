@@ -21,8 +21,8 @@ namespace Mirage.Urbanization.Simulation.Persistence
             PoliceServiceExpenses = persistedCityStatistics.NumberOfPoliceStations * 50;
             FireServiceExpenses = persistedCityStatistics.NumberOfFireStations * 50;
             RoadInfrastructureExpenses = persistedCityStatistics.NumberOfRoadZones;
-            RailroadInfrastructureExpenses = (persistedCityStatistics.NumberOfRailRoadZones*2) +
-                                             (persistedCityStatistics.NumberOfTrainStations*500);
+            RailroadInfrastructureExpenses = (persistedCityStatistics.NumberOfRailRoadZones * 2) +
+                                             (persistedCityStatistics.NumberOfTrainStations * 500);
         }
 
         public int CurrentAmountOfFunds { get; set; }
