@@ -278,16 +278,16 @@
             // 
             // cityBudgetLabel
             // 
+            this.cityBudgetLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.cityBudgetLabel.Name = "cityBudgetLabel";
             this.cityBudgetLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.cityBudgetLabel.Size = new System.Drawing.Size(116, 24);
+            this.cityBudgetLabel.Size = new System.Drawing.Size(120, 24);
             this.cityBudgetLabel.Text = "cityBudgetLabel";
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(107, 24);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 24);
             this.toolStripStatusLabel1.Text = "messageLabel";
             // 
             // saveCityDialog
@@ -303,8 +303,9 @@
             // 
             // projectedIncomeLabel
             // 
+            this.projectedIncomeLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.projectedIncomeLabel.Name = "projectedIncomeLabel";
-            this.projectedIncomeLabel.Size = new System.Drawing.Size(158, 24);
+            this.projectedIncomeLabel.Size = new System.Drawing.Size(162, 24);
             this.projectedIncomeLabel.Text = "projectedIncomeLabel";
             // 
             // MainForm

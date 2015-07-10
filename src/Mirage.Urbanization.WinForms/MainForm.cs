@@ -199,15 +199,27 @@ namespace Mirage.Urbanization.WinForms
                 (_sender, _e) =>
                     statusStrip1.BeginInvoke(new MethodInvoker(() =>
                     {
-                        cityBudgetLabel.Text = string.Format("Current funds: {0}", _e.EventData.CurrentAmount.ToString("C"));
-                        cityBudgetLabel.ForeColor = _e.EventData.CurrentAmount >= 0
-                            ? SystemColors.ControlText
-                            : Color.Red;
-
-                        projectedIncomeLabel.Text = string.Format("(Projected income: {0})", _e.EventData.ProjectedIncome.ToString("C"));
-                        projectedIncomeLabel.ForeColor = _e.EventData.ProjectedIncome >= 0
-                            ? SystemColors.ControlText
-                            : Color.Red;
+                        foreach (var x in new[]
+                        {
+                            new
+                            {
+                                LabelControl = cityBudgetLabel,
+                                TextFormatter = "Current funds: {0}",
+                                Amount = _e.EventData.CurrentAmount
+                            },
+                            new
+                            {
+                                LabelControl = projectedIncomeLabel,
+                                TextFormatter = "Projected income: {0}",
+                                Amount = _e.EventData.ProjectedIncome
+                            }
+                        })
+                        {
+                            x.LabelControl.Text = string.Format(x.TextFormatter, x.Amount.ToString("C"));
+                            x.LabelControl.ForeColor = x.Amount >= 0
+                                ? SystemColors.ControlText
+                                : Color.Red;
+                        }
                     }));
 
             _areaRenderHelper.SimulationSession.OnYearAndOrMonthChanged +=
