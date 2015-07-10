@@ -36,5 +36,10 @@ namespace Mirage.Urbanization.WinForms
             foreach (var text in new[] { label, value })
                 new Label { Text = text }.AddControlTo(overallFlowLayoutPanel);
         }
+
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
