@@ -6,11 +6,13 @@ namespace Mirage.Urbanization.Simulation.Persistence
 
         public PersistedCityStatisticsWithFinancialData(
             PersistedCityStatistics persistedCityStatistics,
-            int currentAmountOfFunds
+            int currentAmountOfFunds,
+            int currentProjectedAmountOfFunds
         )
         {
             PersistedCityStatistics = persistedCityStatistics;
             CurrentAmountOfFunds = currentAmountOfFunds;
+            CurrentProjectedAmountOfFunds = currentProjectedAmountOfFunds;
 
             ResidentialTaxIncome = persistedCityStatistics.ResidentialZonePopulationStatistics.Sum;
             CommercialTaxIncome = persistedCityStatistics.CommercialZonePopulationStatistics.Sum;
@@ -24,6 +26,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
         }
 
         public int CurrentAmountOfFunds { get; set; }
+        public int CurrentProjectedAmountOfFunds { get; set; }
 
         public int ResidentialTaxIncome { get; set; }
         public int CommercialTaxIncome { get; set; }

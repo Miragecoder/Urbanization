@@ -67,7 +67,8 @@ namespace Mirage.Urbanization.WinForms
             );
 
             yield return new GraphDefinition("Amount of funds",
-                new GraphSeries(x => x.CurrentAmountOfFunds, "Current amount of funds", Color.Red));
+                new GraphSeries(x => x.CurrentAmountOfFunds, "Current amount of funds", Color.Red),
+                new GraphSeries(x => x.CurrentProjectedAmountOfFunds, "Projected income", Color.Gray));
 
             yield return new GraphDefinition("Tax income",
                 new GraphSeries(x => x.ResidentialTaxIncome, "Residential zones", Color.Green),

@@ -46,7 +46,8 @@ namespace Mirage.Urbanization.Simulation
         {
             var financialData = new PersistedCityStatisticsWithFinancialData(
                 persistedCityStatistics: persistedCityStatistics, 
-                currentAmountOfFunds: CurrentAmount
+                currentAmountOfFunds: CurrentAmount,
+                currentProjectedAmountOfFunds: ProjectedIncome
             );
 
             AddProjectedIncome(financialData.GetTotal());
@@ -67,6 +68,7 @@ namespace Mirage.Urbanization.Simulation
         public void RestoreFrom(PersistedCityStatisticsWithFinancialData persistedCityStatisticsWithFinancialData)
         {
             _currentAmount = persistedCityStatisticsWithFinancialData.CurrentAmountOfFunds;
+            _projectedIncome = persistedCityStatisticsWithFinancialData.CurrentProjectedAmountOfFunds;
         }
     }
 }
