@@ -51,13 +51,14 @@
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGrowthPathfindingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.cityBudgetLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
-            this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectedIncomeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -246,12 +247,20 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(243, 6);
             // 
+            // toggleOverlayNumbers
+            // 
+            this.toggleOverlayNumbers.CheckOnClick = true;
+            this.toggleOverlayNumbers.Name = "toggleOverlayNumbers";
+            this.toggleOverlayNumbers.Size = new System.Drawing.Size(246, 24);
+            this.toggleOverlayNumbers.Text = "Toggle overlay numbers";
+            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.monthAndYearLabel,
             this.cityBudgetLabel,
+            this.projectedIncomeLabel,
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 524);
             this.statusStrip1.Name = "statusStrip1";
@@ -269,16 +278,16 @@
             // 
             // cityBudgetLabel
             // 
-            this.cityBudgetLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.cityBudgetLabel.Name = "cityBudgetLabel";
             this.cityBudgetLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.cityBudgetLabel.Size = new System.Drawing.Size(120, 24);
+            this.cityBudgetLabel.Size = new System.Drawing.Size(116, 24);
             this.cityBudgetLabel.Text = "cityBudgetLabel";
             // 
             // toolStripStatusLabel1
             // 
+            this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 24);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(107, 24);
             this.toolStripStatusLabel1.Text = "messageLabel";
             // 
             // saveCityDialog
@@ -292,12 +301,11 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
-            // toggleOverlayNumbers
+            // projectedIncomeLabel
             // 
-            this.toggleOverlayNumbers.CheckOnClick = true;
-            this.toggleOverlayNumbers.Name = "toggleOverlayNumbers";
-            this.toggleOverlayNumbers.Size = new System.Drawing.Size(246, 24);
-            this.toggleOverlayNumbers.Text = "Toggle overlay numbers";
+            this.projectedIncomeLabel.Name = "projectedIncomeLabel";
+            this.projectedIncomeLabel.Size = new System.Drawing.Size(158, 24);
+            this.projectedIncomeLabel.Text = "projectedIncomeLabel";
             // 
             // MainForm
             // 
@@ -352,6 +360,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem overlayMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleOverlayNumbers;
+        private System.Windows.Forms.ToolStripStatusLabel projectedIncomeLabel;
     }
 }
 
