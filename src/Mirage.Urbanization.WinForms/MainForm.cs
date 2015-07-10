@@ -354,7 +354,7 @@ namespace Mirage.Urbanization.WinForms
                     .GetRecentStatistics()
                     .WithResultIfHasMatch(statistics =>
                     {
-                        new BudgetForm()
+                        new BudgetForm(statistics)
                         {
                             StartPosition = FormStartPosition.CenterParent,
                             ControlBox = false,
