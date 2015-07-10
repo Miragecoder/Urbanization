@@ -22,6 +22,8 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         public string Name { get { return _name; } }
         public decimal PercentageScore { get { return _percentageScore; } }
+
+        public string PercentageScoreString { get { return _percentageScore.ToString("P"); } }
         public DataMeterValueCategory ValueCategory { get { return _valueCategory; } }
         public int Amount { get { return _amount; } }
     }

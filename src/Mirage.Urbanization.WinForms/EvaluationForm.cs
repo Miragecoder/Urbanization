@@ -27,7 +27,31 @@ namespace Mirage.Urbanization.WinForms
                 .DataMeterResults
                 .Where(x => x.ValueCategory > DataMeterValueCategory.None)
                 .OrderByDescending(x => x.PercentageScore)
-                .Select(x => string.Format("{0} - {1} ({2}%)", x.Name, x.ValueCategory, x.PercentageScore))
+                .Select(x => string.Format("{0} - {1} ({2}%)", x.Name, x.ValueCategory, x.PercentageScoreString))
+                .ToList();
+
+            var negativeOpinion = cityStatistics
+                .DataMeterResults
+                .Average(x => x.PercentageScore);
+
+            var positiveOpinion = 1 - negativeOpinion;
+
+            listBox2.DataSource =
+                new[]
+                {
+                    new
+                    {
+                        Percentage = negativeOpinion.ToString("P"),
+                        Name = "Negative"
+                    },
+                    new
+                    {
+                        Percentage = positiveOpinion.ToString("P"),
+                        Name = "Positive"
+                    }
+                }
+                .OrderByDescending(x => x.Percentage)
+                .Select(x => x.Name + ' ' + x.Percentage)
                 .ToList();
         }
 
