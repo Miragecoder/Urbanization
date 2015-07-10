@@ -59,6 +59,7 @@
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
             this.projectedIncomeLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cityBudgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -139,6 +140,7 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cityBudgetToolStripMenuItem,
             this.evaluationToolStripMenuItem,
             this.statisticsToolStripMenuItem,
             this.toolStripSeparator2,
@@ -308,6 +310,14 @@
             this.projectedIncomeLabel.Size = new System.Drawing.Size(162, 24);
             this.projectedIncomeLabel.Text = "projectedIncomeLabel";
             // 
+            // cityBudgetToolStripMenuItem
+            // 
+            this.cityBudgetToolStripMenuItem.Name = "cityBudgetToolStripMenuItem";
+            this.cityBudgetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.cityBudgetToolStripMenuItem.Size = new System.Drawing.Size(215, 24);
+            this.cityBudgetToolStripMenuItem.Text = "City Budget...";
+            this.cityBudgetToolStripMenuItem.Click += new System.EventHandler(this.cityBudgetToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -362,6 +372,7 @@
         private System.Windows.Forms.ToolStripMenuItem overlayMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleOverlayNumbers;
         private System.Windows.Forms.ToolStripStatusLabel projectedIncomeLabel;
+        private System.Windows.Forms.ToolStripMenuItem cityBudgetToolStripMenuItem;
     }
 }
 

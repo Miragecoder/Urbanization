@@ -344,5 +344,25 @@ namespace Mirage.Urbanization.WinForms
                 );
             });
         }
+
+        private void cityBudgetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WithAreaRenderHelper(helper =>
+            {
+                helper
+                    .SimulationSession
+                    .GetRecentStatistics()
+                    .WithResultIfHasMatch(statistics =>
+                    {
+                        new BudgetForm()
+                        {
+                            StartPosition = FormStartPosition.CenterParent,
+                            ControlBox = false,
+                            FormBorderStyle = FormBorderStyle.FixedDialog
+                        }.ShowDialog(this);
+                    }
+                );
+            });
+        }
     }
 }

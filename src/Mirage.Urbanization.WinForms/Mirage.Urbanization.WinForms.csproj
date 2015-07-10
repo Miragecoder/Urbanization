@@ -60,6 +60,12 @@
     <Compile Include="AreaRenderHelper.cs" />
     <Compile Include="BrushManager.cs" />
     <Compile Include="ControlExtensions.cs" />
+    <Compile Include="BudgetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BudgetForm.Designer.cs">
+      <DependentUpon>BudgetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EvaluationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +110,9 @@
     <Compile Include="ZoneRenderInfo.cs" />
     <Compile Include="ZoneSelectionPanelCreator.cs" />
     <Compile Include="ZoomMode.cs" />
+    <EmbeddedResource Include="BudgetForm.resx">
+      <DependentUpon>BudgetForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EvaluationForm.resx">
       <DependentUpon>EvaluationForm.cs</DependentUpon>
     </EmbeddedResource>

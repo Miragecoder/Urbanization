@@ -19,11 +19,11 @@ namespace Mirage.Urbanization.WinForms
         {
             InitializeComponent();
 
-            AddLabelValue("Population", cityStatistics.Population.ToString("N0"));
-            AddLabelValue("Assessed value", cityStatistics.AssessedValue.ToString("C"));
-            AddLabelValue("Category", cityStatistics.CityCategory);
-            AddLabelValue("Current amount of funds", cityStatistics.CurrentAmountOfFunds.ToString("C"));
-            AddLabelValue("Projected income", cityStatistics.CurrentProjectedAmountOfFunds.ToString("C"));
+            AddLabelValue("Population", cityStatistics.Population.ToString("N0"), overallFlowLayoutPanel);
+            AddLabelValue("Assessed value", cityStatistics.AssessedValue.ToString("C"), overallFlowLayoutPanel);
+            AddLabelValue("Category", cityStatistics.CityCategory, overallFlowLayoutPanel);
+            AddLabelValue("Current funds", cityStatistics.CurrentAmountOfFunds.ToString("C"), budgetFlowLayoutPanel);
+            AddLabelValue("Projected income", cityStatistics.CurrentProjectedAmountOfFunds.ToString("C"), budgetFlowLayoutPanel);
 
             listBox1.DataSource = cityStatistics
                 .DataMeterResults
@@ -57,10 +57,10 @@ namespace Mirage.Urbanization.WinForms
                 .ToList();
         }
 
-        private void AddLabelValue(string label, string value)
+        private static void AddLabelValue(string label, string value, FlowLayoutPanel flowLayoutPanel)
         {
             foreach (var text in new[] { label, value })
-                new Label { Text = text }.AddControlTo(overallFlowLayoutPanel);
+                new Label { Text = text, Width = 170 }.AddControlTo(flowLayoutPanel);
         }
 
         private void okButton_Click(object sender, EventArgs e)
