@@ -119,7 +119,6 @@ namespace Mirage.Urbanization.WinForms
                 var statistics = helper.SimulationSession.GetAllCityStatistics();
 
                 _currentStatisticsForm = new StatisticsForm(helper);
-                _currentStatisticsForm.UpdateCharts(statistics);
 
                 _currentStatisticsForm.StartPosition = FormStartPosition.CenterParent;
                 _currentStatisticsForm.ShowDialog(this);
@@ -354,7 +353,7 @@ namespace Mirage.Urbanization.WinForms
                     .GetRecentStatistics()
                     .WithResultIfHasMatch(statistics =>
                     {
-                        new BudgetForm(statistics)
+                        new BudgetForm(helper)
                         {
                             StartPosition = FormStartPosition.CenterParent,
                             ControlBox = false,

@@ -114,7 +114,7 @@ namespace Mirage.Urbanization.Simulation
 
                             var eventCapture = CityStatisticsUpdated;
                             if (eventCapture != null)
-                                eventCapture(this, new CityStatisticsUpdatedEventArgs());
+                                eventCapture(this, new CityStatisticsUpdatedEventArgs(_persistedCityStatisticsCollection.GetMostRecentPersistedCityStatistics().MatchingObject));
                             _yearAndMonth.AddWeek();
                             if (_yearAndMonth.IsAtBeginningOfNewYear)
                                 _cityBudget.AddProjectedIncomeToCurrentAmount();

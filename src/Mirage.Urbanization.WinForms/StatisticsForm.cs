@@ -19,24 +19,19 @@ using Image = System.Drawing.Image;
 
 namespace Mirage.Urbanization.WinForms
 {
-    public partial class StatisticsForm : Form
+    public partial class StatisticsForm : FormWithCityStatisticsEvent
     {
         public StatisticsForm(SimulationRenderHelper helper)
+            : base(helper)
         {
             InitializeComponent();
 
             foreach (var tabPage in _graphControlDefinitions)
                 tabControl1.TabPages.Add(tabPage.TabPage);
-
-            this.SizeChanged += (sender, e) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
-
-            helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
         }
 
-        public void UpdateCharts(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
+        public override void Update(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, PersistedCityStatisticsWithFinancialData current)
         {
-            if (!IsHandleCreated) return;
-
             var bitmapsAndControls = _graphControlDefinitions
                 .Select(graph => new
                 {
@@ -45,12 +40,12 @@ namespace Mirage.Urbanization.WinForms
                 })
                 .ToList();
 
-            this.BeginInvoke(new MethodInvoker(() =>
+            if (!IsHandleCreated) return;
+            BeginInvoke(new MethodInvoker(() =>
             {
                 foreach (var bitmapAndGraphControl in bitmapsAndControls)
                 {
-                    if (this.IsHandleCreated)
-                        bitmapAndGraphControl.GraphControl.DrawImage(bitmapAndGraphControl.Bitmap);
+                    bitmapAndGraphControl.GraphControl.DrawImage(bitmapAndGraphControl.Bitmap);
                 }
             }));
         }
@@ -152,14 +147,14 @@ namespace Mirage.Urbanization.WinForms
         }
 
         private static IEnumerable<GraphDefinition> GetNumbarSummaryGraphs(
-            Func<PersistedCityStatisticsWithFinancialData,PersistedNumberSummary> getNumberSummary, 
-            string title, 
-            Color primaryColor, 
+            Func<PersistedCityStatisticsWithFinancialData, PersistedNumberSummary> getNumberSummary,
+            string title,
+            Color primaryColor,
             Color secondaryColor)
         {
             Func<PersistedCityStatisticsWithFinancialData, PersistedNumberSummary> getNumberSummarySafeFunc =
                 x => getNumberSummary(x) ?? PersistedNumberSummary.EmptyInstance;
-            
+
             yield return new GraphDefinition("Total " + title,
                 new GraphSeries(
                     x => getNumberSummarySafeFunc(x).Sum,
@@ -171,7 +166,7 @@ namespace Mirage.Urbanization.WinForms
             yield return new GraphDefinition("Average " + title,
                 new GraphSeries(
                     x => getNumberSummarySafeFunc(x).Average,
-                    "Average", 
+                    "Average",
                     secondaryColor
                 ),
                 new GraphSeries(
@@ -226,9 +221,9 @@ namespace Mirage.Urbanization.WinForms
 
                     var dataTable = new DataTable();
 
-                    dataTable.Columns.Add("Type", typeof (string));
-                    dataTable.Columns.Add(chartDef.Title, typeof (int));
-                    dataTable.Columns.Add("TimeCode", typeof (string));
+                    dataTable.Columns.Add("Type", typeof(string));
+                    dataTable.Columns.Add(chartDef.Title, typeof(int));
+                    dataTable.Columns.Add("TimeCode", typeof(string));
 
                     foreach (var statistic in statistics)
                     {
@@ -256,7 +251,7 @@ namespace Mirage.Urbanization.WinForms
                     foreach (var series in chart.Series)
                     {
                         series.ChartType = SeriesChartType.Line;
-                        series.BorderWidth = series.BorderWidth*4;
+                        series.BorderWidth = series.BorderWidth * 4;
 
                         series.Color = chartDef.GraphSeriesSet.Single(x => x.Label == series.Name).Color;
                     }
@@ -271,7 +266,7 @@ namespace Mirage.Urbanization.WinForms
             {
                 var current = _pictureBox.Image;
                 _pictureBox.Image = image;
-                if (current != null)    
+                if (current != null)
                     current.Dispose();
             }
         }

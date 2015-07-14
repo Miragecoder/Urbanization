@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatisticsWithFinancialData
@@ -23,6 +26,15 @@ namespace Mirage.Urbanization.Simulation.Persistence
             RoadInfrastructureExpenses = persistedCityStatistics.NumberOfRoadZones;
             RailroadInfrastructureExpenses = (persistedCityStatistics.NumberOfRailRoadZones * 2) +
                                              (persistedCityStatistics.NumberOfTrainStations * 500);
+        }
+
+        public IEnumerable<PersistedCityStatisticsWithFinancialData> CombineWithYearMates(
+            IEnumerable<PersistedCityStatisticsWithFinancialData> persistedCityStatisticsWithFinancialDatas)
+        {
+            yield return this;
+            foreach (var match in persistedCityStatisticsWithFinancialDatas
+                .Where(x => x.PersistedCityStatistics.SharesYearWith(PersistedCityStatistics)))
+                yield return match;
         }
 
         public int CurrentAmountOfFunds { get; set; }

@@ -72,6 +72,9 @@
     <Compile Include="EvaluationForm.Designer.cs">
       <DependentUpon>EvaluationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormWithCityStatisticsEvent.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GraphicsManagerSelection.cs" />
     <Compile Include="IToolstripMenuOption.cs" />
     <Compile Include="NewCityForm.cs">

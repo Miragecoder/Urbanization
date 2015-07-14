@@ -2,22 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mirage.Urbanization.WinForms.Rendering.BufferedGraphics;
-using Mirage.Urbanization.WinForms.Rendering.SharpDx;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.WinForms.Rendering;
 using Mirage.Urbanization.ZoneConsumption;
-using Mirage.Urbanization.ZoneConsumption.Base;
-using Orientation = Mirage.Urbanization.ZoneConsumption.Base.Orientation;
 
 namespace Mirage.Urbanization.WinForms
 {
