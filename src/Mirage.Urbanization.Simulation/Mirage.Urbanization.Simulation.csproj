@@ -69,6 +69,7 @@
     <Compile Include="ReadOnlyYearAndMonth.cs" />
     <Compile Include="SimulationSession.cs" />
     <Compile Include="SimulationOptions.cs" />
+    <Compile Include="TaxDefinition.cs" />
     <Compile Include="YearAndMonth.cs" />
     <Compile Include="YearAndMonthWeekElapsedEventArgs.cs" />
   </ItemGroup>
