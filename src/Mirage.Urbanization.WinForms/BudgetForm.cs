@@ -62,6 +62,11 @@ namespace Mirage.Urbanization.WinForms
                 Sector = "Sector",
                 Rate = "Rate";
 
+            private readonly DataGridViewRow _totalDataGridViewRow = new DataGridViewRow();
+            private readonly DataGridView _dataGridView;
+
+            private readonly int _totalRowIndex;
+
             public BudgetComponentDefinitionGridViewController(
                 DataGridView targetGridView,
                 IEnumerable<TBudgetComponentDefinition> definitions,
@@ -75,12 +80,23 @@ namespace Mirage.Urbanization.WinForms
                 _taxDefinitionControlSets = definitions
                     .Select(x => new BudgetComponentDefinitionControlSet(targetGridView, x, budget, costsLabel, getCostsFunc))
                     .ToList();
+
+                _dataGridView = targetGridView;
+
+                _totalRowIndex = targetGridView.Rows.Add(_totalDataGridViewRow);
+
+                _totalDataGridViewRow.Cells[costsLabel] = new DataGridViewTextBoxCell();
             }
 
             public void UpdateWith(ISet<PersistedCityStatisticsWithFinancialData> cityStatisticsWithFinancialDatas)
             {
                 foreach (var taxDefinitionControl in _taxDefinitionControlSets)
                     taxDefinitionControl.UpdateWith(cityStatisticsWithFinancialDatas);
+
+                var value = _taxDefinitionControlSets.Sum(x => x.GetValueFrom(cityStatisticsWithFinancialDatas));
+
+                _dataGridView[0, _totalRowIndex].Value = "Total";
+                _dataGridView[1,_totalRowIndex].Value = value.ToString("C");
             }
 
             private readonly IList<BudgetComponentDefinitionControlSet> _taxDefinitionControlSets;
@@ -136,6 +152,11 @@ namespace Mirage.Urbanization.WinForms
                 {
                     if (_projectedCostsCell.DataGridView.IsHandleCreated)
                         _projectedCostsCell.Value = _getCostsFunc(_budgetComponentDefinition, cityStatisticsWithFinancialDatas).ToString("C");
+                }
+
+                public decimal GetValueFrom(ISet<PersistedCityStatisticsWithFinancialData> cityStatisticsWithFinancialDatas)
+                {
+                    return _getCostsFunc(_budgetComponentDefinition, cityStatisticsWithFinancialDatas);
                 }
             }
         }
