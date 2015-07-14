@@ -51,6 +51,7 @@ namespace Mirage.Urbanization.WinForms
             textBox1.BeginInvoke(new MethodInvoker(() =>
             {
                 _taxDefinitionGridViewController.UpdateWith(yearMates);
+                _cityServiceDefinitionGridViewController.UpdateWith(yearMates);
             }));
         }
 
