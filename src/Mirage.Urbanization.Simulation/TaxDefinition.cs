@@ -37,5 +37,11 @@ namespace Mirage.Urbanization.Simulation
                 yield return IndustrialTaxDefinition;
             }
         }
+
+        public override IEnumerable<decimal> GetSelectableRatePercentages()
+        {
+            return Enumerable.Range(0, 20)
+                .Select(x => (decimal)x / 100);
+        }
     }
 }

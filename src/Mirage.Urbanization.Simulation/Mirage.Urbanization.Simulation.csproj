@@ -47,6 +47,7 @@
     <Compile Include="CityBudget.cs" />
     <Compile Include="CityBudgetValueChangedEventArgs.cs" />
     <Compile Include="CityCategoryDefinition.cs" />
+    <Compile Include="CityServiceDefinition.cs" />
     <Compile Include="CityStatisticsUpdatedEventArgs.cs" />
     <Compile Include="CityStatisticsView.cs" />
     <Compile Include="Datameters\DataMeter.cs" />

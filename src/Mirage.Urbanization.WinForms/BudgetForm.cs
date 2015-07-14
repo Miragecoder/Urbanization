@@ -1,30 +1,37 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mirage.Urbanization.Simulation;
-using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
-using Mirage.Urbanization.Statistics;
 
 namespace Mirage.Urbanization.WinForms
 {
     public partial class BudgetForm : FormWithCityStatisticsEvent
     {
-        private readonly TaxDefinitionGridViewController _taxDefinitionGridViewController;
+        private readonly BudgetComponentDefinitionGridViewController<TaxDefinition> _taxDefinitionGridViewController;
+        private readonly BudgetComponentDefinitionGridViewController<CityServiceDefinition> _cityServiceDefinitionGridViewController;
 
         public BudgetForm(SimulationRenderHelper helper)
             : base(helper)
         {
             InitializeComponent();
 
-            _taxDefinitionGridViewController = new TaxDefinitionGridViewController(dataGridView2, helper.SimulationSession.Budget);
+            _taxDefinitionGridViewController = new BudgetComponentDefinitionGridViewController<TaxDefinition>(
+                targetGridView: dataGridView2,
+                definitions: TaxDefinition.TaxDefinitions,
+                budget: helper.SimulationSession.Budget,
+                costsLabel: "Projected income",
+                getCostsFunc: (definition, statistics) => definition.GetProjectedIncome(statistics)
+            );
+
+            _cityServiceDefinitionGridViewController = new BudgetComponentDefinitionGridViewController<CityServiceDefinition>(
+                targetGridView: dataGridView1,
+                definitions: CityServiceDefinition.CityServiceDefinitions,
+                budget: helper.SimulationSession.Budget,
+                costsLabel: "Projected expenses",
+                getCostsFunc: (definition, statistics) => definition.GetProjectedExpenses(statistics)
+            );
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -47,21 +54,25 @@ namespace Mirage.Urbanization.WinForms
             }));
         }
 
-        private class TaxDefinitionGridViewController
+        private class BudgetComponentDefinitionGridViewController<TBudgetComponentDefinition>
+                where TBudgetComponentDefinition : BudgetComponentDefinition
         {
             private const string
                 Sector = "Sector",
-                ProjectedIncome = "Projected Income",
                 Rate = "Rate";
 
-            public TaxDefinitionGridViewController(DataGridView targetGridView, IBudget budget)
+            public BudgetComponentDefinitionGridViewController(
+                DataGridView targetGridView,
+                IEnumerable<TBudgetComponentDefinition> definitions,
+                IBudget budget,
+                string costsLabel,
+                Func<TBudgetComponentDefinition, ISet<PersistedCityStatisticsWithFinancialData>, decimal> getCostsFunc)
             {
-                foreach (var name in new[] { Sector, ProjectedIncome, Rate })
+                foreach (var name in new[] { Sector, costsLabel, Rate })
                     targetGridView.Columns.Add(new DataGridViewTextBoxColumn() { Name = name, HeaderText = name, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
-                _taxDefinitionControlSets = TaxDefinition
-                    .TaxDefinitions
-                    .Select(x => new TaxDefinitionControlSet(targetGridView, x, budget))
+                _taxDefinitionControlSets = definitions
+                    .Select(x => new BudgetComponentDefinitionControlSet(targetGridView, x, budget, costsLabel, getCostsFunc))
                     .ToList();
             }
 
@@ -71,55 +82,59 @@ namespace Mirage.Urbanization.WinForms
                     taxDefinitionControl.UpdateWith(cityStatisticsWithFinancialDatas);
             }
 
-            private readonly IList<TaxDefinitionControlSet> _taxDefinitionControlSets;
+            private readonly IList<BudgetComponentDefinitionControlSet> _taxDefinitionControlSets;
 
-            private class TaxDefinitionControlSet
+            private class BudgetComponentDefinitionControlSet
             {
-                private readonly TaxDefinition _taxDefinition;
-                private readonly IBudget _budget;
-                private readonly DataGridViewCell _projectedIncomeCell, _currentRateCell;
+                private readonly TBudgetComponentDefinition _budgetComponentDefinition;
+                private readonly Func<TBudgetComponentDefinition, ISet<PersistedCityStatisticsWithFinancialData>, decimal> _getCostsFunc;
+                private readonly DataGridViewCell _projectedCostsCell;
 
-                public TaxDefinitionControlSet(DataGridView dataGridView, TaxDefinition taxDefinition, IBudget budget)
+                public BudgetComponentDefinitionControlSet(
+                    DataGridView dataGridView,
+                    TBudgetComponentDefinition budgetComponentDefinition,
+                    IBudget budget,
+                    string costsLabel,
+                    Func<TBudgetComponentDefinition, ISet<PersistedCityStatisticsWithFinancialData>, decimal> getCostsFunc)
                 {
-                    _taxDefinition = taxDefinition;
-                    _budget = budget;
+                    _budgetComponentDefinition = budgetComponentDefinition;
+                    _getCostsFunc = getCostsFunc;
                     var dataGridViewRow = new DataGridViewRow();
                     var index = dataGridView.Rows.Add(dataGridViewRow);
-                    dataGridView[Sector, index].Value = taxDefinition.Name;
+                    dataGridView[Sector, index].Value = budgetComponentDefinition.Name;
                     dataGridView[Sector, index].ReadOnly = true;
 
                     var combobox = new DataGridViewComboBoxCell();
-                    _projectedIncomeCell = dataGridView[ProjectedIncome, index];
+                    _projectedCostsCell = dataGridView[costsLabel, index];
                     dataGridView[Rate, index] = combobox;
 
-                    combobox.DataSource = Enumerable
-                        .Range(0, 20)
-                        .Select(x => (decimal) x)
-                        .Select(x => x / 100)
+                    combobox.DataSource = _budgetComponentDefinition
+                        .GetSelectableRatePercentages()
                         .Select(x => new
                         {
                             Value = x,
                             Label = x.ToString("P")
                         })
+                        .OrderByDescending(x => x.Value)
                         .ToList();
                     combobox.DisplayMember = "Label";
                     combobox.ValueMember = "Value";
 
-                    combobox.Value = taxDefinition.CurrentRate(budget);
+                    combobox.Value = budgetComponentDefinition.CurrentRate(budget);
 
                     dataGridView.CellValueChanged += (s, e) =>
                     {
                         if (combobox == dataGridView[e.ColumnIndex, e.RowIndex])
                         {
-                            taxDefinition.SetCurrentRate(budget, Convert.ToDecimal(combobox.Value));
+                            budgetComponentDefinition.SetCurrentRate(budget, Convert.ToDecimal(combobox.Value));
                         }
                     };
                 }
 
                 public void UpdateWith(ISet<PersistedCityStatisticsWithFinancialData> cityStatisticsWithFinancialDatas)
                 {
-                    if (_projectedIncomeCell.DataGridView.IsHandleCreated)
-                        _projectedIncomeCell.Value = _taxDefinition.GetProjectedIncome(cityStatisticsWithFinancialDatas).ToString("C");
+                    if (_projectedCostsCell.DataGridView.IsHandleCreated)
+                        _projectedCostsCell.Value = _getCostsFunc(_budgetComponentDefinition, cityStatisticsWithFinancialDatas).ToString("C");
                 }
             }
         }

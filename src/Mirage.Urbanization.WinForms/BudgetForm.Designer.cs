@@ -31,9 +31,6 @@
             this.okButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.AmountRequested = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AmountAllocated = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FundingLevel = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -72,37 +69,12 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.AmountRequested,
-            this.AmountAllocated,
-            this.FundingLevel});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(6, 21);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(546, 183);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // AmountRequested
-            // 
-            this.AmountRequested.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.AmountRequested.HeaderText = "Amount requested";
-            this.AmountRequested.Name = "AmountRequested";
-            this.AmountRequested.ReadOnly = true;
-            // 
-            // AmountAllocated
-            // 
-            this.AmountAllocated.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.AmountAllocated.HeaderText = "Amount allocated";
-            this.AmountAllocated.Name = "AmountAllocated";
-            this.AmountAllocated.ReadOnly = true;
-            // 
-            // FundingLevel
-            // 
-            this.FundingLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FundingLevel.HeaderText = "Funding level";
-            this.FundingLevel.Name = "FundingLevel";
-            this.FundingLevel.ReadOnly = true;
             // 
             // groupBox2
             // 
@@ -184,8 +156,5 @@
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AmountRequested;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AmountAllocated;
-        private System.Windows.Forms.DataGridViewComboBoxColumn FundingLevel;
     }
 }
