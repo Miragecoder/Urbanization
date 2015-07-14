@@ -49,7 +49,8 @@ namespace Mirage.Urbanization.WinForms
             {
                 foreach (var bitmapAndGraphControl in bitmapsAndControls)
                 {
-                    bitmapAndGraphControl.GraphControl.DrawImage(bitmapAndGraphControl.Bitmap);
+                    if (this.IsHandleCreated)
+                        bitmapAndGraphControl.GraphControl.DrawImage(bitmapAndGraphControl.Bitmap);
                 }
             }));
         }
