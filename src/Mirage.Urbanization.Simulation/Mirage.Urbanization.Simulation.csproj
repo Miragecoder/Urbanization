@@ -55,9 +55,11 @@
     <Compile Include="Datameters\LandValueCalculator.cs" />
     <Compile Include="Datameters\ZoneInfoDataMeter.cs" />
     <Compile Include="EventArgsWithData.cs" />
+    <Compile Include="IBudget.cs" />
     <Compile Include="ICityBudget.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
+    <Compile Include="PersistedBudget.cs" />
     <Compile Include="Persistence\PersistedCityStatistics.cs" />
     <Compile Include="Persistence\PersistedCityStatisticsCollection.cs" />
     <Compile Include="Persistence\PersistedCityStatisticsWithFinancialData.cs" />

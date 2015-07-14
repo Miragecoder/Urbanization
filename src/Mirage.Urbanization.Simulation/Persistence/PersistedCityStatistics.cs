@@ -6,14 +6,17 @@ namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatistics
     {
-        public PersistedCityStatistics() { }
+        public PersistedCityStatistics()
+        {
+            _yearAndMonthLazy = new Lazy<IReadOnlyYearAndMonth>(() => new ReadOnlyYearAndMonth(TimeCode));
+        }
 
         public PersistedCityStatistics(
             int timeCode,
             IPowerGridStatistics powerGridStatistics,
             IGrowthZoneStatistics growthZoneStatistics,
             IMiscCityStatistics miscCityStatistics
-        )
+        ) : this()
         {
             if (timeCode == default(int)) throw new ArgumentOutOfRangeException("timeCode");
             if (powerGridStatistics == null) throw new ArgumentNullException("powerGridStatistics");
@@ -51,8 +54,6 @@ namespace Mirage.Urbanization.Simulation.Persistence
             NumberOfFireStations = growthZoneStatistics.CityServicesStatistics.NumberOfFireStations;
 
             TimeCode = TimeCode;
-
-            _yearAndMonthLazy = new Lazy<IReadOnlyYearAndMonth>(() => new ReadOnlyYearAndMonth(TimeCode));
         }
 
         public int TimeCode { get; set; }
@@ -64,7 +65,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
             return _yearAndMonthLazy.Value;
         }
 
-        public bool SharesYearWith(PersistedCityStatistics statistics) { return GetYearAndMonth() == statistics.GetYearAndMonth(); }
+        public bool SharesYearWith(PersistedCityStatistics statistics) { return GetYearAndMonth().CurrentYear == statistics.GetYearAndMonth().CurrentYear; }
 
         public int PowerAmountOfConsumers { get; set; }
         public int PowerAmountOfSuppliers { get; set; }

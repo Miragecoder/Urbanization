@@ -31,16 +31,13 @@
             this.okButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.AmountRequested = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AmountAllocated = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FundingLevel = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.AmountRequested = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AmountAllocated = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FundingLevel = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Sector = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CurrentTaxRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DesiredTaxRate = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -86,6 +83,27 @@
             this.dataGridView1.Size = new System.Drawing.Size(546, 183);
             this.dataGridView1.TabIndex = 0;
             // 
+            // AmountRequested
+            // 
+            this.AmountRequested.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.AmountRequested.HeaderText = "Amount requested";
+            this.AmountRequested.Name = "AmountRequested";
+            this.AmountRequested.ReadOnly = true;
+            // 
+            // AmountAllocated
+            // 
+            this.AmountAllocated.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.AmountAllocated.HeaderText = "Amount allocated";
+            this.AmountAllocated.Name = "AmountAllocated";
+            this.AmountAllocated.ReadOnly = true;
+            // 
+            // FundingLevel
+            // 
+            this.FundingLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FundingLevel.HeaderText = "Funding level";
+            this.FundingLevel.Name = "FundingLevel";
+            this.FundingLevel.ReadOnly = true;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dataGridView2);
@@ -95,17 +113,13 @@
             this.groupBox2.Size = new System.Drawing.Size(558, 164);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Service expenses";
+            this.groupBox2.Text = "Taxes";
             // 
             // dataGridView2
             // 
             this.dataGridView2.AllowUserToAddRows = false;
             this.dataGridView2.AllowUserToDeleteRows = false;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Sector,
-            this.CurrentTaxRate,
-            this.DesiredTaxRate});
             this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView2.Location = new System.Drawing.Point(6, 21);
             this.dataGridView2.Name = "dataGridView2";
@@ -134,48 +148,6 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(546, 87);
             this.textBox1.TabIndex = 0;
-            // 
-            // AmountRequested
-            // 
-            this.AmountRequested.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.AmountRequested.HeaderText = "Amount requested";
-            this.AmountRequested.Name = "AmountRequested";
-            this.AmountRequested.ReadOnly = true;
-            // 
-            // AmountAllocated
-            // 
-            this.AmountAllocated.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.AmountAllocated.HeaderText = "Amount allocated";
-            this.AmountAllocated.Name = "AmountAllocated";
-            this.AmountAllocated.ReadOnly = true;
-            // 
-            // FundingLevel
-            // 
-            this.FundingLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FundingLevel.HeaderText = "Funding level";
-            this.FundingLevel.Name = "FundingLevel";
-            this.FundingLevel.ReadOnly = true;
-            // 
-            // Sector
-            // 
-            this.Sector.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Sector.HeaderText = "Sector";
-            this.Sector.Name = "Sector";
-            this.Sector.ReadOnly = true;
-            // 
-            // CurrentTaxRate
-            // 
-            this.CurrentTaxRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.CurrentTaxRate.HeaderText = "Current tax rate";
-            this.CurrentTaxRate.Name = "CurrentTaxRate";
-            this.CurrentTaxRate.ReadOnly = true;
-            // 
-            // DesiredTaxRate
-            // 
-            this.DesiredTaxRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DesiredTaxRate.HeaderText = "Desired tax rate";
-            this.DesiredTaxRate.Name = "DesiredTaxRate";
-            this.DesiredTaxRate.ReadOnly = true;
             // 
             // BudgetForm
             // 
@@ -215,8 +187,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn AmountRequested;
         private System.Windows.Forms.DataGridViewTextBoxColumn AmountAllocated;
         private System.Windows.Forms.DataGridViewComboBoxColumn FundingLevel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Sector;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CurrentTaxRate;
-        private System.Windows.Forms.DataGridViewComboBoxColumn DesiredTaxRate;
     }
 }

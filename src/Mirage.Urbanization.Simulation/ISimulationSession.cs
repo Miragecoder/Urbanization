@@ -14,6 +14,8 @@ namespace Mirage.Urbanization.Simulation
         IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption);
         void StartSimulation();
 
+        IBudget Budget { get; }
+
         QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics();
 
         IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics(); 
