@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,22 +11,23 @@ namespace Mirage.Urbanization.Simulation.Persistence
         public PersistedCityStatisticsWithFinancialData(
             PersistedCityStatistics persistedCityStatistics,
             int currentAmountOfFunds,
-            int currentProjectedAmountOfFunds
-        )
+            int currentProjectedAmountOfFunds,
+            ICityBudgetConfiguration cityBudgetConfiguration)
         {
             PersistedCityStatistics = persistedCityStatistics;
             CurrentAmountOfFunds = currentAmountOfFunds;
             CurrentProjectedAmountOfFunds = currentProjectedAmountOfFunds;
 
-            ResidentialTaxIncome = persistedCityStatistics.ResidentialZonePopulationStatistics.Sum;
-            CommercialTaxIncome = persistedCityStatistics.CommercialZonePopulationStatistics.Sum;
-            IndustrialTaxIncome = persistedCityStatistics.IndustrialZonePopulationStatistics.Sum;
+            ResidentialTaxIncome = Convert.ToInt32(persistedCityStatistics.ResidentialZonePopulationStatistics.Sum * cityBudgetConfiguration.ResidentialTaxRate);
+            CommercialTaxIncome = Convert.ToInt32(persistedCityStatistics.CommercialZonePopulationStatistics.Sum * cityBudgetConfiguration.CommercialTaxRate);
+            IndustrialTaxIncome = Convert.ToInt32(persistedCityStatistics.IndustrialZonePopulationStatistics.Sum * cityBudgetConfiguration.IndustrialTaxRate);
 
-            PoliceServiceExpenses = persistedCityStatistics.NumberOfPoliceStations * 50;
-            FireServiceExpenses = persistedCityStatistics.NumberOfFireStations * 50;
-            RoadInfrastructureExpenses = persistedCityStatistics.NumberOfRoadZones;
-            RailroadInfrastructureExpenses = (persistedCityStatistics.NumberOfRailRoadZones * 2) +
-                                             (persistedCityStatistics.NumberOfTrainStations * 500);
+            PoliceServiceExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfPoliceStations * 500) * cityBudgetConfiguration.PoliceServiceRate);
+            FireServiceExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfFireStations * 500) * cityBudgetConfiguration.FireDepartmentServiceRate);
+
+            RoadInfrastructureExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfRoadZones) * cityBudgetConfiguration.RoadInfrastructureServiceRate);
+            RailroadInfrastructureExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfRailRoadZones) * cityBudgetConfiguration.RailroadInfrastructureServiceRate)
+                + Convert.ToInt32((persistedCityStatistics.NumberOfTrainStations * 10) * cityBudgetConfiguration.RailroadInfrastructureServiceRate);
         }
 
         public IEnumerable<PersistedCityStatisticsWithFinancialData> CombineWithYearMates(

@@ -127,7 +127,7 @@
             this.groupBox4.Size = new System.Drawing.Size(379, 108);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "City budget";
+            this.groupBox4.Text = "City CityBudgetConfiguration";
             // 
             // budgetFlowLayoutPanel
             // 

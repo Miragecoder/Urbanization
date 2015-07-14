@@ -1,6 +1,6 @@
 ﻿namespace Mirage.Urbanization.Simulation
 {
-    public class PersistedBudget : IBudget
+    public class PersistedCityBudgetConfiguration : ICityBudgetConfiguration
     {
         public decimal ResidentialTaxRate { get; set; }
         public decimal CommercialTaxRate { get; set; }
@@ -10,9 +10,9 @@
         public decimal RoadInfrastructureServiceRate { get; set; }
         public decimal RailroadInfrastructureServiceRate { get; set; }
 
-        public static PersistedBudget GetDefaultBudget()
+        public static PersistedCityBudgetConfiguration GetDefaultBudget()
         {
-            return new PersistedBudget
+            return new PersistedCityBudgetConfiguration
             {
                 ResidentialTaxRate = 0.07M,
                 CommercialTaxRate = 0.07M,

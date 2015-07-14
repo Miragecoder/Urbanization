@@ -1,6 +1,6 @@
 ﻿namespace Mirage.Urbanization.Simulation
 {
-    public interface IBudget
+    public interface ICityBudgetConfiguration
     {
         decimal ResidentialTaxRate { get; set; }
         decimal CommercialTaxRate { get; set; }

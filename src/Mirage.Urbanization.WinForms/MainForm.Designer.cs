@@ -315,7 +315,7 @@
             this.cityBudgetToolStripMenuItem.Name = "cityBudgetToolStripMenuItem";
             this.cityBudgetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.cityBudgetToolStripMenuItem.Size = new System.Drawing.Size(215, 24);
-            this.cityBudgetToolStripMenuItem.Text = "City Budget...";
+            this.cityBudgetToolStripMenuItem.Text = "City CityBudgetConfiguration...";
             this.cityBudgetToolStripMenuItem.Click += new System.EventHandler(this.cityBudgetToolStripMenuItem_Click);
             // 
             // MainForm

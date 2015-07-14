@@ -20,7 +20,7 @@ namespace Mirage.Urbanization.WinForms
             _taxDefinitionGridViewController = new BudgetComponentDefinitionGridViewController<TaxDefinition>(
                 targetGridView: dataGridView2,
                 definitions: TaxDefinition.TaxDefinitions,
-                budget: helper.SimulationSession.Budget,
+                cityBudgetConfiguration: helper.SimulationSession.CityBudgetConfiguration,
                 costsLabel: "Projected income",
                 getCostsFunc: (definition, statistics) => definition.GetProjectedIncome(statistics)
             );
@@ -28,7 +28,7 @@ namespace Mirage.Urbanization.WinForms
             _cityServiceDefinitionGridViewController = new BudgetComponentDefinitionGridViewController<CityServiceDefinition>(
                 targetGridView: dataGridView1,
                 definitions: CityServiceDefinition.CityServiceDefinitions,
-                budget: helper.SimulationSession.Budget,
+                cityBudgetConfiguration: helper.SimulationSession.CityBudgetConfiguration,
                 costsLabel: "Projected expenses",
                 getCostsFunc: (definition, statistics) => definition.GetProjectedExpenses(statistics)
             );
@@ -70,7 +70,7 @@ namespace Mirage.Urbanization.WinForms
             public BudgetComponentDefinitionGridViewController(
                 DataGridView targetGridView,
                 IEnumerable<TBudgetComponentDefinition> definitions,
-                IBudget budget,
+                ICityBudgetConfiguration cityBudgetConfiguration,
                 string costsLabel,
                 Func<TBudgetComponentDefinition, ISet<PersistedCityStatisticsWithFinancialData>, decimal> getCostsFunc)
             {
@@ -78,7 +78,7 @@ namespace Mirage.Urbanization.WinForms
                     targetGridView.Columns.Add(new DataGridViewTextBoxColumn() { Name = name, HeaderText = name, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
                 _taxDefinitionControlSets = definitions
-                    .Select(x => new BudgetComponentDefinitionControlSet(targetGridView, x, budget, costsLabel, getCostsFunc))
+                    .Select(x => new BudgetComponentDefinitionControlSet(targetGridView, x, cityBudgetConfiguration, costsLabel, getCostsFunc))
                     .ToList();
 
                 _dataGridView = targetGridView;
@@ -110,7 +110,7 @@ namespace Mirage.Urbanization.WinForms
                 public BudgetComponentDefinitionControlSet(
                     DataGridView dataGridView,
                     TBudgetComponentDefinition budgetComponentDefinition,
-                    IBudget budget,
+                    ICityBudgetConfiguration cityBudgetConfiguration,
                     string costsLabel,
                     Func<TBudgetComponentDefinition, ISet<PersistedCityStatisticsWithFinancialData>, decimal> getCostsFunc)
                 {
@@ -137,13 +137,13 @@ namespace Mirage.Urbanization.WinForms
                     combobox.DisplayMember = "Label";
                     combobox.ValueMember = "Value";
 
-                    combobox.Value = budgetComponentDefinition.CurrentRate(budget);
+                    combobox.Value = budgetComponentDefinition.CurrentRate(cityBudgetConfiguration);
 
                     dataGridView.CellValueChanged += (s, e) =>
                     {
                         if (combobox == dataGridView[e.ColumnIndex, e.RowIndex])
                         {
-                            budgetComponentDefinition.SetCurrentRate(budget, Convert.ToDecimal(combobox.Value));
+                            budgetComponentDefinition.SetCurrentRate(cityBudgetConfiguration, Convert.ToDecimal(combobox.Value));
                         }
                     };
                 }

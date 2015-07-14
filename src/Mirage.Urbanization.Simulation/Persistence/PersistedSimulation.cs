@@ -9,7 +9,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedSimulation
     {
-        public PersistedBudget PersistedBudget { get; set; }
+        public PersistedCityBudgetConfiguration PersistedCityBudgetConfiguration { get; set; }
         public PersistedArea PersistedArea { get; set; }
         public PersistedCityStatisticsWithFinancialData[] PersistedCityStatistics { get; set; }
     }

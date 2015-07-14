@@ -12,7 +12,7 @@ namespace Mirage.Urbanization.Simulation
 
         private TaxDefinition(
             string name,
-            Expression<Func<IBudget, decimal>> currentRate,
+            Expression<Func<ICityBudgetConfiguration, decimal>> currentRate,
             Func<ISet<PersistedCityStatisticsWithFinancialData>, int> getProjectedIncome)
             :base(name,currentRate)
         {

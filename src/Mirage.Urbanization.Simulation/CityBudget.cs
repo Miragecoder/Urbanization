@@ -42,12 +42,13 @@ namespace Mirage.Urbanization.Simulation
             }
         }
 
-        public PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics)
+        public PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics, ICityBudgetConfiguration cityBudgetConfiguration)
         {
             var financialData = new PersistedCityStatisticsWithFinancialData(
                 persistedCityStatistics: persistedCityStatistics, 
                 currentAmountOfFunds: CurrentAmount,
-                currentProjectedAmountOfFunds: ProjectedIncome
+                currentProjectedAmountOfFunds: ProjectedIncome,
+                cityBudgetConfiguration: cityBudgetConfiguration
             );
 
             AddProjectedIncome(financialData.GetTotal());

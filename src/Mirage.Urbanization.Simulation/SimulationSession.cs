@@ -15,7 +15,7 @@ namespace Mirage.Urbanization.Simulation
     {
         private readonly PersistedCityStatisticsCollection _persistedCityStatisticsCollection = new PersistedCityStatisticsCollection();
 
-        private readonly PersistedBudget _budget;
+        private readonly PersistedCityBudgetConfiguration _cityBudgetConfiguration;
 
         private readonly Area _area;
         private readonly Task _growthSimulationTask, _crimeAndPollutionTask, _powerTask;
@@ -63,7 +63,7 @@ namespace Mirage.Urbanization.Simulation
             _area.OnAreaConsumptionResult += HandleAreaConsumptionResult;
             _area.OnAreaMessage += (s, e) => RaiseAreaMessageEvent(e.Message);
 
-            PersistedBudget persistedBudget = null;
+            PersistedCityBudgetConfiguration persistedCityBudgetConfiguration = null;
 
             simulationOptions.WithPersistedSimulation(persistedSimulation =>
             {
@@ -82,10 +82,10 @@ namespace Mirage.Urbanization.Simulation
 
                 _cityBudget.RestoreFrom(last);
 
-                persistedBudget = persistedSimulation.PersistedBudget;
+                persistedCityBudgetConfiguration = persistedSimulation.PersistedCityBudgetConfiguration;
             });
 
-            _budget = persistedBudget ?? new PersistedBudget();
+            _cityBudgetConfiguration = persistedCityBudgetConfiguration ?? new PersistedCityBudgetConfiguration();
 
             _growthSimulationTask = new Task(() =>
             {
@@ -111,7 +111,8 @@ namespace Mirage.Urbanization.Simulation
                                         powerGridStatistics: _lastPowerGridStatistics, 
                                         growthZoneStatistics: growthZoneStatistics, 
                                         miscCityStatistics: _lastMiscCityStatistics
-                                    )
+                                    ), 
+                                    _cityBudgetConfiguration
                                 )
                             );
 
@@ -252,7 +253,7 @@ namespace Mirage.Urbanization.Simulation
             {
                 PersistedArea = _area.GeneratePersistenceSnapshot(),
                 PersistedCityStatistics = _persistedCityStatisticsCollection.GetAll().ToArray(),
-                PersistedBudget = _budget
+                PersistedCityBudgetConfiguration = _cityBudgetConfiguration
             };
         }
 
@@ -288,7 +289,7 @@ namespace Mirage.Urbanization.Simulation
             onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
         }
 
-        public IBudget Budget { get { return _budget; } }
+        public ICityBudgetConfiguration CityBudgetConfiguration { get { return _cityBudgetConfiguration; } }
 
         private readonly ICityBudget _cityBudget = new CityBudget();
 
