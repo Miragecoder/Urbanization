@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateExceptionExtensions.cs" />
+    <Compile Include="BudgetComponentDefinition.cs" />
     <Compile Include="CityBudget.cs" />
     <Compile Include="CityBudgetValueChangedEventArgs.cs" />
     <Compile Include="CityCategoryDefinition.cs" />
