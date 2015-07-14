@@ -1,24 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
+using System.Collections.Immutable;
 
 namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatisticsCollection
     {
-        private readonly IList<PersistedCityStatisticsWithFinancialData> _persistedCityStatistics = new List<PersistedCityStatisticsWithFinancialData>();
+        private ImmutableList<PersistedCityStatisticsWithFinancialData> _persistedCityStatistics = ImmutableList<PersistedCityStatisticsWithFinancialData>.Empty;
 
         private PersistedCityStatisticsWithFinancialData _mostRecentStatistics;
 
-        private readonly object _locker = new object();
-
         public void Add(PersistedCityStatisticsWithFinancialData statistics)
         {
-            lock (_locker)
-            {
-                _persistedCityStatistics.Add(statistics);
-                _mostRecentStatistics = statistics;
-            }
+            _persistedCityStatistics = _persistedCityStatistics.Add(statistics);
+            _mostRecentStatistics = statistics;
         }
 
         public QueryResult<PersistedCityStatisticsWithFinancialData> GetMostRecentPersistedCityStatistics()
@@ -28,7 +24,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
 
         public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAll()
         {
-            return _persistedCityStatistics.ToList();
+            return _persistedCityStatistics;
         }
     }
 }
