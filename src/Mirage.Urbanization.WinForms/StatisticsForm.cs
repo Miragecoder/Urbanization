@@ -28,7 +28,6 @@ namespace Mirage.Urbanization.WinForms
             foreach (var tabPage in _graphControlDefinitions)
                 tabControl1.TabPages.Add(tabPage.TabPage);
 
-            this.tabControl1.TabIndexChanged += (sender, e) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
             this.SizeChanged += (sender, e) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
 
             helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdateCharts(helper.SimulationSession.GetAllCityStatistics());
@@ -37,10 +36,21 @@ namespace Mirage.Urbanization.WinForms
         public void UpdateCharts(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
         {
             if (!IsHandleCreated) return;
+
+            var bitmapsAndControls = _graphControlDefinitions
+                .Select(graph => new
+                {
+                    GraphControl = graph,
+                    Bitmap = graph.ProduceBitmapFor(statistics)
+                })
+                .ToList();
+
             this.BeginInvoke(new MethodInvoker(() =>
             {
-                foreach (var graphControlDefinition in _graphControlDefinitions)
-                    graphControlDefinition.ProduceRenderAction(statistics)();
+                foreach (var bitmapAndGraphControl in bitmapsAndControls)
+                {
+                    bitmapAndGraphControl.GraphControl.DrawImage(bitmapAndGraphControl.Bitmap);
+                }
             }));
         }
 
@@ -197,68 +207,71 @@ namespace Mirage.Urbanization.WinForms
                 get { return _tabPage; }
             }
 
-            public Action ProduceRenderAction(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
+            public Image ProduceBitmapFor(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
             {
-                return () =>
+                using (var chartMemoryStream = new MemoryStream())
                 {
-                    using (var chartMemoryStream = new MemoryStream())
+                    var chart = new Chart
                     {
-                        var chart = new Chart
+                        Width = _pictureBox.Width,
+                        Height = _pictureBox.Height,
+                        Palette = ChartColorPalette.Berry,
+                        BorderColor = Color.DodgerBlue
+                    };
+
+                    var chartDef = _graphDefinition;
+
+                    chart.ChartAreas.Add("Test");
+
+                    var dataTable = new DataTable();
+
+                    dataTable.Columns.Add("Type", typeof (string));
+                    dataTable.Columns.Add(chartDef.Title, typeof (int));
+                    dataTable.Columns.Add("TimeCode", typeof (string));
+
+                    foreach (var statistic in statistics)
+                    {
+                        foreach (var col in chartDef.GraphSeriesSet)
                         {
-                            Width = _pictureBox.Width,
-                            Height = _pictureBox.Height,
-                            Palette = ChartColorPalette.Berry,
-                            BorderColor = Color.DodgerBlue
-                        };
-
-                        var chartDef = _graphDefinition;
-
-                        chart.ChartAreas.Add("Test");
-
-                        var dataTable = new DataTable();
-
-                        dataTable.Columns.Add("Type", typeof(string));
-                        dataTable.Columns.Add(chartDef.Title, typeof(int));
-                        dataTable.Columns.Add("TimeCode", typeof(string));
-
-                        foreach (var statistic in statistics)
-                        {
-                            foreach (var col in chartDef.GraphSeriesSet)
-                            {
-                                dataTable.Rows.Add(col.Label, col.GetValue(statistic),
-                                    statistic.PersistedCityStatistics.TimeCode.ToString(CultureInfo.InvariantCulture));
-                            }
+                            dataTable.Rows.Add(col.Label, col.GetValue(statistic),
+                                statistic.PersistedCityStatistics.TimeCode.ToString(CultureInfo.InvariantCulture));
                         }
-
-
-                        chart.DataBindCrossTable(dataTable.Rows, "Type", "TimeCode", chartDef.Title, String.Empty);
-
-                        chart.Titles.Add(chartDef.Title);
-
-                        chart.Font.Name = _tabPage.Font.Name;
-                        chart.Font.Size = new FontUnit(_tabPage.Font.SizeInPoints);
-
-                        chart.ChartAreas[0].BackGradientStyle = GradientStyle.TopBottom;
-                        chart.ChartAreas[0].BackSecondaryColor = Color.LightSkyBlue;
-                        chart.ChartAreas[0].BackColor = Color.LightBlue;
-
-                        chart.Legends.Add("Legend");
-
-                        foreach (var series in chart.Series)
-                        {
-                            series.ChartType = SeriesChartType.Line;
-                            series.BorderWidth = series.BorderWidth * 4;
-
-                            series.Color = chartDef.GraphSeriesSet.Single(x => x.Label == series.Name).Color;
-                        }
-
-                        chart.SaveImage(chartMemoryStream);
-
-                        Image chartImage = Bitmap.FromStream(chartMemoryStream);
-
-                        _pictureBox.Image = chartImage;
                     }
-                };
+
+
+                    chart.DataBindCrossTable(dataTable.Rows, "Type", "TimeCode", chartDef.Title, String.Empty);
+
+                    chart.Titles.Add(chartDef.Title);
+
+                    chart.Font.Name = _tabPage.Font.Name;
+                    chart.Font.Size = new FontUnit(_tabPage.Font.SizeInPoints);
+
+                    chart.ChartAreas[0].BackGradientStyle = GradientStyle.TopBottom;
+                    chart.ChartAreas[0].BackSecondaryColor = Color.LightSkyBlue;
+                    chart.ChartAreas[0].BackColor = Color.LightBlue;
+
+                    chart.Legends.Add("Legend");
+
+                    foreach (var series in chart.Series)
+                    {
+                        series.ChartType = SeriesChartType.Line;
+                        series.BorderWidth = series.BorderWidth*4;
+
+                        series.Color = chartDef.GraphSeriesSet.Single(x => x.Label == series.Name).Color;
+                    }
+
+                    chart.SaveImage(chartMemoryStream);
+
+                    return Bitmap.FromStream(chartMemoryStream);
+                }
+            }
+
+            public void DrawImage(Image image)
+            {
+                var current = _pictureBox.Image;
+                _pictureBox.Image = image;
+                if (current != null)    
+                    current.Dispose();
             }
         }
 
