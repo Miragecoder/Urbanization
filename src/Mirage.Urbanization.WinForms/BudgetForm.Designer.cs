@@ -30,22 +30,26 @@
         {
             this.okButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.serviceExpensesDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.taxesDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.totalsDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.serviceExpensesDataGridView)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.taxesDataGridView)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.totalsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(495, 518);
+            this.okButton.Location = new System.Drawing.Point(495, 618);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 0;
@@ -55,31 +59,31 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 302);
+            this.groupBox1.Controls.Add(this.serviceExpensesDataGridView);
+            this.groupBox1.Location = new System.Drawing.Point(12, 267);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Size = new System.Drawing.Size(558, 210);
+            this.groupBox1.Size = new System.Drawing.Size(558, 148);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Service expenses";
             // 
-            // dataGridView1
+            // serviceExpensesDataGridView
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 21);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(546, 183);
-            this.dataGridView1.TabIndex = 0;
+            this.serviceExpensesDataGridView.AllowUserToAddRows = false;
+            this.serviceExpensesDataGridView.AllowUserToDeleteRows = false;
+            this.serviceExpensesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.serviceExpensesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serviceExpensesDataGridView.Location = new System.Drawing.Point(6, 21);
+            this.serviceExpensesDataGridView.Name = "serviceExpensesDataGridView";
+            this.serviceExpensesDataGridView.RowTemplate.Height = 24;
+            this.serviceExpensesDataGridView.Size = new System.Drawing.Size(546, 121);
+            this.serviceExpensesDataGridView.TabIndex = 0;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.dataGridView2);
-            this.groupBox2.Location = new System.Drawing.Point(12, 132);
+            this.groupBox2.Controls.Add(this.taxesDataGridView);
+            this.groupBox2.Location = new System.Drawing.Point(12, 97);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox2.Size = new System.Drawing.Size(558, 164);
@@ -87,18 +91,18 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Taxes";
             // 
-            // dataGridView2
+            // taxesDataGridView
             // 
-            this.dataGridView2.AllowUserToAddRows = false;
-            this.dataGridView2.AllowUserToDeleteRows = false;
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(6, 21);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(546, 137);
-            this.dataGridView2.TabIndex = 0;
+            this.taxesDataGridView.AllowUserToAddRows = false;
+            this.taxesDataGridView.AllowUserToDeleteRows = false;
+            this.taxesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.taxesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.taxesDataGridView.Location = new System.Drawing.Point(6, 21);
+            this.taxesDataGridView.Name = "taxesDataGridView";
+            this.taxesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.taxesDataGridView.RowTemplate.Height = 24;
+            this.taxesDataGridView.Size = new System.Drawing.Size(546, 137);
+            this.taxesDataGridView.TabIndex = 0;
             // 
             // groupBox3
             // 
@@ -106,7 +110,7 @@
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox3.Size = new System.Drawing.Size(558, 114);
+            this.groupBox3.Size = new System.Drawing.Size(558, 79);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Summary";
@@ -118,15 +122,39 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(546, 87);
+            this.textBox1.Size = new System.Drawing.Size(546, 52);
             this.textBox1.TabIndex = 0;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.totalsDataGridView);
+            this.groupBox4.Location = new System.Drawing.Point(12, 421);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(6);
+            this.groupBox4.Size = new System.Drawing.Size(558, 191);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Totals";
+            // 
+            // totalsDataGridView
+            // 
+            this.totalsDataGridView.AllowUserToAddRows = false;
+            this.totalsDataGridView.AllowUserToDeleteRows = false;
+            this.totalsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.totalsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.totalsDataGridView.Location = new System.Drawing.Point(6, 21);
+            this.totalsDataGridView.Name = "totalsDataGridView";
+            this.totalsDataGridView.RowTemplate.Height = 24;
+            this.totalsDataGridView.Size = new System.Drawing.Size(546, 164);
+            this.totalsDataGridView.TabIndex = 0;
             // 
             // BudgetForm
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 553);
+            this.ClientSize = new System.Drawing.Size(582, 653);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -138,11 +166,13 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "City CityBudgetConfiguration";
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.serviceExpensesDataGridView)).EndInit();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.taxesDataGridView)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.totalsDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -151,10 +181,12 @@
 
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView serviceExpensesDataGridView;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView taxesDataGridView;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.DataGridView totalsDataGridView;
     }
 }

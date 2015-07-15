@@ -11,6 +11,7 @@ namespace Mirage.Urbanization.WinForms
     {
         private readonly BudgetComponentDefinitionGridViewController<TaxDefinition> _taxDefinitionGridViewController;
         private readonly BudgetComponentDefinitionGridViewController<CityServiceDefinition> _cityServiceDefinitionGridViewController;
+        private readonly TotalsGridViewController _totalsGridViewController;
 
         public BudgetForm(SimulationRenderHelper helper)
             : base(helper)
@@ -18,7 +19,7 @@ namespace Mirage.Urbanization.WinForms
             InitializeComponent();
 
             _taxDefinitionGridViewController = new BudgetComponentDefinitionGridViewController<TaxDefinition>(
-                targetGridView: dataGridView2,
+                targetGridView: taxesDataGridView,
                 definitions: TaxDefinition.TaxDefinitions,
                 cityBudgetConfiguration: helper.SimulationSession.CityBudgetConfiguration,
                 costsLabel: "Projected income",
@@ -26,12 +27,14 @@ namespace Mirage.Urbanization.WinForms
             );
 
             _cityServiceDefinitionGridViewController = new BudgetComponentDefinitionGridViewController<CityServiceDefinition>(
-                targetGridView: dataGridView1,
+                targetGridView: serviceExpensesDataGridView,
                 definitions: CityServiceDefinition.CityServiceDefinitions,
                 cityBudgetConfiguration: helper.SimulationSession.CityBudgetConfiguration,
                 costsLabel: "Projected expenses",
                 getCostsFunc: (definition, statistics) => definition.GetProjectedExpenses(statistics)
             );
+
+            _totalsGridViewController = new TotalsGridViewController(totalsDataGridView);
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -46,12 +49,11 @@ namespace Mirage.Urbanization.WinForms
             var yearMates = new HashSet<PersistedCityStatisticsWithFinancialData>(current
                 .CombineWithYearMates(statistics));
 
-            var summary = new BudgetSummary(yearMates);
-
             textBox1.BeginInvoke(new MethodInvoker(() =>
             {
                 _taxDefinitionGridViewController.UpdateWith(yearMates);
                 _cityServiceDefinitionGridViewController.UpdateWith(yearMates);
+                _totalsGridViewController.UpdateWith(yearMates);
             }));
         }
 
@@ -96,7 +98,7 @@ namespace Mirage.Urbanization.WinForms
                 var value = _taxDefinitionControlSets.Sum(x => x.GetValueFrom(cityStatisticsWithFinancialDatas));
 
                 _dataGridView[0, _totalRowIndex].Value = "Total";
-                _dataGridView[1,_totalRowIndex].Value = value.ToString("C");
+                _dataGridView[1, _totalRowIndex].Value = value.ToString("C");
             }
 
             private readonly IList<BudgetComponentDefinitionControlSet> _taxDefinitionControlSets;
@@ -161,25 +163,39 @@ namespace Mirage.Urbanization.WinForms
             }
         }
 
-        private class BudgetSummary
+        private class TotalsGridViewController
         {
-            private readonly ISet<PersistedCityStatisticsWithFinancialData> _statistics;
+            private readonly DataGridView _targetGridView;
 
-            public int Year { get { return _statistics.First().PersistedCityStatistics.GetYearAndMonth().CurrentYear; } }
+            private const string
+                ColumnCategory = "Category",
+                ColumnValue = "Value";
 
-            public BudgetSummary(ISet<PersistedCityStatisticsWithFinancialData> statistics)
+            private const string
+                RowTaxIncome = "Tax income",
+                RowCityServiceExpenses = "City service expenses",
+                RowProjectedIncome = "Projected income";
+
+            private readonly Dictionary<string, int> _rowNamesAndIds = new Dictionary<string, int>();
+
+            public TotalsGridViewController(DataGridView targetGridView)
             {
-                _statistics = statistics;
+                _targetGridView = targetGridView;
+                foreach (var name in new[] { ColumnCategory, ColumnValue })
+                    targetGridView.Columns.Add(new DataGridViewTextBoxColumn() { Name = name, HeaderText = name, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
-                var statisticsGroupedByYear = _statistics.GroupBy(x => x.PersistedCityStatistics.GetYearAndMonth().CurrentYear);
-                if (statisticsGroupedByYear.Count() != 1)
-                    throw new ArgumentException(
-                        message: string.Format(
-                            format: "'{0}'-instances encountered for multiple years ({1}); only one is supported.",
-                            arg0: typeof(PersistedCityStatisticsWithFinancialData).Name,
-                            arg1: string.Join(", ", _statistics.Select(x => x.PersistedCityStatistics.GetYearAndMonth().CurrentYear))
-                        )
-                    );
+                foreach (var rowName in new[] { RowTaxIncome, RowCityServiceExpenses, RowProjectedIncome })
+                {
+                    _rowNamesAndIds.Add(rowName, targetGridView.Rows.Add(new DataGridViewRow()));
+                    targetGridView[ColumnCategory, _rowNamesAndIds[rowName]].Value = rowName;
+                }
+            }
+
+            public void UpdateWith(HashSet<PersistedCityStatisticsWithFinancialData> yearMates)
+            {
+                _targetGridView[ColumnValue, _rowNamesAndIds[RowTaxIncome]].Value = yearMates.Sum(x => x.GetIncome()).ToString("C");
+                _targetGridView[ColumnValue, _rowNamesAndIds[RowCityServiceExpenses]].Value = yearMates.Sum(x => x.GetExpenses()).ToString("C");
+                _targetGridView[ColumnValue, _rowNamesAndIds[RowProjectedIncome]].Value = yearMates.Sum(x => x.GetTotal()).ToString("C");
             }
         }
     }

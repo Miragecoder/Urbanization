@@ -51,15 +51,19 @@ namespace Mirage.Urbanization.Simulation.Persistence
         public int RoadInfrastructureExpenses { get; set; }
         public int RailroadInfrastructureExpenses { get; set; }
 
-        public int GetTotal()
+        public int GetIncome() { return ResidentialTaxIncome + CommercialTaxIncome + IndustrialTaxIncome; }
+
+        public int GetExpenses()
         {
-            var income = ResidentialTaxIncome + CommercialTaxIncome + IndustrialTaxIncome;
-            var expenses = PoliceServiceExpenses
+            return PoliceServiceExpenses
                 + FireServiceExpenses
                 + RoadInfrastructureExpenses
                 + RailroadInfrastructureExpenses;
+        }
 
-            return income - expenses;
+        public int GetTotal()
+        {
+            return GetIncome() - GetExpenses();
         }
 
         public PersistedCityStatistics PersistedCityStatistics { get; set; }
