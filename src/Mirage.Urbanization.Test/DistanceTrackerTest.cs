@@ -49,7 +49,7 @@ namespace Mirage.Urbanization.Test
         [TestMethod]
         public void SimpleDistanceTrackerTest()
         {
-            var area = new Area(new AreaOptions(FakeLandValueCalculator.Instance, new TerraformingOptions(), new ProcessOptions(() => true)));
+            var area = new Area(new AreaOptions(FakeLandValueCalculator.Instance, new TerraformingOptions(), new ProcessOptions(() => true, () => false)));
 
             var tracker = new ZoneInfoDistanceTracker(x => x.IsGrowthZoneClusterOfType<ResidentialZoneClusterConsumption>());
 

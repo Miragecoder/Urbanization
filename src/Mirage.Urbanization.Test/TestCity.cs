@@ -169,6 +169,6 @@ namespace Mirage.Urbanization.Test
             _commercialZoneBuilt = true;
         }
 
-        public static readonly ProcessOptions ProcessOptions = new ProcessOptions(() => false);
+        public static readonly ProcessOptions ProcessOptions = new ProcessOptions(() => false, () => false);
     }
 }

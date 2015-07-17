@@ -168,9 +168,9 @@ namespace Mirage.Urbanization.WinForms
 
             var areaOptions = terraformingOptions != null
                 ? new SimulationOptions(terraformingOptions,
-                    new ProcessOptions(() => showGrowthPathfindingToolStripMenuItem.Checked))
+                    new ProcessOptions(() => showGrowthPathFinding.Checked, () => enableMoneyCheatToolStripMenuItem.Checked))
                 : new SimulationOptions(persistedSimulation,
-                    new ProcessOptions(() => showGrowthPathfindingToolStripMenuItem.Checked));
+                    new ProcessOptions(() => showGrowthPathFinding.Checked, () => enableMoneyCheatToolStripMenuItem.Checked));
 
             if (_areaRenderHelper != null)
             {
@@ -182,7 +182,7 @@ namespace Mirage.Urbanization.WinForms
                            gamePanel: _gamePanel,
                            renderZoneOptions: new RenderZoneOptions(
                                renderDebugPollutionValues: () => toggleOverlayNumbers.Checked,
-                               showDebugGrowthPathFinding: () => showGrowthPathfindingToolStripMenuItem.Checked,
+                               showDebugGrowthPathFinding: () => enableMoneyCheatToolStripMenuItem.Checked,
                                selectedGraphicsManagerFunc: () => _graphicsManagerSelection.GetCurrentOption(),
                                getCurrentOverlayOptionFunc: () => _overlaySelection.GetCurrentOption()
                            ),

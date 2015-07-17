@@ -34,8 +34,10 @@ namespace Mirage.Urbanization.Simulation
                 return new AreaOptions(LandValueCalculator.Instance, _terraformingOptions, _processOptions);
             else if (_persistedSimulation != null && _terraformingOptions == null)
                 return new AreaOptions(LandValueCalculator.Instance, _persistedSimulation.PersistedArea, _processOptions);
-            else 
+            else
                 throw new InvalidOperationException();
         }
+
+        public ProcessOptions ProcessOptions { get { return _processOptions; } }
     }
 }

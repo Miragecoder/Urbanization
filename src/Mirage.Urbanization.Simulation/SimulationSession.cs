@@ -13,6 +13,7 @@ namespace Mirage.Urbanization.Simulation
 {
     public class SimulationSession : ISimulationSession
     {
+        private readonly SimulationOptions _simulationOptions;
         private readonly PersistedCityStatisticsCollection _persistedCityStatisticsCollection = new PersistedCityStatisticsCollection();
 
         private readonly PersistedCityBudgetConfiguration _cityBudgetConfiguration;
@@ -26,9 +27,34 @@ namespace Mirage.Urbanization.Simulation
 
         public IReadOnlyArea Area { get { return _area; } }
 
+        private class InsufficientFundsAreaConsumptionResult : IAreaConsumptionResult
+        {
+            private readonly IAreaConsumption _consumption;
+
+            public InsufficientFundsAreaConsumptionResult(IAreaConsumption consumption)
+            {
+                if (consumption == null) throw new ArgumentNullException("consumption");
+                _consumption = consumption;
+            }
+
+            public bool Success { get { return false; } }
+            public IAreaConsumption AreaConsumption { get { return _consumption; } }
+            public string Message { get { return "You currently do not have enough funds to build a " + AreaConsumption.Name; } }
+        }
+
         public IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
         {
-            return _area.ConsumeZoneAt(readOnlyZoneInfo, consumption);
+            if (_cityBudget.CurrentAmount < consumption.Cost && !_simulationOptions.ProcessOptions.GetIsMoneyCheatEnabled())
+            {
+                var insufficientFundsResult = new InsufficientFundsAreaConsumptionResult(consumption);
+                RaiseAreaHotMessageEvent("Insufficient funds", insufficientFundsResult.Message);
+                return insufficientFundsResult;
+            }
+
+            var result = _area.ConsumeZoneAt(readOnlyZoneInfo, consumption);
+            if (result.Success)
+                _cityBudget.Handle(result);
+            return result;
         }
 
         private bool PowerAndMiscStatisticsLoaded
@@ -58,6 +84,7 @@ namespace Mirage.Urbanization.Simulation
 
         public SimulationSession(SimulationOptions simulationOptions)
         {
+            _simulationOptions = simulationOptions;
             _area = new Area(simulationOptions.GetAreaOptions());
 
             _area.OnAreaConsumptionResult += HandleAreaConsumptionResult;
@@ -102,16 +129,16 @@ namespace Mirage.Urbanization.Simulation
                         {
                             var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token).Result;
                             var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
-                            if (onYearAndOrMonthChanged != null) 
+                            if (onYearAndOrMonthChanged != null)
                                 onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
 
                             _persistedCityStatisticsCollection.Add(
                                    _cityBudget.ProcessFinances(new PersistedCityStatistics(
-                                        timeCode: _yearAndMonth.TimeCode, 
-                                        powerGridStatistics: _lastPowerGridStatistics, 
-                                        growthZoneStatistics: growthZoneStatistics, 
+                                        timeCode: _yearAndMonth.TimeCode,
+                                        powerGridStatistics: _lastPowerGridStatistics,
+                                        growthZoneStatistics: growthZoneStatistics,
                                         miscCityStatistics: _lastMiscCityStatistics
-                                    ), 
+                                    ),
                                     _cityBudgetConfiguration
                                 )
                             );
@@ -158,7 +185,7 @@ namespace Mirage.Urbanization.Simulation
 
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                     var queryPollutionResults = new HashSet<IQueryPollutionResult>(_area.EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-               
+
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                     var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(_area.EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
 
@@ -180,10 +207,10 @@ namespace Mirage.Urbanization.Simulation
                         .Select(x => x.Value);
 
                     _lastMiscCityStatistics = new MiscCityStatistics(
-                        queryCrimeResults: queryCrimeResults, 
-                        queryFireHazardResults: queryFireHazardResults, 
-                        queryLandValueResults: queryLandValueResults, 
-                        queryPollutionResults: queryPollutionResults, 
+                        queryCrimeResults: queryCrimeResults,
+                        queryFireHazardResults: queryFireHazardResults,
+                        queryLandValueResults: queryLandValueResults,
+                        queryPollutionResults: queryPollutionResults,
                         queryTravelDistanceResults: travelDistances
                     );
 
@@ -268,7 +295,6 @@ namespace Mirage.Urbanization.Simulation
 
         private void HandleAreaConsumptionResult(object sender, AreaConsumptionResultEventArgs e)
         {
-            _cityBudget.Handle(e.AreaConsumptionResult);
             RaiseAreaMessageEvent(e.AreaConsumptionResult.Message);
         }
 
