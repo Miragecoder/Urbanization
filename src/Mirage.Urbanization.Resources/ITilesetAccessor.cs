@@ -20,19 +20,16 @@ namespace Mirage.Urbanization.Tilesets
 
     public class BitmapLayer
     {
-        private readonly Bitmap _layerOne;
-        private readonly Bitmap _layerTwo;
-
         public BitmapLayer(Bitmap layerOne, Bitmap layerTwo = null)
         {
             if (layerOne == null) throw new ArgumentNullException(nameof(layerOne), "The bitmap specified in 'layerOne' is not allowed to be null.");
-            _layerOne = layerOne;
-            _layerTwo = layerTwo;
+            LayerOne = layerOne;
+            LayerTwo = layerTwo;
         }
 
-        public Bitmap LayerOne => _layerOne;
+        public Bitmap LayerOne { get; }
 
-        public bool IsLayerTwoSpecified => _layerTwo != null;
-        public Bitmap LayerTwo => _layerTwo;
+        public bool IsLayerTwoSpecified => LayerTwo != null;
+        public Bitmap LayerTwo { get; }
     }
 }

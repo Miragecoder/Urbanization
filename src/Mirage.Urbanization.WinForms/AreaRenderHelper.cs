@@ -13,7 +13,6 @@ namespace Mirage.Urbanization.WinForms
 {
     public class SimulationRenderHelper
     {
-        private readonly ISimulationSession _simulationSession;
         private readonly ITilesetAccessor _tilesetAccessor = new TilesetAccessor();
         private readonly ZoneSelectionPanelCreator _zoneSelectionPanelBehaviour;
 
@@ -38,7 +37,7 @@ namespace Mirage.Urbanization.WinForms
                 default:
                     throw new ArgumentException(string.Format("The given '{0}' is currently not supported.", mode), nameof(mode));
             }
-            _canvasPanel.Size = _tilesetAccessor.GetAreaSize(_simulationSession.Area);
+            _canvasPanel.Size = _tilesetAccessor.GetAreaSize(SimulationSession.Area);
             _zoomStateChanged = true;
         }
 
@@ -96,7 +95,7 @@ namespace Mirage.Urbanization.WinForms
             if (gamePanel == null) throw new ArgumentNullException(nameof(gamePanel));
             gamePanel.Controls.Clear();
 
-            _simulationSession = new SimulationSession(options);
+            SimulationSession = new SimulationSession(options);
 
             _zoneSelectionPanel.Width = 160;
             _zoneSelectionPanel.Dock = DockStyle.Left;
@@ -115,14 +114,14 @@ namespace Mirage.Urbanization.WinForms
             _canvasPanel = new Panel
             {
                 BackColor = EmptyZoneConsumption.DefaultColor,
-                Size = _tilesetAccessor.GetAreaSize(_simulationSession.Area),
+                Size = _tilesetAccessor.GetAreaSize(SimulationSession.Area),
                 Dock = DockStyle.None
             };
 
             _viewportPanel.Controls.Add(_canvasPanel);
 
             _zoneSelectionPanelBehaviour = new ZoneSelectionPanelCreator(
-                area: _simulationSession.Area,
+                area: SimulationSession.Area,
                 targetPanel: _zoneSelectionPanel
             );
 
@@ -135,7 +134,7 @@ namespace Mirage.Urbanization.WinForms
                     ? new EmptyZoneConsumption()
                     : _zoneSelectionPanelBehaviour.CreateNewCurrentZoneConsumption();
 
-                var result = _simulationSession.ConsumeZoneAt(zone, zoneConsumption);
+                var result = SimulationSession.ConsumeZoneAt(zone, zoneConsumption);
                 if (result == null) throw new InvalidOperationException();
             };
 
@@ -148,7 +147,7 @@ namespace Mirage.Urbanization.WinForms
                 }
             };
 
-            _zoneRenderInfos = _simulationSession.Area
+            _zoneRenderInfos = SimulationSession.Area
                     .EnumerateZoneInfos()
                     .ToDictionary(x => x,
                     zoneRenderInfo =>
@@ -186,12 +185,12 @@ namespace Mirage.Urbanization.WinForms
 
                 foreach (var controller in new[]
                 {
-                    _simulationSession.Area.ShipController,
-                    _simulationSession.Area.TrainController,
-                    _simulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>
+                    SimulationSession.Area.ShipController,
+                    SimulationSession.Area.TrainController,
+                    SimulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>
                 })
                 {
-                    if (controller == _simulationSession.Area.TrainController)
+                    if (controller == SimulationSession.Area.TrainController)
                     {
                         foreach (var continuation in continuations.Where(x => x.HasDrawSecondLayerDelegate))
                             continuation.DrawSecondLayer();
@@ -262,7 +261,7 @@ namespace Mirage.Urbanization.WinForms
             lock (_locker)
             {
                 _graphicsManager.StartRendering();
-                _simulationSession.StartSimulation();
+                SimulationSession.StartSimulation();
             }
         }
 
@@ -270,7 +269,7 @@ namespace Mirage.Urbanization.WinForms
         {
             lock (_locker)
             {
-                _simulationSession.Dispose();
+                SimulationSession.Dispose();
                 _graphicsManager.Dispose();
             }
         }
@@ -288,7 +287,7 @@ namespace Mirage.Urbanization.WinForms
             return rect.IntersectsWith(visibleRectangle);
         }
 
-        public ISimulationSession SimulationSession => _simulationSession;
+        public ISimulationSession SimulationSession { get; }
 
         private Rectangle _lastViewportRectangle = default(Rectangle);
 
@@ -323,7 +322,7 @@ namespace Mirage.Urbanization.WinForms
 
         public IReadOnlyZoneInfo GetZoneStateFor(Point point)
         {
-            return _simulationSession.Area
+            return SimulationSession.Area
                 .EnumerateZoneInfos()
                 .Single(zonePoint =>
                     zonePoint.Point.X == (point.X / _tilesetAccessor.TileWidthAndSizeInPixels)

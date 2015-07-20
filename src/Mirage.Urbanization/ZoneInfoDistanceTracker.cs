@@ -19,18 +19,16 @@ namespace Mirage.Urbanization
 
         private class DistanceAndConsumption
         {
-            private int _distance;
-
             public DistanceAndConsumption(int distance)
             {
-                _distance = distance;
+                Distance = distance;
             }
 
-            public int Distance => _distance;
+            public int Distance { get; private set; }
 
             public void UpdateDistance(int distance)
             {
-                _distance = distance;
+                Distance = distance;
             }
         }
 

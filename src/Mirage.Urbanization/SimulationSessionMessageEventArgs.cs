@@ -4,13 +4,11 @@ namespace Mirage.Urbanization
 {
     public class SimulationSessionMessageEventArgs : EventArgs
     {
-        private readonly string _message;
-
         public SimulationSessionMessageEventArgs(string message)
         {
-            _message = message;
+            Message = message;
         }
 
-        public string Message => _message;
+        public string Message { get; }
     }
 }

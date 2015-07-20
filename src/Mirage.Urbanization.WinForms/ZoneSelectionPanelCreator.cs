@@ -64,7 +64,7 @@ namespace Mirage.Urbanization.WinForms
                             btn.Enabled = true;
                         button.Enabled = false;
                         _currentFactory = factory;
-                        _currentZoneConsumptionSample = _currentFactory();
+                        CurrentZoneConsumptionSample = _currentFactory();
                     };
 
                     button.Click += currentClickHandler;
@@ -79,11 +79,9 @@ namespace Mirage.Urbanization.WinForms
             if (_currentFactory == null) throw new InvalidOperationException();
         }
 
-        private IAreaConsumption _currentZoneConsumptionSample;
+        public IAreaConsumption CurrentZoneConsumptionSample { get; private set; }
 
-        public IAreaConsumption CurrentZoneConsumptionSample => _currentZoneConsumptionSample;
-
-        public bool IsCurrentlyNetworkZoning => _currentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption;
+        public bool IsCurrentlyNetworkZoning => CurrentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption;
 
         public IAreaConsumption CreateNewCurrentZoneConsumption()
         {

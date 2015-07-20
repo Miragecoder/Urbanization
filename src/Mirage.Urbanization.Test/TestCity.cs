@@ -33,34 +33,30 @@ namespace Mirage.Urbanization.Test
                     );
         }
 
-        private readonly Area _area;
-
-        private readonly ZonePoint _industrialZonePoint = new ZonePoint { X = 3, Y = 3 };
-        private readonly ZonePoint _residentialZonePoint = new ZonePoint { X = 3, Y = 20 };
-        private readonly ZonePoint _commercialZonePoint = new ZonePoint { X = 9, Y = 10 };
-
         private readonly ZonePoint _powerPlantZonePoint = new ZonePoint {X = 3, Y = 30};
 
-        private readonly ZonePoint _trainStationZonePointA = new ZonePoint { X = 2, Y = 6 };
-        private readonly ZonePoint _trainStationZonePointB = new ZonePoint { X = 8, Y = 6 };
         private readonly Dictionary<Type, Func<IAreaConsumption>> _factories;
 
         public TestCity(PersistedArea persistedArea = null)
         {
-            _area = CreateTestArea(persistedArea);
+            Area = CreateTestArea(persistedArea);
 
-            _factories = _area
+            _factories = Area
                 .GetSupportedZoneConsumptionFactoriesPrivate()
                 .ToDictionary(x => x().GetType(), x => x);
         }
 
-        public Area Area => _area;
+        public Area Area { get; }
 
-        public ZonePoint IndustrialZonePoint => _industrialZonePoint;
-        public ZonePoint ResidentialZonePoint => _residentialZonePoint;
-        public ZonePoint CommercialZonePoint => _commercialZonePoint;
-        public ZonePoint TrainStationZonePointB => _trainStationZonePointB;
-        public ZonePoint TrainStationZonePointA => _trainStationZonePointA;
+        public ZonePoint IndustrialZonePoint { get; } = new ZonePoint { X = 3, Y = 3 };
+
+        public ZonePoint ResidentialZonePoint { get; } = new ZonePoint { X = 3, Y = 20 };
+
+        public ZonePoint CommercialZonePoint { get; } = new ZonePoint { X = 9, Y = 10 };
+
+        public ZonePoint TrainStationZonePointB { get; } = new ZonePoint { X = 8, Y = 6 };
+
+        public ZonePoint TrainStationZonePointA { get; } = new ZonePoint { X = 2, Y = 6 };
 
         public ZoneInfo GetZoneInfoFor(Func<TestCity, ZonePoint> expression)
         {
@@ -70,8 +66,8 @@ namespace Mirage.Urbanization.Test
         public bool ConsumeZonePointWith<T>(ZonePoint point)
             where T : IAreaConsumption
         {
-            var result = _area
-                .ConsumeZoneAt(point.GetZoneInfoOn(_area).MatchingObject,
+            var result = Area
+                .ConsumeZoneAt(point.GetZoneInfoOn(Area).MatchingObject,
                     _factories[typeof(T)]());
 
             return result.Success;
@@ -80,7 +76,7 @@ namespace Mirage.Urbanization.Test
         public bool ConsumeZonePointWithNetwork<T>(ZonePoint point)
             where T : BaseInfrastructureNetworkZoneConsumption
         {
-            var zoneInfo = point.GetZoneInfoOn(_area).MatchingObject;
+            var zoneInfo = point.GetZoneInfoOn(Area).MatchingObject;
 
             if (zoneInfo.ConsumptionState.GetIsNetworkMember<T>())
             {
@@ -122,7 +118,7 @@ namespace Mirage.Urbanization.Test
                 });
             }
 
-            Assert.IsTrue(_area.CalculatePowergridStatistics(new CancellationToken()).Result.PowerGridNetworkStatistics.Any());
+            Assert.IsTrue(Area.CalculatePowergridStatistics(new CancellationToken()).Result.PowerGridNetworkStatistics.Any());
 
             Assert.IsTrue(GetZoneInfoFor(x => ResidentialZonePoint).GetAsZoneCluster<ResidentialZoneClusterConsumption>().MatchingObject.HasPower);
             Assert.IsTrue(GetZoneInfoFor(x => IndustrialZonePoint).GetAsZoneCluster<IndustrialZoneClusterConsumption>().MatchingObject.HasPower);

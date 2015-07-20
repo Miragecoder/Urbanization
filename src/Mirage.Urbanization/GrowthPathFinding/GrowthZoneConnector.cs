@@ -15,27 +15,23 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
         class TrafficDensity
         {
-            private readonly int _oldValue;
+            public int HalfOfOldDensity => OldDensity > 0
+                ? OldDensity / 2
+                : OldDensity;
 
-            public int HalfOfOldDensity => _oldValue > 0
-                ? _oldValue / 2
-                : _oldValue;
-
-            public int OldDensity => _oldValue;
+            public int OldDensity { get; }
 
             public TrafficDensity(int oldValue)
             {
-                _oldValue = oldValue;
+                OldDensity = oldValue;
             }
 
-            private int? _newDensity;
-
-            public int? NewDensity => _newDensity;
+            public int? NewDensity { get; private set; }
 
             public void AddToNewValue(int density)
             {
-                if (!NewDensity.HasValue) _newDensity = default(int);
-                _newDensity += density;
+                if (!NewDensity.HasValue) NewDensity = default(int);
+                NewDensity += density;
             }
         }
 

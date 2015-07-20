@@ -2,17 +2,14 @@ namespace Mirage.Urbanization.Statistics
 {
     public class RailroadInfrastructureStatistics : IRailroadInfrastructureStatistics
     {
-        private readonly int _numberOfTrainStations;
-        private readonly int _numberOfRailRoadZones;
-
         public RailroadInfrastructureStatistics(int numberOfTrainStations, int numberOfRailRoadZones)
         {
-            _numberOfTrainStations = numberOfTrainStations;
-            _numberOfRailRoadZones = numberOfRailRoadZones;
+            NumberOfTrainStations = numberOfTrainStations;
+            NumberOfRailRoadZones = numberOfRailRoadZones;
         }
 
-        public int NumberOfTrainStations => _numberOfTrainStations;
+        public int NumberOfTrainStations { get; }
 
-        public int NumberOfRailRoadZones => _numberOfRailRoadZones;
+        public int NumberOfRailRoadZones { get; }
     }
 }

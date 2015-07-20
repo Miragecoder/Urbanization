@@ -45,16 +45,14 @@ namespace Mirage.Urbanization.Tilesets
     internal class GrowthZonePredicateAndBitmapSelector<T>
         where T : IAreaObjectWithSeed
     {
-        private readonly BitmapSelector _bitmapSelector;
-        private readonly Func<T, bool> _predicate;
+        public Func<T, bool> Predicate { get; }
 
-        public Func<T, bool> Predicate => _predicate;
-        internal BitmapSelector BitmapSelector => _bitmapSelector;
+        internal BitmapSelector BitmapSelector { get; }
 
         public GrowthZonePredicateAndBitmapSelector(Func<T, bool> predicate, BitmapSelector bitmapSelector)
         {
-            _predicate = predicate;
-            _bitmapSelector = bitmapSelector;
+            Predicate = predicate;
+            BitmapSelector = bitmapSelector;
         }
     }
 

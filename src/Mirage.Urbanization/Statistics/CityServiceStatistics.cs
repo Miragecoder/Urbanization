@@ -17,10 +17,10 @@ namespace Mirage.Urbanization.Statistics
             NumberOfAirports = numberOfAirports;
         }
 
-        public int NumberOfPoliceStations { get; private set; }
-        public int NumberOfFireStations { get; private set; }
-        public int NumberOfStadiums { get; private set; }
-        public int NumberOfSeaports { get; private set; }
-        public int NumberOfAirports { get; private set; }
+        public int NumberOfPoliceStations { get; }
+        public int NumberOfFireStations { get; }
+        public int NumberOfStadiums { get; }
+        public int NumberOfSeaports { get; }
+        public int NumberOfAirports { get; }
     }
 }

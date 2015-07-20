@@ -5,17 +5,15 @@ namespace Mirage.Urbanization.Simulation
 {
     public class CityCategoryDefinition
     {
-        private readonly string _name;
-        private readonly int _minimumPopulation;
-
         public CityCategoryDefinition(string name, int minimumPopulation)
         {
-            _name = name;
-            _minimumPopulation = minimumPopulation;
+            Name = name;
+            MinimumPopulation = minimumPopulation;
         }
 
-        public string Name => _name;
-        public int MinimumPopulation => _minimumPopulation;
+        public string Name { get; }
+
+        public int MinimumPopulation { get; }
 
         public static CityCategoryDefinition GetForPopulation(int population)
         {

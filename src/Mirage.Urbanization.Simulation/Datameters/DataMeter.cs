@@ -7,22 +7,21 @@ namespace Mirage.Urbanization.Simulation.Datameters
 {
     public class DataMeter
     {
-        private readonly string _name;
         private readonly Func<PersistedCityStatisticsWithFinancialData, int> _getValue;
-        private readonly bool _representsIssue;
 
         private readonly IReadOnlyCollection<Threshold> _thresholds;
 
         private readonly Lazy<int> _measureUnitSumLazy;
 
-        public string Name => _name;
-        public bool RepresentsIssue => _representsIssue;
+        public string Name { get; }
+
+        public bool RepresentsIssue { get; }
 
         public DataMeter(int measureUnit, string name, Func<PersistedCityStatisticsWithFinancialData, int> getValue, bool representsIssue)
         {
-            _name = name;
+            Name = name;
             _getValue = getValue;
-            _representsIssue = representsIssue;
+            RepresentsIssue = representsIssue;
 
             _thresholds = Enumerable.Range(0, 5)
                 .Select(i => new Threshold(i * measureUnit, (DataMeterValueCategory)i))
@@ -46,7 +45,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         public DataMeterResult GetDataMeterResult(int amount)
         {
-            return new DataMeterResult(_name, amount, GetPercentageScore(amount), GetScoreCategory(amount));
+            return new DataMeterResult(Name, amount, GetPercentageScore(amount), GetScoreCategory(amount));
         }
 
         private DataMeterValueCategory GetScoreCategory(int amount)
@@ -65,16 +64,14 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private class Threshold
         {
-            private readonly int _measureUnitTreshold;
-            private readonly DataMeterValueCategory _category;
+            public DataMeterValueCategory Category { get; }
 
-            public DataMeterValueCategory Category => _category;
-            public int MeasureUnitThreshold => _measureUnitTreshold;
+            public int MeasureUnitThreshold { get; }
 
             public Threshold(int measureUnitTreshold, DataMeterValueCategory category)
             {
-                _measureUnitTreshold = measureUnitTreshold;
-                _category = category;
+                MeasureUnitThreshold = measureUnitTreshold;
+                Category = category;
             }
         }
     }

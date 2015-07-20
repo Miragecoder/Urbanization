@@ -29,16 +29,15 @@ namespace Mirage.Urbanization.Simulation
 
         private class InsufficientFundsAreaConsumptionResult : IAreaConsumptionResult
         {
-            private readonly IAreaConsumption _consumption;
-
             public InsufficientFundsAreaConsumptionResult(IAreaConsumption consumption)
             {
                 if (consumption == null) throw new ArgumentNullException(nameof(consumption));
-                _consumption = consumption;
+                AreaConsumption = consumption;
             }
 
             public bool Success => false;
-            public IAreaConsumption AreaConsumption => _consumption;
+            public IAreaConsumption AreaConsumption { get; }
+
             public string Message => "You currently do not have enough funds to build a " + AreaConsumption.Name;
         }
 

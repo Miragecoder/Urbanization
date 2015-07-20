@@ -8,18 +8,17 @@ namespace Mirage.Urbanization.Simulation
     {
         private readonly TerraformingOptions _terraformingOptions;
         private readonly PersistedSimulation _persistedSimulation;
-        private readonly ProcessOptions _processOptions;
 
         public SimulationOptions(TerraformingOptions terraformingOptions, ProcessOptions processOptions)
         {
             _terraformingOptions = terraformingOptions;
-            _processOptions = processOptions;
+            ProcessOptions = processOptions;
 
         }
         public SimulationOptions(PersistedSimulation persistedSimulation, ProcessOptions processOptions)
         {
             _persistedSimulation = persistedSimulation;
-            _processOptions = processOptions;
+            ProcessOptions = processOptions;
         }
 
         public void WithPersistedSimulation(Action<PersistedSimulation> action)
@@ -31,13 +30,13 @@ namespace Mirage.Urbanization.Simulation
         public AreaOptions GetAreaOptions()
         {
             if (_terraformingOptions != null && _persistedSimulation == null)
-                return new AreaOptions(LandValueCalculator.Instance, _terraformingOptions, _processOptions);
+                return new AreaOptions(LandValueCalculator.Instance, _terraformingOptions, ProcessOptions);
             else if (_persistedSimulation != null && _terraformingOptions == null)
-                return new AreaOptions(LandValueCalculator.Instance, _persistedSimulation.PersistedArea, _processOptions);
+                return new AreaOptions(LandValueCalculator.Instance, _persistedSimulation.PersistedArea, ProcessOptions);
             else
                 throw new InvalidOperationException();
         }
 
-        public ProcessOptions ProcessOptions => _processOptions;
+        public ProcessOptions ProcessOptions { get; }
     }
 }

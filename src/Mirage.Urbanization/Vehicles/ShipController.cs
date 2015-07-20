@@ -110,7 +110,6 @@ namespace Mirage.Urbanization.Vehicles
             private class ShipPathNode
             {
                 private readonly IZoneInfo _rootZoneInfo;
-                private readonly IZoneInfo _currentZoneInfo;
                 private readonly ShipPathNode _preceedingShipPathNode;
 
                 private readonly Lazy<IEnumerable<ShipPathNode>> _childrenLazy;
@@ -137,7 +136,7 @@ namespace Mirage.Urbanization.Vehicles
                     }
                 }
 
-                public IZoneInfo CurrentZoneInfo => _currentZoneInfo;
+                public IZoneInfo CurrentZoneInfo { get; }
 
                 public IEnumerable<ShipPathNode> EnumeratePathBackwards()
                 {
@@ -147,9 +146,7 @@ namespace Mirage.Urbanization.Vehicles
                             yield return x;
                 }
 
-                public int Distance => _distance;
-
-                private readonly int _distance;
+                public int Distance { get; }
 
                 private ShipPathNode(
                     IZoneInfo rootZoneInfo,
@@ -162,15 +159,15 @@ namespace Mirage.Urbanization.Vehicles
                     if (rootZoneInfo == null) throw new ArgumentNullException(nameof(rootZoneInfo));
                     _rootZoneInfo = rootZoneInfo;
                     if (currentZoneInfo == null) throw new ArgumentNullException(nameof(currentZoneInfo));
-                    _currentZoneInfo = currentZoneInfo;
+                    CurrentZoneInfo = currentZoneInfo;
 
                     if (!seenPaths.Add(currentZoneInfo))
                         throw new ArgumentException("'currentZoneInfo' was already added to this path.", nameof(currentZoneInfo));
 
                     _preceedingShipPathNode = preceedingShipPathNode;
 
-                    _distance = distance;
-                    _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => _currentZoneInfo
+                    Distance = distance;
+                    _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => CurrentZoneInfo
                         .GetNorthEastSouthWest()
                         .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject))
                         .OrderByDescending(x => CalculateDistance(x.MatchingObject.Point, _rootZoneInfo.Point))
@@ -181,7 +178,7 @@ namespace Mirage.Urbanization.Vehicles
                                 currentZoneInfo: x.MatchingObject,
                                 preceedingShipPathNode: this,
                                 seenPaths: seenPaths,
-                                distance: _distance + 1
+                                distance: Distance + 1
                                 )
                         )
                         );

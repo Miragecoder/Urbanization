@@ -182,23 +182,22 @@ namespace Mirage.Urbanization.WinForms
         private class GraphControlDefinition
         {
             private readonly GraphDefinition _graphDefinition;
-            private readonly TabPage _tabPage;
             private readonly PictureBox _pictureBox;
 
             public GraphControlDefinition(GraphDefinition graphDefinition)
             {
                 _graphDefinition = graphDefinition;
                 {
-                    _tabPage = new TabPage() { Text = graphDefinition.Title, Dock = DockStyle.Fill };
+                    TabPage = new TabPage() { Text = graphDefinition.Title, Dock = DockStyle.Fill };
                     _pictureBox = new PictureBox() { Dock = DockStyle.Fill };
 
                     _pictureBox.SendToBack();
 
-                    _tabPage.Controls.Add(_pictureBox);
+                    TabPage.Controls.Add(_pictureBox);
                 }
             }
 
-            public TabPage TabPage => _tabPage;
+            public TabPage TabPage { get; }
 
             public Image ProduceBitmapFor(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
             {
@@ -236,8 +235,8 @@ namespace Mirage.Urbanization.WinForms
 
                     chart.Titles.Add(chartDef.Title);
 
-                    chart.Font.Name = _tabPage.Font.Name;
-                    chart.Font.Size = new FontUnit(_tabPage.Font.SizeInPoints);
+                    chart.Font.Name = TabPage.Font.Name;
+                    chart.Font.Size = new FontUnit(TabPage.Font.SizeInPoints);
 
                     chart.ChartAreas[0].BackGradientStyle = GradientStyle.TopBottom;
                     chart.ChartAreas[0].BackSecondaryColor = Color.LightSkyBlue;
@@ -270,31 +269,26 @@ namespace Mirage.Urbanization.WinForms
 
         private class GraphDefinition
         {
-            private readonly IReadOnlyCollection<GraphSeries> _graphSeriesSet;
-            private readonly string _title;
-
             public GraphDefinition(string title, params GraphSeries[] graphSeriesSet)
             {
-                _title = title;
-                _graphSeriesSet = graphSeriesSet;
+                Title = title;
+                GraphSeriesSet = graphSeriesSet;
             }
 
-            public string Title => _title;
+            public string Title { get; }
 
-            public IReadOnlyCollection<GraphSeries> GraphSeriesSet => _graphSeriesSet;
+            public IReadOnlyCollection<GraphSeries> GraphSeriesSet { get; }
         }
 
         private class GraphSeries
         {
             private readonly Func<PersistedCityStatisticsWithFinancialData, int> valueGetterFunc;
-            private readonly string _label;
-            private readonly Color _color;
 
             public GraphSeries(Func<PersistedCityStatisticsWithFinancialData, int> valueGetterFunc, string label, Color color)
             {
                 this.valueGetterFunc = valueGetterFunc;
-                _label = label;
-                _color = color;
+                Label = label;
+                Color = color;
             }
 
             public int GetValue(PersistedCityStatisticsWithFinancialData citytStatistics)
@@ -302,9 +296,9 @@ namespace Mirage.Urbanization.WinForms
                 return valueGetterFunc(citytStatistics);
             }
 
-            public string Label => _label;
+            public string Label { get; }
 
-            public Color Color => _color;
+            public Color Color { get; }
         }
     }
 }

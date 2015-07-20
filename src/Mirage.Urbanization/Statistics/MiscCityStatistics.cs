@@ -18,12 +18,6 @@ namespace Mirage.Urbanization.Statistics
 
     public class MiscCityStatistics : IMiscCityStatistics
     {
-        private readonly INumberSummary _fireHazardNumbers;
-        private readonly INumberSummary _crimeNumbers;
-        private readonly INumberSummary _landValueNumbers;
-        private readonly INumberSummary _pollutionNumbers;
-        private readonly INumberSummary _travelDistanceNumbers;
-
         public MiscCityStatistics(
             IEnumerable<IQueryCrimeResult> queryCrimeResults,
             IEnumerable<IQueryFireHazardResult> queryFireHazardResults,
@@ -38,22 +32,22 @@ namespace Mirage.Urbanization.Statistics
             if (queryPollutionResults == null) throw new ArgumentNullException(nameof(queryPollutionResults));
             if (queryTravelDistanceResults == null) throw new ArgumentNullException(nameof(queryTravelDistanceResults));
 
-            _fireHazardNumbers = new NumberSummary(queryFireHazardResults.Select(x => x.ValueInUnits));
-            _crimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.ValueInUnits));
-            _landValueNumbers = new NumberSummary(queryLandValueResults.Select(x => x.ValueInUnits));
-            _pollutionNumbers = new NumberSummary(queryPollutionResults.Select(x => x.ValueInUnits));
-            _travelDistanceNumbers = new NumberSummary(queryTravelDistanceResults);
+            FireHazardNumbers = new NumberSummary(queryFireHazardResults.Select(x => x.ValueInUnits));
+            CrimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.ValueInUnits));
+            LandValueNumbers = new NumberSummary(queryLandValueResults.Select(x => x.ValueInUnits));
+            PollutionNumbers = new NumberSummary(queryPollutionResults.Select(x => x.ValueInUnits));
+            TravelDistanceNumbers = new NumberSummary(queryTravelDistanceResults);
         }
 
-        public INumberSummary CrimeNumbers => _crimeNumbers;
+        public INumberSummary CrimeNumbers { get; }
 
-        public INumberSummary LandValueNumbers => _landValueNumbers;
+        public INumberSummary LandValueNumbers { get; }
 
-        public INumberSummary PollutionNumbers => _pollutionNumbers;
+        public INumberSummary PollutionNumbers { get; }
 
-        public INumberSummary TravelDistanceNumbers => _travelDistanceNumbers;
+        public INumberSummary TravelDistanceNumbers { get; }
 
-        public INumberSummary FireHazardNumbers => _fireHazardNumbers;
+        public INumberSummary FireHazardNumbers { get; }
     }
 
     public interface INumberSummary
@@ -67,32 +61,26 @@ namespace Mirage.Urbanization.Statistics
 
     internal class NumberSummary : INumberSummary
     {
-        private readonly int _lowest;
-        private readonly int _average;
-        private readonly int _highest;
-        private readonly int _sum;
-        private readonly int _count;
-
         public NumberSummary(IEnumerable<int> numbers)
         {
             var capturedNumbers = numbers.ToList();
             capturedNumbers = capturedNumbers.Any() ? capturedNumbers : new List<int>() { 0 };
 
-            _lowest = capturedNumbers.Min();
-            _average = Convert.ToInt32(capturedNumbers.Average());
-            _highest = capturedNumbers.Max();
-            _sum = capturedNumbers.Sum();
-            _count = capturedNumbers.Count();
+            Lowest = capturedNumbers.Min();
+            Average = Convert.ToInt32(capturedNumbers.Average());
+            Highest = capturedNumbers.Max();
+            Sum = capturedNumbers.Sum();
+            Count = capturedNumbers.Count();
         }
 
-        public int Lowest => _lowest;
+        public int Lowest { get; }
 
-        public int Average => _average;
+        public int Average { get; }
 
-        public int Highest => _highest;
+        public int Highest { get; }
 
-        public int Sum => _sum;
+        public int Sum { get; }
 
-        public int Count => _count;
+        public int Count { get; }
     }
 }

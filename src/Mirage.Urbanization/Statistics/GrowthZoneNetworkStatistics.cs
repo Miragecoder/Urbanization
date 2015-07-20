@@ -6,11 +6,7 @@ namespace Mirage.Urbanization.Statistics
 {
     internal class GrowthZoneNetworkStatistics : IGrowthZoneStatistics
     {
-        private readonly IRoadInfrastructureStatistics _roadInfraStructureStatistics;
-        private readonly IRailroadInfrastructureStatistics _railroadInfrastructureStatistics;
-        private readonly ICityServicesStatistics _cityServicesStatistics;
-
-        public IRoadInfrastructureStatistics RoadInfrastructureStatistics => _roadInfraStructureStatistics;
+        public IRoadInfrastructureStatistics RoadInfrastructureStatistics { get; }
 
         public GrowthZoneNetworkStatistics(
             IRoadInfrastructureStatistics roadInfraStructureStatistics,
@@ -21,32 +17,27 @@ namespace Mirage.Urbanization.Statistics
             ICityServicesStatistics cityServicesStatistics
         )
         {
-            _roadInfraStructureStatistics = roadInfraStructureStatistics;
-            _railroadInfrastructureStatistics = railroadInfrastructureStatistics;
-            _cityServicesStatistics = cityServicesStatistics;
+            RoadInfrastructureStatistics = roadInfraStructureStatistics;
+            RailroadInfrastructureStatistics = railroadInfrastructureStatistics;
+            CityServicesStatistics = cityServicesStatistics;
 
-            _residentialZonePopulationNumbers = new NumberSummary(residentialZonePopulationNumbers);
-            _commercialZonePopulationNumbers = new NumberSummary(commercialZonePopulationNumbers);
-            _industrialZonePopulationNumbers = new NumberSummary(industrialZonePopulationNumbers);
+            ResidentialZonePopulationNumbers = new NumberSummary(residentialZonePopulationNumbers);
+            CommercialZonePopulationNumbers = new NumberSummary(commercialZonePopulationNumbers);
+            IndustrialZonePopulationNumbers = new NumberSummary(industrialZonePopulationNumbers);
 
-            _globalZonePopulationNumbers = new NumberSummary(residentialZonePopulationNumbers.Concat(commercialZonePopulationNumbers).Concat(industrialZonePopulationNumbers));
+            GlobalZonePopulationNumbers = new NumberSummary(residentialZonePopulationNumbers.Concat(commercialZonePopulationNumbers).Concat(industrialZonePopulationNumbers));
         }
 
-        public IRailroadInfrastructureStatistics RailroadInfrastructureStatistics => _railroadInfrastructureStatistics;
+        public IRailroadInfrastructureStatistics RailroadInfrastructureStatistics { get; }
 
-        private readonly INumberSummary _residentialZonePopulationNumbers,
-            _commercialZonePopulationNumbers,
-            _industrialZonePopulationNumbers,
-            _globalZonePopulationNumbers;
+        public INumberSummary ResidentialZonePopulationNumbers { get; }
 
-        public INumberSummary ResidentialZonePopulationNumbers => _residentialZonePopulationNumbers;
+        public INumberSummary CommercialZonePopulationNumbers { get; }
 
-        public INumberSummary CommercialZonePopulationNumbers => _commercialZonePopulationNumbers;
+        public INumberSummary IndustrialZonePopulationNumbers { get; }
 
-        public INumberSummary IndustrialZonePopulationNumbers => _industrialZonePopulationNumbers;
+        public INumberSummary GlobalZonePopulationNumbers { get; }
 
-        public INumberSummary GlobalZonePopulationNumbers => _globalZonePopulationNumbers;
-
-        public ICityServicesStatistics CityServicesStatistics => _cityServicesStatistics;
+        public ICityServicesStatistics CityServicesStatistics { get; }
     }
 }

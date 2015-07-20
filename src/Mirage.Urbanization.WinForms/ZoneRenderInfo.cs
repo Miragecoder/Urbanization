@@ -44,21 +44,20 @@ namespace Mirage.Urbanization.WinForms
 
     public class ZoneRenderInfo
     {
-        private readonly IReadOnlyZoneInfo _zoneInfo;
         private readonly Func<IReadOnlyZoneInfo, Rectangle> _createRectangle;
         private readonly ITilesetAccessor _tilesetAccessor;
         private readonly RenderZoneOptions _renderZoneOptions;
 
-        public IReadOnlyZoneInfo ZoneInfo => _zoneInfo;
+        public IReadOnlyZoneInfo ZoneInfo { get; }
 
         public Rectangle GetRectangle()
         {
-            return _createRectangle(_zoneInfo);
+            return _createRectangle(ZoneInfo);
         }
 
         public ZoneRenderInfo(IReadOnlyZoneInfo zoneInfo, Func<IReadOnlyZoneInfo, Rectangle> createRectangle, ITilesetAccessor tilesetAccessor, RenderZoneOptions renderZoneOptions)
         {
-            _zoneInfo = zoneInfo;
+            ZoneInfo = zoneInfo;
             _createRectangle = createRectangle;
             _tilesetAccessor = tilesetAccessor;
             _renderZoneOptions = renderZoneOptions;
@@ -84,7 +83,7 @@ namespace Mirage.Urbanization.WinForms
 
                 if (_renderZoneOptions.ShowDebugGrowthPathFinding)
                 {
-                    switch (_zoneInfo.GrowthAlgorithmHighlightState.Current)
+                    switch (ZoneInfo.GrowthAlgorithmHighlightState.Current)
                     {
                         case HighlightState.UsedAsPath:
                             graphics.DrawRectangle(BrushManager.GreenPen, rectangle);
