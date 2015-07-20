@@ -59,6 +59,7 @@
     <Compile Include="EventArgsWithData.cs" />
     <Compile Include="ICityBudgetConfiguration.cs" />
     <Compile Include="ICityBudget.cs" />
+    <Compile Include="IReadOnlyYearAndMonth.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
     <Compile Include="PersistedCityBudgetConfiguration.cs" />
