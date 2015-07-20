@@ -49,7 +49,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
                 Action<string, Func<bool>> assignIsSuccessFuncAction = (description, action) =>
                 {
-                    if (isSuccessFunc != null) throw new InvalidOperationException("Could not set " + description + " as the 'IsSuccessFunc'. " + currentIsSuccessFuncDesc + "Is currently set.");
+                    if (isSuccessFunc != null) throw new InvalidOperationException($"Could not set {description} as the 'IsSuccessFunc'. {currentIsSuccessFuncDesc} Is currently set.");
                     assignIsSuccessOverrideFuncAction(description, action);
                 };
 
