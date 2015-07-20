@@ -13,16 +13,15 @@ namespace Mirage.Urbanization
     [DebuggerDisplay("Zone info: (X: {Point.X}, Y: {Point.Y})")]
     public class ZoneInfo : IZoneInfo
     {
-        private readonly IZoneConsumptionState _zoneState;
-        private readonly ZonePoint _zonePoint;
         private readonly GetRelativeZoneInfoDelegate _getRelativeZoneInfo;
         private readonly ILandValueCalculator _landValueCalculator;
         private readonly GrowthAlgorithmHighlightState _highlightState = new GrowthAlgorithmHighlightState();
 
-        public IGrowthAlgorithmHighlightState GrowthAlgorithmHighlightState { get { return _highlightState; } }
+        public IGrowthAlgorithmHighlightState GrowthAlgorithmHighlightState => _highlightState;
 
-        public IZoneConsumptionState ConsumptionState { get { return _zoneState; } }
-        public ZonePoint Point { get { return _zonePoint; } }
+        public IZoneConsumptionState ConsumptionState { get; } = new ZoneConsumptionState();
+
+        public ZonePoint Point { get; }
 
         public ZoneInfo(
             ZonePoint zonePoint,
@@ -33,9 +32,8 @@ namespace Mirage.Urbanization
             if (zonePoint == null) throw new ArgumentNullException(nameof(zonePoint));
             if (getRelativeZoneInfo == null) throw new ArgumentNullException(nameof(getRelativeZoneInfo));
             if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
-
-            _zoneState = new ZoneConsumptionState();
-            _zonePoint = zonePoint;
+            
+            Point = zonePoint;
             _getRelativeZoneInfo = getRelativeZoneInfo;
             _landValueCalculator = landValueCalculator;
         }
@@ -47,7 +45,7 @@ namespace Mirage.Urbanization
 
         public int GetDistanceScoreBasedOnConsumption()
         {
-            return _zoneState.GetIsRailroadNetworkMember() || _zoneState.GetIsPowerGridMember()
+            return ConsumptionState.GetIsRailroadNetworkMember() || ConsumptionState.GetIsPowerGridMember()
                 ? 1
                 : 3;
 
@@ -139,7 +137,7 @@ namespace Mirage.Urbanization
 
         IReadOnlyZoneConsumptionState IReadOnlyZoneInfo.ZoneConsumptionState
         {
-            get { return _zoneState; }
+            get { return ConsumptionState; }
         }
 
         public QueryResult<IQueryPollutionResult> QueryPollution()
