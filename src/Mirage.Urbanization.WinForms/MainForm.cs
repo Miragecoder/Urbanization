@@ -333,7 +333,7 @@ namespace Mirage.Urbanization.WinForms
                     .GetRecentStatistics()
                     .WithResultIfHasMatch(statistics =>
                     {
-                        new EvaluationForm(new CityStatisticsView(statistics))
+                        new EvaluationForm(helper)
                         {
                             StartPosition = FormStartPosition.CenterParent,
                             ControlBox = false,
