@@ -108,7 +108,7 @@ namespace Mirage.Urbanization.Tilesets
                 else if (intersection.EastWestZoneConsumption is WaterZoneConsumption)
                     return _roadNorthSouthWaterEastWestFrameEnumerator.Current;
                 else
-                    throw new ArgumentException("Could not map the specified intersection to a frame.", "intersection");
+                    throw new ArgumentException("Could not map the specified intersection to a frame.", nameof(intersection));
             }
             else if (intersection.EastWestZoneConsumption is RoadZoneConsumption)
             {
@@ -119,10 +119,10 @@ namespace Mirage.Urbanization.Tilesets
                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption)
                     return _waterNorthSouthRoadEastWestFrameEnumerator.Current;
                 else
-                    throw new ArgumentException("Could not map the specified intersection to a frame.", "intersection");
+                    throw new ArgumentException("Could not map the specified intersection to a frame.", nameof(intersection));
             }
             else
-                throw new ArgumentException("Could not map the specified intersection to a frame.", "intersection");
+                throw new ArgumentException("Could not map the specified intersection to a frame.", nameof(intersection));
         }
 
         public Bitmap GetBitmapFor(BaseNetworkZoneConsumption baseNetworkZoneConsumption)

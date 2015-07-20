@@ -22,7 +22,7 @@ namespace Mirage.Urbanization
             if (value >= MinWidthAndHeight && value <= MaxWidthAndHeight)
                 _zoneWidthAndHeight = value;
             else
-                throw new ArgumentOutOfRangeException("value");
+                throw new ArgumentOutOfRangeException(nameof(value));
         }
 
         public void SetWoodlands(int value)
@@ -31,7 +31,7 @@ namespace Mirage.Urbanization
                 _woodlands = value;
             else
             {
-                throw new ArgumentOutOfRangeException("value");
+                throw new ArgumentOutOfRangeException(nameof(value));
             }
         }
     }

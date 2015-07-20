@@ -66,7 +66,7 @@ namespace Mirage.Urbanization.WinForms
 
         public RenderZoneContinuation RenderZoneInto(IGraphicsWrapper graphics, bool isHighlighted)
         {
-            if (graphics == null) throw new ArgumentNullException("graphics");
+            if (graphics == null) throw new ArgumentNullException(nameof(graphics));
 
             var rectangle = GetRectangle();
 

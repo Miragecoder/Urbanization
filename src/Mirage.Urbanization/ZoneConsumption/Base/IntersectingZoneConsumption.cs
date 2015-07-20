@@ -43,9 +43,9 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public IntersectingZoneConsumption(ZoneInfoFinder zoneInfoFinder, BaseInfrastructureNetworkZoneConsumption eastWestZoneConsumption, BaseInfrastructureNetworkZoneConsumption northSouthZoneConsumption)
         {
-            if (zoneInfoFinder == null) throw new ArgumentNullException("zoneInfoFinder");
-            if (eastWestZoneConsumption == null) throw new ArgumentNullException("eastWestZoneConsumption");
-            if (northSouthZoneConsumption == null) throw new ArgumentNullException("northSouthZoneConsumption");
+            if (zoneInfoFinder == null) throw new ArgumentNullException(nameof(zoneInfoFinder));
+            if (eastWestZoneConsumption == null) throw new ArgumentNullException(nameof(eastWestZoneConsumption));
+            if (northSouthZoneConsumption == null) throw new ArgumentNullException(nameof(northSouthZoneConsumption));
 
             if (eastWestZoneConsumption.GetType() == northSouthZoneConsumption.GetType())
                 throw new InvalidOperationException("An intersecting zone consumption must consist of two differing types.");

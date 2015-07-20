@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.Simulation
 
         public EventArgsWithData(TEventData data)
         {
-            if (data == null) throw new ArgumentNullException("data");
+            if (data == null) throw new ArgumentNullException(nameof(data));
             _data = data;
         }
     }

@@ -18,10 +18,10 @@ namespace Mirage.Urbanization.Simulation.Persistence
             IMiscCityStatistics miscCityStatistics
         ) : this()
         {
-            if (timeCode == default(int)) throw new ArgumentOutOfRangeException("timeCode");
-            if (powerGridStatistics == null) throw new ArgumentNullException("powerGridStatistics");
-            if (growthZoneStatistics == null) throw new ArgumentNullException("growthZoneStatistics");
-            if (miscCityStatistics == null) throw new ArgumentNullException("miscCityStatistics");
+            if (timeCode == default(int)) throw new ArgumentOutOfRangeException(nameof(timeCode));
+            if (powerGridStatistics == null) throw new ArgumentNullException(nameof(powerGridStatistics));
+            if (growthZoneStatistics == null) throw new ArgumentNullException(nameof(growthZoneStatistics));
+            if (miscCityStatistics == null) throw new ArgumentNullException(nameof(miscCityStatistics));
 
             TimeCode = timeCode;
             CrimeNumbers = new PersistedNumberSummary(miscCityStatistics.CrimeNumbers);

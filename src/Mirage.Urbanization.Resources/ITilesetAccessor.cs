@@ -25,7 +25,7 @@ namespace Mirage.Urbanization.Tilesets
 
         public BitmapLayer(Bitmap layerOne, Bitmap layerTwo = null)
         {
-            if (layerOne == null) throw new ArgumentNullException("layerOne", "The bitmap specified in 'layerOne' is not allowed to be null.");
+            if (layerOne == null) throw new ArgumentNullException(nameof(layerOne), "The bitmap specified in 'layerOne' is not allowed to be null.");
             _layerOne = layerOne;
             _layerTwo = layerTwo;
         }

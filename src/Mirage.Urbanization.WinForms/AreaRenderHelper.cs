@@ -36,7 +36,7 @@ namespace Mirage.Urbanization.WinForms
                     _tilesetAccessor.TileWidthAndSizeInPixels = 12;
                     break;
                 default:
-                    throw new ArgumentException(string.Format("The given '{0}' is currently not supported.", mode), "mode");
+                    throw new ArgumentException(string.Format("The given '{0}' is currently not supported.", mode), nameof(mode));
             }
             _canvasPanel.Size = _tilesetAccessor.GetAreaSize(_simulationSession.Area);
             _zoomStateChanged = true;
@@ -93,7 +93,7 @@ namespace Mirage.Urbanization.WinForms
 
         public SimulationRenderHelper(Panel gamePanel, RenderZoneOptions renderZoneOptions, SimulationOptions options)
         {
-            if (gamePanel == null) throw new ArgumentNullException("gamePanel");
+            if (gamePanel == null) throw new ArgumentNullException(nameof(gamePanel));
             gamePanel.Controls.Clear();
 
             _simulationSession = new SimulationSession(options);
@@ -110,7 +110,7 @@ namespace Mirage.Urbanization.WinForms
             _zoneSelectionPanel.BringToFront();
             _viewportPanel.BringToFront();
 
-            if (renderZoneOptions == null) throw new ArgumentNullException("renderZoneOptions");
+            if (renderZoneOptions == null) throw new ArgumentNullException(nameof(renderZoneOptions));
 
             _canvasPanel = new Panel
             {

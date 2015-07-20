@@ -13,7 +13,7 @@ namespace Mirage.Urbanization.Simulation
 
         public CityStatisticsView(PersistedCityStatisticsWithFinancialData cityStatistics)
         {
-            if (cityStatistics == null) throw new ArgumentNullException("cityStatistics");
+            if (cityStatistics == null) throw new ArgumentNullException(nameof(cityStatistics));
             _cityStatistics = cityStatistics;
             _issueDataMeterResultsLazy = new Lazy<IList<DataMeterResult>>(() => DataMeterInstances.GetDataMeterResults(cityStatistics, x => x.RepresentsIssue).ToList());
         }

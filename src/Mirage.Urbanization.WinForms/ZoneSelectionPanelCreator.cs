@@ -30,8 +30,8 @@ namespace Mirage.Urbanization.WinForms
 
         public ZoneSelectionPanelCreator(IReadOnlyArea area, Panel targetPanel)
         {
-            if (targetPanel == null) throw new ArgumentNullException("targetPanel");
-            if (area == null) throw new ArgumentNullException("area");
+            if (targetPanel == null) throw new ArgumentNullException(nameof(targetPanel));
+            if (area == null) throw new ArgumentNullException(nameof(area));
 
             _targetPanel = targetPanel;
 

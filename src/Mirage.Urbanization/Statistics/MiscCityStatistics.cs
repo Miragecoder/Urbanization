@@ -33,10 +33,10 @@ namespace Mirage.Urbanization.Statistics
         )
         {
             if (queryCrimeResults == null) throw new ArgumentNullException(nameof(queryCrimeResults));
-            if (queryFireHazardResults == null) throw new ArgumentNullException("queryFireHazardResults");
-            if (queryLandValueResults == null) throw new ArgumentNullException("queryLandValueResults");
-            if (queryPollutionResults == null) throw new ArgumentNullException("queryPollutionResults");
-            if (queryTravelDistanceResults == null) throw new ArgumentNullException("queryTravelDistanceResults");
+            if (queryFireHazardResults == null) throw new ArgumentNullException(nameof(queryFireHazardResults));
+            if (queryLandValueResults == null) throw new ArgumentNullException(nameof(queryLandValueResults));
+            if (queryPollutionResults == null) throw new ArgumentNullException(nameof(queryPollutionResults));
+            if (queryTravelDistanceResults == null) throw new ArgumentNullException(nameof(queryTravelDistanceResults));
 
             _fireHazardNumbers = new NumberSummary(queryFireHazardResults.Select(x => x.ValueInUnits));
             _crimeNumbers = new NumberSummary(queryCrimeResults.Select(x => x.ValueInUnits));

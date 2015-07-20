@@ -31,7 +31,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         protected BaseNetworkZoneConsumption(ZoneInfoFinder neighborNavigator)
         {
-            if (neighborNavigator == null) throw new ArgumentNullException("neighborNavigator");
+            if (neighborNavigator == null) throw new ArgumentNullException(nameof(neighborNavigator));
 
             NeighborNavigator = neighborNavigator;
         }

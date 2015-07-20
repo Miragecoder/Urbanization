@@ -162,13 +162,13 @@ namespace Mirage.Urbanization.Vehicles
                     int distance
                     )
                 {
-                    if (rootZoneInfo == null) throw new ArgumentNullException("rootZoneInfo");
+                    if (rootZoneInfo == null) throw new ArgumentNullException(nameof(rootZoneInfo));
                     _rootZoneInfo = rootZoneInfo;
-                    if (currentZoneInfo == null) throw new ArgumentNullException("currentZoneInfo");
+                    if (currentZoneInfo == null) throw new ArgumentNullException(nameof(currentZoneInfo));
                     _currentZoneInfo = currentZoneInfo;
 
                     if (!seenPaths.Add(currentZoneInfo))
-                        throw new ArgumentException("'currentZoneInfo' was already added to this path.", "currentZoneInfo");
+                        throw new ArgumentException("'currentZoneInfo' was already added to this path.", nameof(currentZoneInfo));
 
                     _preceedingShipPathNode = preceedingShipPathNode;
 

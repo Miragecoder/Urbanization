@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.WinForms
 
         public ToolstripMenuOptionChangedEventArgs(TToolstripMenuOption toolstripMenuOption)
         {
-            if (toolstripMenuOption == null) throw new ArgumentNullException("toolstripMenuOption");
+            if (toolstripMenuOption == null) throw new ArgumentNullException(nameof(toolstripMenuOption));
             _toolstripMenuOption = toolstripMenuOption;
         }
     }

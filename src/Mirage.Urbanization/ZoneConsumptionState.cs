@@ -19,7 +19,7 @@ namespace Mirage.Urbanization
 
         public IConsumeAreaOperation TryConsumeWith(IAreaZoneConsumption consumption)
         {
-            if (consumption == null) throw new ArgumentNullException("consumption");
+            if (consumption == null) throw new ArgumentNullException(nameof(consumption));
             return new ConsumeAreaOperation(_zoneConsumption.GetCanOverrideWith(consumption), (toBeDeployedConsumption) =>
             {
                 _zoneConsumption = toBeDeployedConsumption;

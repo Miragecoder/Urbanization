@@ -367,7 +367,7 @@ namespace Mirage.Urbanization.Tilesets
                                 throw new NotImplementedException();
                         }
                     }
-                    else throw new ArgumentException("Invalid intersection was specified.", "intersection");
+                    else throw new ArgumentException("Invalid intersection was specified.", nameof(intersection));
                 }
 
                 public static class TrafficAnim
@@ -463,7 +463,7 @@ namespace Mirage.Urbanization.Tilesets
             Stream file = Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tilesets." + name);
 
             if (file == null)
-                throw new ArgumentException("Could not extract resource stream for file: " + name, "name");
+                throw new ArgumentException("Could not extract resource stream for file: " + name, nameof(name));
             return new Bitmap(Image.FromStream(file));
         }
     }
@@ -473,11 +473,11 @@ namespace Mirage.Urbanization.Tilesets
         public static Bitmap Get90DegreesRotatedClone(this Bitmap bitmap)
         {
             if (bitmap == null)
-                throw new ArgumentNullException("bitmap");
+                throw new ArgumentNullException(nameof(bitmap));
             var clone = bitmap.Clone() as Bitmap;
             if (clone == null)
                 throw new ArgumentException(
-                    String.Format("Could not clone 'bitmap' into a new {0} instance.", typeof(Bitmap).Name), "bitmap");
+                    String.Format("Could not clone 'bitmap' into a new {0} instance.", typeof(Bitmap).Name), nameof(bitmap));
 
             clone.RotateFlip(RotateFlipType.Rotate90FlipNone);
             return clone;

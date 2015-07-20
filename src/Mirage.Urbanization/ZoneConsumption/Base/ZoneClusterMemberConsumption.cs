@@ -108,8 +108,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             int positionInClusterY
         )
         {
-            if (name == null) throw new ArgumentNullException("name");
-            if (parentBaseZoneClusterConsumption == null) throw new ArgumentNullException("parentBaseZoneClusterConsumption");
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (parentBaseZoneClusterConsumption == null) throw new ArgumentNullException(nameof(parentBaseZoneClusterConsumption));
 
             _parentBaseZoneClusterConsumption = parentBaseZoneClusterConsumption;
             _name = name;
@@ -125,9 +125,9 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public static IEnumerable<ZoneClusterMemberConsumption> Generate(BaseZoneClusterConsumption parent, Func<ZoneInfoFinder> createZoneInfoFinderFunc, int widthInZones, int heightInZones, Color color)
         {
             if (widthInZones <= 1)
-                throw new ArgumentOutOfRangeException("widthInZones");
+                throw new ArgumentOutOfRangeException(nameof(widthInZones));
             if (heightInZones <= 1)
-                throw new ArgumentOutOfRangeException("heightInZones");
+                throw new ArgumentOutOfRangeException(nameof(heightInZones));
 
             int zeroBasedWidth = widthInZones - 1;
             int zeroBasedHeight = heightInZones - 1;
