@@ -38,6 +38,8 @@ namespace Mirage.Urbanization.Simulation
             }
         }
 
+        public const decimal DefaultTaxRate = 0.07M;
+
         public override IEnumerable<decimal> GetSelectableRatePercentages()
         {
             return Enumerable.Range(0, 20)

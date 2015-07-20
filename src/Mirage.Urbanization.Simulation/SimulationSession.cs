@@ -33,7 +33,7 @@ namespace Mirage.Urbanization.Simulation
 
             public InsufficientFundsAreaConsumptionResult(IAreaConsumption consumption)
             {
-                if (consumption == null) throw new ArgumentNullException("consumption");
+                if (consumption == null) throw new ArgumentNullException(nameof(consumption));
                 _consumption = consumption;
             }
 
