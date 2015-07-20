@@ -30,9 +30,9 @@ namespace Mirage.Urbanization
             ILandValueCalculator landValueCalculator
             )
         {
-            if (zonePoint == null) throw new ArgumentNullException("zonePoint");
-            if (getRelativeZoneInfo == null) throw new ArgumentNullException("getRelativeZoneInfo");
-            if (landValueCalculator == null) throw new ArgumentNullException("landValueCalculator");
+            if (zonePoint == null) throw new ArgumentNullException(nameof(zonePoint));
+            if (getRelativeZoneInfo == null) throw new ArgumentNullException(nameof(getRelativeZoneInfo));
+            if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
 
             _zoneState = new ZoneConsumptionState();
             _zonePoint = zonePoint;
