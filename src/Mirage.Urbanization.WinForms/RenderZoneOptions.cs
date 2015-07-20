@@ -12,10 +12,10 @@ namespace Mirage.Urbanization.WinForms
         private readonly Func<GraphicsManagerWrapperOption> _selectedGraphicsManagerFunc;
         private readonly Func<OverlayOption> _getCurrentOverlayOptionFunc;
 
-        public OverlayOption CurrentOverlayOption { get { return _getCurrentOverlayOptionFunc(); } }
-        public bool RenderDebugPollutionValues { get { return _renderDebugPollutionValues(); } }
-        public bool ShowDebugGrowthPathFinding { get { return _showDebugGrowthPathFinding(); } }
-        public GraphicsManagerWrapperOption SelectedGraphicsManager { get { return _selectedGraphicsManagerFunc(); } }
+        public OverlayOption CurrentOverlayOption => _getCurrentOverlayOptionFunc();
+        public bool RenderDebugPollutionValues => _renderDebugPollutionValues();
+        public bool ShowDebugGrowthPathFinding => _showDebugGrowthPathFinding();
+        public GraphicsManagerWrapperOption SelectedGraphicsManager => _selectedGraphicsManagerFunc();
 
         public RenderZoneOptions(
             Func<bool> renderDebugPollutionValues, 

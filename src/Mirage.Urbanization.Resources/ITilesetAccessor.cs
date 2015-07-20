@@ -30,9 +30,9 @@ namespace Mirage.Urbanization.Tilesets
             _layerTwo = layerTwo;
         }
 
-        public Bitmap LayerOne { get { return _layerOne; } }
+        public Bitmap LayerOne => _layerOne;
 
-        public bool IsLayerTwoSpecified { get { return _layerTwo != null; } }
-        public Bitmap LayerTwo { get { return _layerTwo; } }
+        public bool IsLayerTwoSpecified => _layerTwo != null;
+        public Bitmap LayerTwo => _layerTwo;
     }
 }

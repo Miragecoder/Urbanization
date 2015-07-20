@@ -198,10 +198,7 @@ namespace Mirage.Urbanization.WinForms
                 }
             }
 
-            public TabPage TabPage
-            {
-                get { return _tabPage; }
-            }
+            public TabPage TabPage => _tabPage;
 
             public Image ProduceBitmapFor(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
             {
@@ -282,15 +279,9 @@ namespace Mirage.Urbanization.WinForms
                 _graphSeriesSet = graphSeriesSet;
             }
 
-            public string Title
-            {
-                get { return _title; }
-            }
+            public string Title => _title;
 
-            public IReadOnlyCollection<GraphSeries> GraphSeriesSet
-            {
-                get { return _graphSeriesSet; }
-            }
+            public IReadOnlyCollection<GraphSeries> GraphSeriesSet => _graphSeriesSet;
         }
 
         private class GraphSeries
@@ -311,15 +302,9 @@ namespace Mirage.Urbanization.WinForms
                 return valueGetterFunc(citytStatistics);
             }
 
-            public string Label
-            {
-                get { return _label; }
-            }
+            public string Label => _label;
 
-            public Color Color
-            {
-                get { return _color; }
-            }
+            public Color Color => _color;
         }
     }
 }

@@ -11,14 +11,8 @@ namespace Mirage.Urbanization.Statistics
             _numberOfRailRoadZones = numberOfRailRoadZones;
         }
 
-        public int NumberOfTrainStations
-        {
-            get { return _numberOfTrainStations; }
-        }
+        public int NumberOfTrainStations => _numberOfTrainStations;
 
-        public int NumberOfRailRoadZones
-        {
-            get { return _numberOfRailRoadZones; }
-        }
+        public int NumberOfRailRoadZones => _numberOfRailRoadZones;
     }
 }

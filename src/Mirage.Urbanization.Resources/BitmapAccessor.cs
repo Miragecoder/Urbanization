@@ -48,8 +48,8 @@ namespace Mirage.Urbanization.Tilesets
         private readonly BitmapSelector _bitmapSelector;
         private readonly Func<T, bool> _predicate;
 
-        public Func<T, bool> Predicate { get { return _predicate; } }
-        internal BitmapSelector BitmapSelector { get { return _bitmapSelector; } }
+        public Func<T, bool> Predicate => _predicate;
+        internal BitmapSelector BitmapSelector => _bitmapSelector;
 
         public GrowthZonePredicateAndBitmapSelector(Func<T, bool> predicate, BitmapSelector bitmapSelector)
         {

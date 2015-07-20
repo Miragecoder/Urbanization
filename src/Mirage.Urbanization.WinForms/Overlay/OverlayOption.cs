@@ -63,6 +63,6 @@ namespace Mirage.Urbanization.WinForms.Overlay
             });
         }
 
-        public string Name { get { return _name; } }
+        public string Name => _name;
     }
 }

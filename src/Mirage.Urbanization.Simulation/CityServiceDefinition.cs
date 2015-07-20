@@ -32,10 +32,7 @@ namespace Mirage.Urbanization.Simulation
             new CityServiceDefinition("Fire department", x => x.FireDepartmentServiceRate, x => x.Sum(y => y.FireServiceExpenses)),
         };
 
-        public static IEnumerable<CityServiceDefinition> CityServiceDefinitions
-        {
-            get { return CityServiceDefinitionInstances; }
-        }
+        public static IEnumerable<CityServiceDefinition> CityServiceDefinitions => CityServiceDefinitionInstances;
 
         public override IEnumerable<decimal> GetSelectableRatePercentages()
         {

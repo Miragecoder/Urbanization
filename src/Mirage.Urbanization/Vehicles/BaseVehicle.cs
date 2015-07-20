@@ -32,13 +32,7 @@ namespace Mirage.Urbanization.Vehicles
 
         private DateTime _lastChange = DateTime.Now;
 
-        public bool CanBeRemoved
-        {
-            get
-            {
-                return CurrentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
-            }
-        }
+        public bool CanBeRemoved => CurrentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
 
         protected abstract int SpeedInMilliseconds { get; }
 

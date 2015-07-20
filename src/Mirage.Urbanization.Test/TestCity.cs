@@ -54,13 +54,13 @@ namespace Mirage.Urbanization.Test
                 .ToDictionary(x => x().GetType(), x => x);
         }
 
-        public Area Area { get { return _area; } }
+        public Area Area => _area;
 
-        public ZonePoint IndustrialZonePoint { get { return _industrialZonePoint; } }
-        public ZonePoint ResidentialZonePoint { get { return _residentialZonePoint; } }
-        public ZonePoint CommercialZonePoint { get { return _commercialZonePoint; } }
-        public ZonePoint TrainStationZonePointB { get { return _trainStationZonePointB; } }
-        public ZonePoint TrainStationZonePointA { get { return _trainStationZonePointA; } }
+        public ZonePoint IndustrialZonePoint => _industrialZonePoint;
+        public ZonePoint ResidentialZonePoint => _residentialZonePoint;
+        public ZonePoint CommercialZonePoint => _commercialZonePoint;
+        public ZonePoint TrainStationZonePointB => _trainStationZonePointB;
+        public ZonePoint TrainStationZonePointA => _trainStationZonePointA;
 
         public ZoneInfo GetZoneInfoFor(Func<TestCity, ZonePoint> expression)
         {

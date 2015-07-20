@@ -23,7 +23,7 @@ namespace Mirage.Urbanization.Simulation
 
         public abstract IEnumerable<decimal> GetSelectableRatePercentages();
 
-        public string Name { get { return _name; } }
+        public string Name => _name;
         public decimal CurrentRate(ICityBudgetConfiguration cityBudgetConfiguration) { return _getCurrentRate(cityBudgetConfiguration); }
         public void SetCurrentRate(ICityBudgetConfiguration cityBudgetConfiguration, decimal rate) { _setCurrentRate(cityBudgetConfiguration, rate); }
     }

@@ -9,37 +9,19 @@ namespace Mirage.Urbanization.Simulation
         protected int CurrentMonth = 1;
         protected int CurrentWeek = 1;
 
-        public int CurrentYear { get { return CurrentYearProtected; } }
+        public int CurrentYear => CurrentYearProtected;
 
         public string GetCurrentDescription() { return CurrentMonthDescription + ' ' + CurrentYear + " (Week: " + CurrentWeek + ")"; }
 
-        private string CurrentMonthDescription
-        {
-            get
-            {
-                return CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(CurrentMonth);
-            }
-        }
+        private string CurrentMonthDescription => CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(CurrentMonth);
 
-        public bool IsAtBeginningOfNewYear
-        {
-            get { return IsAtBeginningOfMonth && CurrentWeek == 1; }
-        }
+        public bool IsAtBeginningOfNewYear => IsAtBeginningOfMonth && CurrentWeek == 1;
 
-        public bool IsAtBeginningOfMonth
-        {
-            get { return CurrentMonth == 1; }
-        }
+        public bool IsAtBeginningOfMonth => CurrentMonth == 1;
 
-        public int TimeCode
-        {
-            get
-            {
-                return (CurrentYear * 10000) +
-                       (CurrentMonth * 100) +
-                       CurrentWeek;
-            }
-        }
+        public int TimeCode => (CurrentYear * 10000) +
+                               (CurrentMonth * 100) +
+                               CurrentWeek;
 
         protected ReadOnlyYearAndMonth() { }
 

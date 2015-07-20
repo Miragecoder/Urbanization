@@ -12,12 +12,9 @@ namespace Mirage.Urbanization
             _relativeY = relativeY;
         }
 
-        public int Distance
-        {
-            get { return Math.Abs(RelativeX) + Math.Abs(RelativeY); }
-        }
+        public int Distance => Math.Abs(RelativeX) + Math.Abs(RelativeY);
 
-        public int RelativeY { get { return _relativeY; } }
-        public int RelativeX { get { return _relativeX; } }
+        public int RelativeY => _relativeY;
+        public int RelativeX => _relativeX;
     }
 }

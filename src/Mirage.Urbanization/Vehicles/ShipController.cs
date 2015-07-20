@@ -19,7 +19,7 @@ namespace Mirage.Urbanization.Vehicles
 
         private DateTime _lastShipInsertion = DateTime.Now;
 
-        private bool NewShipCanBeInserted { get { return DateTime.Now.AddSeconds(-5) > _lastShipInsertion; } }
+        private bool NewShipCanBeInserted => DateTime.Now.AddSeconds(-5) > _lastShipInsertion;
 
         protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
         {
@@ -105,10 +105,7 @@ namespace Mirage.Urbanization.Vehicles
                 return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
             }
 
-            protected override int SpeedInMilliseconds
-            {
-                get { return 500; }
-            }
+            protected override int SpeedInMilliseconds => 500;
 
             private class ShipPathNode
             {
@@ -140,7 +137,7 @@ namespace Mirage.Urbanization.Vehicles
                     }
                 }
 
-                public IZoneInfo CurrentZoneInfo { get { return _currentZoneInfo; } }
+                public IZoneInfo CurrentZoneInfo => _currentZoneInfo;
 
                 public IEnumerable<ShipPathNode> EnumeratePathBackwards()
                 {
@@ -150,7 +147,7 @@ namespace Mirage.Urbanization.Vehicles
                             yield return x;
                 }
 
-                public int Distance { get { return _distance; } }
+                public int Distance => _distance;
 
                 private readonly int _distance;
 

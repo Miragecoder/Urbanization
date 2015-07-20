@@ -15,8 +15,8 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private readonly Lazy<int> _measureUnitSumLazy;
 
-        public string Name { get { return _name; } }
-        public bool RepresentsIssue { get { return _representsIssue; } }
+        public string Name => _name;
+        public bool RepresentsIssue => _representsIssue;
 
         public DataMeter(int measureUnit, string name, Func<PersistedCityStatisticsWithFinancialData, int> getValue, bool representsIssue)
         {
@@ -68,8 +68,8 @@ namespace Mirage.Urbanization.Simulation.Datameters
             private readonly int _measureUnitTreshold;
             private readonly DataMeterValueCategory _category;
 
-            public DataMeterValueCategory Category { get { return _category; } }
-            public int MeasureUnitThreshold { get { return _measureUnitTreshold; } }
+            public DataMeterValueCategory Category => _category;
+            public int MeasureUnitThreshold => _measureUnitTreshold;
 
             public Threshold(int measureUnitTreshold, DataMeterValueCategory category)
             {

@@ -10,13 +10,7 @@ namespace Mirage.Urbanization.Statistics
         private readonly IRailroadInfrastructureStatistics _railroadInfrastructureStatistics;
         private readonly ICityServicesStatistics _cityServicesStatistics;
 
-        public IRoadInfrastructureStatistics RoadInfrastructureStatistics
-        {
-            get
-            {
-                return _roadInfraStructureStatistics;
-            }
-        }
+        public IRoadInfrastructureStatistics RoadInfrastructureStatistics => _roadInfraStructureStatistics;
 
         public GrowthZoneNetworkStatistics(
             IRoadInfrastructureStatistics roadInfraStructureStatistics,
@@ -38,39 +32,21 @@ namespace Mirage.Urbanization.Statistics
             _globalZonePopulationNumbers = new NumberSummary(residentialZonePopulationNumbers.Concat(commercialZonePopulationNumbers).Concat(industrialZonePopulationNumbers));
         }
 
-        public IRailroadInfrastructureStatistics RailroadInfrastructureStatistics
-        {
-            get { return _railroadInfrastructureStatistics; }
-        }
+        public IRailroadInfrastructureStatistics RailroadInfrastructureStatistics => _railroadInfrastructureStatistics;
 
         private readonly INumberSummary _residentialZonePopulationNumbers,
             _commercialZonePopulationNumbers,
             _industrialZonePopulationNumbers,
             _globalZonePopulationNumbers;
 
-        public INumberSummary ResidentialZonePopulationNumbers
-        {
-            get { return _residentialZonePopulationNumbers; }
-        }
+        public INumberSummary ResidentialZonePopulationNumbers => _residentialZonePopulationNumbers;
 
-        public INumberSummary CommercialZonePopulationNumbers
-        {
-            get { return _commercialZonePopulationNumbers; }
-        }
+        public INumberSummary CommercialZonePopulationNumbers => _commercialZonePopulationNumbers;
 
-        public INumberSummary IndustrialZonePopulationNumbers
-        {
-            get { return _industrialZonePopulationNumbers; }
-        }
+        public INumberSummary IndustrialZonePopulationNumbers => _industrialZonePopulationNumbers;
 
-        public INumberSummary GlobalZonePopulationNumbers
-        {
-            get { return _globalZonePopulationNumbers; }
-        }
+        public INumberSummary GlobalZonePopulationNumbers => _globalZonePopulationNumbers;
 
-        public ICityServicesStatistics CityServicesStatistics
-        {
-            get { return _cityServicesStatistics; }
-        }
+        public ICityServicesStatistics CityServicesStatistics => _cityServicesStatistics;
     }
 }

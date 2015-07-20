@@ -45,30 +45,15 @@ namespace Mirage.Urbanization.Statistics
             _travelDistanceNumbers = new NumberSummary(queryTravelDistanceResults);
         }
 
-        public INumberSummary CrimeNumbers
-        {
-            get { return _crimeNumbers; }
-        }
+        public INumberSummary CrimeNumbers => _crimeNumbers;
 
-        public INumberSummary LandValueNumbers
-        {
-            get { return _landValueNumbers; }
-        }
+        public INumberSummary LandValueNumbers => _landValueNumbers;
 
-        public INumberSummary PollutionNumbers
-        {
-            get { return _pollutionNumbers; }
-        }
+        public INumberSummary PollutionNumbers => _pollutionNumbers;
 
-        public INumberSummary TravelDistanceNumbers
-        {
-            get { return _travelDistanceNumbers; }
-        }
+        public INumberSummary TravelDistanceNumbers => _travelDistanceNumbers;
 
-        public INumberSummary FireHazardNumbers
-        {
-            get { return _fireHazardNumbers; }
-        }
+        public INumberSummary FireHazardNumbers => _fireHazardNumbers;
     }
 
     public interface INumberSummary
@@ -100,23 +85,14 @@ namespace Mirage.Urbanization.Statistics
             _count = capturedNumbers.Count();
         }
 
-        public int Lowest
-        {
-            get { return _lowest; }
-        }
+        public int Lowest => _lowest;
 
-        public int Average
-        {
-            get { return _average; }
-        }
+        public int Average => _average;
 
-        public int Highest
-        {
-            get { return _highest; }
-        }
+        public int Highest => _highest;
 
-        public int Sum { get { return _sum; } }
+        public int Sum => _sum;
 
-        public int Count { get { return _count; } }
+        public int Count => _count;
     }
 }

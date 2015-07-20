@@ -14,8 +14,8 @@ namespace Mirage.Urbanization.Simulation
             _minimumPopulation = minimumPopulation;
         }
 
-        public string Name { get { return _name; } }
-        public int MinimumPopulation { get { return _minimumPopulation; } }
+        public string Name => _name;
+        public int MinimumPopulation => _minimumPopulation;
 
         public static CityCategoryDefinition GetForPopulation(int population)
         {

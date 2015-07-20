@@ -308,7 +308,7 @@ namespace Mirage.Urbanization.WinForms
                     return _xmlSerializer.Deserialize(file) as PersistedSimulation;
             }
 
-            public bool CurrentFilenameIsKnown { get { return _lastSaveFileName != null; } }
+            public bool CurrentFilenameIsKnown => _lastSaveFileName != null;
 
             public void Save(PersistedSimulation simulation)
             {

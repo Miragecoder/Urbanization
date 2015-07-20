@@ -288,7 +288,7 @@ namespace Mirage.Urbanization.WinForms
             return rect.IntersectsWith(visibleRectangle);
         }
 
-        public ISimulationSession SimulationSession { get { return _simulationSession; } }
+        public ISimulationSession SimulationSession => _simulationSession;
 
         private Rectangle _lastViewportRectangle = default(Rectangle);
 

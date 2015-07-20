@@ -60,10 +60,7 @@ namespace Mirage.Urbanization.Networks
                     .Distinct();
         }
 
-        public bool HasSuppliers
-        {
-            get { return GetElectricitySuppliers().Any(); }
-        }
+        public bool HasSuppliers => GetElectricitySuppliers().Any();
 
         public IEnumerable<IElectricitySupplier> GetElectricitySuppliers()
         {

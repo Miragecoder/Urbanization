@@ -14,8 +14,8 @@ namespace Mirage.Urbanization
         private int _woodlands = MinWoodlands;
         private int _zoneWidthAndHeight = MinWidthAndHeight;
 
-        public int Woodlands { get { return _woodlands; } }
-        public int ZoneWidthAndHeight { get { return _zoneWidthAndHeight; } }
+        public int Woodlands => _woodlands;
+        public int ZoneWidthAndHeight => _zoneWidthAndHeight;
 
         public void SetZoneWidthAndHeight(int value)
         {

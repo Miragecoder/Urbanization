@@ -26,7 +26,7 @@ namespace Mirage.Urbanization
                 _distance = distance;
             }
 
-            public int Distance { get { return _distance; } }
+            public int Distance => _distance;
 
             public void UpdateDistance(int distance)
             {

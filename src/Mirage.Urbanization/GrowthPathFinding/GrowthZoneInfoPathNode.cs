@@ -222,6 +222,6 @@ namespace Mirage.Urbanization.GrowthPathFinding
             _originBaseZoneClusterConsumption = clusterMemberConsumption.ParentBaseZoneClusterConsumption;
         }
 
-        public BaseZoneClusterConsumption OriginBaseZoneClusterConsumption { get { return _originBaseZoneClusterConsumption; } }
+        public BaseZoneClusterConsumption OriginBaseZoneClusterConsumption => _originBaseZoneClusterConsumption;
     }
 }

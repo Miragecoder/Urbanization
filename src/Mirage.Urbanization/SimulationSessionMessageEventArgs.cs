@@ -11,6 +11,6 @@ namespace Mirage.Urbanization
             _message = message;
         }
 
-        public string Message { get { return _message; } }
+        public string Message => _message;
     }
 }

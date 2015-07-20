@@ -12,11 +12,11 @@ namespace Mirage.Urbanization.WinForms.Rendering
     {
         private readonly string _name;
 
-        public string Name { get { return _name; } }
+        public string Name => _name;
 
         private readonly Func<Panel, Action, IGraphicsManagerWrapper> _factory;
 
-        public Func<Panel, Action, IGraphicsManagerWrapper> Factory { get { return _factory; } }
+        public Func<Panel, Action, IGraphicsManagerWrapper> Factory => _factory;
 
         public GraphicsManagerWrapperOption(string name, Func<Panel, Action, BaseGraphicsManagerWrapper> factory)
         {

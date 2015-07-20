@@ -17,14 +17,8 @@ namespace Mirage.Urbanization.Statistics
             _trafficNumbers = new NumberSummary(capturedRoadZoneConsumptions.Select(x => x.GetTrafficDensityAsInt()));
         }
 
-        public int NumberOfRoadZones
-        {
-            get { return _numberOfRoadZones; }
-        }
+        public int NumberOfRoadZones => _numberOfRoadZones;
 
-        public INumberSummary TrafficNumbers
-        {
-            get { return _trafficNumbers; }
-        }
+        public INumberSummary TrafficNumbers => _trafficNumbers;
     }
 }

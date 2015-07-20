@@ -20,11 +20,11 @@ namespace Mirage.Urbanization.Simulation.Datameters
             _amount = amount;
         }
 
-        public string Name { get { return _name; } }
-        public decimal PercentageScore { get { return _percentageScore; } }
+        public string Name => _name;
+        public decimal PercentageScore => _percentageScore;
 
-        public string PercentageScoreString { get { return _percentageScore.ToString("P"); } }
-        public DataMeterValueCategory ValueCategory { get { return _valueCategory; } }
-        public int Amount { get { return _amount; } }
+        public string PercentageScoreString => _percentageScore.ToString("P");
+        public DataMeterValueCategory ValueCategory => _valueCategory;
+        public int Amount => _amount;
     }
 }

@@ -25,7 +25,7 @@ namespace Mirage.Urbanization.Simulation
         private IMiscCityStatistics _lastMiscCityStatistics;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public IReadOnlyArea Area { get { return _area; } }
+        public IReadOnlyArea Area => _area;
 
         private class InsufficientFundsAreaConsumptionResult : IAreaConsumptionResult
         {
@@ -37,9 +37,9 @@ namespace Mirage.Urbanization.Simulation
                 _consumption = consumption;
             }
 
-            public bool Success { get { return false; } }
-            public IAreaConsumption AreaConsumption { get { return _consumption; } }
-            public string Message { get { return "You currently do not have enough funds to build a " + AreaConsumption.Name; } }
+            public bool Success => false;
+            public IAreaConsumption AreaConsumption => _consumption;
+            public string Message => "You currently do not have enough funds to build a " + AreaConsumption.Name;
         }
 
         public IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
@@ -57,10 +57,7 @@ namespace Mirage.Urbanization.Simulation
             return result;
         }
 
-        private bool PowerAndMiscStatisticsLoaded
-        {
-            get { return (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null); }
-        }
+        private bool PowerAndMiscStatisticsLoaded => (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null);
 
         private readonly HashSet<CityCategoryDefinition> _seenCityStates = new HashSet<CityCategoryDefinition>
         {

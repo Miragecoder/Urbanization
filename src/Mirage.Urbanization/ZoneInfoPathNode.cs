@@ -20,7 +20,7 @@ namespace Mirage.Urbanization
 
         private readonly int? _destinationHashCode;
 
-        public IZoneInfoPathNode PreviousPathNode { get { return _previousPathNode; } }
+        public IZoneInfoPathNode PreviousPathNode => _previousPathNode;
 
         public ZoneInfoPathNode(IZoneInfo zoneInfo, Func<IZoneInfoPathNode, QueryResult<IZoneInfo, RelativeZoneInfoQuery>, bool> canBeJoinedFunc, Func<IZoneInfo, int?> getDestinationHashCode, ZoneInfoDistanceTracker distanceTracker)
             : this(
@@ -66,14 +66,11 @@ namespace Mirage.Urbanization
                     .ToList<IZoneInfoPathNode>());
         }
 
-        public bool IsDestination { get { return _destinationHashCode.HasValue; } }
+        public bool IsDestination => _destinationHashCode.HasValue;
 
-        public int? DestinationHashCode { get { return _destinationHashCode; } }
+        public int? DestinationHashCode => _destinationHashCode;
 
-        public IZoneInfo ZoneInfo
-        {
-            get { return _zoneInfo; }
-        }
+        public IZoneInfo ZoneInfo => _zoneInfo;
 
         public bool GetIsPartOfParentCluster()
         {
@@ -98,10 +95,7 @@ namespace Mirage.Urbanization
             }
         }
 
-        public int Distance
-        {
-            get { return _distance; }
-        }
+        public int Distance => _distance;
 
         private IZoneInfo GetOrigin()
         {

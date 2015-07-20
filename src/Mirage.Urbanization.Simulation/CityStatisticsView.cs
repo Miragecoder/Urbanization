@@ -18,17 +18,14 @@ namespace Mirage.Urbanization.Simulation
             _issueDataMeterResultsLazy = new Lazy<IList<DataMeterResult>>(() => DataMeterInstances.GetDataMeterResults(cityStatistics, x => x.RepresentsIssue).ToList());
         }
 
-        public int Population { get { return _cityStatistics.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum; } }
-        public decimal AssessedValue { get { return _cityStatistics.PersistedCityStatistics.LandValueNumbers.Sum; } }
+        public int Population => _cityStatistics.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum;
+        public decimal AssessedValue => _cityStatistics.PersistedCityStatistics.LandValueNumbers.Sum;
 
-        public int CurrentAmountOfFunds { get { return _cityStatistics.CurrentAmountOfFunds; } }
-        public int CurrentProjectedAmountOfFunds { get { return _cityStatistics.CurrentProjectedAmountOfFunds; } }
+        public int CurrentAmountOfFunds => _cityStatistics.CurrentAmountOfFunds;
+        public int CurrentProjectedAmountOfFunds => _cityStatistics.CurrentProjectedAmountOfFunds;
 
-        public string CityCategory
-        {
-            get { return CityCategoryDefinition.GetForPopulation(Population).Name; }
-        }
+        public string CityCategory => CityCategoryDefinition.GetForPopulation(Population).Name;
 
-        public IList<DataMeterResult> DataMeterResults { get { return _issueDataMeterResultsLazy.Value; } }
+        public IList<DataMeterResult> DataMeterResults => _issueDataMeterResultsLazy.Value;
     }
 }

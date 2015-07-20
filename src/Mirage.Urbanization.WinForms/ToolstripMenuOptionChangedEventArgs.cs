@@ -6,7 +6,7 @@ namespace Mirage.Urbanization.WinForms
         where TToolstripMenuOption : IToolstripMenuOption
     {
         private readonly TToolstripMenuOption _toolstripMenuOption;
-        public TToolstripMenuOption ToolstripMenuOption { get { return _toolstripMenuOption; } }
+        public TToolstripMenuOption ToolstripMenuOption => _toolstripMenuOption;
 
         public ToolstripMenuOptionChangedEventArgs(TToolstripMenuOption toolstripMenuOption)
         {

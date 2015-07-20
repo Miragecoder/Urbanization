@@ -135,10 +135,7 @@ namespace Mirage.Urbanization
             }
         }
 
-        IReadOnlyZoneConsumptionState IReadOnlyZoneInfo.ZoneConsumptionState
-        {
-            get { return ConsumptionState; }
-        }
+        IReadOnlyZoneConsumptionState IReadOnlyZoneInfo.ZoneConsumptionState => ConsumptionState;
 
         public QueryResult<IQueryPollutionResult> QueryPollution()
         {

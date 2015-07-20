@@ -10,7 +10,7 @@ namespace Mirage.Urbanization
     {
         private IAreaZoneConsumption _zoneConsumption = new EmptyZoneConsumption();
         private DateTime _lastUpdateDateTime = DateTime.Now;
-        public DateTime LastUpdateDateTime { get { return _lastUpdateDateTime; } }
+        public DateTime LastUpdateDateTime => _lastUpdateDateTime;
 
         public IAreaZoneConsumption GetZoneConsumption()
         {

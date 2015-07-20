@@ -6,7 +6,7 @@ namespace Mirage.Urbanization.Simulation
         where TEventData : class
     {
         private readonly TEventData _data;
-        public TEventData EventData { get { return _data; } }
+        public TEventData EventData => _data;
 
         public EventArgsWithData(TEventData data)
         {

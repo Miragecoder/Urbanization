@@ -31,9 +31,9 @@ namespace Mirage.Urbanization.WinForms
                 _drawHighligterAction(consumption);
         }
 
-        public bool HasDrawHighlighterDelegate { get { return _drawHighligterAction != null; } }
+        public bool HasDrawHighlighterDelegate => _drawHighligterAction != null;
 
-        public bool HasDrawSecondLayerDelegate { get { return _drawSecondLayerAction != null; } }
+        public bool HasDrawSecondLayerDelegate => _drawSecondLayerAction != null;
 
         public RenderZoneContinuation(Action drawSecondLayerAction, Action<IAreaConsumption> drawHighligterAction)
         {
@@ -49,7 +49,7 @@ namespace Mirage.Urbanization.WinForms
         private readonly ITilesetAccessor _tilesetAccessor;
         private readonly RenderZoneOptions _renderZoneOptions;
 
-        public IReadOnlyZoneInfo ZoneInfo { get { return _zoneInfo; } }
+        public IReadOnlyZoneInfo ZoneInfo => _zoneInfo;
 
         public Rectangle GetRectangle()
         {

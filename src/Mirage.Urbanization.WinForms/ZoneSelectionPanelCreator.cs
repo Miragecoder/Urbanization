@@ -81,12 +81,9 @@ namespace Mirage.Urbanization.WinForms
 
         private IAreaConsumption _currentZoneConsumptionSample;
 
-        public IAreaConsumption CurrentZoneConsumptionSample { get { return _currentZoneConsumptionSample; } }
+        public IAreaConsumption CurrentZoneConsumptionSample => _currentZoneConsumptionSample;
 
-        public bool IsCurrentlyNetworkZoning
-        {
-            get { return _currentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption; }
-        }
+        public bool IsCurrentlyNetworkZoning => _currentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption;
 
         public IAreaConsumption CreateNewCurrentZoneConsumption()
         {

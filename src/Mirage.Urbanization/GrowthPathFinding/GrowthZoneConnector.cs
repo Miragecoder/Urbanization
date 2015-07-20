@@ -17,17 +17,11 @@ namespace Mirage.Urbanization.GrowthPathFinding
         {
             private readonly int _oldValue;
 
-            public int HalfOfOldDensity
-            {
-                get
-                {
-                    return _oldValue > 0
-                        ? _oldValue / 2
-                        : _oldValue;
-                }
-            }
+            public int HalfOfOldDensity => _oldValue > 0
+                ? _oldValue / 2
+                : _oldValue;
 
-            public int OldDensity { get { return _oldValue; } }
+            public int OldDensity => _oldValue;
 
             public TrafficDensity(int oldValue)
             {
@@ -36,7 +30,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
             private int? _newDensity;
 
-            public int? NewDensity { get { return _newDensity; } }
+            public int? NewDensity => _newDensity;
 
             public void AddToNewValue(int density)
             {

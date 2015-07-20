@@ -38,6 +38,6 @@ namespace Mirage.Urbanization.Simulation
                 throw new InvalidOperationException();
         }
 
-        public ProcessOptions ProcessOptions { get { return _processOptions; } }
+        public ProcessOptions ProcessOptions => _processOptions;
     }
 }
