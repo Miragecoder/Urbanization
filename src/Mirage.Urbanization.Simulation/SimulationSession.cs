@@ -118,19 +118,14 @@ namespace Mirage.Urbanization.Simulation
             {
                 while (true)
                 {
-                    {
-                        var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
-                        if (onYearAndOrMonthChanged != null)
-                            onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
-                    }
+                    OnYearAndOrMonthChanged?.Invoke(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
                     foreach (var iteration in Enumerable.Range(0, 4))
                     {
                         if (PowerAndMiscStatisticsLoaded)
                         {
                             var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token).Result;
                             var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
-                            if (onYearAndOrMonthChanged != null)
-                                onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
+                            onYearAndOrMonthChanged?.Invoke(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
 
                             _persistedCityStatisticsCollection.Add(
                                    _cityBudget.ProcessFinances(new PersistedCityStatistics(
@@ -143,9 +138,7 @@ namespace Mirage.Urbanization.Simulation
                                 )
                             );
 
-                            var eventCapture = CityStatisticsUpdated;
-                            if (eventCapture != null)
-                                eventCapture(this, new CityStatisticsUpdatedEventArgs(_persistedCityStatisticsCollection.GetMostRecentPersistedCityStatistics().MatchingObject));
+                            CityStatisticsUpdated?.Invoke(this, new CityStatisticsUpdatedEventArgs(_persistedCityStatisticsCollection.GetMostRecentPersistedCityStatistics().MatchingObject));
                             _yearAndMonth.AddWeek();
                             if (_yearAndMonth.IsAtBeginningOfNewYear)
                                 _cityBudget.AddProjectedIncomeToCurrentAmount();
@@ -223,9 +216,7 @@ namespace Mirage.Urbanization.Simulation
 
             _cityBudget.OnCityBudgetValueChanged += (sender, e) =>
             {
-                var onCityBudgetValueChanged = OnCityBudgetValueChanged;
-                if (onCityBudgetValueChanged != null)
-                    onCityBudgetValueChanged(this, e);
+                OnCityBudgetValueChanged?.Invoke(this, e);
             };
 
             _yearAndMonth.OnWeekElapsed += OnWeekPass;
@@ -300,22 +291,16 @@ namespace Mirage.Urbanization.Simulation
 
         private void RaiseAreaHotMessageEvent(string title, string message)
         {
-            var onOnAreaHotMessage = OnAreaHotMessage;
-            if (onOnAreaHotMessage == null)
-                return;
-            onOnAreaHotMessage(this, new SimulationSessionHotMessageEventArgs(title, message));
+            OnAreaHotMessage?.Invoke(this, new SimulationSessionHotMessageEventArgs(title, message));
         }
 
         public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
         private void RaiseAreaMessageEvent(string message)
         {
-            var onOnAreaMessage = OnAreaMessage;
-            if (onOnAreaMessage == null)
-                return;
-            onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
+            OnAreaMessage?.Invoke(this, new SimulationSessionMessageEventArgs(message));
         }
 
-        public ICityBudgetConfiguration CityBudgetConfiguration { get { return _cityBudgetConfiguration; } }
+        public ICityBudgetConfiguration CityBudgetConfiguration => _cityBudgetConfiguration;
 
         private readonly ICityBudget _cityBudget = new CityBudget();
 
