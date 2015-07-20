@@ -6,8 +6,6 @@ namespace Mirage.Urbanization
     public class AreaOptions
     {
         private readonly TerraformingOptions _terraformingOptions;
-        private readonly ProcessOptions _processOptions;
-        private readonly ILandValueCalculator _landValueCalculator;
 
         private readonly PersistedArea _persistedArea;
 
@@ -22,8 +20,8 @@ namespace Mirage.Urbanization
         {
             if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
             if (processOptions == null) throw new ArgumentNullException(nameof(processOptions));
-            _processOptions = processOptions;
-            _landValueCalculator = landValueCalculator;
+            ProcessOptions = processOptions;
+            LandValueCalculator = landValueCalculator;
         }
 
         public AreaOptions(ILandValueCalculator landValueCalculator, PersistedArea persistedArea, ProcessOptions processOptions)
@@ -43,18 +41,12 @@ namespace Mirage.Urbanization
             if (_persistedArea != null) persistedAreaAction(_persistedArea);
         }
 
-        public ProcessOptions ProcessOptions
-        {
-            get { return _processOptions; }
-        }
-
-        public ILandValueCalculator LandValueCalculator { get { return _landValueCalculator; } }
+        public ProcessOptions ProcessOptions { get; }
+        public ILandValueCalculator LandValueCalculator { get; }
 
         public int GetZoneWidthAndHeight()
         {
-            return _terraformingOptions != null
-                ? _terraformingOptions.ZoneWidthAndHeight
-                : _persistedArea.GetZoneWidthAndHeight();
+            return _terraformingOptions?.ZoneWidthAndHeight ?? _persistedArea.GetZoneWidthAndHeight();
         }
     }
 }

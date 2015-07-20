@@ -8,23 +8,14 @@ namespace Mirage.Urbanization.ZoneConsumption
     {
         public IndustrialZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc) : base(createZoneInfoFinderFunc, Color.Yellow) { }
 
-        protected override decimal PopulationPollutionFactor
-        {
-            get { return 1.4M; }
-        }
+        protected override decimal PopulationPollutionFactor => 1.4M;
 
-        public override char KeyChar { get { return 'i'; } }
+        public override char KeyChar => 'i';
 
-        protected override decimal PopulationCrimeFactor
-        {
-            get { return 0.7M; }
-        }
+        protected override decimal PopulationCrimeFactor => 0.7M;
 
-        protected override decimal PopulationFireHazardFactor
-        {
-            get { return 0.5M; }
-        }
+        protected override decimal PopulationFireHazardFactor => 0.5M;
 
-        public override string Name { get { return "Industrial zone"; } }
+        public override string Name => "Industrial zone";
     }
 }

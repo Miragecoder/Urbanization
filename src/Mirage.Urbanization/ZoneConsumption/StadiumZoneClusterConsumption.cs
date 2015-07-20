@@ -20,14 +20,12 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         }
 
-        public override char KeyChar { get { return 'v'; } }
-        private readonly ICrimeBehaviour _crimeBehaviour = new DynamicCrimeBehaviour(() => 20);
-        public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
+        public override char KeyChar => 'v';
+        public override ICrimeBehaviour CrimeBehaviour { get; } = new DynamicCrimeBehaviour(() => 20);
 
-        private readonly IFireHazardBehaviour _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => 20);
-        public override IFireHazardBehaviour FireHazardBehaviour { get { return _fireHazardBehaviour; } }
+        public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
 
-        public override int Cost { get { return 5000; } }
-        public override string Name { get { return "Stadium"; } }
+        public override int Cost => 5000;
+        public override string Name => "Stadium";
     }
 }

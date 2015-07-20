@@ -20,7 +20,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public RoadZoneConsumption(ZoneInfoFinder neighborNavigator)
             : base(neighborNavigator)
         {
-            _pollutionBehaviour = new DynamicPollutionBehaviour(() =>
+            PollutionBehaviour = new DynamicPollutionBehaviour(() =>
             {
                 switch (GetTrafficDensity())
                 {
@@ -36,30 +36,16 @@ namespace Mirage.Urbanization.ZoneConsumption
             });
         }
 
-        public override char KeyChar { get { return 'r'; } }
-        public override int Cost { get { return 25; } }
+        public override char KeyChar => 'r';
+        public override int Cost => 25;
 
-        public override string Name
-        {
-            get { return "Road"; }
-        }
+        public override string Name => "Road";
 
-        public override bool CanBeOverriddenByZoneClusters
-        {
-            get { return false; }
-        }
+        public override bool CanBeOverriddenByZoneClusters => false;
 
-        public override Color Color
-        {
-            get { return Color.Gray; }
-        }
+        public override Color Color => Color.Gray;
 
-        private readonly IPollutionBehaviour _pollutionBehaviour;
-
-        public IPollutionBehaviour PollutionBehaviour
-        {
-            get { return _pollutionBehaviour; }
-        }
+        public IPollutionBehaviour PollutionBehaviour { get; }
 
         public TrafficDensity GetTrafficDensity()
         {

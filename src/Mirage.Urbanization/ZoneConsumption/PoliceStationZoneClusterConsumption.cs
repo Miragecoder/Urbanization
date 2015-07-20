@@ -7,14 +7,11 @@ namespace Mirage.Urbanization.ZoneConsumption
 {
     public class PoliceStationZoneClusterConsumption : StaticZoneClusterConsumption
     {
-        public override string Name
-        {
-            get { return "Police station"; }
-        }
+        public override string Name => "Police station";
 
-        public override char KeyChar { get { return 'u'; } }
+        public override char KeyChar => 'u';
 
-        public override int Cost { get { return 500; } }
+        public override int Cost => 500;
 
         public PoliceStationZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
             : base(
@@ -25,12 +22,11 @@ namespace Mirage.Urbanization.ZoneConsumption
                 widthInZones: 3,
                 heightInZones: 3)
         {
-            _crimeBehaviour = new DynamicCrimeBehaviour(() => HasPower ? -500 : -50);
+            CrimeBehaviour = new DynamicCrimeBehaviour(() => HasPower ? -500 : -50);
         }
-        private readonly ICrimeBehaviour _crimeBehaviour;
-        public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
 
-        private readonly IFireHazardBehaviour _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => 20);
-        public override IFireHazardBehaviour FireHazardBehaviour { get { return _fireHazardBehaviour; } }
+        public override ICrimeBehaviour CrimeBehaviour { get; }
+
+        public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
     }
 }

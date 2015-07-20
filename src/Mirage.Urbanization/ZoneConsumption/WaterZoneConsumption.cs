@@ -13,19 +13,13 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         }
 
-        public override int Cost { get { return 100; } }
+        public override int Cost => 100;
 
-        public override char KeyChar { get { return 'w'; } }
+        public override char KeyChar => 'w';
 
-        public override string Name
-        {
-            get { return "Water"; }
-        }
+        public override string Name => "Water";
 
-        public override Color Color
-        {
-            get { return System.Drawing.Color.DarkBlue; }
-        }
+        public override Color Color => System.Drawing.Color.DarkBlue;
 
         protected override bool GetIsOrientatableNeighbor(QueryResult<IZoneInfo, RelativeZoneInfoQuery> consumptionQueryResult)
         {
@@ -97,9 +91,6 @@ namespace Mirage.Urbanization.ZoneConsumption
                 && comparison(intersectingZoneConsumption).GetType() == typeof(TBaseInfrastructureNetworkZoneConsumption)));
         }
 
-        public override bool CanBeOverriddenByZoneClusters
-        {
-            get { return false; }
-        }
+        public override bool CanBeOverriddenByZoneClusters => false;
     }
 }

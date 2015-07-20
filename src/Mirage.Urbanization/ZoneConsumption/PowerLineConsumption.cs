@@ -10,23 +10,14 @@ namespace Mirage.Urbanization.ZoneConsumption
     {
         public PowerLineConsumption(ZoneInfoFinder neighborNavigator) : base(neighborNavigator) { }
 
-        public override string Name
-        {
-            get { return "Power line"; }
-        }
-        public override int Cost { get { return 10; } }
+        public override string Name => "Power line";
+        public override int Cost => 10;
 
-        public override char KeyChar { get { return 'l'; } }
+        public override char KeyChar => 'l';
 
-        public override Color Color
-        {
-            get { return Color.Teal; }
-        }
+        public override Color Color => Color.Teal;
 
-        public override bool CanBeOverriddenByZoneClusters
-        {
-            get { return true; }
-        }
+        public override bool CanBeOverriddenByZoneClusters => true;
 
         protected override bool GetIsOrientatableNeighbor(QueryResult<IZoneInfo, RelativeZoneInfoQuery> consumptionQueryResult)
         {

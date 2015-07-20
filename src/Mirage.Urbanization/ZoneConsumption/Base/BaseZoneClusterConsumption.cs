@@ -7,8 +7,6 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 {
     public abstract class BaseZoneClusterConsumption : IAreaZoneClusterConsumption
     {
-        private readonly IElectricityBehaviour _electricityBehaviour;
-
         public abstract char KeyChar { get; }
 
         public abstract int Cost { get; }
@@ -16,25 +14,20 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract IPollutionBehaviour PollutionBehaviour { get; }
         public abstract ICrimeBehaviour CrimeBehaviour { get; }
         public abstract IFireHazardBehaviour FireHazardBehaviour { get; }
-        public IElectricityBehaviour ElectricityBehaviour { get { return _electricityBehaviour; } }
+        public IElectricityBehaviour ElectricityBehaviour { get; }
 
         protected BaseZoneClusterConsumption(IElectricityBehaviour electricityBehaviour)
         {
-            _electricityBehaviour = electricityBehaviour;
+            ElectricityBehaviour = electricityBehaviour;
         }
 
-        public bool HasPower
-        {
-            get { return _electricityBehaviour.IsPowered; }
-        }
+        public bool HasPower => ElectricityBehaviour.IsPowered;
 
         public abstract string Name { get; }
         public abstract IReadOnlyCollection<ZoneClusterMemberConsumption> ZoneClusterMembers { get; }
         public bool ClusterMembersAreUnlocked { get; private set; }
 
-        private readonly DateTime _dateTimeCreated = DateTime.Now;
-
-        protected DateTime DateTimeCreated { get { return _dateTimeCreated; } }
+        protected DateTime DateTimeCreated { get; } = DateTime.Now;
 
         private readonly object _clusterMemberLocker = new object();
 

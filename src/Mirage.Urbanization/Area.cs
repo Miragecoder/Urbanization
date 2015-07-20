@@ -19,27 +19,10 @@ namespace Mirage.Urbanization
         private readonly ZoneInfoGrid _zoneInfoGrid;
         private readonly Func<ZoneInfoFinder> _createZoneInfoFinder;
         private readonly AreaOptions _areaOptions;
-        private readonly TrainController _trainController;
-        private readonly AirplaneController _airplaneController;
-        private readonly ShipController _shipController;
 
-        public IVehicleController<ITrain> TrainController
-        {
-            get
-            {
-                return _trainController;
-            }
-        }
-
-        public IVehicleController<IAirplane> AirplaneController
-        {
-            get { return _airplaneController; }
-        }
-
-        public IVehicleController<IShip> ShipController
-        {
-            get { return _shipController; }
-        }
+        public IVehicleController<ITrain> TrainController { get; }
+        public IVehicleController<IAirplane> AirplaneController { get; }
+        public IVehicleController<IShip> ShipController { get; }
 
         public Area(AreaOptions options)
         {
@@ -127,9 +110,9 @@ namespace Mirage.Urbanization
             _areaOptions = options;
             var zoneInfos = new HashSet<IZoneInfo>(_zoneInfoGrid.ZoneInfos.Values);
 
-            _trainController = new TrainController(() => zoneInfos);
-            _airplaneController = new AirplaneController(() => zoneInfos);
-            _shipController = new ShipController(() => zoneInfos);
+            TrainController = new TrainController(() => zoneInfos);
+            AirplaneController = new AirplaneController(() => zoneInfos);
+            ShipController = new ShipController(() => zoneInfos);
         }
 
         private WoodlandZoneConsumption CreateWoodlandZone() { return new WoodlandZoneConsumption(_createZoneInfoFinder()); }
@@ -141,7 +124,7 @@ namespace Mirage.Urbanization
             return _zoneInfoGrid.ZoneInfos.Values;
         }
 
-        public int AmountOfZonesX { get { return AmountOfZonesY; } }
+        public int AmountOfZonesX => AmountOfZonesY;
 
         public int AmountOfZonesY
         {
@@ -164,10 +147,8 @@ namespace Mirage.Urbanization
         public IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
         {
             var result = ConsumeZoneAtPrivate(readOnlyZoneInfo, consumption);
-
-            var onAreaMessage = OnAreaConsumptionResult;
-            if (onAreaMessage != null)
-                onAreaMessage(this, new AreaConsumptionResultEventArgs(result));
+            
+            OnAreaConsumptionResult?.Invoke(this, new AreaConsumptionResultEventArgs(result));
 
             return result;
         }
@@ -479,10 +460,7 @@ namespace Mirage.Urbanization
         public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
         private void RaiseAreaMessageEvent(string message)
         {
-            var onOnAreaMessage = OnAreaMessage;
-            if (onOnAreaMessage == null)
-                return;
-            onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
+            OnAreaMessage?.Invoke(this, new SimulationSessionMessageEventArgs(message));
         }
 
         public PersistedArea GeneratePersistenceSnapshot()

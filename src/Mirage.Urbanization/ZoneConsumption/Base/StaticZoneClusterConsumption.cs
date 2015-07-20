@@ -6,13 +6,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 {
     public abstract class StaticZoneClusterConsumption : BaseImplementedZoneClusterConsumption
     {
-        private readonly IPollutionBehaviour _pollutionBehaviour;
-
-
-        public override IPollutionBehaviour PollutionBehaviour
-        {
-            get { return _pollutionBehaviour; }
-        }
+        public override IPollutionBehaviour PollutionBehaviour { get; }
 
         protected StaticZoneClusterConsumption(
             Func<ZoneInfoFinder> createZoneInfoFinderFunc,
@@ -23,7 +17,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             int heightInZones)
             : base(createZoneInfoFinderFunc, electricityBehaviour, color, widthInZones, heightInZones)
         {
-            _pollutionBehaviour = new DynamicPollutionBehaviour(() => pollutionInUnits);
+            PollutionBehaviour = new DynamicPollutionBehaviour(() => pollutionInUnits);
         }
     }
 }

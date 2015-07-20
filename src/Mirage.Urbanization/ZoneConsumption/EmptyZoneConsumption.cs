@@ -5,19 +5,13 @@ namespace Mirage.Urbanization.ZoneConsumption
 {
     public class EmptyZoneConsumption : BaseSingleZoneConsumption
     {
-        public override string Name
-        {
-            get { return "Clear"; }
-        }
+        public override string Name => "Clear";
 
-        public override char KeyChar { get { return 'd'; } }
+        public override char KeyChar => 'd';
 
-        public override Color Color
-        {
-            get { return DefaultColor; }
-        }
+        public override Color Color => DefaultColor;
 
-        public override int Cost { get { return 10; } }
+        public override int Cost => 10;
 
         public static Color DefaultColor = System.Drawing.Color.BurlyWood;
 

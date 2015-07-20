@@ -27,13 +27,10 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
                 return new AreaZoneConsumptionOverrideInfoResult(this, consumption);
         }
 
-        private readonly BaseInfrastructureNetworkZoneConsumption _eastWestZoneConsumption;
-        private readonly BaseInfrastructureNetworkZoneConsumption _northSouthZoneConsumption;
+        public BaseInfrastructureNetworkZoneConsumption EastWestZoneConsumption { get; }
+        public BaseInfrastructureNetworkZoneConsumption NorthSouthZoneConsumption { get; }
 
-        public BaseInfrastructureNetworkZoneConsumption EastWestZoneConsumption { get { return _eastWestZoneConsumption; } }
-        public BaseInfrastructureNetworkZoneConsumption NorthSouthZoneConsumption { get { return _northSouthZoneConsumption; } }
-
-        public int Cost { get { return EastWestZoneConsumption.Cost + NorthSouthZoneConsumption.Cost; } }
+        public int Cost => EastWestZoneConsumption.Cost + NorthSouthZoneConsumption.Cost;
 
         public IEnumerable<BaseInfrastructureNetworkZoneConsumption> GetIntersectingZoneConsumptions()
         {
@@ -51,25 +48,19 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
                 throw new InvalidOperationException("An intersecting zone consumption must consist of two differing types.");
 
             _zoneInfoFinder = zoneInfoFinder;
-            _eastWestZoneConsumption = eastWestZoneConsumption;
-            _northSouthZoneConsumption = northSouthZoneConsumption;
+            EastWestZoneConsumption = eastWestZoneConsumption;
+            NorthSouthZoneConsumption = northSouthZoneConsumption;
         }
 
-        public string Name
-        {
-            get { return _eastWestZoneConsumption.Name + " and " + _northSouthZoneConsumption.Name; }
-        }
+        public string Name => EastWestZoneConsumption.Name + " and " + NorthSouthZoneConsumption.Name;
 
         public IEnumerable<Type> GetIntersectingTypes()
         {
-            yield return _eastWestZoneConsumption.GetType();
-            yield return _northSouthZoneConsumption.GetType();
+            yield return EastWestZoneConsumption.GetType();
+            yield return NorthSouthZoneConsumption.GetType();
         }
 
-        public Color Color
-        {
-            get { return Color.Firebrick; }
-        }
+        public Color Color => Color.Firebrick;
 
         public TrafficDensity GetTrafficDensity()
         {

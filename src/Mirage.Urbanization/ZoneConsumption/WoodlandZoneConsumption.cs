@@ -8,26 +8,17 @@ namespace Mirage.Urbanization.ZoneConsumption
     {
         public WoodlandZoneConsumption(ZoneInfoFinder navigator) : base(navigator) { }
 
-        public override string Name
-        {
-            get { return "Woodlands"; }
-        }
+        public override string Name => "Woodlands";
 
-        public override int Cost { get { return 25; } }
+        public override int Cost => 25;
 
-        public override char KeyChar { get { return 'b'; } }
+        public override char KeyChar => 'b';
 
         private static readonly DynamicPollutionBehaviour WoodlandPollutionBehaviour = new DynamicPollutionBehaviour(() => -50);
 
-        public IPollutionBehaviour PollutionBehaviour
-        {
-            get { return WoodlandPollutionBehaviour; }
-        }
+        public IPollutionBehaviour PollutionBehaviour => WoodlandPollutionBehaviour;
 
-        public override Color Color
-        {
-            get { return System.Drawing.Color.DarkGreen; }
-        }
+        public override Color Color => System.Drawing.Color.DarkGreen;
 
         public override IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)
         {
