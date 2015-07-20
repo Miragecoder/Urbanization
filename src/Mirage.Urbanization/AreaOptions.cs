@@ -14,14 +14,14 @@ namespace Mirage.Urbanization
         public AreaOptions(ILandValueCalculator landValueCalculator, TerraformingOptions terraformingOptions, ProcessOptions processOptions)
             : this(landValueCalculator, processOptions)
         {
-            if (terraformingOptions == null) throw new ArgumentNullException("terraformingOptions");
+            if (terraformingOptions == null) throw new ArgumentNullException(nameof(terraformingOptions));
             _terraformingOptions = terraformingOptions;
         }
 
         private AreaOptions(ILandValueCalculator landValueCalculator, ProcessOptions processOptions)
         {
-            if (landValueCalculator == null) throw new ArgumentNullException("landValueCalculator");
-            if (processOptions == null) throw new ArgumentNullException("processOptions");
+            if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
+            if (processOptions == null) throw new ArgumentNullException(nameof(processOptions));
             _processOptions = processOptions;
             _landValueCalculator = landValueCalculator;
         }
@@ -29,7 +29,7 @@ namespace Mirage.Urbanization
         public AreaOptions(ILandValueCalculator landValueCalculator, PersistedArea persistedArea, ProcessOptions processOptions)
             : this(landValueCalculator, processOptions)
         {
-            if (persistedArea == null) throw new ArgumentNullException("persistedArea");
+            if (persistedArea == null) throw new ArgumentNullException(nameof(persistedArea));
             _persistedArea = persistedArea;
         }
 

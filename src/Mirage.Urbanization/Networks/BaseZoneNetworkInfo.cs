@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.Networks
 
         protected BaseZoneNetworkInfo(IEnumerable<IZoneInfo> memberZoneInfos)
         {
-            if (memberZoneInfos == null) throw new ArgumentNullException("memberZoneInfos");
+            if (memberZoneInfos == null) throw new ArgumentNullException(nameof(memberZoneInfos));
 
             MemberZoneInfos = new HashSet<IZoneInfo>(memberZoneInfos);
         }

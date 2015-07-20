@@ -14,7 +14,7 @@ namespace Mirage.Urbanization.Networks
         private PowerNetworkInfo(IEnumerable<IZoneInfo> memberZoneInfos, Action<string> onBrownoutsMessageFunc)
             : base(memberZoneInfos)
         {
-            if (onBrownoutsMessageFunc == null) throw new ArgumentNullException("onBrownoutsMessageFunc");
+            if (onBrownoutsMessageFunc == null) throw new ArgumentNullException(nameof(onBrownoutsMessageFunc));
             _onBrownoutsMessageFunc = onBrownoutsMessageFunc;
         }
 

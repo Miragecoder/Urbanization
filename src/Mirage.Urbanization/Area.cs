@@ -175,7 +175,7 @@ namespace Mirage.Urbanization
         private IAreaConsumptionResult ConsumeZoneAtPrivate(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
         {
             var zoneInfo = readOnlyZoneInfo as ZoneInfo;
-            if (zoneInfo == null) throw new ArgumentException("readOnlyZoneInfo");
+            if (zoneInfo == null) throw new ArgumentNullException(nameof(readOnlyZoneInfo));
 
             lock (_zoneConsumptionLock)
             {
@@ -318,7 +318,7 @@ namespace Mirage.Urbanization
 
         public Task<IGrowthZoneStatistics> PerformGrowthSimulationCycle(CancellationToken cancellationToken)
         {
-            if (cancellationToken == null) throw new ArgumentNullException("cancellationToken");
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             return Task<IGrowthZoneStatistics>.Run(() =>
             {

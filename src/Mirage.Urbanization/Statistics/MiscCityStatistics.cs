@@ -32,7 +32,7 @@ namespace Mirage.Urbanization.Statistics
             IEnumerable<int> queryTravelDistanceResults 
         )
         {
-            if (queryCrimeResults == null) throw new ArgumentNullException("queryCrimeResults");
+            if (queryCrimeResults == null) throw new ArgumentNullException(nameof(queryCrimeResults));
             if (queryFireHazardResults == null) throw new ArgumentNullException("queryFireHazardResults");
             if (queryLandValueResults == null) throw new ArgumentNullException("queryLandValueResults");
             if (queryPollutionResults == null) throw new ArgumentNullException("queryPollutionResults");

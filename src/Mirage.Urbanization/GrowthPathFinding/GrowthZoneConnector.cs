@@ -118,7 +118,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
                 ObtainMatchAction<ResidentialZoneClusterConsumption>(originAsIndustry, destinations)
                     .WithResultIfHasMatch(x => x());
             }
-            else throw new ArgumentException("Origin consumption is not of a valid type: " + originConsumption.GetType(), "growthZoneInfoPathNode");
+            else throw new ArgumentException("Origin consumption is not of a valid type: " + originConsumption.GetType(), nameof(growthZoneInfoPathNode));
         }
 
         private void AddTrafficTo(RoadZoneConsumption zoneInfo, params BaseGrowthZoneClusterConsumption[] involvedGrowthZones)
