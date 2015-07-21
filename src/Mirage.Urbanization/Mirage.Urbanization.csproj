@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICityServiceStrengthLevels.cs" />
     <Compile Include="LogEventArgs.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Statistics\CityServiceStatistics.cs" />

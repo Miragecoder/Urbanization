@@ -14,12 +14,6 @@ using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
 {
-    public interface ICityServiceStrengthLevels
-    {
-        decimal PoliceStrength { get; }
-        decimal FireSquadStrength { get; }
-    }
-
     public class Area : IReadOnlyArea
     {
         private readonly AreaOptions _areaOptions;
