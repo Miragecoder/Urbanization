@@ -13,7 +13,9 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         public override int Cost => 500;
 
-        public PoliceStationZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
+        public PoliceStationZoneClusterConsumption(
+            Func<ZoneInfoFinder> createZoneInfoFinderFunc,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
             : base(
                 createZoneInfoFinderFunc: createZoneInfoFinderFunc,
                 electricityBehaviour: new ElectricityConsumerBehaviour(10),
@@ -22,7 +24,7 @@ namespace Mirage.Urbanization.ZoneConsumption
                 widthInZones: 3,
                 heightInZones: 3)
         {
-            CrimeBehaviour = new DynamicCrimeBehaviour(() => HasPower ? -500 : -50);
+            CrimeBehaviour = new DynamicCrimeBehaviour(() => Convert.ToInt32((HasPower ? -500 : -50) * getCityServiceStrengthLevels().PoliceStrength));
         }
 
         public override ICrimeBehaviour CrimeBehaviour { get; }

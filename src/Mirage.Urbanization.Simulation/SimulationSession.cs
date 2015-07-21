@@ -81,7 +81,7 @@ namespace Mirage.Urbanization.Simulation
         public SimulationSession(SimulationOptions simulationOptions)
         {
             _simulationOptions = simulationOptions;
-            _area = new Area(simulationOptions.GetAreaOptions());
+            _area = new Area(simulationOptions.GetAreaOptions(() => _cityBudgetConfiguration));
 
             _area.OnAreaConsumptionResult += HandleAreaConsumptionResult;
             _area.OnAreaMessage += (s, e) => RaiseAreaMessageEvent(e.Message);

@@ -9,23 +9,40 @@ namespace Mirage.Urbanization
 
         private readonly PersistedArea _persistedArea;
 
-        public AreaOptions(ILandValueCalculator landValueCalculator, TerraformingOptions terraformingOptions, ProcessOptions processOptions)
-            : this(landValueCalculator, processOptions)
+        private readonly Func<ICityServiceStrengthLevels> _getCityServiceStrengthLevels;
+        public ICityServiceStrengthLevels GetCityServiceStrengthLevels()
+        {
+            return _getCityServiceStrengthLevels();
+        }
+
+        public AreaOptions(ILandValueCalculator landValueCalculator, 
+            TerraformingOptions terraformingOptions, 
+            ProcessOptions processOptions,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
+            : this(landValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
             if (terraformingOptions == null) throw new ArgumentNullException(nameof(terraformingOptions));
             _terraformingOptions = terraformingOptions;
         }
 
-        private AreaOptions(ILandValueCalculator landValueCalculator, ProcessOptions processOptions)
+        private AreaOptions(
+            ILandValueCalculator landValueCalculator, 
+            ProcessOptions processOptions,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
         {
             if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
             if (processOptions == null) throw new ArgumentNullException(nameof(processOptions));
+            if (getCityServiceStrengthLevels == null) throw new ArgumentNullException(nameof(getCityServiceStrengthLevels));
             ProcessOptions = processOptions;
             LandValueCalculator = landValueCalculator;
+            _getCityServiceStrengthLevels = getCityServiceStrengthLevels;
         }
 
-        public AreaOptions(ILandValueCalculator landValueCalculator, PersistedArea persistedArea, ProcessOptions processOptions)
-            : this(landValueCalculator, processOptions)
+        public AreaOptions(ILandValueCalculator landValueCalculator, 
+            PersistedArea persistedArea, 
+            ProcessOptions processOptions,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
+            : this(landValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
             if (persistedArea == null) throw new ArgumentNullException(nameof(persistedArea));
             _persistedArea = persistedArea;

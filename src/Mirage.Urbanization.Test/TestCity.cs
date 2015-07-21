@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Rhino.Mocks;
 
 namespace Mirage.Urbanization.Test
 {
@@ -23,12 +24,13 @@ namespace Mirage.Urbanization.Test
             terraFormingOptions.SetWoodlands(0);
 
             return persistedArea != null ?
-                new Area(new AreaOptions(FakeLandValueCalculator.Instance, persistedArea, ProcessOptions))
+                new Area(new AreaOptions(FakeLandValueCalculator.Instance, persistedArea, ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()))
                 : new Area(
                     options: new AreaOptions(
                         landValueCalculator: FakeLandValueCalculator.Instance, 
                         terraformingOptions: terraFormingOptions,
-                        processOptions: ProcessOptions
+                        processOptions: ProcessOptions,
+                        getCityServiceStrengthLevels: () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()
                         )
                     );
         }

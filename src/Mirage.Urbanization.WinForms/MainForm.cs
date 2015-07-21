@@ -112,8 +112,6 @@ namespace Mirage.Urbanization.WinForms
             WithAreaRenderHelper(helper => helper.Stop());
         }
 
-        private StatisticsForm _currentStatisticsForm;
-
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             WithAreaRenderHelper(helper => helper.ToggleZoom(ZoomMode.Full));

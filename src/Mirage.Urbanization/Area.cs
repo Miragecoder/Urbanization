@@ -14,6 +14,12 @@ using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
 {
+    public interface ICityServiceStrengthLevels
+    {
+        decimal PoliceStrength { get; }
+        decimal FireSquadStrength { get; }
+    }
+
     public class Area : IReadOnlyArea
     {
         private readonly AreaOptions _areaOptions;
@@ -24,6 +30,7 @@ namespace Mirage.Urbanization
 
         public Area(AreaOptions options)
         {
+            _areaOptions = options;
             _createZoneInfoFinder = () => new ZoneInfoFinder(
                 queryObject => _zoneInfoGrid
                     .GetZoneInfoFor(queryObject));
@@ -103,7 +110,6 @@ namespace Mirage.Urbanization
                 }
             });
 
-            _areaOptions = options;
             var zoneInfos = new HashSet<IZoneInfo>(_zoneInfoGrid.ZoneInfos.Values);
 
             TrainController = new TrainController(() => zoneInfos);
@@ -281,8 +287,8 @@ namespace Mirage.Urbanization
             yield return () => new CommercialZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new IndustrialZoneClusterConsumption(_createZoneInfoFinder);
 
-            yield return () => new PoliceStationZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new FireStationZoneclusterConsumption(_createZoneInfoFinder);
+            yield return () => new PoliceStationZoneClusterConsumption(_createZoneInfoFinder, _areaOptions.GetCityServiceStrengthLevels);
+            yield return () => new FireStationZoneclusterConsumption(_createZoneInfoFinder, _areaOptions.GetCityServiceStrengthLevels);
 
             yield return () => new CoalPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
             yield return () => new NuclearPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
