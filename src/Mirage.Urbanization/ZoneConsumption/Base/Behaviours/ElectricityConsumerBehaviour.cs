@@ -4,36 +4,25 @@ namespace Mirage.Urbanization.ZoneConsumption.Base.Behaviours
 {
     public class ElectricityConsumerBehaviour : IElectricityConsumer
     {
-        private readonly int _consumptionInUnits;
-
-        public int ConsumptionInUnits { get { return _consumptionInUnits; } }
+        public int ConsumptionInUnits { get; }
 
         public ElectricityConsumerBehaviour(int consumptionInUnits)
         {
-            _consumptionInUnits = consumptionInUnits;
+            ConsumptionInUnits = consumptionInUnits;
         }
 
-        public bool IsPowered
-        {
-            get { return _isPowered; }
-        }
+        public bool IsPowered { get; private set; }
 
-        public bool IsConnected
-        {
-            get { return _isConnected; }
-        }
-
-        private bool _isPowered;
-        private bool _isConnected;
+        public bool IsConnected { get; private set; }
 
         public void TogglePowered(bool isPowered)
         {
-            _isPowered = isPowered;
+            IsPowered = isPowered;
         }
 
         public void ToggleConnected(bool isConnected)
         {
-            _isConnected = isConnected;
+            IsConnected = isConnected;
         }
     }
 }

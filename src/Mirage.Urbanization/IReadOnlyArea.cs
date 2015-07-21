@@ -16,8 +16,8 @@ namespace Mirage.Urbanization
         IEnumerable<IReadOnlyZoneInfo> EnumerateZoneInfos();
         IEnumerable<Func<IAreaConsumption>> GetSupportedZoneConsumptionFactories();
 
-        Task<IGrowthZoneStatistics> PerformGrowthSimulationCycle(CancellationToken cancellationToken);
-        Task<IPowerGridStatistics> CalculatePowergridStatistics(CancellationToken cancellationToken);
+        IGrowthZoneStatistics PerformGrowthSimulationCycle(CancellationToken cancellationToken);
+        IPowerGridStatistics CalculatePowergridStatistics();
 
         IVehicleController<ITrain> TrainController { get; }
         IVehicleController<IAirplane> AirplaneController { get; }

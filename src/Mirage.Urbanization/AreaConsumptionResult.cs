@@ -7,19 +7,15 @@ namespace Mirage.Urbanization
 {
     internal class AreaConsumptionResult : IAreaConsumptionResult
     {
-        private readonly IAreaConsumption _areaConsumption;
-        private readonly string _message;
-        private readonly bool _success;
-
-        public bool Success { get { return _success; } }
-        public string Message { get { return _message; } }
-        public IAreaConsumption AreaConsumption { get { return _areaConsumption; } }
+        public bool Success { get; }
+        public string Message { get; }
+        public IAreaConsumption AreaConsumption { get; }
 
         public AreaConsumptionResult(IAreaConsumption areaConsumption, bool success, string message)
         {
-            _areaConsumption = areaConsumption;
-            _message = message;
-            _success = success;
+            AreaConsumption = areaConsumption;
+            Message = message;
+            Success = success;
         }
     }
 }

@@ -31,9 +31,9 @@ namespace Mirage.Urbanization.WinForms
                 _drawHighligterAction(consumption);
         }
 
-        public bool HasDrawHighlighterDelegate { get { return _drawHighligterAction != null; } }
+        public bool HasDrawHighlighterDelegate => _drawHighligterAction != null;
 
-        public bool HasDrawSecondLayerDelegate { get { return _drawSecondLayerAction != null; } }
+        public bool HasDrawSecondLayerDelegate => _drawSecondLayerAction != null;
 
         public RenderZoneContinuation(Action drawSecondLayerAction, Action<IAreaConsumption> drawHighligterAction)
         {
@@ -44,21 +44,20 @@ namespace Mirage.Urbanization.WinForms
 
     public class ZoneRenderInfo
     {
-        private readonly IReadOnlyZoneInfo _zoneInfo;
         private readonly Func<IReadOnlyZoneInfo, Rectangle> _createRectangle;
         private readonly ITilesetAccessor _tilesetAccessor;
         private readonly RenderZoneOptions _renderZoneOptions;
 
-        public IReadOnlyZoneInfo ZoneInfo { get { return _zoneInfo; } }
+        public IReadOnlyZoneInfo ZoneInfo { get; }
 
         public Rectangle GetRectangle()
         {
-            return _createRectangle(_zoneInfo);
+            return _createRectangle(ZoneInfo);
         }
 
         public ZoneRenderInfo(IReadOnlyZoneInfo zoneInfo, Func<IReadOnlyZoneInfo, Rectangle> createRectangle, ITilesetAccessor tilesetAccessor, RenderZoneOptions renderZoneOptions)
         {
-            _zoneInfo = zoneInfo;
+            ZoneInfo = zoneInfo;
             _createRectangle = createRectangle;
             _tilesetAccessor = tilesetAccessor;
             _renderZoneOptions = renderZoneOptions;
@@ -66,7 +65,7 @@ namespace Mirage.Urbanization.WinForms
 
         public RenderZoneContinuation RenderZoneInto(IGraphicsWrapper graphics, bool isHighlighted)
         {
-            if (graphics == null) throw new ArgumentNullException("graphics");
+            if (graphics == null) throw new ArgumentNullException(nameof(graphics));
 
             var rectangle = GetRectangle();
 
@@ -84,7 +83,7 @@ namespace Mirage.Urbanization.WinForms
 
                 if (_renderZoneOptions.ShowDebugGrowthPathFinding)
                 {
-                    switch (_zoneInfo.GrowthAlgorithmHighlightState.Current)
+                    switch (ZoneInfo.GrowthAlgorithmHighlightState.Current)
                     {
                         case HighlightState.UsedAsPath:
                             graphics.DrawRectangle(BrushManager.GreenPen, rectangle);

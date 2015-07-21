@@ -12,15 +12,10 @@ namespace Mirage.Urbanization
 {
     class ZoneInfoPathNode : IZoneInfoPathNode
     {
-        private readonly IZoneInfo _zoneInfo;
-        private readonly IZoneInfoPathNode _previousPathNode;
         private readonly IZoneInfoPathNode _originParentPathNode;
         private readonly Lazy<List<IZoneInfoPathNode>> _childPathsLazy;
-        private readonly int _distance;
 
-        private readonly int? _destinationHashCode;
-
-        public IZoneInfoPathNode PreviousPathNode { get { return _previousPathNode; } }
+        public IZoneInfoPathNode PreviousPathNode { get; }
 
         public ZoneInfoPathNode(IZoneInfo zoneInfo, Func<IZoneInfoPathNode, QueryResult<IZoneInfo, RelativeZoneInfoQuery>, bool> canBeJoinedFunc, Func<IZoneInfo, int?> getDestinationHashCode, ZoneInfoDistanceTracker distanceTracker)
             : this(
@@ -44,40 +39,37 @@ namespace Mirage.Urbanization
             int distance,
             ZoneInfoDistanceTracker distanceTracker)
         {
-            _zoneInfo = zoneInfo;
-            _previousPathNode = previousPathNode;
+            ZoneInfo = zoneInfo;
+            PreviousPathNode = previousPathNode;
 
             _originParentPathNode = originParentPathNode ?? this;
 
-            _destinationHashCode = getDestinationHashCode(zoneInfo);
+            DestinationHashCode = getDestinationHashCode(zoneInfo);
 
-            _distance = distance;
+            Distance = distance;
 
             _childPathsLazy = new Lazy<List<IZoneInfoPathNode>>(() => 
-                !distanceTracker.IsPreviouslyNotSeenOrSeenAtLargerDistance(_zoneInfo, distance, previousPathNode) 
+                !distanceTracker.IsPreviouslyNotSeenOrSeenAtLargerDistance(ZoneInfo, distance, previousPathNode) 
                 ? Enumerable.Empty<IZoneInfoPathNode>().ToList()
                 : ZoneInfo
                     .GetNorthEastSouthWest()
                     .Where(x => x.HasMatch)
-                    .Where(x => x.MatchingObject != (_previousPathNode != null ? _previousPathNode.ZoneInfo : null))
-                    .Where(x => distanceTracker.DoesNotExceedMaximumDistanceForAllCriteria(_zoneInfo, distance))
+                    .Where(x => x.MatchingObject != (PreviousPathNode != null ? PreviousPathNode.ZoneInfo : null))
+                    .Where(x => distanceTracker.DoesNotExceedMaximumDistanceForAllCriteria(ZoneInfo, distance))
                     .Where(x => canBeJoinedFunc(this, x))
-                    .Select(x => new ZoneInfoPathNode(x.MatchingObject, canBeJoinedFunc, getDestinationHashCode, this, _originParentPathNode, _distance + x.MatchingObject.GetDistanceScoreBasedOnConsumption(), distanceTracker))
+                    .Select(x => new ZoneInfoPathNode(x.MatchingObject, canBeJoinedFunc, getDestinationHashCode, this, _originParentPathNode, Distance + x.MatchingObject.GetDistanceScoreBasedOnConsumption(), distanceTracker))
                     .ToList<IZoneInfoPathNode>());
         }
 
-        public bool IsDestination { get { return _destinationHashCode.HasValue; } }
+        public bool IsDestination => DestinationHashCode.HasValue;
 
-        public int? DestinationHashCode { get { return _destinationHashCode; } }
+        public int? DestinationHashCode { get; }
 
-        public IZoneInfo ZoneInfo
-        {
-            get { return _zoneInfo; }
-        }
+        public IZoneInfo ZoneInfo { get; }
 
         public bool GetIsPartOfParentCluster()
         {
-            var thisAsClusterMember = _zoneInfo.ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
+            var thisAsClusterMember = ZoneInfo.ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
             if (thisAsClusterMember == null) return false;
 
             var thatAsClusterMember = GetOrigin().ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
@@ -98,10 +90,7 @@ namespace Mirage.Urbanization
             }
         }
 
-        public int Distance
-        {
-            get { return _distance; }
-        }
+        public int Distance { get; }
 
         private IZoneInfo GetOrigin()
         {
@@ -111,8 +100,8 @@ namespace Mirage.Urbanization
         public IEnumerable<IZoneInfoPathNode> EnumeratePathBackwards()
         {
             yield return this;
-            if (_previousPathNode != null)
-                foreach (var x in _previousPathNode.EnumeratePathBackwards())
+            if (PreviousPathNode != null)
+                foreach (var x in PreviousPathNode.EnumeratePathBackwards())
                     yield return x;
         }
 

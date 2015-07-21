@@ -92,7 +92,7 @@ namespace Mirage.Urbanization.Vehicles
             {
             }
 
-            protected override int SpeedInMilliseconds { get { return 300; } }
+            protected override int SpeedInMilliseconds => 300;
 
             public void SetTrainNetwork(ISet<IZoneInfo> trainNetwork)
             {

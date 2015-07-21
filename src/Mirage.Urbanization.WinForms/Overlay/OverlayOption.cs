@@ -10,7 +10,6 @@ namespace Mirage.Urbanization.WinForms.Overlay
 {
     public class OverlayOption : IToolstripMenuOption
     {
-        private readonly string _name;
         private readonly Func<bool> _toggleShowNumbersFunc;
         private readonly QueryResult<Func<ZoneInfoDataMeter>> _getDataMeterFunc;
 
@@ -33,7 +32,7 @@ namespace Mirage.Urbanization.WinForms.Overlay
 
         public OverlayOption(string name, Func<ZoneInfoDataMeter> getDataMeterFunc, Func<bool> toggleShowNumbersFunc)
         {
-            _name = name;
+            Name = name;
             _toggleShowNumbersFunc = toggleShowNumbersFunc;
             _getDataMeterFunc = new QueryResult<Func<ZoneInfoDataMeter>>(getDataMeterFunc);
         }
@@ -63,6 +62,6 @@ namespace Mirage.Urbanization.WinForms.Overlay
             });
         }
 
-        public string Name { get { return _name; } }
+        public string Name { get; }
     }
 }

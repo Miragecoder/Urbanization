@@ -71,7 +71,7 @@ namespace Mirage.Urbanization.Vehicles
                 }
             }
 
-            protected override int SpeedInMilliseconds { get { return 200; } }
+            protected override int SpeedInMilliseconds => 200;
 
             public void Move()
             {

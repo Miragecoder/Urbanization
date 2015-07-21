@@ -50,6 +50,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showGrowthPathFinding = new System.Windows.Forms.ToolStripMenuItem();
             this.enableMoneyCheatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
-            this.showGrowthPathFinding = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -96,7 +97,7 @@
             // 
             this.newCityToolStripMenuItem.Name = "newCityToolStripMenuItem";
             this.newCityToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newCityToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.newCityToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.newCityToolStripMenuItem.Text = "New city...";
             this.newCityToolStripMenuItem.Click += new System.EventHandler(this.newCityToolStripMenuItem_Click);
             // 
@@ -104,7 +105,7 @@
             // 
             this.openCityToolStripMenuItem.Name = "openCityToolStripMenuItem";
             this.openCityToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openCityToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.openCityToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.openCityToolStripMenuItem.Text = "Open city";
             this.openCityToolStripMenuItem.Click += new System.EventHandler(this.openCityToolStripMenuItem_Click);
             // 
@@ -113,7 +114,7 @@
             this.saveCityToolStripMenuItem.Enabled = false;
             this.saveCityToolStripMenuItem.Name = "saveCityToolStripMenuItem";
             this.saveCityToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveCityToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.saveCityToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.saveCityToolStripMenuItem.Text = "Save city";
             this.saveCityToolStripMenuItem.Click += new System.EventHandler(this.saveCityToolStripMenuItem_Click);
             // 
@@ -121,20 +122,20 @@
             // 
             this.saveCityAsToolStripMenuItem.Enabled = false;
             this.saveCityAsToolStripMenuItem.Name = "saveCityAsToolStripMenuItem";
-            this.saveCityAsToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.saveCityAsToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.saveCityAsToolStripMenuItem.Text = "Save city as...";
             this.saveCityAsToolStripMenuItem.Click += new System.EventHandler(this.saveCityAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(200, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -157,15 +158,15 @@
             // 
             this.cityBudgetToolStripMenuItem.Name = "cityBudgetToolStripMenuItem";
             this.cityBudgetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.cityBudgetToolStripMenuItem.Size = new System.Drawing.Size(331, 24);
-            this.cityBudgetToolStripMenuItem.Text = "City CityBudgetConfiguration...";
+            this.cityBudgetToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            this.cityBudgetToolStripMenuItem.Text = "City budget";
             this.cityBudgetToolStripMenuItem.Click += new System.EventHandler(this.cityBudgetToolStripMenuItem_Click);
             // 
             // evaluationToolStripMenuItem
             // 
             this.evaluationToolStripMenuItem.Name = "evaluationToolStripMenuItem";
             this.evaluationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.evaluationToolStripMenuItem.Size = new System.Drawing.Size(331, 24);
+            this.evaluationToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
             this.evaluationToolStripMenuItem.Text = "Evaluation...";
             this.evaluationToolStripMenuItem.Click += new System.EventHandler(this.evaluationToolStripMenuItem_Click);
             // 
@@ -173,19 +174,19 @@
             // 
             this.statisticsToolStripMenuItem.Name = "statisticsToolStripMenuItem";
             this.statisticsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(331, 24);
+            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
             this.statisticsToolStripMenuItem.Text = "Statistics...";
             this.statisticsToolStripMenuItem.Click += new System.EventHandler(this.statisticsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(328, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
             // 
             // overlayMenuItem
             // 
             this.overlayMenuItem.Name = "overlayMenuItem";
-            this.overlayMenuItem.Size = new System.Drawing.Size(331, 24);
+            this.overlayMenuItem.Size = new System.Drawing.Size(212, 26);
             this.overlayMenuItem.Text = "Overlay";
             // 
             // zoomToolStripMenuItem
@@ -194,32 +195,32 @@
             this.zoomFullMenuItem,
             this.zoomHalfMenuItem});
             this.zoomToolStripMenuItem.Name = "zoomToolStripMenuItem";
-            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(331, 24);
+            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
             this.zoomToolStripMenuItem.Text = "Zoom";
             // 
             // zoomFullMenuItem
             // 
             this.zoomFullMenuItem.Name = "zoomFullMenuItem";
-            this.zoomFullMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.zoomFullMenuItem.Size = new System.Drawing.Size(120, 26);
             this.zoomFullMenuItem.Text = "100%";
             this.zoomFullMenuItem.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // zoomHalfMenuItem
             // 
             this.zoomHalfMenuItem.Name = "zoomHalfMenuItem";
-            this.zoomHalfMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.zoomHalfMenuItem.Size = new System.Drawing.Size(120, 26);
             this.zoomHalfMenuItem.Text = "50%";
             this.zoomHalfMenuItem.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(328, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(209, 6);
             // 
             // rendererToolStripMenuItem
             // 
             this.rendererToolStripMenuItem.Name = "rendererToolStripMenuItem";
-            this.rendererToolStripMenuItem.Size = new System.Drawing.Size(331, 24);
+            this.rendererToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
             this.rendererToolStripMenuItem.Text = "Renderer";
             // 
             // helpToolStripMenuItem
@@ -233,7 +234,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(119, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // debugToolStripMenuItem
@@ -242,28 +243,36 @@
             this.showGrowthPathFinding,
             this.enableMoneyCheatToolStripMenuItem,
             this.toolStripSeparator5,
-            this.toggleOverlayNumbers});
+            this.toggleOverlayNumbers,
+            this.debugWindowToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // showGrowthPathFinding
+            // 
+            this.showGrowthPathFinding.CheckOnClick = true;
+            this.showGrowthPathFinding.Name = "showGrowthPathFinding";
+            this.showGrowthPathFinding.Size = new System.Drawing.Size(252, 26);
+            this.showGrowthPathFinding.Text = "Show Growth Pathfinding";
             // 
             // enableMoneyCheatToolStripMenuItem
             // 
             this.enableMoneyCheatToolStripMenuItem.CheckOnClick = true;
             this.enableMoneyCheatToolStripMenuItem.Name = "enableMoneyCheatToolStripMenuItem";
-            this.enableMoneyCheatToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.enableMoneyCheatToolStripMenuItem.Size = new System.Drawing.Size(252, 26);
             this.enableMoneyCheatToolStripMenuItem.Text = "Enable money cheat";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(243, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(249, 6);
             // 
             // toggleOverlayNumbers
             // 
             this.toggleOverlayNumbers.CheckOnClick = true;
             this.toggleOverlayNumbers.Name = "toggleOverlayNumbers";
-            this.toggleOverlayNumbers.Size = new System.Drawing.Size(246, 24);
+            this.toggleOverlayNumbers.Size = new System.Drawing.Size(252, 26);
             this.toggleOverlayNumbers.Text = "Toggle overlay numbers";
             // 
             // statusStrip1
@@ -320,12 +329,12 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
-            // showGrowthPathFinding
+            // debugWindowToolStripMenuItem
             // 
-            this.showGrowthPathFinding.CheckOnClick = true;
-            this.showGrowthPathFinding.Name = "showGrowthPathFinding";
-            this.showGrowthPathFinding.Size = new System.Drawing.Size(246, 24);
-            this.showGrowthPathFinding.Text = "Show Growth Pathfinding";
+            this.debugWindowToolStripMenuItem.Name = "debugWindowToolStripMenuItem";
+            this.debugWindowToolStripMenuItem.Size = new System.Drawing.Size(252, 26);
+            this.debugWindowToolStripMenuItem.Text = "Log output";
+            this.debugWindowToolStripMenuItem.Click += new System.EventHandler(this.debugWindowToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -383,6 +392,7 @@
         private System.Windows.Forms.ToolStripStatusLabel projectedIncomeLabel;
         private System.Windows.Forms.ToolStripMenuItem cityBudgetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGrowthPathFinding;
+        private System.Windows.Forms.ToolStripMenuItem debugWindowToolStripMenuItem;
     }
 }
 

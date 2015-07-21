@@ -22,8 +22,8 @@ namespace Mirage.Urbanization.Simulation.Persistence
             CommercialTaxIncome = Convert.ToInt32(persistedCityStatistics.CommercialZonePopulationStatistics.Sum * cityBudgetConfiguration.CommercialTaxRate);
             IndustrialTaxIncome = Convert.ToInt32(persistedCityStatistics.IndustrialZonePopulationStatistics.Sum * cityBudgetConfiguration.IndustrialTaxRate);
 
-            PoliceServiceExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfPoliceStations * 500) * cityBudgetConfiguration.PoliceServiceRate);
-            FireServiceExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfFireStations * 500) * cityBudgetConfiguration.FireDepartmentServiceRate);
+            PoliceServiceExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfPoliceStations * 10) * cityBudgetConfiguration.PoliceServiceRate);
+            FireServiceExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfFireStations * 10) * cityBudgetConfiguration.FireDepartmentServiceRate);
 
             RoadInfrastructureExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfRoadZones) * cityBudgetConfiguration.RoadInfrastructureServiceRate);
             RailroadInfrastructureExpenses = Convert.ToInt32((persistedCityStatistics.NumberOfRailRoadZones) * cityBudgetConfiguration.RailroadInfrastructureServiceRate)

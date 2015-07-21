@@ -16,35 +16,17 @@ namespace Mirage.Urbanization
 {
     public class Area : IReadOnlyArea
     {
-        private readonly ZoneInfoGrid _zoneInfoGrid;
-        private readonly Func<ZoneInfoFinder> _createZoneInfoFinder;
         private readonly AreaOptions _areaOptions;
-        private readonly TrainController _trainController;
-        private readonly AirplaneController _airplaneController;
-        private readonly ShipController _shipController;
-
-        public IVehicleController<ITrain> TrainController
-        {
-            get
-            {
-                return _trainController;
-            }
-        }
-
-        public IVehicleController<IAirplane> AirplaneController
-        {
-            get { return _airplaneController; }
-        }
-
-        public IVehicleController<IShip> ShipController
-        {
-            get { return _shipController; }
-        }
+        private readonly Func<ZoneInfoFinder> _createZoneInfoFinder;
+        private readonly Random _random = new Random();
+        private readonly object _zoneConsumptionLock = new object();
+        private readonly ZoneInfoGrid _zoneInfoGrid;
 
         public Area(AreaOptions options)
         {
+            _areaOptions = options;
             _createZoneInfoFinder = () => new ZoneInfoFinder(
-                (queryObject) => _zoneInfoGrid
+                queryObject => _zoneInfoGrid
                     .GetZoneInfoFor(queryObject));
             _zoneInfoGrid = new ZoneInfoGrid(options.GetZoneWidthAndHeight(), options.LandValueCalculator);
 
@@ -58,34 +40,37 @@ namespace Mirage.Urbanization
             {
                 var factoriesAndNames =
                     GetSupportedZoneConsumptionFactoriesPrivate()
-                    .ToDictionary(x => x().Name, x => x);
+                        .ToDictionary(x => x().Name, x => x);
 
                 if (persistedArea
                     .PersistedSingleZoneConsumptions
-                    .Select(x => ConsumeZoneAt(
-                        readOnlyZoneInfo: _zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
-                        consumption: factoriesAndNames[x.Name]()))
+                    .Select(
+                        x =>
+                            ConsumeZoneAt(_zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
+                                factoriesAndNames[x.Name]()))
                     .Concat(persistedArea
                         .PersistedStaticZoneClusterCentralMemberConsumptions
-                        .Select(x => ConsumeZoneAt(
-                            readOnlyZoneInfo: _zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
-                            consumption: factoriesAndNames[x.Name]())
+                        .Select(
+                            x =>
+                                ConsumeZoneAt(_zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
+                                    factoriesAndNames[x.Name]())
                         )
                     )
                     .Any(result => !result.Success)
-                )
+                    )
                 {
                     throw new InvalidOperationException();
                 }
 
                 if (persistedArea
                     .PersistedIntersectingZoneConsumptions
-                    .Select(x => ConsumeZoneAt(
-                        readOnlyZoneInfo: _zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
-                        consumption: new IntersectingZoneConsumption(_createZoneInfoFinder(),
-                            factoriesAndNames[x.EastWestName]() as BaseInfrastructureNetworkZoneConsumption,
-                            factoriesAndNames[x.NorthSouthName]() as BaseInfrastructureNetworkZoneConsumption)
-                    ))
+                    .Select(
+                        x =>
+                            ConsumeZoneAt(_zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
+                                new IntersectingZoneConsumption(_createZoneInfoFinder(),
+                                    factoriesAndNames[x.EastWestName]() as BaseInfrastructureNetworkZoneConsumption,
+                                    factoriesAndNames[x.NorthSouthName]() as BaseInfrastructureNetworkZoneConsumption)
+                                ))
                     .Any(result => !result.Success))
                 {
                     throw new InvalidOperationException();
@@ -99,10 +84,8 @@ namespace Mirage.Urbanization
 
                         consumption.Set(x.Id, x.Population);
 
-                        return ConsumeZoneAt(
-                            readOnlyZoneInfo: _zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }],
-                            consumption: consumption
-                        );
+                        return ConsumeZoneAt(_zoneInfoGrid.ZoneInfos[new ZonePoint { X = x.X, Y = x.Y }], consumption
+                            );
                     })
                     .Any(result => !result.Success))
                 {
@@ -114,34 +97,24 @@ namespace Mirage.Urbanization
                     foreach (var trafficState in persistedArea.PersistedTrafficStates)
                     {
                         var localTrafficState = trafficState;
-                        _zoneInfoGrid.ZoneInfos[new ZonePoint() { X = trafficState.X, Y = trafficState.Y }]
-                            .WithNetworkConsumptionIf((RoadZoneConsumption x) =>
-                            {
-                                x.SetTrafficDensity(trafficState.Traffic);
-                            });
+                        _zoneInfoGrid.ZoneInfos[new ZonePoint { X = trafficState.X, Y = trafficState.Y }]
+                            .WithNetworkConsumptionIf(
+                                (RoadZoneConsumption x) => { x.SetTrafficDensity(trafficState.Traffic); });
                     }
-                    Console.WriteLine(String.Empty);
                 }
             });
 
-            _areaOptions = options;
             var zoneInfos = new HashSet<IZoneInfo>(_zoneInfoGrid.ZoneInfos.Values);
 
-            _trainController = new TrainController(() => zoneInfos);
-            _airplaneController = new AirplaneController(() => zoneInfos);
-            _shipController = new ShipController(() => zoneInfos);
+            TrainController = new TrainController(() => zoneInfos);
+            AirplaneController = new AirplaneController(() => zoneInfos);
+            ShipController = new ShipController(() => zoneInfos);
         }
 
-        private WoodlandZoneConsumption CreateWoodlandZone() { return new WoodlandZoneConsumption(_createZoneInfoFinder()); }
-
-        private WaterZoneConsumption CreateWaterZone() { return new WaterZoneConsumption(_createZoneInfoFinder()); }
-
-        public IEnumerable<ZoneInfo> EnumerateZoneInfos()
-        {
-            return _zoneInfoGrid.ZoneInfos.Values;
-        }
-
-        public int AmountOfZonesX { get { return AmountOfZonesY; } }
+        public IVehicleController<ITrain> TrainController { get; }
+        public IVehicleController<IAirplane> AirplaneController { get; }
+        public IVehicleController<IShip> ShipController { get; }
+        public int AmountOfZonesX => AmountOfZonesY;
 
         public int AmountOfZonesY
         {
@@ -154,35 +127,214 @@ namespace Mirage.Urbanization
                         .GroupBy(x => x.Value.Point.Y)
                         .Select(x => x.Count())
                     )
-                )
-                .Single();
+                    )
+                    .Single();
             }
         }
 
-        private readonly object _zoneConsumptionLock = new object();
+        public IPowerGridStatistics CalculatePowergridStatistics()
+        {
+            return new PowerGridStatistics(
+                PowerNetworkInfo
+                    .GenerateFrom(_zoneInfoGrid.ZoneInfos, RaiseAreaMessageEvent)
+                    .Select(x => x.PerformSurge())
+                );
+        }
+
+        public IGrowthZoneStatistics PerformGrowthSimulationCycle(CancellationToken cancellationToken)
+        {
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var zoneClusters = GetZoneClusterConsumptions<BaseZoneClusterConsumption>();
+
+            var growthZones =
+                new HashSet<BaseGrowthZoneClusterConsumption>(
+                    zoneClusters.OfType<BaseGrowthZoneClusterConsumption>());
+
+            var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
+
+            connector.DecreasePopulation(growthZones);
+
+            // Outside influence which powers initial growth...
+            {
+                var industrialZones = growthZones.OfType<IndustrialZoneClusterConsumption>().ToList();
+
+                if (industrialZones.All(x => x.PopulationDensity == 0))
+                {
+                    foreach (var z in industrialZones.Where(x => x.HasPower).OrderBy(x => _random.Next()).Take(2))
+                    {
+                        z.IncreasePopulation();
+                        z.IncreasePopulation();
+                        z.IncreasePopulation();
+                    }
+                }
+            }
+
+            Action<ZoneClusterMemberConsumption> body = clusterMemberConsumption =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                clusterMemberConsumption.GetZoneInfo()
+                    .WithResultIfHasMatch(
+                        zoneInfo =>
+                            connector.Process(new GrowthZoneInfoPathNode(zoneInfo, clusterMemberConsumption,
+                                _areaOptions.ProcessOptions
+                                )
+                                )
+                    );
+            };
+
+            var growthZoneDemandThresholds = new IGrowthZoneDemandThreshold[]
+            {
+                    new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
+                        GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), "Industry requires seaport", 40
+                        ),
+                    new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
+                        GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50
+                        ),
+                    new GrowthZoneDemandThreshold<ResidentialZoneClusterConsumption, StadiumZoneClusterConsumption>(
+                        GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(), "Citizens demand stadium", 30
+                        )
+            };
+
+            foreach (var poweredCluster in growthZones
+                .SelectMany(x => x.ZoneClusterMembers)
+                .Where(
+                    x =>
+                        x.IsCentralClusterMember &&
+                        x.ParentBaseZoneClusterConsumption.ElectricityBehaviour.IsPowered)
+                )
+            {
+                var violatedThreshold = growthZoneDemandThresholds
+                    .SingleOrDefault(
+                        x => x.DecrementAvailableConsumption(poweredCluster.ParentBaseZoneClusterConsumption));
+
+                if (violatedThreshold != null && violatedThreshold.AvailableConsumptionsExceeded)
+                {
+                    RaiseAreaMessageEvent(violatedThreshold.OnExceededMessage);
+                    continue;
+                }
+                if (_areaOptions.ProcessOptions.GetStepByStepGrowthCyclingToggled())
+                    Thread.Sleep(500);
+                body(poweredCluster);
+            }
+
+            var roadInfraStructureStatistics = connector.ApplyTraffic();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            connector.ApplyAverageTravelDistances();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Mirage.Urbanization.Logger.Instance.WriteLine("Growth cycle completed. (Took: " + stopwatch.Elapsed + ")");
+            return
+                new GrowthZoneNetworkStatistics(roadInfraStructureStatistics,
+                    new RailroadInfrastructureStatistics(_zoneInfoGrid
+                        .ZoneInfos
+                        .Values
+                        .Select(x => x.GetAsZoneCluster<TrainStationZoneClusterConsumption>())
+                        .Where(x => x.HasMatch)
+                        .Select(x => x.MatchingObject)
+                        .Distinct()
+                        .Count(), _zoneInfoGrid
+                            .ZoneInfos
+                            .Values
+                            .Select(x => x.GetNetworkZoneConsumption<RailRoadZoneConsumption>())
+                            .Where(x => x.HasMatch)
+                            .Select(x => x.MatchingObject)
+                            .Count()
+                        ),
+                    growthZones.OfType<ResidentialZoneClusterConsumption>()
+                        .Distinct()
+                        .Select(x => x.PopulationStatistics)
+                        .ToList(),
+                    growthZones.OfType<CommercialZoneClusterConsumption>()
+                        .Distinct()
+                        .Select(x => x.PopulationStatistics)
+                        .ToList(),
+                    growthZones.OfType<IndustrialZoneClusterConsumption>()
+                        .Distinct()
+                        .Select(x => x.PopulationStatistics)
+                        .ToList(),
+                    new CityServiceStatistics(zoneClusters.OfType<PoliceStationZoneClusterConsumption>().Count(),
+                        zoneClusters.OfType<FireStationZoneclusterConsumption>().Count(),
+                        zoneClusters.OfType<StadiumZoneClusterConsumption>().Count(),
+                        zoneClusters.OfType<SeaPortZoneClusterConsumption>().Count(),
+                        zoneClusters.OfType<AirportZoneClusterConsumption>().Count()
+                        )
+                    ) as IGrowthZoneStatistics;
+        }
+
+        public IEnumerable<Func<IAreaConsumption>> GetSupportedZoneConsumptionFactories()
+        {
+            yield return () => new EmptyZoneConsumption();
+            yield return () => new WoodlandZoneConsumption(_createZoneInfoFinder());
+            yield return () => new WaterZoneConsumption(_createZoneInfoFinder());
+            yield return () => new PowerLineConsumption(_createZoneInfoFinder());
+            yield return () => new RoadZoneConsumption(_createZoneInfoFinder());
+            yield return () => new RailRoadZoneConsumption(_createZoneInfoFinder());
+
+            yield return () => new TrainStationZoneClusterConsumption(_createZoneInfoFinder);
+
+            yield return () => new ResidentialZoneClusterConsumption(_createZoneInfoFinder);
+            yield return () => new CommercialZoneClusterConsumption(_createZoneInfoFinder);
+            yield return () => new IndustrialZoneClusterConsumption(_createZoneInfoFinder);
+
+            yield return () => new PoliceStationZoneClusterConsumption(_createZoneInfoFinder, _areaOptions.GetCityServiceStrengthLevels);
+            yield return () => new FireStationZoneclusterConsumption(_createZoneInfoFinder, _areaOptions.GetCityServiceStrengthLevels);
+
+            yield return () => new CoalPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
+            yield return () => new NuclearPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
+
+            yield return () => new StadiumZoneClusterConsumption(_createZoneInfoFinder);
+            yield return () => new SeaPortZoneClusterConsumption(_createZoneInfoFinder);
+            yield return () => new AirportZoneClusterConsumption(_createZoneInfoFinder);
+        }
+
+        IEnumerable<IReadOnlyZoneInfo> IReadOnlyArea.EnumerateZoneInfos()
+        {
+            return EnumerateZoneInfos();
+        }
+
+        private WoodlandZoneConsumption CreateWoodlandZone()
+        {
+            return new WoodlandZoneConsumption(_createZoneInfoFinder());
+        }
+
+        private WaterZoneConsumption CreateWaterZone()
+        {
+            return new WaterZoneConsumption(_createZoneInfoFinder());
+        }
+
+        public IEnumerable<ZoneInfo> EnumerateZoneInfos()
+        {
+            return _zoneInfoGrid.ZoneInfos.Values;
+        }
 
         public IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
         {
             var result = ConsumeZoneAtPrivate(readOnlyZoneInfo, consumption);
 
-            var onAreaMessage = OnAreaConsumptionResult;
-            if (onAreaMessage != null)
-                onAreaMessage(this, new AreaConsumptionResultEventArgs(result));
+            OnAreaConsumptionResult?.Invoke(this, new AreaConsumptionResultEventArgs(result));
 
             return result;
         }
 
-        private IAreaConsumptionResult ConsumeZoneAtPrivate(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
+        private IAreaConsumptionResult ConsumeZoneAtPrivate(IReadOnlyZoneInfo readOnlyZoneInfo,
+            IAreaConsumption consumption)
         {
             var zoneInfo = readOnlyZoneInfo as ZoneInfo;
-            if (zoneInfo == null) throw new ArgumentException("readOnlyZoneInfo");
+            if (zoneInfo == null) throw new ArgumentNullException(nameof(readOnlyZoneInfo));
 
             lock (_zoneConsumptionLock)
             {
                 if (consumption is IAreaZoneConsumption)
                 {
-                    var zoneClusterMember = zoneInfo.ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
-                    if (consumption is EmptyZoneConsumption && zoneClusterMember != null && zoneClusterMember.IsCentralClusterMember)
+                    var zoneClusterMember =
+                        zoneInfo.ConsumptionState.GetZoneConsumption() as ZoneClusterMemberConsumption;
+                    if (consumption is EmptyZoneConsumption && zoneClusterMember != null &&
+                        zoneClusterMember.IsCentralClusterMember)
                     {
                         List<IConsumeAreaOperation> consumeAreaOperations = null;
                         zoneClusterMember.ParentBaseZoneClusterConsumption.WithUnlockedClusterMembers(() =>
@@ -208,11 +360,8 @@ namespace Mirage.Urbanization
                         });
 
                         if (consumeAreaOperations == null) throw new InvalidOperationException();
-                        return new AreaConsumptionResult(
-                            areaConsumption: consumption,
-                            success: true,
-                            message: consumeAreaOperations.First().Description
-                        );
+                        return new AreaConsumptionResult(consumption, true, consumeAreaOperations.First().Description
+                            );
                     }
 
                     var consumptionOperation = zoneInfo
@@ -222,13 +371,11 @@ namespace Mirage.Urbanization
                     if (consumptionOperation.CanOverrideWithResult.WillSucceed)
                         consumptionOperation.Apply();
 
-                    return new AreaConsumptionResult(
-                        areaConsumption: consumption,
-                        success: consumptionOperation.CanOverrideWithResult.WillSucceed,
-                        message: consumptionOperation.Description
-                    );
+                    return new AreaConsumptionResult(consumption, consumptionOperation.CanOverrideWithResult.WillSucceed,
+                        consumptionOperation.Description
+                        );
                 }
-                else if (consumption is IAreaZoneClusterConsumption)
+                if (consumption is IAreaZoneClusterConsumption)
                 {
                     var clusterZoneConsumption = consumption as IAreaZoneClusterConsumption;
 
@@ -238,20 +385,16 @@ namespace Mirage.Urbanization
                             new
                             {
                                 QueryResult = zoneInfo
-                                    .GetRelativeZoneInfo(new RelativeZoneInfoQuery(
-                                    relativeX: member.RelativeToParentCenterX,
-                                    relativeY: member.RelativeToParentCenterY)),
+                                    .GetRelativeZoneInfo(new RelativeZoneInfoQuery(member.RelativeToParentCenterX,
+                                        member.RelativeToParentCenterY)),
                                 ConsumptionZoneMember = member
                             }
                         )
                         .ToArray();
 
                     if (queryResults.Any(x => x.QueryResult.HasNoMatch))
-                        return new AreaConsumptionResult(
-                            areaConsumption: consumption,
-                            success: true,
-                            message: "Cannot build across map boundaries."
-                        );
+                        return new AreaConsumptionResult(consumption, true, "Cannot build across map boundaries."
+                            );
 
                     var consumeAreaOperations = queryResults
                         .Select(x => x
@@ -266,41 +409,19 @@ namespace Mirage.Urbanization
                     {
                         foreach (var consumeAreaOperation in consumeAreaOperations)
                             consumeAreaOperation.Apply();
-                        return new AreaConsumptionResult(
-                            areaConsumption: consumption,
-                            success: true,
-                            message: consumeAreaOperations.First().Description
-                        );
+                        return new AreaConsumptionResult(consumption, true, consumeAreaOperations.First().Description
+                            );
                     }
-                    return new AreaConsumptionResult(
-                        areaConsumption: consumption,
-                        success: false,
-                        message: string.Join(", ", consumeAreaOperations
-                            .Where(x => !x.CanOverrideWithResult.WillSucceed)
-                            .Select(x => x.Description)
-                            .Distinct()
+                    return new AreaConsumptionResult(consumption, false, string.Join(", ", consumeAreaOperations
+                        .Where(x => !x.CanOverrideWithResult.WillSucceed)
+                        .Select(x => x.Description)
+                        .Distinct()
                         )
-                    );
+                        );
                 }
-                else throw new InvalidOperationException();
+                throw new InvalidOperationException();
             }
         }
-
-        public Task<IPowerGridStatistics> CalculatePowergridStatistics(CancellationToken cancellationToken)
-        {
-            var powerTask = new Task<IPowerGridStatistics>(() => new PowerGridStatistics(
-                PowerNetworkInfo
-                    .GenerateFrom(_zoneInfoGrid.ZoneInfos, RaiseAreaMessageEvent)
-                    .Select(x => x.PerformSurge())
-                ), cancellationToken
-            );
-
-            powerTask.Start();
-
-            return powerTask;
-        }
-
-        private readonly Random _random = new Random();
 
         private ISet<TBaseZoneClusterConsumption> GetZoneClusterConsumptions<TBaseZoneClusterConsumption>()
             where TBaseZoneClusterConsumption : BaseZoneClusterConsumption
@@ -313,130 +434,7 @@ namespace Mirage.Urbanization
                 .Where(x => x.IsCentralClusterMember)
                 .Select(x => x.ParentBaseZoneClusterConsumption)
                 .OfType<TBaseZoneClusterConsumption>()
-            );
-        }
-
-        public Task<IGrowthZoneStatistics> PerformGrowthSimulationCycle(CancellationToken cancellationToken)
-        {
-            if (cancellationToken == null) throw new ArgumentNullException("cancellationToken");
-
-            return Task<IGrowthZoneStatistics>.Run(() =>
-            {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                var zoneClusters = GetZoneClusterConsumptions<BaseZoneClusterConsumption>();
-
-                var growthZones = new HashSet<BaseGrowthZoneClusterConsumption>(zoneClusters.OfType<BaseGrowthZoneClusterConsumption>());
-
-                var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
-
-                connector.DecreasePopulation(growthZones);
-
-                // Outside influence which powers initial growth...
-                {
-                    var industrialZones = growthZones.OfType<IndustrialZoneClusterConsumption>().ToList();
-
-                    if (industrialZones.All(x => x.PopulationDensity == 0))
-                    {
-                        foreach (var z in industrialZones.Where(x => x.HasPower).OrderBy(x => _random.Next()).Take(2))
-                        {
-                            z.IncreasePopulation();
-                            z.IncreasePopulation();
-                            z.IncreasePopulation();
-                        }
-                    }
-                }
-
-                Action<ZoneClusterMemberConsumption> body = clusterMemberConsumption =>
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    clusterMemberConsumption.GetZoneInfo()
-                        .WithResultIfHasMatch(zoneInfo => connector.Process(
-                            growthZoneInfoPathNode: new GrowthZoneInfoPathNode(
-                                zoneInfo: zoneInfo,
-                                clusterMemberConsumption: clusterMemberConsumption,
-                                processOptions: _areaOptions.ProcessOptions
-                                )
-                            )
-                        );
-                };
-
-                var growthZoneDemandThresholds = new IGrowthZoneDemandThreshold[]
-                {
-                    new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
-                        currentlyOffered: GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), 
-                        onExceededMessage: "Industry requires seaport",
-                        growthFactor: 40
-                    ),
-                    new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
-                        currentlyOffered: GetZoneClusterConsumptions<AirportZoneClusterConsumption>(),
-                        onExceededMessage: "Commerce requires airport", 
-                        growthFactor: 50
-                    ),
-                    new GrowthZoneDemandThreshold<ResidentialZoneClusterConsumption, StadiumZoneClusterConsumption>(
-                        currentlyOffered: GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(),
-                        onExceededMessage: "Citizens demand stadium",
-                        growthFactor: 30
-                    )
-                };
-
-                foreach (var poweredCluster in growthZones
-                    .SelectMany(x => x.ZoneClusterMembers)
-                    .Where(x => x.IsCentralClusterMember && x.ParentBaseZoneClusterConsumption.ElectricityBehaviour.IsPowered)
-                )
-                {
-                    var violatedThreshold = growthZoneDemandThresholds
-                        .SingleOrDefault(x => x.DecrementAvailableConsumption(poweredCluster.ParentBaseZoneClusterConsumption));
-
-                    if (violatedThreshold != null && violatedThreshold.AvailableConsumptionsExceeded)
-                    {
-                        RaiseAreaMessageEvent(violatedThreshold.OnExceededMessage);
-                        continue;
-                    }
-                    if (_areaOptions.ProcessOptions.GetStepByStepGrowthCyclingToggled())
-                        Thread.Sleep(500);
-                    body(poweredCluster);
-                }
-
-                var roadInfraStructureStatistics = connector.ApplyTraffic();
-                cancellationToken.ThrowIfCancellationRequested();
-
-                connector.ApplyAverageTravelDistances();
-                cancellationToken.ThrowIfCancellationRequested();
-
-                Console.WriteLine("Growth cycle completed. (Took: " + stopwatch.Elapsed + ")");
-                return new GrowthZoneNetworkStatistics(
-                    roadInfraStructureStatistics: roadInfraStructureStatistics,
-                    railroadInfrastructureStatistics: new RailroadInfrastructureStatistics(
-                        numberOfTrainStations: _zoneInfoGrid
-                            .ZoneInfos
-                            .Values
-                            .Select(x => x.GetAsZoneCluster<TrainStationZoneClusterConsumption>())
-                            .Where(x => x.HasMatch)
-                            .Select(x => x.MatchingObject)
-                            .Distinct()
-                            .Count(),
-                        numberOfRailRoadZones: _zoneInfoGrid
-                            .ZoneInfos
-                            .Values
-                            .Select(x => x.GetNetworkZoneConsumption<RailRoadZoneConsumption>())
-                            .Where(x => x.HasMatch)
-                            .Select(x => x.MatchingObject)
-                            .Count()
-                            ),
-                    residentialZonePopulationNumbers: growthZones.OfType<ResidentialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
-                    commercialZonePopulationNumbers: growthZones.OfType<CommercialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
-                    industrialZonePopulationNumbers: growthZones.OfType<IndustrialZoneClusterConsumption>().Distinct().Select(x => x.PopulationStatistics).ToList(),
-                    cityServicesStatistics: new CityServiceStatistics(
-                        numberOfPoliceStations: zoneClusters.OfType<PoliceStationZoneClusterConsumption>().Count(),
-                        numberOfFireStations: zoneClusters.OfType<FireStationZoneclusterConsumption>().Count(),
-                        numberOfStadiums: zoneClusters.OfType<StadiumZoneClusterConsumption>().Count(),
-                        numberOfSeaports: zoneClusters.OfType<SeaPortZoneClusterConsumption>().Count(),
-                        numberOfAirports: zoneClusters.OfType<AirportZoneClusterConsumption>().Count()
-                    )
-                ) as IGrowthZoneStatistics;
-            }, cancellationToken: cancellationToken);
+                );
         }
 
         internal IEnumerable<Func<IAreaConsumption>> GetSupportedZoneConsumptionFactoriesPrivate()
@@ -446,43 +444,12 @@ namespace Mirage.Urbanization
             yield return () => new RubbishZoneConsumption();
         }
 
-        public IEnumerable<Func<IAreaConsumption>> GetSupportedZoneConsumptionFactories()
-        {
-            yield return () => new EmptyZoneConsumption();
-            yield return () => new WoodlandZoneConsumption(_createZoneInfoFinder());
-            yield return () => new WaterZoneConsumption(_createZoneInfoFinder());
-            yield return () => new PowerLineConsumption(_createZoneInfoFinder());
-            yield return () => new RoadZoneConsumption(_createZoneInfoFinder());
-            yield return () => new RailRoadZoneConsumption(_createZoneInfoFinder());
-
-            yield return () => new TrainStationZoneClusterConsumption(_createZoneInfoFinder);
-
-            yield return () => new ResidentialZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new CommercialZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new IndustrialZoneClusterConsumption(_createZoneInfoFinder);
-
-            yield return () => new PoliceStationZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new FireStationZoneclusterConsumption(_createZoneInfoFinder);
-
-            yield return () => new CoalPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new NuclearPowerPlantZoneClusterConsumption(_createZoneInfoFinder);
-
-            yield return () => new StadiumZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new SeaPortZoneClusterConsumption(_createZoneInfoFinder);
-            yield return () => new AirportZoneClusterConsumption(_createZoneInfoFinder);
-        }
-
-        IEnumerable<IReadOnlyZoneInfo> IReadOnlyArea.EnumerateZoneInfos() { return EnumerateZoneInfos(); }
-
         public event EventHandler<AreaConsumptionResultEventArgs> OnAreaConsumptionResult;
-
         public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
+
         private void RaiseAreaMessageEvent(string message)
         {
-            var onOnAreaMessage = OnAreaMessage;
-            if (onOnAreaMessage == null)
-                return;
-            onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
+            OnAreaMessage?.Invoke(this, new SimulationSessionMessageEventArgs(message));
         }
 
         public PersistedArea GeneratePersistenceSnapshot()
@@ -513,54 +480,62 @@ namespace Mirage.Urbanization
                         {
                             X = x.Key.X,
                             Y = x.Key.Y,
-                            EastWestName = ((IntersectingZoneConsumption)x.Value.GetZoneConsumption()).EastWestZoneConsumption.Name,
-                            NorthSouthName = ((IntersectingZoneConsumption)x.Value.GetZoneConsumption()).NorthSouthZoneConsumption.Name
+                            EastWestName =
+                                ((IntersectingZoneConsumption)x.Value.GetZoneConsumption()).EastWestZoneConsumption
+                                    .Name,
+                            NorthSouthName =
+                                ((IntersectingZoneConsumption)x.Value.GetZoneConsumption()).NorthSouthZoneConsumption
+                                    .Name
                         }).ToArray(),
                     PersistedGrowthZoneClusterCentralMemberConsumptions = clusterCenters
                         .Where(
                             x =>
-                                ((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption()).ParentBaseZoneClusterConsumption is
+                                ((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption())
+                                    .ParentBaseZoneClusterConsumption is
                                     BaseGrowthZoneClusterConsumption)
                         .Select(x => new PersistedGrowthZoneClusterCentralMemberConsumption
                         {
                             X = x.Key.X,
                             Y = x.Key.Y,
                             Id =
-                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption()).ParentBaseZoneClusterConsumption as
+                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption())
+                                    .ParentBaseZoneClusterConsumption as
                                     BaseGrowthZoneClusterConsumption).Id,
                             Name =
-                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption()).ParentBaseZoneClusterConsumption as
+                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption())
+                                    .ParentBaseZoneClusterConsumption as
                                     BaseGrowthZoneClusterConsumption).Name,
                             Population =
-                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption()).ParentBaseZoneClusterConsumption as
+                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption())
+                                    .ParentBaseZoneClusterConsumption as
                                     BaseGrowthZoneClusterConsumption).PopulationDensity
                         }).ToArray(),
                     PersistedStaticZoneClusterCentralMemberConsumptions = clusterCenters
                         .Where(
                             x =>
-                                ((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption()).ParentBaseZoneClusterConsumption is
+                                ((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption())
+                                    .ParentBaseZoneClusterConsumption is
                                     StaticZoneClusterConsumption)
-                        .Select(x => new PersistedStaticZoneClusterCentralMemberConsumption()
+                        .Select(x => new PersistedStaticZoneClusterCentralMemberConsumption
                         {
                             X = x.Key.X,
                             Y = x.Key.Y,
                             Name =
-                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption()).ParentBaseZoneClusterConsumption as
-                                    StaticZoneClusterConsumption).Name,
+                                (((ZoneClusterMemberConsumption)x.Value.GetZoneConsumption())
+                                    .ParentBaseZoneClusterConsumption as
+                                    StaticZoneClusterConsumption).Name
                         }).ToArray(),
                     PersistedTrafficStates = snapshot
                         .Where(x => x.Value.GetIsRoadNetworkMember())
-                        .Select(x => new PersistedTrafficState()
+                        .Select(x => new PersistedTrafficState
                         {
                             X = x.Key.X,
                             Y = x.Key.Y,
                             Traffic = new Func<int>(() =>
                             {
                                 var traffic = default(int);
-                                x.Value.WithNetworkMember<RoadZoneConsumption>(y =>
-                                {
-                                    traffic = y.GetTrafficDensityAsInt();
-                                });
+                                x.Value.WithNetworkMember<RoadZoneConsumption>(
+                                    y => { traffic = y.GetTrafficDensityAsInt(); });
                                 return traffic;
                             })()
                         }).ToArray()

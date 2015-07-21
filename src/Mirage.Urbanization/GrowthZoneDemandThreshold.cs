@@ -8,12 +8,11 @@ namespace Mirage.Urbanization
         where TDemandingConsumption : BaseZoneClusterConsumption
         where TDemandedConsumption : BaseZoneClusterConsumption
     {
-        private readonly string _onExceededMessage;
         private int _availableConsumptions;
 
         public GrowthZoneDemandThreshold(IEnumerable<TDemandedConsumption> currentlyOffered, string onExceededMessage, int growthFactor)
         {
-            _onExceededMessage = onExceededMessage;
+            OnExceededMessage = onExceededMessage;
             _availableConsumptions = growthFactor + (new HashSet<TDemandedConsumption>(currentlyOffered.Where(x => x.HasPower)).Count * growthFactor);
         }
 
@@ -27,14 +26,8 @@ namespace Mirage.Urbanization
             return false;
         }
 
-        public string OnExceededMessage { get { return _onExceededMessage; } }
+        public string OnExceededMessage { get; }
 
-        public bool AvailableConsumptionsExceeded
-        {
-            get
-            {
-                return _availableConsumptions <= 0;
-            }
-        }
+        public bool AvailableConsumptionsExceeded => _availableConsumptions <= 0;
     }
 }

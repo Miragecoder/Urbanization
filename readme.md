@@ -1,13 +1,14 @@
 # Urbanization
 
-AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/ala0uiruj1s644pq/branch/master?svg=true)](https://ci.appveyor.com/project/Miragecoder/urbanization/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/ala0uiruj1s644pq/branch/master?svg=true)](https://ci.appveyor.com/project/Miragecoder/urbanization/branch/master)
 
 Urbanization is a .NET implementation of a city building simulation game, heavily inspired by the classic [Simcity](http://en.wikipedia.org/wiki/SimCity_(1989_video_game)) game released in 1989; of which its source code has been released under the title [Micropolis](https://github.com/SimHacker/micropolis).
 
 The implementation is far from complete, but most of the basics are currently present. These include (amongst others):
 - Customizable terrain generation
-- Power grid and infrastructure simulation (including population growth)
-- Crime and pollution
+- Power grid and infrastructure simulation (including population growth and commuting)
+- Crime and fire hazard, both of which can be controlled by building police and/or fire stations
+- Pollution, which is negatively influenced by industrial areas (and positively by nature!)
 
 ![Screenshot of 'Urbanization'](/screenshot.png?raw=true "Screenshot of 'Urbanization'")
 
@@ -39,6 +40,14 @@ http://sharpdx.org/
 #### RhinoMocks:
 
 http://hibernatingrhinos.com/oss/rhino-mocks
+
+#### RhinoMocks:
+
+http://hibernatingrhinos.com/oss/rhino-mocks
+
+#### System.Collections.Immutable:
+
+http://blogs.msdn.com/b/bclteam/p/immutable.aspx
 
 ## License
 

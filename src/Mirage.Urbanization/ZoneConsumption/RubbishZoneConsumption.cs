@@ -4,17 +4,8 @@ namespace Mirage.Urbanization.ZoneConsumption
 {
     public class RubbishZoneConsumption : EmptyZoneConsumption
     {
-        public override string Name
-        {
-            get { return "Rubbish"; }
-        }
+        public override string Name => "Rubbish";
 
-        public override Color Color
-        {
-            get
-            {
-                return Color.SaddleBrown;
-            }
-        }
+        public override Color Color => Color.SaddleBrown;
     }
 }

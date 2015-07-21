@@ -11,27 +11,25 @@ namespace Mirage.Urbanization
         public bool HorizontalRiver { get; set; }
         public bool VerticalRiver { get; set; }
 
-        private int _woodlands = MinWoodlands;
-        private int _zoneWidthAndHeight = MinWidthAndHeight;
+        public int Woodlands { get; private set; } = MinWoodlands;
 
-        public int Woodlands { get { return _woodlands; } }
-        public int ZoneWidthAndHeight { get { return _zoneWidthAndHeight; } }
+        public int ZoneWidthAndHeight { get; private set; } = MinWidthAndHeight;
 
         public void SetZoneWidthAndHeight(int value)
         {
             if (value >= MinWidthAndHeight && value <= MaxWidthAndHeight)
-                _zoneWidthAndHeight = value;
+                ZoneWidthAndHeight = value;
             else
-                throw new ArgumentOutOfRangeException("value");
+                throw new ArgumentOutOfRangeException(nameof(value));
         }
 
         public void SetWoodlands(int value)
         {
             if (value >= MinWoodlands && value <= MaxWoodlands)
-                _woodlands = value;
+                Woodlands = value;
             else
             {
-                throw new ArgumentOutOfRangeException("value");
+                throw new ArgumentOutOfRangeException(nameof(value));
             }
         }
     }

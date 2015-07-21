@@ -8,51 +8,26 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 {
     public class ZoneClusterMemberConsumption : BaseZoneConsumption, IAreaObjectWithSeed
     {
-        private readonly int _id = Random.Next(0, Int32.MaxValue);
-
         public override char KeyChar { get { throw new NotImplementedException(); } }
 
-        public int Id { get { return _id; } }
+        public int Id { get; } = Random.Next(0, Int32.MaxValue);
 
         private static readonly Random Random = new Random();
-        private readonly BaseZoneClusterConsumption _parentBaseZoneClusterConsumption;
-        private readonly string _name;
-        private readonly int _relativeToParentCenterX;
-        private readonly int _relativeToParentCenterY;
 
-        private readonly int _positionInClusterX, _positionInClusterY;
+        public int PositionInClusterY { get; }
 
-        public int PositionInClusterY
-        {
-            get { return _positionInClusterY; }
-        }
+        public int SingleCellCost => ParentBaseZoneClusterConsumption.Cost / ParentBaseZoneClusterConsumption.ZoneClusterMembers.Count;
 
-        public int SingleCellCost
-        {
-            get
-            {
-                return ParentBaseZoneClusterConsumption.Cost / ParentBaseZoneClusterConsumption.ZoneClusterMembers.Count;
-            }
-        }
+        public int PositionInClusterX { get; }
 
-        public int PositionInClusterX
-        {
-            get { return _positionInClusterX; }
-        }
-
-        private readonly Color _color;
-
-        public override Color Color { get { return _color; } }
-        public int RelativeToParentCenterX { get { return _relativeToParentCenterX; } }
-        public int RelativeToParentCenterY { get { return _relativeToParentCenterY; } }
+        public override Color Color { get; }
+        public int RelativeToParentCenterX { get; }
+        public int RelativeToParentCenterY { get; }
 
         public override int Cost { get { throw new InvalidOperationException(); } }
 
 
-        public bool IsCentralClusterMember
-        {
-            get { return RelativeToParentCenterX == 0 && RelativeToParentCenterY == 0; }
-        }
+        public bool IsCentralClusterMember => RelativeToParentCenterX == 0 && RelativeToParentCenterY == 0;
 
         public bool IsMemberOf<T>()
             where T : BaseZoneClusterConsumption
@@ -60,7 +35,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             return ParentBaseZoneClusterConsumption.GetType() == typeof(T);
         }
 
-        public BaseZoneClusterConsumption ParentBaseZoneClusterConsumption { get { return _parentBaseZoneClusterConsumption; } }
+        public BaseZoneClusterConsumption ParentBaseZoneClusterConsumption { get; }
 
         public QueryResult<BaseGrowthZoneClusterConsumption> QueryParentAsBaseGrowthZoneClusterConsumption()
         {
@@ -75,7 +50,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             return x;
         }
 
-        public override string Name { get { return _name; } }
+        public override string Name { get; }
 
         public override IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)
         {
@@ -108,16 +83,16 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             int positionInClusterY
         )
         {
-            if (name == null) throw new ArgumentNullException("name");
-            if (parentBaseZoneClusterConsumption == null) throw new ArgumentNullException("parentBaseZoneClusterConsumption");
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (parentBaseZoneClusterConsumption == null) throw new ArgumentNullException(nameof(parentBaseZoneClusterConsumption));
 
-            _parentBaseZoneClusterConsumption = parentBaseZoneClusterConsumption;
-            _name = name;
-            _relativeToParentCenterX = relativeToParentCenterX;
-            _relativeToParentCenterY = relativeToParentCenterY;
-            _color = color;
-            _positionInClusterX = positionInClusterX;
-            _positionInClusterY = positionInClusterY;
+            ParentBaseZoneClusterConsumption = parentBaseZoneClusterConsumption;
+            Name = name;
+            RelativeToParentCenterX = relativeToParentCenterX;
+            RelativeToParentCenterY = relativeToParentCenterY;
+            Color = color;
+            PositionInClusterX = positionInClusterX;
+            PositionInClusterY = positionInClusterY;
 
             _zoneInfoFinder = createZoneInfoFinderFunc();
         }
@@ -125,9 +100,9 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public static IEnumerable<ZoneClusterMemberConsumption> Generate(BaseZoneClusterConsumption parent, Func<ZoneInfoFinder> createZoneInfoFinderFunc, int widthInZones, int heightInZones, Color color)
         {
             if (widthInZones <= 1)
-                throw new ArgumentOutOfRangeException("widthInZones");
+                throw new ArgumentOutOfRangeException(nameof(widthInZones));
             if (heightInZones <= 1)
-                throw new ArgumentOutOfRangeException("heightInZones");
+                throw new ArgumentOutOfRangeException(nameof(heightInZones));
 
             int zeroBasedWidth = widthInZones - 1;
             int zeroBasedHeight = heightInZones - 1;

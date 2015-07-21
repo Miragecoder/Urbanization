@@ -7,8 +7,6 @@ namespace Mirage.Urbanization.GrowthPathFinding
 {
     class GrowthZoneInfoPathNode : ZoneInfoPathNode
     {
-        private readonly BaseZoneClusterConsumption _originBaseZoneClusterConsumption;
-
         public GrowthZoneInfoPathNode(IZoneInfo zoneInfo, ZoneClusterMemberConsumption clusterMemberConsumption, ProcessOptions processOptions)
             : base(
             zoneInfo: zoneInfo, 
@@ -49,7 +47,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
                 Action<string, Func<bool>> assignIsSuccessFuncAction = (description, action) =>
                 {
-                    if (isSuccessFunc != null) throw new InvalidOperationException("Could not set " + description + " as the 'IsSuccessFunc'. " + currentIsSuccessFuncDesc + "Is currently set.");
+                    if (isSuccessFunc != null) throw new InvalidOperationException($"Could not set {description} as the 'IsSuccessFunc'. {currentIsSuccessFuncDesc} Is currently set.");
                     assignIsSuccessOverrideFuncAction(description, action);
                 };
 
@@ -219,9 +217,9 @@ namespace Mirage.Urbanization.GrowthPathFinding
                 )
             )
         {
-            _originBaseZoneClusterConsumption = clusterMemberConsumption.ParentBaseZoneClusterConsumption;
+            OriginBaseZoneClusterConsumption = clusterMemberConsumption.ParentBaseZoneClusterConsumption;
         }
 
-        public BaseZoneClusterConsumption OriginBaseZoneClusterConsumption { get { return _originBaseZoneClusterConsumption; } }
+        public BaseZoneClusterConsumption OriginBaseZoneClusterConsumption { get; }
     }
 }

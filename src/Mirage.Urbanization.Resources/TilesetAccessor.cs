@@ -12,12 +12,7 @@ namespace Mirage.Urbanization.Tilesets
     {
         private const int DefaultTileWidthAndSizeInPixels = 25;
 
-        private int _tileWidthAndSizeInPixels = DefaultTileWidthAndSizeInPixels;
-        public int TileWidthAndSizeInPixels
-        {
-            get { return _tileWidthAndSizeInPixels; }
-            set { _tileWidthAndSizeInPixels = value; }
-        }
+        public int TileWidthAndSizeInPixels { get; set; } = DefaultTileWidthAndSizeInPixels;
 
         public Size ResizeToTileWidthAndSize(Size size)
         {

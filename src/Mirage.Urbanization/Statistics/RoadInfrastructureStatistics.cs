@@ -6,25 +6,16 @@ namespace Mirage.Urbanization.Statistics
 {
     public class RoadInfrastructureStatistics : IRoadInfrastructureStatistics
     {
-        private readonly int _numberOfRoadZones;
-        private readonly INumberSummary _trafficNumbers;
-
         public RoadInfrastructureStatistics(IEnumerable<RoadZoneConsumption> roadZoneConsumptions)
         {
             var capturedRoadZoneConsumptions = roadZoneConsumptions.ToList();
 
-            _numberOfRoadZones = capturedRoadZoneConsumptions.Count();
-            _trafficNumbers = new NumberSummary(capturedRoadZoneConsumptions.Select(x => x.GetTrafficDensityAsInt()));
+            NumberOfRoadZones = capturedRoadZoneConsumptions.Count();
+            TrafficNumbers = new NumberSummary(capturedRoadZoneConsumptions.Select(x => x.GetTrafficDensityAsInt()));
         }
 
-        public int NumberOfRoadZones
-        {
-            get { return _numberOfRoadZones; }
-        }
+        public int NumberOfRoadZones { get; }
 
-        public INumberSummary TrafficNumbers
-        {
-            get { return _trafficNumbers; }
-        }
+        public INumberSummary TrafficNumbers { get; }
     }
 }

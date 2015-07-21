@@ -1,27 +1,17 @@
-﻿namespace Mirage.Urbanization.Simulation
-{
-    public class PersistedCityBudgetConfiguration : ICityBudgetConfiguration
-    {
-        public decimal ResidentialTaxRate { get; set; }
-        public decimal CommercialTaxRate { get; set; }
-        public decimal IndustrialTaxRate { get; set; }
-        public decimal PoliceServiceRate { get; set; }
-        public decimal FireDepartmentServiceRate { get; set; }
-        public decimal RoadInfrastructureServiceRate { get; set; }
-        public decimal RailroadInfrastructureServiceRate { get; set; }
+﻿using System;
 
-        public static PersistedCityBudgetConfiguration GetDefaultBudget()
-        {
-            return new PersistedCityBudgetConfiguration
-            {
-                ResidentialTaxRate = 0.07M,
-                CommercialTaxRate = 0.07M,
-                IndustrialTaxRate = 0.07M,
-                RoadInfrastructureServiceRate = 1M,
-                RailroadInfrastructureServiceRate = 1M,
-                PoliceServiceRate = 1M,
-                FireDepartmentServiceRate = 1M
-            };
-        }
+namespace Mirage.Urbanization.Simulation
+{
+    public class PersistedCityBudgetConfiguration : ICityBudgetConfiguration, ICityServiceStrengthLevels
+    {
+        public decimal ResidentialTaxRate { get; set; } = TaxDefinition.DefaultTaxRate;
+        public decimal CommercialTaxRate { get; set; } = TaxDefinition.DefaultTaxRate;
+        public decimal IndustrialTaxRate { get; set; } = TaxDefinition.DefaultTaxRate;
+        public decimal PoliceServiceRate { get; set; } = 1M;
+        public decimal FireDepartmentServiceRate { get; set; } = 1M;
+        public decimal RoadInfrastructureServiceRate { get; set; } = 1M;
+        public decimal RailroadInfrastructureServiceRate { get; set; } = 1M;
+        public decimal PoliceStrength => PoliceServiceRate;
+        public decimal FireSquadStrength => FireDepartmentServiceRate;
     }
 }

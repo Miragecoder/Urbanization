@@ -10,18 +10,14 @@ namespace Mirage.Urbanization.WinForms.Rendering
 {
     public class GraphicsManagerWrapperOption : IToolstripMenuOption
     {
-        private readonly string _name;
+        public string Name { get; }
 
-        public string Name { get { return _name; } }
-
-        private readonly Func<Panel, Action, IGraphicsManagerWrapper> _factory;
-
-        public Func<Panel, Action, IGraphicsManagerWrapper> Factory { get { return _factory; } }
+        public Func<Panel, Action, IGraphicsManagerWrapper> Factory { get; }
 
         public GraphicsManagerWrapperOption(string name, Func<Panel, Action, BaseGraphicsManagerWrapper> factory)
         {
-            _name = name;
-            _factory = factory;
+            Name = name;
+            Factory = factory;
         }
 
         public static IEnumerable<GraphicsManagerWrapperOption> GetOptions()

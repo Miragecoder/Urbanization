@@ -4,20 +4,16 @@ namespace Mirage.Urbanization
 {
     public class RelativeZoneInfoQuery
     {
-        private readonly int _relativeX, _relativeY;
-
         public RelativeZoneInfoQuery(int relativeX, int relativeY)
         {
-            _relativeX = relativeX;
-            _relativeY = relativeY;
+            RelativeX = relativeX;
+            RelativeY = relativeY;
         }
 
-        public int Distance
-        {
-            get { return Math.Abs(RelativeX) + Math.Abs(RelativeY); }
-        }
+        public int Distance => Math.Abs(RelativeX) + Math.Abs(RelativeY);
 
-        public int RelativeY { get { return _relativeY; } }
-        public int RelativeX { get { return _relativeX; } }
+        public int RelativeY { get; }
+
+        public int RelativeX { get; }
     }
 }

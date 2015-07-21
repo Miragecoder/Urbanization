@@ -22,13 +22,11 @@ namespace Mirage.Urbanization.ZoneConsumption
                 ) { }
 
 
-        public override char KeyChar { get { return 'p'; } }
-        public override string Name { get { return "Coal power plant"; } }
-        private readonly ICrimeBehaviour _crimeBehaviour = new DynamicCrimeBehaviour(() => 0);
-        public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
-        public override int Cost { get { return 15000; } }
+        public override char KeyChar => 'p';
+        public override string Name => "Coal power plant";
+        public override ICrimeBehaviour CrimeBehaviour { get; } = new DynamicCrimeBehaviour(() => 0);
+        public override int Cost => 15000;
 
-        private readonly IFireHazardBehaviour _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => 20);
-        public override IFireHazardBehaviour FireHazardBehaviour { get { return _fireHazardBehaviour; } }
+        public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
     }
 }

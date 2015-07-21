@@ -17,20 +17,16 @@ namespace Mirage.Urbanization.ZoneConsumption
                 heightInZones: 6
                 )
         {
-            _crimeBehaviour = new DynamicCrimeBehaviour(() => 50);
+            CrimeBehaviour = new DynamicCrimeBehaviour(() => 50);
         }
 
-        public override char KeyChar { get { return 'a'; } }
+        public override char KeyChar => 'a';
 
-        public override string Name
-        {
-            get { return "Airport"; }
-        }
-        private readonly ICrimeBehaviour _crimeBehaviour;
-        public override ICrimeBehaviour CrimeBehaviour { get { return _crimeBehaviour; } }
-        public override int Cost { get { return 10000; } }
+        public override string Name => "Airport";
 
-        private readonly IFireHazardBehaviour _fireHazardBehaviour = new DynamicFireHazardBehaviour(() => 20);
-        public override IFireHazardBehaviour FireHazardBehaviour { get { return _fireHazardBehaviour; } }
+        public override ICrimeBehaviour CrimeBehaviour { get; }
+        public override int Cost => 10000;
+
+        public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
     }
 }

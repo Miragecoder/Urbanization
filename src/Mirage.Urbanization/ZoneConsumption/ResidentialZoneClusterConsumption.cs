@@ -16,24 +16,15 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         }
 
-        public override char KeyChar { get { return 'g'; } }
+        public override char KeyChar => 'g';
 
-        protected override decimal PopulationPollutionFactor
-        {
-            get { return 0.5M; }
-        }
+        protected override decimal PopulationPollutionFactor => 0.5M;
 
-        protected override decimal PopulationCrimeFactor
-        {
-            get { return 0.5M; }
-        }
+        protected override decimal PopulationCrimeFactor => 0.5M;
 
-        protected override decimal PopulationFireHazardFactor
-        {
-            get { return 0.5M; }
-        }
+        protected override decimal PopulationFireHazardFactor => 0.5M;
 
-        public override string Name { get { return "Residential zone"; } }
+        public override string Name => "Residential zone";
 
         public bool RenderAsHouse(ZoneClusterMemberConsumption zoneClusterMember)
         {

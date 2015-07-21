@@ -9,8 +9,7 @@ namespace Mirage.Urbanization
     public class ZoneConsumptionState : IZoneConsumptionState
     {
         private IAreaZoneConsumption _zoneConsumption = new EmptyZoneConsumption();
-        private DateTime _lastUpdateDateTime = DateTime.Now;
-        public DateTime LastUpdateDateTime { get { return _lastUpdateDateTime; } }
+        public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
 
         public IAreaZoneConsumption GetZoneConsumption()
         {
@@ -19,11 +18,11 @@ namespace Mirage.Urbanization
 
         public IConsumeAreaOperation TryConsumeWith(IAreaZoneConsumption consumption)
         {
-            if (consumption == null) throw new ArgumentNullException("consumption");
+            if (consumption == null) throw new ArgumentNullException(nameof(consumption));
             return new ConsumeAreaOperation(_zoneConsumption.GetCanOverrideWith(consumption), (toBeDeployedConsumption) =>
             {
                 _zoneConsumption = toBeDeployedConsumption;
-                _lastUpdateDateTime = DateTime.Now;
+                LastUpdateDateTime = DateTime.Now;
             });
         }
 

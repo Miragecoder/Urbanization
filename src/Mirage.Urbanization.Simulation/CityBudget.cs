@@ -11,9 +11,9 @@ namespace Mirage.Urbanization.Simulation
 
         private int _projectedIncome;
 
-        public int CurrentAmount { get { return _currentAmount; } }
+        public int CurrentAmount => _currentAmount;
 
-        public int ProjectedIncome { get { return _projectedIncome; } }
+        public int ProjectedIncome => _projectedIncome;
 
         private void AddProjectedIncome(int amount)
         {

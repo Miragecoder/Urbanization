@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     public abstract class BaseImplementedZoneClusterConsumption : BaseZoneClusterConsumption
     {
         protected readonly IReadOnlyCollection<ZoneClusterMemberConsumption> _zoneClusterMembers;
-        public override IReadOnlyCollection<ZoneClusterMemberConsumption> ZoneClusterMembers { get { return _zoneClusterMembers; } }
+        public override IReadOnlyCollection<ZoneClusterMemberConsumption> ZoneClusterMembers => _zoneClusterMembers;
 
         protected BaseImplementedZoneClusterConsumption(
             Func<ZoneInfoFinder> createZoneInfoFinderFunc,

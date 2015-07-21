@@ -19,27 +19,26 @@ namespace Mirage.Urbanization.Simulation
         private readonly PersistedCityBudgetConfiguration _cityBudgetConfiguration;
 
         private readonly Area _area;
-        private readonly Task _growthSimulationTask, _crimeAndPollutionTask, _powerTask;
+        private readonly NeverEndingTask _growthSimulationTask, _crimeAndPollutionTask, _powerTask;
         private readonly YearAndMonth _yearAndMonth = new YearAndMonth();
         private IPowerGridStatistics _lastPowerGridStatistics;
         private IMiscCityStatistics _lastMiscCityStatistics;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public IReadOnlyArea Area { get { return _area; } }
+        public IReadOnlyArea Area => _area;
 
         private class InsufficientFundsAreaConsumptionResult : IAreaConsumptionResult
         {
-            private readonly IAreaConsumption _consumption;
-
             public InsufficientFundsAreaConsumptionResult(IAreaConsumption consumption)
             {
-                if (consumption == null) throw new ArgumentNullException("consumption");
-                _consumption = consumption;
+                if (consumption == null) throw new ArgumentNullException(nameof(consumption));
+                AreaConsumption = consumption;
             }
 
-            public bool Success { get { return false; } }
-            public IAreaConsumption AreaConsumption { get { return _consumption; } }
-            public string Message { get { return "You currently do not have enough funds to build a " + AreaConsumption.Name; } }
+            public bool Success => false;
+            public IAreaConsumption AreaConsumption { get; }
+
+            public string Message => "You currently do not have enough funds to build a " + AreaConsumption.Name;
         }
 
         public IAreaConsumptionResult ConsumeZoneAt(IReadOnlyZoneInfo readOnlyZoneInfo, IAreaConsumption consumption)
@@ -57,10 +56,7 @@ namespace Mirage.Urbanization.Simulation
             return result;
         }
 
-        private bool PowerAndMiscStatisticsLoaded
-        {
-            get { return (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null); }
-        }
+        private bool PowerAndMiscStatisticsLoaded => (_lastPowerGridStatistics != null && _lastMiscCityStatistics != null);
 
         private readonly HashSet<CityCategoryDefinition> _seenCityStates = new HashSet<CityCategoryDefinition>
         {
@@ -85,7 +81,7 @@ namespace Mirage.Urbanization.Simulation
         public SimulationSession(SimulationOptions simulationOptions)
         {
             _simulationOptions = simulationOptions;
-            _area = new Area(simulationOptions.GetAreaOptions());
+            _area = new Area(simulationOptions.GetAreaOptions(() => _cityBudgetConfiguration));
 
             _area.OnAreaConsumptionResult += HandleAreaConsumptionResult;
             _area.OnAreaMessage += (s, e) => RaiseAreaMessageEvent(e.Message);
@@ -114,118 +110,83 @@ namespace Mirage.Urbanization.Simulation
 
             _cityBudgetConfiguration = persistedCityBudgetConfiguration ?? new PersistedCityBudgetConfiguration();
 
-            _growthSimulationTask = new Task(() =>
+            _growthSimulationTask = new NeverEndingTask("Growth simulation", () =>
             {
-                while (true)
-                {
-                    {
-                        var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
-                        if (onYearAndOrMonthChanged != null)
-                            onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
-                    }
-                    foreach (var iteration in Enumerable.Range(0, 4))
-                    {
-                        if (PowerAndMiscStatisticsLoaded)
-                        {
-                            var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token).Result;
-                            var onYearAndOrMonthChanged = OnYearAndOrMonthChanged;
-                            if (onYearAndOrMonthChanged != null)
-                                onYearAndOrMonthChanged(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
+                if (!PowerAndMiscStatisticsLoaded)
+                    return;
 
-                            _persistedCityStatisticsCollection.Add(
-                                   _cityBudget.ProcessFinances(new PersistedCityStatistics(
-                                        timeCode: _yearAndMonth.TimeCode,
-                                        powerGridStatistics: _lastPowerGridStatistics,
-                                        growthZoneStatistics: growthZoneStatistics,
-                                        miscCityStatistics: _lastMiscCityStatistics
-                                    ),
-                                    _cityBudgetConfiguration
-                                )
-                            );
+                var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token);
 
-                            var eventCapture = CityStatisticsUpdated;
-                            if (eventCapture != null)
-                                eventCapture(this, new CityStatisticsUpdatedEventArgs(_persistedCityStatisticsCollection.GetMostRecentPersistedCityStatistics().MatchingObject));
-                            _yearAndMonth.AddWeek();
-                            if (_yearAndMonth.IsAtBeginningOfNewYear)
-                                _cityBudget.AddProjectedIncomeToCurrentAmount();
-                        }
-                        _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                        Task.Delay(2000).Wait();
-                    }
-                }
+                _persistedCityStatisticsCollection.Add(
+                       _cityBudget.ProcessFinances(new PersistedCityStatistics(
+                            timeCode: _yearAndMonth.TimeCode,
+                            powerGridStatistics: _lastPowerGridStatistics,
+                            growthZoneStatistics: growthZoneStatistics,
+                            miscCityStatistics: _lastMiscCityStatistics
+                        ),
+                        _cityBudgetConfiguration
+                    )
+                );
+
+                OnYearAndOrMonthChanged?.Invoke(this, new EventArgsWithData<IYearAndMonth>(_yearAndMonth));
+                CityStatisticsUpdated?.Invoke(this, new CityStatisticsUpdatedEventArgs(_persistedCityStatisticsCollection.GetMostRecentPersistedCityStatistics().MatchingObject));
+                _yearAndMonth.AddWeek();
+                if (_yearAndMonth.IsAtBeginningOfNewYear)
+                    _cityBudget.AddProjectedIncomeToCurrentAmount();
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
             }, _cancellationTokenSource.Token);
-            _powerTask = new Task(() =>
-            {
-                while (true)
-                {
-                    var stopwatch = new Stopwatch();
 
-                    stopwatch.Start();
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    _lastPowerGridStatistics = _area.CalculatePowergridStatistics(_cancellationTokenSource.Token).Result;
-                    Console.WriteLine("Power grid scan completed. (Took: '{0}')", stopwatch.Elapsed);
+            _powerTask = new NeverEndingTask("Power grid scan", () =>
+             {
+                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                 _lastPowerGridStatistics = _area.CalculatePowergridStatistics();
+             }, _cancellationTokenSource.Token);
 
-                    Task.Delay(2000).Wait();
-                }
-            }, _cancellationTokenSource.Token);
-            _crimeAndPollutionTask = new Task(() =>
-            {
-                while (true)
-                {
-                    var stopwatch = new Stopwatch();
+            _crimeAndPollutionTask = new NeverEndingTask("Crime and pollution calculation", () =>
+             {
+                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                 var queryCrimeResults = new HashSet<IQueryCrimeResult>(_area.EnumerateZoneInfos().Select(x => x.QueryCrime()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
 
-                    stopwatch.Start();
+                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                 var queryLandValueResults = new HashSet<IQueryLandValueResult>(_area.EnumerateZoneInfos().Select(x => x.QueryLandValue()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
 
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    var queryCrimeResults = new HashSet<IQueryCrimeResult>(_area.EnumerateZoneInfos().Select(x => x.QueryCrime()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                 var queryPollutionResults = new HashSet<IQueryPollutionResult>(_area.EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
 
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    var queryLandValueResults = new HashSet<IQueryLandValueResult>(_area.EnumerateZoneInfos().Select(x => x.QueryLandValue()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                 var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(_area.EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
 
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    var queryPollutionResults = new HashSet<IQueryPollutionResult>(_area.EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(_area.EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+                 var travelDistances = new HashSet<BaseGrowthZoneClusterConsumption>(
+                         _area
+                         .EnumerateZoneInfos()
+                         .Select(x => x.ConsumptionState.GetZoneConsumption())
+                         .OfType<ZoneClusterMemberConsumption>()
+                         .Where(x => x.IsCentralClusterMember)
+                         .Select(x => x.ParentBaseZoneClusterConsumption)
+                         .OfType<BaseGrowthZoneClusterConsumption>()
+                     )
+                     .Select(x => x.ZoneClusterMembers.First(y => y.IsCentralClusterMember))
+                     .Select(x => x.GetZoneInfo())
+                     .Select(x => x.WithResultIfHasMatch(y => y.GetLastAverageTravelDistance()))
+                     .Where(x => x.HasValue)
+                     .Select(x => x.Value);
 
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    var travelDistances = new HashSet<BaseGrowthZoneClusterConsumption>(
-                            _area
-                            .EnumerateZoneInfos()
-                            .Select(x => x.ConsumptionState.GetZoneConsumption())
-                            .OfType<ZoneClusterMemberConsumption>()
-                            .Where(x => x.IsCentralClusterMember)
-                            .Select(x => x.ParentBaseZoneClusterConsumption)
-                            .OfType<BaseGrowthZoneClusterConsumption>()
-                        )
-                        .Select(x => x.ZoneClusterMembers.First(y => y.IsCentralClusterMember))
-                        .Select(x => x.GetZoneInfo())
-                        .Select(x => x.WithResultIfHasMatch(y => y.GetLastAverageTravelDistance()))
-                        .Where(x => x.HasValue)
-                        .Select(x => x.Value);
-
-                    _lastMiscCityStatistics = new MiscCityStatistics(
-                        queryCrimeResults: queryCrimeResults,
-                        queryFireHazardResults: queryFireHazardResults,
-                        queryLandValueResults: queryLandValueResults,
-                        queryPollutionResults: queryPollutionResults,
-                        queryTravelDistanceResults: travelDistances
-                    );
-
-                    Console.WriteLine("Crime and pollution scan completed. (Took: '{0}')", stopwatch.Elapsed);
-
-                    Task.Delay(2000).Wait();
-                }
-            }, _cancellationTokenSource.Token);
+                 _lastMiscCityStatistics = new MiscCityStatistics(
+                     queryCrimeResults: queryCrimeResults,
+                     queryFireHazardResults: queryFireHazardResults,
+                     queryLandValueResults: queryLandValueResults,
+                     queryPollutionResults: queryPollutionResults,
+                     queryTravelDistanceResults: travelDistances
+                 );
+             }, _cancellationTokenSource.Token);
 
 
             _cityBudget.OnCityBudgetValueChanged += (sender, e) =>
             {
-                var onCityBudgetValueChanged = OnCityBudgetValueChanged;
-                if (onCityBudgetValueChanged != null)
-                    onCityBudgetValueChanged(this, e);
+                OnCityBudgetValueChanged?.Invoke(this, e);
             };
 
             _yearAndMonth.OnWeekElapsed += OnWeekPass;
@@ -243,23 +204,15 @@ namespace Mirage.Urbanization.Simulation
 
         public void Dispose()
         {
-            Console.WriteLine("Killing simulation...");
+            Mirage.Urbanization.Logger.Instance.WriteLine("Killing simulation...");
 
             _cancellationTokenSource.Cancel();
 
             foreach (var task in new[] { _powerTask, _growthSimulationTask, _crimeAndPollutionTask })
             {
-                try
-                {
-                    task.Wait();
-                }
-                catch (AggregateException aggEx)
-                {
-                    if (!aggEx.IsCancelled())
-                        throw;
-                }
+                task.Wait();
             }
-            Console.WriteLine("Simulation killed.");
+            Mirage.Urbanization.Logger.Instance.WriteLine("Simulation killed.");
         }
 
         public QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics()
@@ -300,22 +253,16 @@ namespace Mirage.Urbanization.Simulation
 
         private void RaiseAreaHotMessageEvent(string title, string message)
         {
-            var onOnAreaHotMessage = OnAreaHotMessage;
-            if (onOnAreaHotMessage == null)
-                return;
-            onOnAreaHotMessage(this, new SimulationSessionHotMessageEventArgs(title, message));
+            OnAreaHotMessage?.Invoke(this, new SimulationSessionHotMessageEventArgs(title, message));
         }
 
         public event EventHandler<SimulationSessionMessageEventArgs> OnAreaMessage;
         private void RaiseAreaMessageEvent(string message)
         {
-            var onOnAreaMessage = OnAreaMessage;
-            if (onOnAreaMessage == null)
-                return;
-            onOnAreaMessage(this, new SimulationSessionMessageEventArgs(message));
+            OnAreaMessage?.Invoke(this, new SimulationSessionMessageEventArgs(message));
         }
 
-        public ICityBudgetConfiguration CityBudgetConfiguration { get { return _cityBudgetConfiguration; } }
+        public ICityBudgetConfiguration CityBudgetConfiguration => _cityBudgetConfiguration;
 
         private readonly ICityBudget _cityBudget = new CityBudget();
 

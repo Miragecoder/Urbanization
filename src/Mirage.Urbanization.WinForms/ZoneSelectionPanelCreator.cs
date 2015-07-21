@@ -30,8 +30,8 @@ namespace Mirage.Urbanization.WinForms
 
         public ZoneSelectionPanelCreator(IReadOnlyArea area, Panel targetPanel)
         {
-            if (targetPanel == null) throw new ArgumentNullException("targetPanel");
-            if (area == null) throw new ArgumentNullException("area");
+            if (targetPanel == null) throw new ArgumentNullException(nameof(targetPanel));
+            if (area == null) throw new ArgumentNullException(nameof(area));
 
             _targetPanel = targetPanel;
 
@@ -64,7 +64,7 @@ namespace Mirage.Urbanization.WinForms
                             btn.Enabled = true;
                         button.Enabled = false;
                         _currentFactory = factory;
-                        _currentZoneConsumptionSample = _currentFactory();
+                        CurrentZoneConsumptionSample = _currentFactory();
                     };
 
                     button.Click += currentClickHandler;
@@ -79,14 +79,9 @@ namespace Mirage.Urbanization.WinForms
             if (_currentFactory == null) throw new InvalidOperationException();
         }
 
-        private IAreaConsumption _currentZoneConsumptionSample;
+        public IAreaConsumption CurrentZoneConsumptionSample { get; private set; }
 
-        public IAreaConsumption CurrentZoneConsumptionSample { get { return _currentZoneConsumptionSample; } }
-
-        public bool IsCurrentlyNetworkZoning
-        {
-            get { return _currentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption; }
-        }
+        public bool IsCurrentlyNetworkZoning => CurrentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption;
 
         public IAreaConsumption CreateNewCurrentZoneConsumption()
         {

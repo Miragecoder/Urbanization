@@ -14,7 +14,7 @@ namespace Mirage.Urbanization.Networks
         private PowerNetworkInfo(IEnumerable<IZoneInfo> memberZoneInfos, Action<string> onBrownoutsMessageFunc)
             : base(memberZoneInfos)
         {
-            if (onBrownoutsMessageFunc == null) throw new ArgumentNullException("onBrownoutsMessageFunc");
+            if (onBrownoutsMessageFunc == null) throw new ArgumentNullException(nameof(onBrownoutsMessageFunc));
             _onBrownoutsMessageFunc = onBrownoutsMessageFunc;
         }
 
@@ -60,10 +60,7 @@ namespace Mirage.Urbanization.Networks
                     .Distinct();
         }
 
-        public bool HasSuppliers
-        {
-            get { return GetElectricitySuppliers().Any(); }
-        }
+        public bool HasSuppliers => GetElectricitySuppliers().Any();
 
         public IEnumerable<IElectricitySupplier> GetElectricitySuppliers()
         {

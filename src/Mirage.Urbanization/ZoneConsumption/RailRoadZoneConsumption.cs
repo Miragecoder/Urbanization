@@ -10,22 +10,13 @@ namespace Mirage.Urbanization.ZoneConsumption
     {
         public RailRoadZoneConsumption(ZoneInfoFinder neighborNavigator) : base(neighborNavigator) { }
 
-        public override string Name
-        {
-            get { return "Railroad"; }
-        }
+        public override string Name => "Railroad";
 
-        public override char KeyChar { get { return 't'; } }
+        public override char KeyChar => 't';
 
-        public override bool CanBeOverriddenByZoneClusters
-        {
-            get { return false; }
-        }
-        public override int Cost { get { return 50; } }
+        public override bool CanBeOverriddenByZoneClusters => false;
+        public override int Cost => 50;
 
-        public override Color Color
-        {
-            get { return System.Drawing.Color.SaddleBrown; }
-        }
+        public override Color Color => System.Drawing.Color.SaddleBrown;
     }
 }

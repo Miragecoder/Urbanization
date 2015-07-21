@@ -63,7 +63,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 267);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Size = new System.Drawing.Size(558, 148);
+            this.groupBox1.Size = new System.Drawing.Size(558, 189);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Service expenses";
@@ -77,7 +77,7 @@
             this.serviceExpensesDataGridView.Location = new System.Drawing.Point(6, 21);
             this.serviceExpensesDataGridView.Name = "serviceExpensesDataGridView";
             this.serviceExpensesDataGridView.RowTemplate.Height = 24;
-            this.serviceExpensesDataGridView.Size = new System.Drawing.Size(546, 121);
+            this.serviceExpensesDataGridView.Size = new System.Drawing.Size(546, 162);
             this.serviceExpensesDataGridView.TabIndex = 0;
             // 
             // groupBox2
@@ -128,10 +128,10 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.totalsDataGridView);
-            this.groupBox4.Location = new System.Drawing.Point(12, 421);
+            this.groupBox4.Location = new System.Drawing.Point(12, 462);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox4.Size = new System.Drawing.Size(558, 191);
+            this.groupBox4.Size = new System.Drawing.Size(558, 150);
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Totals";
@@ -145,7 +145,7 @@
             this.totalsDataGridView.Location = new System.Drawing.Point(6, 21);
             this.totalsDataGridView.Name = "totalsDataGridView";
             this.totalsDataGridView.RowTemplate.Height = 24;
-            this.totalsDataGridView.Size = new System.Drawing.Size(546, 164);
+            this.totalsDataGridView.Size = new System.Drawing.Size(546, 123);
             this.totalsDataGridView.TabIndex = 0;
             // 
             // BudgetForm
@@ -164,7 +164,7 @@
             this.Name = "BudgetForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "City CityBudgetConfiguration";
+            this.Text = "City budget";
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.serviceExpensesDataGridView)).EndInit();
             this.groupBox2.ResumeLayout(false);

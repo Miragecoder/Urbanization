@@ -5,18 +5,15 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 {
     public class ZoneNeighborQuery
     {
-        private readonly IAreaZoneConsumption _areaZoneConsumption;
-        private readonly int _relativeX, _relativeY;
-
-        public IAreaZoneConsumption AreaZoneConsumption { get { return _areaZoneConsumption; } }
-        public int RelativeY { get { return _relativeY; } }
-        public int RelativeX { get { return _relativeX; } }
+        public IAreaZoneConsumption AreaZoneConsumption { get; }
+        public int RelativeY { get; }
+        public int RelativeX { get; }
 
         public ZoneNeighborQuery(IAreaZoneConsumption areaZoneConsumption, int relativeX, int relativeY)
         {
-            _areaZoneConsumption = areaZoneConsumption;
-            _relativeX = relativeX;
-            _relativeY = relativeY;
+            AreaZoneConsumption = areaZoneConsumption;
+            RelativeX = relativeX;
+            RelativeY = relativeY;
         }
     }
 

@@ -4,12 +4,12 @@ namespace Mirage.Urbanization
 {
     public class AreaConsumptionResultEventArgs : EventArgs
     {
-        private readonly IAreaConsumptionResult _areaConsumptionResult;
-        public IAreaConsumptionResult AreaConsumptionResult { get { return _areaConsumptionResult; } }
+        public IAreaConsumptionResult AreaConsumptionResult { get; }
+
         public AreaConsumptionResultEventArgs(IAreaConsumptionResult areaConsumptionResult)
         {
-            if (areaConsumptionResult == null) throw new ArgumentNullException("areaConsumptionResult");
-            _areaConsumptionResult = areaConsumptionResult;
+            if (areaConsumptionResult == null) throw new ArgumentNullException(nameof(areaConsumptionResult));
+            AreaConsumptionResult = areaConsumptionResult;
         }
     }
 }

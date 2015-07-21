@@ -8,15 +8,9 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
         private HighlightState _lastHighlightState;
 
-        public HighlightState Current
-        {
-            get
-            {
-                return _lastChange > DateTime.Now.AddMilliseconds(-40)
-                    ? _lastHighlightState
-                    : HighlightState.None;
-            }
-        }
+        public HighlightState Current => _lastChange > DateTime.Now.AddMilliseconds(-40)
+            ? _lastHighlightState
+            : HighlightState.None;
 
         public void SetState(HighlightState highlightState)
         {

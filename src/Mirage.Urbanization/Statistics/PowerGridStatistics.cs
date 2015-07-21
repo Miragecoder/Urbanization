@@ -7,6 +7,6 @@ namespace Mirage.Urbanization.Statistics
         public PowerGridStatistics(IEnumerable<IPowerGridNetworkStatistics> powerGridNetworkStatistics)
             : base(powerGridNetworkStatistics) { }
 
-        public IReadOnlyCollection<IPowerGridNetworkStatistics> PowerGridNetworkStatistics { get { return NetworkStatistics; } }
+        public IReadOnlyCollection<IPowerGridNetworkStatistics> PowerGridNetworkStatistics => NetworkStatistics;
     }
 }

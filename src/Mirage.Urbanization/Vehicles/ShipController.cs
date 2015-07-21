@@ -19,7 +19,7 @@ namespace Mirage.Urbanization.Vehicles
 
         private DateTime _lastShipInsertion = DateTime.Now;
 
-        private bool NewShipCanBeInserted { get { return DateTime.Now.AddSeconds(-5) > _lastShipInsertion; } }
+        private bool NewShipCanBeInserted => DateTime.Now.AddSeconds(-5) > _lastShipInsertion;
 
         protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
         {
@@ -105,15 +105,11 @@ namespace Mirage.Urbanization.Vehicles
                 return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
             }
 
-            protected override int SpeedInMilliseconds
-            {
-                get { return 500; }
-            }
+            protected override int SpeedInMilliseconds => 500;
 
             private class ShipPathNode
             {
                 private readonly IZoneInfo _rootZoneInfo;
-                private readonly IZoneInfo _currentZoneInfo;
                 private readonly ShipPathNode _preceedingShipPathNode;
 
                 private readonly Lazy<IEnumerable<ShipPathNode>> _childrenLazy;
@@ -140,7 +136,7 @@ namespace Mirage.Urbanization.Vehicles
                     }
                 }
 
-                public IZoneInfo CurrentZoneInfo { get { return _currentZoneInfo; } }
+                public IZoneInfo CurrentZoneInfo { get; }
 
                 public IEnumerable<ShipPathNode> EnumeratePathBackwards()
                 {
@@ -150,9 +146,7 @@ namespace Mirage.Urbanization.Vehicles
                             yield return x;
                 }
 
-                public int Distance { get { return _distance; } }
-
-                private readonly int _distance;
+                public int Distance { get; }
 
                 private ShipPathNode(
                     IZoneInfo rootZoneInfo,
@@ -162,18 +156,18 @@ namespace Mirage.Urbanization.Vehicles
                     int distance
                     )
                 {
-                    if (rootZoneInfo == null) throw new ArgumentNullException("rootZoneInfo");
+                    if (rootZoneInfo == null) throw new ArgumentNullException(nameof(rootZoneInfo));
                     _rootZoneInfo = rootZoneInfo;
-                    if (currentZoneInfo == null) throw new ArgumentNullException("currentZoneInfo");
-                    _currentZoneInfo = currentZoneInfo;
+                    if (currentZoneInfo == null) throw new ArgumentNullException(nameof(currentZoneInfo));
+                    CurrentZoneInfo = currentZoneInfo;
 
                     if (!seenPaths.Add(currentZoneInfo))
-                        throw new ArgumentException("'currentZoneInfo' was already added to this path.", "currentZoneInfo");
+                        throw new ArgumentException("'currentZoneInfo' was already added to this path.", nameof(currentZoneInfo));
 
                     _preceedingShipPathNode = preceedingShipPathNode;
 
-                    _distance = distance;
-                    _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => _currentZoneInfo
+                    Distance = distance;
+                    _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => CurrentZoneInfo
                         .GetNorthEastSouthWest()
                         .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject))
                         .OrderByDescending(x => CalculateDistance(x.MatchingObject.Point, _rootZoneInfo.Point))
@@ -184,7 +178,7 @@ namespace Mirage.Urbanization.Vehicles
                                 currentZoneInfo: x.MatchingObject,
                                 preceedingShipPathNode: this,
                                 seenPaths: seenPaths,
-                                distance: _distance + 1
+                                distance: Distance + 1
                                 )
                         )
                         );

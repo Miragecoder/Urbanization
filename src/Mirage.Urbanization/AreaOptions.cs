@@ -6,30 +6,45 @@ namespace Mirage.Urbanization
     public class AreaOptions
     {
         private readonly TerraformingOptions _terraformingOptions;
-        private readonly ProcessOptions _processOptions;
-        private readonly ILandValueCalculator _landValueCalculator;
 
         private readonly PersistedArea _persistedArea;
 
-        public AreaOptions(ILandValueCalculator landValueCalculator, TerraformingOptions terraformingOptions, ProcessOptions processOptions)
-            : this(landValueCalculator, processOptions)
+        private readonly Func<ICityServiceStrengthLevels> _getCityServiceStrengthLevels;
+        public ICityServiceStrengthLevels GetCityServiceStrengthLevels()
         {
-            if (terraformingOptions == null) throw new ArgumentNullException("terraformingOptions");
+            return _getCityServiceStrengthLevels();
+        }
+
+        public AreaOptions(ILandValueCalculator landValueCalculator, 
+            TerraformingOptions terraformingOptions, 
+            ProcessOptions processOptions,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
+            : this(landValueCalculator, processOptions, getCityServiceStrengthLevels)
+        {
+            if (terraformingOptions == null) throw new ArgumentNullException(nameof(terraformingOptions));
             _terraformingOptions = terraformingOptions;
         }
 
-        private AreaOptions(ILandValueCalculator landValueCalculator, ProcessOptions processOptions)
+        private AreaOptions(
+            ILandValueCalculator landValueCalculator, 
+            ProcessOptions processOptions,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
         {
-            if (landValueCalculator == null) throw new ArgumentNullException("landValueCalculator");
-            if (processOptions == null) throw new ArgumentNullException("processOptions");
-            _processOptions = processOptions;
-            _landValueCalculator = landValueCalculator;
+            if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
+            if (processOptions == null) throw new ArgumentNullException(nameof(processOptions));
+            if (getCityServiceStrengthLevels == null) throw new ArgumentNullException(nameof(getCityServiceStrengthLevels));
+            ProcessOptions = processOptions;
+            LandValueCalculator = landValueCalculator;
+            _getCityServiceStrengthLevels = getCityServiceStrengthLevels;
         }
 
-        public AreaOptions(ILandValueCalculator landValueCalculator, PersistedArea persistedArea, ProcessOptions processOptions)
-            : this(landValueCalculator, processOptions)
+        public AreaOptions(ILandValueCalculator landValueCalculator, 
+            PersistedArea persistedArea, 
+            ProcessOptions processOptions,
+            Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
+            : this(landValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
-            if (persistedArea == null) throw new ArgumentNullException("persistedArea");
+            if (persistedArea == null) throw new ArgumentNullException(nameof(persistedArea));
             _persistedArea = persistedArea;
         }
 
@@ -43,18 +58,12 @@ namespace Mirage.Urbanization
             if (_persistedArea != null) persistedAreaAction(_persistedArea);
         }
 
-        public ProcessOptions ProcessOptions
-        {
-            get { return _processOptions; }
-        }
-
-        public ILandValueCalculator LandValueCalculator { get { return _landValueCalculator; } }
+        public ProcessOptions ProcessOptions { get; }
+        public ILandValueCalculator LandValueCalculator { get; }
 
         public int GetZoneWidthAndHeight()
         {
-            return _terraformingOptions != null
-                ? _terraformingOptions.ZoneWidthAndHeight
-                : _persistedArea.GetZoneWidthAndHeight();
+            return _terraformingOptions?.ZoneWidthAndHeight ?? _persistedArea.GetZoneWidthAndHeight();
         }
     }
 }
