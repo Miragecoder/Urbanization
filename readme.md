@@ -1,6 +1,6 @@
 # Urbanization
 
-AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/ala0uiruj1s644pq/branch/master?svg=true)](https://ci.appveyor.com/project/Miragecoder/urbanization/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/ala0uiruj1s644pq/branch/master?svg=true)](https://ci.appveyor.com/project/Miragecoder/urbanization/branch/master)
 
 Urbanization is a .NET implementation of a city building simulation game, heavily inspired by the classic [Simcity](http://en.wikipedia.org/wiki/SimCity_(1989_video_game)) game released in 1989; of which its source code has been released under the title [Micropolis](https://github.com/SimHacker/micropolis).
 
