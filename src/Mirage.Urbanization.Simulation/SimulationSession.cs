@@ -115,7 +115,7 @@ namespace Mirage.Urbanization.Simulation
                 if (!PowerAndMiscStatisticsLoaded)
                     return;
 
-                var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token).Result;
+                var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token);
 
                 _persistedCityStatisticsCollection.Add(
                        _cityBudget.ProcessFinances(new PersistedCityStatistics(
@@ -140,7 +140,7 @@ namespace Mirage.Urbanization.Simulation
             _powerTask = new NeverEndingTask("Power grid scan", () =>
              {
                  _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                 _lastPowerGridStatistics = _area.CalculatePowergridStatistics(_cancellationTokenSource.Token).Result;
+                 _lastPowerGridStatistics = _area.CalculatePowergridStatistics();
              }, _cancellationTokenSource.Token);
 
             _crimeAndPollutionTask = new NeverEndingTask("Crime and pollution calculation", () =>

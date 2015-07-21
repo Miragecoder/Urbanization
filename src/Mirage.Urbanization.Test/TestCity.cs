@@ -118,7 +118,7 @@ namespace Mirage.Urbanization.Test
                 });
             }
 
-            Assert.IsTrue(Area.CalculatePowergridStatistics(new CancellationToken()).Result.PowerGridNetworkStatistics.Any());
+            Assert.IsTrue(Area.CalculatePowergridStatistics().PowerGridNetworkStatistics.Any());
 
             Assert.IsTrue(GetZoneInfoFor(x => ResidentialZonePoint).GetAsZoneCluster<ResidentialZoneClusterConsumption>().MatchingObject.HasPower);
             Assert.IsTrue(GetZoneInfoFor(x => IndustrialZonePoint).GetAsZoneCluster<IndustrialZoneClusterConsumption>().MatchingObject.HasPower);
