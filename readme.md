@@ -6,8 +6,9 @@ Urbanization is a .NET implementation of a city building simulation game, heavil
 
 The implementation is far from complete, but most of the basics are currently present. These include (amongst others):
 - Customizable terrain generation
-- Power grid and infrastructure simulation (including population growth)
-- Crime and pollution
+- Power grid and infrastructure simulation (including population growth and commuting)
+- Crime and fire hazard, both of which can be controlled by building police and/or fire stations
+- Pollution, which is negatively influenced by industrial areas (and positively by nature!)
 
 ![Screenshot of 'Urbanization'](/screenshot.png?raw=true "Screenshot of 'Urbanization'")
 
