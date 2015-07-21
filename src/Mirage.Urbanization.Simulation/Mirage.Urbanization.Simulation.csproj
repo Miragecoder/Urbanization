@@ -62,6 +62,7 @@
     <Compile Include="IReadOnlyYearAndMonth.cs" />
     <Compile Include="ISimulationSession.cs" />
     <Compile Include="IYearAndMonth.cs" />
+    <Compile Include="NeverEndingTask.cs" />
     <Compile Include="PersistedCityBudgetConfiguration.cs" />
     <Compile Include="Persistence\PersistedCityStatistics.cs" />
     <Compile Include="Persistence\PersistedCityStatisticsCollection.cs" />

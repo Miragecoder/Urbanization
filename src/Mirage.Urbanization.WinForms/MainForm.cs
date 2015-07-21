@@ -181,8 +181,7 @@ namespace Mirage.Urbanization.WinForms
             _areaRenderHelper = new SimulationRenderHelper(
                            gamePanel: _gamePanel,
                            renderZoneOptions: new RenderZoneOptions(
-                               renderDebugPollutionValues: () => toggleOverlayNumbers.Checked,
-                               showDebugGrowthPathFinding: () => enableMoneyCheatToolStripMenuItem.Checked,
+                               showDebugGrowthPathFinding: () => showGrowthPathFinding.Checked,
                                selectedGraphicsManagerFunc: () => _graphicsManagerSelection.GetCurrentOption(),
                                getCurrentOverlayOptionFunc: () => _overlaySelection.GetCurrentOption()
                            ),

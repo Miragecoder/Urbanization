@@ -42,7 +42,7 @@ namespace Mirage.Urbanization.WinForms.Rendering
                     frameCount++;
                     if (stopwatch.Elapsed.Seconds >= 1)
                     {
-                        Console.WriteLine("Amount of FPS: " + frameCount);
+                        Mirage.Urbanization.Logger.Instance.WriteLine("Amount of FPS: " + frameCount);
                         frameCount = 0;
 
                         stopwatch.Reset();
@@ -55,7 +55,7 @@ namespace Mirage.Urbanization.WinForms.Rendering
 
         public virtual void Dispose()
         {
-            Console.WriteLine("Killing renderer...");
+            Mirage.Urbanization.Logger.Instance.WriteLine("Killing renderer...");
             _cancellationTokenSource.Cancel();
             try
             {
@@ -66,7 +66,7 @@ namespace Mirage.Urbanization.WinForms.Rendering
                 if (!aggEx.IsCancelled())
                     throw;
             }
-            Console.WriteLine("Renderer killed.");
+            Mirage.Urbanization.Logger.Instance.WriteLine("Renderer killed.");
         }
     }
 }
