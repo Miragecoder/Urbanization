@@ -28,7 +28,7 @@ namespace Mirage.Urbanization.Simulation
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {description}...");
                     taskAction();
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {description} completed in {stopWatch.Elapsed}.");
-                    Task.Delay(2000, token).Wait(token);
+                    Thread.Sleep(2000);
                 }
                 // ReSharper disable once FunctionNeverReturns
             }, token);
