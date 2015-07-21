@@ -269,10 +269,13 @@ namespace Mirage.Urbanization.WinForms
         {
             lock (_locker)
             {
+                Stopping?.Invoke(this, new EventArgs());
                 SimulationSession.Dispose();
                 _graphicsManager.Dispose();
             }
         }
+
+        public event EventHandler Stopping;
 
         private bool IsVisibleInViewPort(Rectangle rect)
         {

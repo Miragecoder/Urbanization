@@ -112,19 +112,6 @@ namespace Mirage.Urbanization.WinForms
             WithAreaRenderHelper(helper => helper.Stop());
         }
 
-        private void statisticsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WithAreaRenderHelper(helper =>
-            {
-                var statistics = helper.SimulationSession.GetAllCityStatistics();
-
-                _currentStatisticsForm = new StatisticsForm(helper);
-
-                _currentStatisticsForm.StartPosition = FormStartPosition.CenterParent;
-                _currentStatisticsForm.ShowDialog(this);
-            });
-        }
-
         private StatisticsForm _currentStatisticsForm;
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -322,47 +309,36 @@ namespace Mirage.Urbanization.WinForms
                 _lastSaveFileName = fileName;
             }
         }
+        private readonly SimulationRenderHelperFormManager<EvaluationForm> _evaluationFormManager = new SimulationRenderHelperFormManager<EvaluationForm>(helper => new EvaluationForm(helper));
 
         private void evaluationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WithAreaRenderHelper(helper =>
             {
-                helper
-                    .SimulationSession
-                    .GetRecentStatistics()
-                    .WithResultIfHasMatch(statistics =>
-                    {
-                        new EvaluationForm(helper)
-                        {
-                            StartPosition = FormStartPosition.CenterParent,
-                            ControlBox = false,
-                            FormBorderStyle = FormBorderStyle.FixedDialog
-                        }.ShowDialog(this);
-                    }
-                );
+                _evaluationFormManager.Show(this, helper);
             });
         }
+
+        private readonly SimulationRenderHelperFormManager<BudgetForm> _budgetFormManager = new SimulationRenderHelperFormManager<BudgetForm>(helper => new BudgetForm(helper));
 
         private void cityBudgetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WithAreaRenderHelper(helper =>
             {
-                helper
-                    .SimulationSession
-                    .GetRecentStatistics()
-                    .WithResultIfHasMatch(statistics =>
-                    {
-                        new BudgetForm(helper)
-                        {
-                            StartPosition = FormStartPosition.CenterParent,
-                            ControlBox = false,
-                            FormBorderStyle = FormBorderStyle.FixedDialog
-                        }.ShowDialog(this);
-                    }
-                );
+                _budgetFormManager.Show(this, helper);
             });
         }
-        
+
+        private readonly SimulationRenderHelperFormManager<StatisticsForm> _statisticsFormManager = new SimulationRenderHelperFormManager<StatisticsForm>(helper => new StatisticsForm(helper));
+
+        private void statisticsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WithAreaRenderHelper(helper =>
+            {
+                _statisticsFormManager.Show(this, helper);
+            });
+        }
+
         private readonly FormManager<LogWindow> _logWindowFormManager = new FormManager<LogWindow>(() => new LogWindow());
 
         private void debugWindowToolStripMenuItem_Click(object sender, EventArgs e)
