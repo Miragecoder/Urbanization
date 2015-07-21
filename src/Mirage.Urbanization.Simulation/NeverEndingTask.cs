@@ -20,9 +20,10 @@ namespace Mirage.Urbanization.Simulation
         {
             return new Task(() =>
             {
+                var stopWatch = new Stopwatch();
                 while (true)
                 {
-                    var stopWatch = new Stopwatch();
+                    stopWatch.Restart();
 
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {description}...");
                     taskAction();

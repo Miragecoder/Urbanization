@@ -362,9 +362,21 @@ namespace Mirage.Urbanization.WinForms
                 );
             });
         }
+
+        private LogWindow _logWindow;
+
         private void debugWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new LogWindow().ShowDialog(this);
+            if (_logWindow == null)
+            {
+                _logWindow = new LogWindow();
+                _logWindow.Closed += (a, x) =>
+                {
+                    _logWindow.Dispose();
+                    _logWindow = null;
+                };
+                _logWindow.Show(this);
+            }
         }
     }
 }
