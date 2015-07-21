@@ -61,6 +61,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
+            this.debugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -242,7 +243,8 @@
             this.showGrowthPathFinding,
             this.enableMoneyCheatToolStripMenuItem,
             this.toolStripSeparator5,
-            this.toggleOverlayNumbers});
+            this.toggleOverlayNumbers,
+            this.debugWindowToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -327,6 +329,13 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
+            // debugWindowToolStripMenuItem
+            // 
+            this.debugWindowToolStripMenuItem.Name = "debugWindowToolStripMenuItem";
+            this.debugWindowToolStripMenuItem.Size = new System.Drawing.Size(252, 26);
+            this.debugWindowToolStripMenuItem.Text = "Log output";
+            this.debugWindowToolStripMenuItem.Click += new System.EventHandler(this.debugWindowToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -383,6 +392,7 @@
         private System.Windows.Forms.ToolStripStatusLabel projectedIncomeLabel;
         private System.Windows.Forms.ToolStripMenuItem cityBudgetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGrowthPathFinding;
+        private System.Windows.Forms.ToolStripMenuItem debugWindowToolStripMenuItem;
     }
 }
 
