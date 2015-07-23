@@ -28,7 +28,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
             return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult((int)Math.Round(newScore)));
         }
 
-        private int GetScoreFor(IReadOnlyZoneInfo zoneInfo)
+        private static int GetScoreFor(IReadOnlyZoneInfo zoneInfo)
         {
             var consumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption();
 
@@ -36,21 +36,13 @@ namespace Mirage.Urbanization.Simulation.Datameters
             {
                 var clusterMemberConsumption = consumption as ZoneClusterMemberConsumption;
 
-                int multiplier = 1;
-
                 var parentAsGrowthZone = clusterMemberConsumption.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption;
                 if (parentAsGrowthZone != null)
                 {
-                    multiplier = parentAsGrowthZone.PopulationDensity;
+                    return clusterMemberConsumption.SingleCellCost * parentAsGrowthZone.PopulationDensity;
                 }
-
-                return clusterMemberConsumption.SingleCellCost * multiplier;
             }
-
-            if (consumption is EmptyZoneConsumption || consumption is WoodlandZoneConsumption || consumption is WaterZoneConsumption)
-                return 0;
-
-            return consumption.Cost;
+            return 0;
         }
     }
 }
