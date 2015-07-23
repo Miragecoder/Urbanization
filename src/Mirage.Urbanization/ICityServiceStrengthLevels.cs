@@ -4,5 +4,9 @@ namespace Mirage.Urbanization
     {
         decimal PoliceStrength { get; }
         decimal FireSquadStrength { get; }
+
+        decimal RoadInfrastructureStrength { get; }
+
+        decimal RailroadInfrastructureStrength { get; }
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Statistics\CityServiceStatistics.cs" />
     <Compile Include="Statistics\ICityServicesStatistics.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Vehicles\AirplaneController.cs" />
     <Compile Include="Area.cs" />
     <Compile Include="AreaConsumptionResult.cs" />

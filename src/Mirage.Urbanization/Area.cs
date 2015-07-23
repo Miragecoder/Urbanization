@@ -11,6 +11,7 @@ using Mirage.Urbanization.Statistics;
 using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization
 {
@@ -139,6 +140,82 @@ namespace Mirage.Urbanization
                     .GenerateFrom(_zoneInfoGrid.ZoneInfos, RaiseAreaMessageEvent)
                     .Select(x => x.PerformSurge())
                 );
+        }
+
+        private bool RandomDeterioriation<TBaseInfrastructureNetworkZoneConsumption>(
+            Func<ICityServiceStrengthLevels, decimal> serviceSelector)
+            where TBaseInfrastructureNetworkZoneConsumption : BaseInfrastructureNetworkZoneConsumption
+        {
+            var strengthLevel = Convert.ToInt32(serviceSelector(_areaOptions.GetCityServiceStrengthLevels()) * 100);
+
+            Func<bool> diceRoll = () => _random.Next(0, 100) > strengthLevel;
+
+            if (strengthLevel >= 100)
+                return false;
+
+            foreach (var road in EnumerateZoneInfos()
+                .Where(x => x.ConsumptionState.GetZoneConsumption() is TBaseInfrastructureNetworkZoneConsumption)
+                .Where(road => diceRoll())
+                .Where(road => diceRoll())
+                .Where(road => diceRoll()))
+            {
+                ConsumeZoneAtPrivate(road, new RubbishZoneConsumption());
+            }
+            return true;
+        }
+
+        public IMiscCityStatistics CalculateMiscCityStatistics(CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            var queryCrimeResults = new HashSet<IQueryCrimeResult>(EnumerateZoneInfos().Select(x => x.QueryCrime()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+
+            token.ThrowIfCancellationRequested();
+            var queryLandValueResults = new HashSet<IQueryLandValueResult>(EnumerateZoneInfos().Select(x => x.QueryLandValue()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+
+            token.ThrowIfCancellationRequested();
+            var queryPollutionResults = new HashSet<IQueryPollutionResult>(EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+
+            token.ThrowIfCancellationRequested();
+            var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+
+            token.ThrowIfCancellationRequested();
+
+            var deterioriatingInfrastructures = new HashSet<string>();
+
+            if (RandomDeterioriation<RoadZoneConsumption>(x => x.RoadInfrastructureStrength))
+                deterioriatingInfrastructures.Add("road");
+
+            token.ThrowIfCancellationRequested();
+
+            if (RandomDeterioriation<RailRoadZoneConsumption>(x => x.RailroadInfrastructureStrength))
+                deterioriatingInfrastructures.Add("railroad");
+
+            token.ThrowIfCancellationRequested();
+
+            if (deterioriatingInfrastructures.Any())
+                RaiseAreaMessageEvent((string.Join(" and ", deterioriatingInfrastructures) + " infrastructure is deterioriating due to lack of funding.").FirstCharToUpper());
+
+            var travelDistances = new HashSet<BaseGrowthZoneClusterConsumption>(
+                    EnumerateZoneInfos()
+                    .Select(x => x.ConsumptionState.GetZoneConsumption())
+                    .OfType<ZoneClusterMemberConsumption>()
+                    .Where(x => x.IsCentralClusterMember)
+                    .Select(x => x.ParentBaseZoneClusterConsumption)
+                    .OfType<BaseGrowthZoneClusterConsumption>()
+                )
+                .Select(x => x.ZoneClusterMembers.First(y => y.IsCentralClusterMember))
+                .Select(x => x.GetZoneInfo())
+                .Select(x => x.WithResultIfHasMatch(y => y.GetLastAverageTravelDistance()))
+                .Where(x => x.HasValue)
+                .Select(x => x.Value);
+
+            return new MiscCityStatistics(
+                queryCrimeResults: queryCrimeResults,
+                queryFireHazardResults: queryFireHazardResults,
+                queryLandValueResults: queryLandValueResults,
+                queryPollutionResults: queryPollutionResults,
+                queryTravelDistanceResults: travelDistances
+            );
         }
 
         public IGrowthZoneStatistics PerformGrowthSimulationCycle(CancellationToken cancellationToken)

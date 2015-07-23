@@ -11,7 +11,10 @@ namespace Mirage.Urbanization.Simulation
         public decimal FireDepartmentServiceRate { get; set; } = 1M;
         public decimal RoadInfrastructureServiceRate { get; set; } = 1M;
         public decimal RailroadInfrastructureServiceRate { get; set; } = 1M;
-        public decimal PoliceStrength => PoliceServiceRate;
-        public decimal FireSquadStrength => FireDepartmentServiceRate;
+
+        decimal ICityServiceStrengthLevels.PoliceStrength => PoliceServiceRate;
+        decimal ICityServiceStrengthLevels.FireSquadStrength => FireDepartmentServiceRate;
+        decimal ICityServiceStrengthLevels.RoadInfrastructureStrength => RoadInfrastructureServiceRate;
+        decimal ICityServiceStrengthLevels.RailroadInfrastructureStrength => RailroadInfrastructureServiceRate;
     }
 }

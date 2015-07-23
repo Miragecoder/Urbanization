@@ -144,43 +144,9 @@ namespace Mirage.Urbanization.Simulation
              }, _cancellationTokenSource.Token);
 
             _crimeAndPollutionTask = new NeverEndingTask("Crime and pollution calculation", () =>
-             {
-                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                 var queryCrimeResults = new HashSet<IQueryCrimeResult>(_area.EnumerateZoneInfos().Select(x => x.QueryCrime()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                 var queryLandValueResults = new HashSet<IQueryLandValueResult>(_area.EnumerateZoneInfos().Select(x => x.QueryLandValue()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                 var queryPollutionResults = new HashSet<IQueryPollutionResult>(_area.EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                 var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(_area.EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                 var travelDistances = new HashSet<BaseGrowthZoneClusterConsumption>(
-                         _area
-                         .EnumerateZoneInfos()
-                         .Select(x => x.ConsumptionState.GetZoneConsumption())
-                         .OfType<ZoneClusterMemberConsumption>()
-                         .Where(x => x.IsCentralClusterMember)
-                         .Select(x => x.ParentBaseZoneClusterConsumption)
-                         .OfType<BaseGrowthZoneClusterConsumption>()
-                     )
-                     .Select(x => x.ZoneClusterMembers.First(y => y.IsCentralClusterMember))
-                     .Select(x => x.GetZoneInfo())
-                     .Select(x => x.WithResultIfHasMatch(y => y.GetLastAverageTravelDistance()))
-                     .Where(x => x.HasValue)
-                     .Select(x => x.Value);
-
-                 _lastMiscCityStatistics = new MiscCityStatistics(
-                     queryCrimeResults: queryCrimeResults,
-                     queryFireHazardResults: queryFireHazardResults,
-                     queryLandValueResults: queryLandValueResults,
-                     queryPollutionResults: queryPollutionResults,
-                     queryTravelDistanceResults: travelDistances
-                 );
+            {
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                _lastMiscCityStatistics = _area.CalculateMiscCityStatistics(_cancellationTokenSource.Token);
              }, _cancellationTokenSource.Token);
 
 
