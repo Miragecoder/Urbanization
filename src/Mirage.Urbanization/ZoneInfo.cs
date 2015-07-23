@@ -171,9 +171,9 @@ namespace Mirage.Urbanization
                 pollutionBehaviour = (consumptionState as ZoneClusterMemberConsumption).ParentBaseZoneClusterConsumption
                     .PollutionBehaviour;
             }
-            else if (consumptionState is WoodlandZoneConsumption)
+            else if (consumptionState is ISingleZoneConsumptionWithPollutionBehaviour)
             {
-                pollutionBehaviour = (consumptionState as WoodlandZoneConsumption).PollutionBehaviour;
+                pollutionBehaviour = (consumptionState as ISingleZoneConsumptionWithPollutionBehaviour).PollutionBehaviour;
             }
             else
             {

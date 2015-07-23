@@ -445,6 +445,15 @@ namespace Mirage.Urbanization.Tilesets
                 public static readonly Bitmap WoodWestNorthEast = GetImage("NetworkZones.Wood.woodnwe.png");
                 public static readonly Bitmap WoodNorthWestEastSouth = GetImage("NetworkZones.Wood.woodnwes.png");
             }
+            public static class Park
+            {
+                public static readonly Bitmap WoodNoDirection = GetImage("NetworkZones.Park.park.png");
+                public static readonly Bitmap WoodEast = GetImage("NetworkZones.Park.parke.png");
+                public static readonly Bitmap WoodEastWest = GetImage("NetworkZones.Park.parkew.png");
+                public static readonly Bitmap WoodNorthWest = GetImage("NetworkZones.Park.parknw.png");
+                public static readonly Bitmap WoodWestNorthEast = GetImage("NetworkZones.Park.parknwe.png");
+                public static readonly Bitmap WoodNorthWestEastSouth = GetImage("NetworkZones.Park.parknwes.png");
+            }
             public static class Water
             {
                 public static readonly Bitmap WaterNoDirection = GetImage("NetworkZones.Water.water.png");

@@ -32,6 +32,15 @@ namespace Mirage.Urbanization.Tilesets
             bitmapNoDirection: BitmapAccessor.NetworkZones.Wood.WoodNoDirection
         );
 
+        private readonly INetworkZoneTileset _parkNetworkZoneTileset = new NetworkZoneTileset(
+            bitmapEastWest: BitmapAccessor.NetworkZones.Park.WoodEastWest,
+            bitmapNorthWest: BitmapAccessor.NetworkZones.Park.WoodNorthWest,
+            bitmapWestNorthEast: BitmapAccessor.NetworkZones.Park.WoodWestNorthEast,
+            bitmapNorthEastSouthWest: BitmapAccessor.NetworkZones.Park.WoodNorthWestEastSouth,
+            bitmapEast: BitmapAccessor.NetworkZones.Park.WoodEast,
+            bitmapNoDirection: BitmapAccessor.NetworkZones.Park.WoodNoDirection
+        );
+
         private readonly INetworkZoneTileset _railNetworkZoneTileset = new NetworkZoneTileset(
             bitmapEastWest: BitmapAccessor.NetworkZones.Rail.RailEastWest,
             bitmapNorthWest: BitmapAccessor.NetworkZones.Rail.RailNorthWest,
@@ -96,6 +105,10 @@ namespace Mirage.Urbanization.Tilesets
                 else if (consumption is WoodlandZoneConsumption)
                 {
                     bitmapOne = _woodNetworkZoneTileset.GetBitmapFor(networkConsumption);
+                }
+                else if (consumption is ParkZoneConsumption)
+                {
+                    bitmapOne = _parkNetworkZoneTileset.GetBitmapFor(networkConsumption);
                 }
                 else throw new InvalidOperationException();
             }

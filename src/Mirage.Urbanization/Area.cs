@@ -342,8 +342,7 @@ namespace Mirage.Urbanization
         public IEnumerable<Func<IAreaConsumption>> GetSupportedZoneConsumptionFactories()
         {
             yield return () => new EmptyZoneConsumption();
-            yield return () => new WoodlandZoneConsumption(_createZoneInfoFinder());
-            yield return () => new WaterZoneConsumption(_createZoneInfoFinder());
+            yield return () => new ParkZoneConsumption(_createZoneInfoFinder());
             yield return () => new PowerLineConsumption(_createZoneInfoFinder());
             yield return () => new RoadZoneConsumption(_createZoneInfoFinder());
             yield return () => new RailRoadZoneConsumption(_createZoneInfoFinder());
@@ -514,6 +513,8 @@ namespace Mirage.Urbanization
         {
             foreach (var x in GetSupportedZoneConsumptionFactories())
                 yield return x;
+            yield return () => new WaterZoneConsumption(_createZoneInfoFinder());
+            yield return () => new WoodlandZoneConsumption(_createZoneInfoFinder());
             yield return () => new RubbishZoneConsumption();
         }
 

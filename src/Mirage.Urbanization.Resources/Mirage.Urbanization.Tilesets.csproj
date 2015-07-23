@@ -505,6 +505,17 @@
   <ItemGroup>
     <EmbeddedResource Include="stadium.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="park.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NetworkZones\Park\park.png" />
+    <EmbeddedResource Include="NetworkZones\Park\parke.png" />
+    <EmbeddedResource Include="NetworkZones\Park\parkew.png" />
+    <EmbeddedResource Include="NetworkZones\Park\parknw.png" />
+    <EmbeddedResource Include="NetworkZones\Park\parknwe.png" />
+    <EmbeddedResource Include="NetworkZones\Park\parknwes.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
