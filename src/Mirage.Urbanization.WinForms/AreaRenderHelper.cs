@@ -226,10 +226,10 @@ namespace Mirage.Urbanization.WinForms
                             if (pair.Render)
                             {
                                 var pointOne = _zoneRenderInfos[pair.Third].GetRectangle().ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size));
-                                var pointThree = _zoneRenderInfos[pair.Second].GetRectangle().ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size));
+                                var pointTwo = _zoneRenderInfos[pair.Second].GetRectangle().ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size));
 
-                                var distanceX = Convert.ToInt32(pointOne.Location.X + ((pointThree.Location.X - pointOne.Location.X) * airplane.Progress));
-                                var distanceY = Convert.ToInt32(pointOne.Location.Y + ((pointThree.Location.Y - pointOne.Location.Y) * airplane.Progress));
+                                var distanceX = Convert.ToInt32(pointOne.Location.X + ((pointTwo.Location.X - pointOne.Location.X) * airplane.Progress));
+                                var distanceY = Convert.ToInt32(pointOne.Location.Y + ((pointTwo.Location.Y - pointOne.Location.Y) * airplane.Progress));
 
                                 var currentRectangle = _zoneRenderInfos[pair.Second]
                                     .GetRectangle()
