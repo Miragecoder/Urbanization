@@ -37,7 +37,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 true
                 ),
             TravelDistanceDataMeter = new ZoneInfoDataMeter(
-                20,
+                30,
                 "Travel distance",
                 x => x.PersistedCityStatistics.AverageTravelDistanceStatistics.Average,
                 x => x.GetLastAverageTravelDistance() ?? 0,
