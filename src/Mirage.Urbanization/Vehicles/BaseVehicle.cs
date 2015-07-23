@@ -36,6 +36,37 @@ namespace Mirage.Urbanization.Vehicles
 
         protected abstract int SpeedInMilliseconds { get; }
 
+        private decimal _cachedProgress;
+
+        private DateTime _lastProgressCalculation = DateTime.MinValue;
+
+        public decimal Progress
+        {
+            get
+            {
+                if ((DateTime.Now - _lastProgressCalculation).TotalMilliseconds > 10)
+                {
+                    decimal returnValue;
+                    var range = (DateTime.Now - _lastChange);
+
+                    if (range.Milliseconds > 0)
+                    {
+                        returnValue = Convert.ToDecimal(
+                            (range.TotalMilliseconds / SpeedInMilliseconds
+                            ));
+                    }
+                    else
+                        returnValue = 0M;
+
+                    if (returnValue < 0)
+                        throw new InvalidOperationException();
+                    _cachedProgress = returnValue;
+                    _lastProgressCalculation = DateTime.Now;
+                }
+                return _cachedProgress;
+            }
+        } 
+
         protected void IfMustBeMoved(Action action)
         {
             if (_lastChange > DateTime.Now.AddMilliseconds(-SpeedInMilliseconds))
