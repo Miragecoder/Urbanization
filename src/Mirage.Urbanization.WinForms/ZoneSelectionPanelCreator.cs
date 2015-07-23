@@ -81,7 +81,7 @@ namespace Mirage.Urbanization.WinForms
 
         public IAreaConsumption CurrentZoneConsumptionSample { get; private set; }
 
-        public bool IsCurrentlyNetworkZoning => CurrentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption;
+        public bool IsCurrentlyNetworkZoning => CurrentZoneConsumptionSample is BaseInfrastructureNetworkZoneConsumption || CurrentZoneConsumptionSample is ParkZoneConsumption;
 
         public IAreaConsumption CreateNewCurrentZoneConsumption()
         {
