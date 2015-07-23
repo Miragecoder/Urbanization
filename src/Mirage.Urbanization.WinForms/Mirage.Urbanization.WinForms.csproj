@@ -109,6 +109,7 @@
     <Compile Include="Rendering\SharpDx\ConverterAndCacher.cs" />
     <Compile Include="Rendering\SharpDx\DxGraphicsManagerWrapper.cs" />
     <Compile Include="RenderZoneOptions.cs" />
+    <Compile Include="RuntimeInspection.cs" />
     <Compile Include="SimulationRenderHelperFormManager.cs" />
     <Compile Include="StatisticsForm.cs">
       <SubType>Form</SubType>
