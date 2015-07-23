@@ -54,10 +54,18 @@ namespace Mirage.Urbanization
                 : ZoneInfo
                     .GetNorthEastSouthWest()
                     .Where(x => x.HasMatch)
-                    .Where(x => x.MatchingObject != (PreviousPathNode != null ? PreviousPathNode.ZoneInfo : null))
+                    .Where(x => x.MatchingObject != PreviousPathNode?.ZoneInfo)
                     .Where(x => distanceTracker.DoesNotExceedMaximumDistanceForAllCriteria(ZoneInfo, distance))
                     .Where(x => canBeJoinedFunc(this, x))
-                    .Select(x => new ZoneInfoPathNode(x.MatchingObject, canBeJoinedFunc, getDestinationHashCode, this, _originParentPathNode, Distance + x.MatchingObject.GetDistanceScoreBasedOnConsumption(), distanceTracker))
+                    .Select(x => new ZoneInfoPathNode(
+                        zoneInfo: x.MatchingObject, 
+                        canBeJoinedFunc: canBeJoinedFunc, 
+                        getDestinationHashCode: getDestinationHashCode, 
+                        previousPathNode: this, 
+                        originParentPathNode: _originParentPathNode, 
+                        distance: Distance + x.MatchingObject.GetDistanceScoreBasedOnConsumption(), 
+                        distanceTracker: distanceTracker
+                    ))
                     .ToList<IZoneInfoPathNode>());
         }
 
@@ -100,9 +108,10 @@ namespace Mirage.Urbanization
         public IEnumerable<IZoneInfoPathNode> EnumeratePathBackwards()
         {
             yield return this;
-            if (PreviousPathNode != null)
-                foreach (var x in PreviousPathNode.EnumeratePathBackwards())
-                    yield return x;
+            if (PreviousPathNode == null)
+                yield break;
+            foreach (var x in PreviousPathNode.EnumeratePathBackwards())
+                yield return x;
         }
 
         public IZoneInfoPathNode WithPathMembers(Action<IZoneInfoPathNode> func)

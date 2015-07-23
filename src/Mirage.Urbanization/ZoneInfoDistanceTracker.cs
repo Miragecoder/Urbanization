@@ -69,7 +69,7 @@ namespace Mirage.Urbanization
         public bool IsPreviouslyNotSeenOrSeenAtLargerDistance(IZoneInfo node, int distance, IZoneInfoPathNode previousPathNode)
         {
             var currentConsumption = node.ConsumptionState.GetZoneConsumption();
-            var previousConsumption = previousPathNode != null ? previousPathNode.ZoneInfo.ConsumptionState.GetZoneConsumption() : null;
+            var previousConsumption = previousPathNode?.ZoneInfo.ConsumptionState.GetZoneConsumption();
 
             if (currentConsumption is IntersectingZoneConsumption)
             {

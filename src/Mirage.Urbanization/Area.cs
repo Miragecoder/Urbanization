@@ -250,30 +250,17 @@ namespace Mirage.Urbanization
                 }
             }
 
-            Action<ZoneClusterMemberConsumption> body = clusterMemberConsumption =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                clusterMemberConsumption.GetZoneInfo()
-                    .WithResultIfHasMatch(
-                        zoneInfo =>
-                            connector.Process(new GrowthZoneInfoPathNode(zoneInfo, clusterMemberConsumption,
-                                _areaOptions.ProcessOptions
-                                )
-                                )
-                    );
-            };
-
             var growthZoneDemandThresholds = new IGrowthZoneDemandThreshold[]
             {
-                    new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), "Industry requires seaport", 40
-                        ),
-                    new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50
-                        ),
-                    new GrowthZoneDemandThreshold<ResidentialZoneClusterConsumption, StadiumZoneClusterConsumption>(
-                        GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(), "Citizens demand stadium", 30
-                        )
+                new GrowthZoneDemandThreshold<IndustrialZoneClusterConsumption, SeaPortZoneClusterConsumption>(
+                    GetZoneClusterConsumptions<SeaPortZoneClusterConsumption>(), "Industry requires seaport", 40
+                ),
+                new GrowthZoneDemandThreshold<CommercialZoneClusterConsumption, AirportZoneClusterConsumption>(
+                    GetZoneClusterConsumptions<AirportZoneClusterConsumption>(), "Commerce requires airport", 50
+                ),
+                new GrowthZoneDemandThreshold<ResidentialZoneClusterConsumption, StadiumZoneClusterConsumption>(
+                    GetZoneClusterConsumptions<StadiumZoneClusterConsumption>(), "Citizens demand stadium", 30
+                )
             };
 
             foreach (var poweredCluster in growthZones
@@ -295,7 +282,16 @@ namespace Mirage.Urbanization
                 }
                 if (_areaOptions.ProcessOptions.GetStepByStepGrowthCyclingToggled())
                     Thread.Sleep(500);
-                body(poweredCluster);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                poweredCluster.GetZoneInfo()
+                    .WithResultIfHasMatch(
+                        zoneInfo =>
+                            connector.Process(new GrowthZoneInfoPathNode(zoneInfo, poweredCluster,
+                                _areaOptions.ProcessOptions
+                            )
+                        )
+                    );
             }
 
             var roadInfraStructureStatistics = connector.ApplyTraffic();
