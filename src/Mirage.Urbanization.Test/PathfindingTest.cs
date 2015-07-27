@@ -97,7 +97,8 @@ namespace Mirage.Urbanization.Test
                     .MatchingObject
                     .ZoneClusterMembers
                     .Single(x => x.IsCentralClusterMember), 
-                processOptions: TestCity.ProcessOptions
+                processOptions: TestCity.ProcessOptions,
+                undesirableGrowthZones: new HashSet<BaseGrowthZoneClusterConsumption>()
             );
 
             var destinationPathNodesForIndustrial = pathFinderForIndustrial
@@ -140,7 +141,8 @@ namespace Mirage.Urbanization.Test
                         .MatchingObject
                         .ZoneClusterMembers
                         .Single(x => x.IsCentralClusterMember), 
-                        processOptions: TestCity.ProcessOptions
+                        processOptions: TestCity.ProcessOptions,
+                    undesirableGrowthZones: new HashSet<BaseGrowthZoneClusterConsumption>()
                 );
 
                 var commercialDestinationNodes = commercialPathFinder

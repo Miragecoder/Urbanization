@@ -67,7 +67,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 .GetZoneInfo()
                 .WithResultIfHasMatch(centralZone =>
                 {
-                    var issueThreshold = getCityBudgetValue(_cityBudgetConfiguration) * _taxRateMultiplier;
+                    var issueThreshold = 1M - (getCityBudgetValue(_cityBudgetConfiguration) * _taxRateMultiplier);
                     return GetIssueResults(centralZone, x => x.RepresentsIssue 
                         && x != DataMeterInstances.PollutionDataMeter 
                         && x != DataMeterInstances.TravelDistanceDataMeter)

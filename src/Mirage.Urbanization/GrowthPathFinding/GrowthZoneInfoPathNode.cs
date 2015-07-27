@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
@@ -7,7 +8,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
 {
     class GrowthZoneInfoPathNode : ZoneInfoPathNode
     {
-        public GrowthZoneInfoPathNode(IZoneInfo zoneInfo, ZoneClusterMemberConsumption clusterMemberConsumption, ProcessOptions processOptions)
+        public GrowthZoneInfoPathNode(IZoneInfo zoneInfo, ZoneClusterMemberConsumption clusterMemberConsumption, ProcessOptions processOptions, HashSet<BaseGrowthZoneClusterConsumption> undesirableGrowthZones)
             : base(
             zoneInfo: zoneInfo, 
             canBeJoinedFunc: (previousPath, currentZoneInfo) =>
@@ -160,12 +161,13 @@ namespace Mirage.Urbanization.GrowthPathFinding
             {
                 var destinationHashCode = default(int?);
 
-
                 if (clusterMemberConsumption.ParentBaseZoneClusterConsumption is IndustrialZoneClusterConsumption)
                 {
                     match.WithZoneClusterIf<ResidentialZoneClusterConsumption>(
                         cluster =>
                         {
+                            if (undesirableGrowthZones.Contains(cluster))
+                                return;
                             if (cluster.GetType() !=
                                 clusterMemberConsumption.ParentBaseZoneClusterConsumption
                                     .GetType())
@@ -177,6 +179,8 @@ namespace Mirage.Urbanization.GrowthPathFinding
                     match.WithZoneClusterIf<BaseGrowthZoneClusterConsumption>(
                         cluster =>
                         {
+                            if (undesirableGrowthZones.Contains(cluster))
+                                return;
                             if (cluster.GetType() !=
                                 clusterMemberConsumption.ParentBaseZoneClusterConsumption
                                     .GetType())

@@ -224,22 +224,35 @@ namespace Mirage.Urbanization
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+            
+            var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
+
+            HashSet<BaseGrowthZoneClusterConsumption> desirableGrowthZones;
+            HashSet<BaseGrowthZoneClusterConsumption> undesirableGrowthZones;
 
             var zoneClusters = GetZoneClusterConsumptions<BaseZoneClusterConsumption>();
 
-            var growthZones = zoneClusters
-                .OfType<BaseGrowthZoneClusterConsumption>()
-                .ToHashSet();
+            {
+                var growthZones = zoneClusters
+                    .OfType<BaseGrowthZoneClusterConsumption>()
+                    .ToHashSet();
 
-            var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
+                connector.DecreasePopulation(growthZones);
 
-            connector.DecreasePopulation(growthZones);
+                desirableGrowthZones = growthZones
+                    .Where(x => _areaOptions.GetLandValueCalculator().AllowsForGrowth(x))
+                    .ToHashSet();
 
-            growthZones.RemoveWhere(x => !_areaOptions.GetLandValueCalculator().AllowsForGrowth(x));
+                undesirableGrowthZones = growthZones.Except(desirableGrowthZones).ToHashSet();
+
+
+                Mirage.Urbanization.Logger.Instance.WriteLine($"Working with {desirableGrowthZones.Count} desirable zones and {undesirableGrowthZones.Count} undesirable.");
+
+            }
 
             // Outside influence which powers initial growth...
             {
-                var industrialZones = growthZones.OfType<IndustrialZoneClusterConsumption>().ToList();
+                var industrialZones = desirableGrowthZones.OfType<IndustrialZoneClusterConsumption>().ToList();
 
                 if (industrialZones.All(x => x.PopulationDensity == 0))
                 {
@@ -265,7 +278,7 @@ namespace Mirage.Urbanization
                 )
             };
 
-            foreach (var poweredCluster in growthZones
+            foreach (var poweredCluster in desirableGrowthZones
                 .SelectMany(x => x.ZoneClusterMembers)
                 .Where(
                     x =>
@@ -290,7 +303,7 @@ namespace Mirage.Urbanization
                     .WithResultIfHasMatch(
                         zoneInfo =>
                             connector.Process(new GrowthZoneInfoPathNode(zoneInfo, poweredCluster,
-                                _areaOptions.ProcessOptions
+                                _areaOptions.ProcessOptions, undesirableGrowthZones
                             )
                         )
                     );
@@ -320,15 +333,15 @@ namespace Mirage.Urbanization
                             .Select(x => x.MatchingObject)
                             .Count()
                         ),
-                    growthZones.OfType<ResidentialZoneClusterConsumption>()
+                    desirableGrowthZones.Concat(undesirableGrowthZones).OfType<ResidentialZoneClusterConsumption>()
                         .Distinct()
                         .Select(x => x.PopulationStatistics)
                         .ToList(),
-                    growthZones.OfType<CommercialZoneClusterConsumption>()
+                    desirableGrowthZones.Concat(undesirableGrowthZones).OfType<CommercialZoneClusterConsumption>()
                         .Distinct()
                         .Select(x => x.PopulationStatistics)
                         .ToList(),
-                    growthZones.OfType<IndustrialZoneClusterConsumption>()
+                    desirableGrowthZones.Concat(undesirableGrowthZones).OfType<IndustrialZoneClusterConsumption>()
                         .Distinct()
                         .Select(x => x.PopulationStatistics)
                         .ToList(),
