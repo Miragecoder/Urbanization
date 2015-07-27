@@ -14,19 +14,22 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 "Crime",
                 x => x.PersistedCityStatistics.CrimeNumbers.Average,
                 x => x.GetLastQueryCrimeResult().WithResultIfHasMatch(y => y.ValueInUnits),
-                true
+                true,
+                new [] { typeof(ResidentialZoneClusterConsumption), typeof(CommercialZoneClusterConsumption), typeof(IndustrialZoneClusterConsumption)}
                 ),
             FireHazardDataMeter = new ZoneInfoDataMeter(120,
                 "Fire hazard",
                 x => x.PersistedCityStatistics.FireHazardNumbers.Average,
                 x => x.GetLastQueryFireHazardResult().WithResultIfHasMatch(y => y.ValueInUnits),
-                true
+                true,
+                new[] { typeof(ResidentialZoneClusterConsumption), typeof(CommercialZoneClusterConsumption), typeof(IndustrialZoneClusterConsumption) }
                 ),
             PollutionDataMeter = new ZoneInfoDataMeter(150,
                 "Pollution",
                 x => x.PersistedCityStatistics.PollutionNumbers.Average,
                 x => x.GetLastQueryPollutionResult().WithResultIfHasMatch(y => y.ValueInUnits),
-                true
+                true,
+                new[] { typeof(ResidentialZoneClusterConsumption) }
                 ),
             TrafficDataMeter = new ZoneInfoDataMeter(
                 100,
@@ -34,26 +37,30 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 x => x.PersistedCityStatistics.TrafficNumbers.Average,
                 x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
                     .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt()),
-                true
+                true,
+                Enumerable.Empty<Type>().ToArray()
                 ),
             TravelDistanceDataMeter = new ZoneInfoDataMeter(
-                30,
+                60,
                 "Travel distance",
                 x => x.PersistedCityStatistics.AverageTravelDistanceStatistics.Average,
                 x => x.GetLastAverageTravelDistance() ?? 0,
-                true
+                true,
+                Enumerable.Empty<Type>().ToArray()
                 ),
             PopulationDataMeter = new ZoneInfoDataMeter(
                 10, "Population",
                 x => x.PersistedCityStatistics.GlobalZonePopulationStatistics.Average,
                 x => x.GetPopulationDensity(),
-                false
+                false,
+                Enumerable.Empty<Type>().ToArray()
                 ),
             LandValueDataMeter = new ZoneInfoDataMeter(
                 10, "Land value",
                 x => x.PersistedCityStatistics.LandValueNumbers.Average,
                 x => x.GetLastLandValueResult().WithResultIfHasMatch(y => y.ValueInUnits),
-                false
+                false,
+                Enumerable.Empty<Type>().ToArray()
                 );
 
         public static readonly IReadOnlyCollection<ZoneInfoDataMeter> DataMeters = new[]

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Mirage.Urbanization.GrowthPathFinding;
 using Mirage.Urbanization.Networks;
 using Mirage.Urbanization.Persistence;
@@ -224,13 +223,15 @@ namespace Mirage.Urbanization
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            
+
             var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
 
             HashSet<BaseGrowthZoneClusterConsumption> desirableGrowthZones;
             HashSet<BaseGrowthZoneClusterConsumption> undesirableGrowthZones;
 
             var zoneClusters = GetZoneClusterConsumptions<BaseZoneClusterConsumption>();
+
+            var undesirabilityReasons = new HashSet<string>();
 
             {
                 var growthZones = zoneClusters
@@ -240,7 +241,16 @@ namespace Mirage.Urbanization
                 connector.DecreasePopulation(growthZones);
 
                 desirableGrowthZones = growthZones
-                    .Where(x => _areaOptions.GetLandValueCalculator().AllowsForGrowth(x))
+                    .Where(x =>
+                    {
+                        bool desirable = true;
+                        foreach (var reason in _areaOptions.GetLandValueCalculator().GetUndesirabilityReasons(x))
+                        {
+                            undesirabilityReasons.Add(reason);
+                            desirable = false;
+                        }
+                        return desirable;
+                    })
                     .ToHashSet();
 
                 undesirableGrowthZones = growthZones.Except(desirableGrowthZones).ToHashSet();
@@ -249,6 +259,9 @@ namespace Mirage.Urbanization
                 Mirage.Urbanization.Logger.Instance.WriteLine($"Working with {desirableGrowthZones.Count} desirable zones and {undesirableGrowthZones.Count} undesirable.");
 
             }
+
+            if (undesirabilityReasons.Any())
+                RaiseAreaMessageEvent($"Tax rate is deemed too high due to the following problems: {string.Join(", ", undesirabilityReasons)}");
 
             // Outside influence which powers initial growth...
             {
@@ -299,7 +312,8 @@ namespace Mirage.Urbanization
                     Thread.Sleep(500);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                poweredCluster.GetZoneInfo()
+                poweredCluster
+                    .GetZoneInfo()
                     .WithResultIfHasMatch(
                         zoneInfo =>
                             connector.Process(new GrowthZoneInfoPathNode(zoneInfo, poweredCluster,
@@ -496,15 +510,14 @@ namespace Mirage.Urbanization
                     {
                         foreach (var consumeAreaOperation in consumeAreaOperations)
                             consumeAreaOperation.Apply();
-                        return new AreaConsumptionResult(consumption, true, consumeAreaOperations.First().Description
-                            );
+                        return new AreaConsumptionResult(consumption, true, consumeAreaOperations.First().Description);
                     }
                     return new AreaConsumptionResult(consumption, false, string.Join(", ", consumeAreaOperations
                         .Where(x => !x.CanOverrideWithResult.WillSucceed)
                         .Select(x => x.Description)
                         .Distinct()
                         )
-                        );
+                    );
                 }
                 throw new InvalidOperationException();
             }

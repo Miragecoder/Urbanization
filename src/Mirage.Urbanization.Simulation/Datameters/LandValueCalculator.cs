@@ -23,40 +23,51 @@ namespace Mirage.Urbanization.Simulation.Datameters
             var newScore = GetIssueResults(zoneInfo, x => x.RepresentsIssue)
                 .Aggregate(
                     (decimal)score,
-                    (currentScore, percentageScore) => currentScore / (1 + percentageScore)
+                    (currentScore, percentageScore) => currentScore / (1 + percentageScore.IssueAmount)
                 );
 
             return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult((int)Math.Round(newScore)));
         }
 
-        private static IEnumerable<decimal> GetIssueResults(IReadOnlyZoneInfo zoneInfo, Func<DataMeter, bool> where)
+        private class IssueResult
+        {
+            public IssueResult(string issue, decimal issueAmount)
+            {
+                Issue = issue;
+                IssueAmount = issueAmount;
+            }
+
+            public string Issue { get; }
+            public decimal IssueAmount { get; }
+        }
+
+        private static IEnumerable<IssueResult> GetIssueResults(IReadOnlyZoneInfo zoneInfo, Func<ZoneInfoDataMeter, bool> where)
         {
             return DataMeterInstances
                 .DataMeters
-                .Where(x => x.RepresentsIssue)
-                .Select(x => x.GetDataMeterResult(zoneInfo))
-                .Where(x => x.PercentageScore > 0)
-                .Select(x => x.PercentageScore);
+                .Where(where)
+                .Select(x => new IssueResult(x.Name, x.GetDataMeterResult(zoneInfo).PercentageScore))
+                .Where(x => x.IssueAmount > 0);
         }
 
-        public bool AllowsForGrowth(BaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption)
+        public IEnumerable<string> GetUndesirabilityReasons(BaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption)
         {
             if (baseGrowthZoneClusterConsumption is ResidentialZoneClusterConsumption)
-                return AllowsForGrowth((ResidentialZoneClusterConsumption)baseGrowthZoneClusterConsumption, x => x.ResidentialTaxRate);
-            else if (baseGrowthZoneClusterConsumption is CommercialZoneClusterConsumption)
-                return AllowsForGrowth((CommercialZoneClusterConsumption)baseGrowthZoneClusterConsumption, x => x.CommercialTaxRate);
-            else if (baseGrowthZoneClusterConsumption is IndustrialZoneClusterConsumption)
-                return AllowsForGrowth((IndustrialZoneClusterConsumption)baseGrowthZoneClusterConsumption, x => x.IndustrialTaxRate);
+                return GetUndesirabilityReasons(baseGrowthZoneClusterConsumption, x => x.ResidentialTaxRate);
+            if (baseGrowthZoneClusterConsumption is CommercialZoneClusterConsumption)
+                return GetUndesirabilityReasons(baseGrowthZoneClusterConsumption, x => x.CommercialTaxRate);
+            if (baseGrowthZoneClusterConsumption is IndustrialZoneClusterConsumption)
+                return GetUndesirabilityReasons(baseGrowthZoneClusterConsumption, x => x.IndustrialTaxRate);
             throw new InvalidOperationException($"The type '{baseGrowthZoneClusterConsumption.GetType().Name}' is currently not supported.");
         }
 
-        private bool AllowsForGrowth<TBaseGrowthZoneClusterConsumption>(
+        private IEnumerable<string> GetUndesirabilityReasons<TBaseGrowthZoneClusterConsumption>(
             TBaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption,
             Func<ICityBudgetConfiguration, decimal> getCityBudgetValue)
             where TBaseGrowthZoneClusterConsumption : BaseGrowthZoneClusterConsumption
         {
             if (baseGrowthZoneClusterConsumption.PopulationDensity < 9)
-                return true;
+                return Enumerable.Empty<string>();
 
             if (!_taxRateMultiplier.HasValue)
                 _taxRateMultiplier = 1M / TaxDefinition.GetSelectableTaxRatePercentages().Max();
@@ -67,12 +78,12 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 .GetZoneInfo()
                 .WithResultIfHasMatch(centralZone =>
                 {
-                    var issueThreshold = 1M - (getCityBudgetValue(_cityBudgetConfiguration) * _taxRateMultiplier);
-                    return GetIssueResults(centralZone, x => x.RepresentsIssue 
-                        && x != DataMeterInstances.PollutionDataMeter 
-                        && x != DataMeterInstances.TravelDistanceDataMeter)
-                        .All(x => x < issueThreshold);
+                    var issueThreshold = 1.5M - (getCityBudgetValue(_cityBudgetConfiguration) * _taxRateMultiplier);
+                    return GetIssueResults(centralZone, x => x.RepresentsUndesirabilityFor(baseGrowthZoneClusterConsumption))
+                        .Where(x => x.IssueAmount > issueThreshold)
+                        .Select(x => x.Issue);
                 });
+
         }
 
         private decimal? _taxRateMultiplier;

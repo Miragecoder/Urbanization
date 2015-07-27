@@ -12,6 +12,6 @@ namespace Mirage.Urbanization
     {
         QueryResult<IQueryLandValueResult> GetFor(IReadOnlyZoneInfo zoneInfo);
 
-        bool AllowsForGrowth(BaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption);
+        IEnumerable<string> GetUndesirabilityReasons(BaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption);
     }
 }

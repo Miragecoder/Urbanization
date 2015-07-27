@@ -19,17 +19,9 @@ namespace Mirage.Urbanization.WinForms
         private readonly Action _drawSecondLayerAction;
         private readonly Action<IAreaConsumption> _drawHighligterAction;
 
-        public void DrawSecondLayer()
-        {
-            if (_drawSecondLayerAction != null)
-                _drawSecondLayerAction();
-        }
+        public void DrawSecondLayer()=>_drawSecondLayerAction?.Invoke();
 
-        public void DrawHighlighter(IAreaConsumption consumption)
-        {
-            if (_drawHighligterAction != null)
-                _drawHighligterAction(consumption);
-        }
+        public void DrawHighlighter(IAreaConsumption consumption)=>_drawHighligterAction?.Invoke(consumption);
 
         public bool HasDrawHighlighterDelegate => _drawHighligterAction != null;
 

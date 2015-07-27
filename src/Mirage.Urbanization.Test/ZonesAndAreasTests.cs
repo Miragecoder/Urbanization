@@ -20,9 +20,9 @@ namespace Mirage.Urbanization.Test
             return QueryResult<IQueryLandValueResult>.Empty;
         }
 
-        public bool AllowsForGrowth(BaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption)
+        public IEnumerable<string> GetUndesirabilityReasons(BaseGrowthZoneClusterConsumption baseGrowthZoneClusterConsumption)
         {
-            return true;
+            return Enumerable.Empty<string>();
         }
     }
 
