@@ -9,7 +9,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 {
     public static class DataMeterInstances
     {
-        private static readonly ZoneInfoDataMeter
+        public static readonly ZoneInfoDataMeter
             CrimeDataMeter = new ZoneInfoDataMeter(100,
                 "Crime",
                 x => x.PersistedCityStatistics.CrimeNumbers.Average,

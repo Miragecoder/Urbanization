@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
 using Mirage.Urbanization.Statistics;
 using Mirage.Urbanization.ZoneConsumption.Base;
@@ -81,7 +82,7 @@ namespace Mirage.Urbanization.Simulation
         public SimulationSession(SimulationOptions simulationOptions)
         {
             _simulationOptions = simulationOptions;
-            _area = new Area(simulationOptions.GetAreaOptions(() => _cityBudgetConfiguration));
+            _area = new Area(simulationOptions.GetAreaOptions(() => _cityBudgetConfiguration, () => new LandValueCalculator(_cityBudgetConfiguration)));
 
             _area.OnAreaConsumptionResult += HandleAreaConsumptionResult;
             _area.OnAreaMessage += (s, e) => RaiseAreaMessageEvent(e.Message);

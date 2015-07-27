@@ -24,10 +24,10 @@ namespace Mirage.Urbanization.Test
             terraFormingOptions.SetWoodlands(0);
 
             return persistedArea != null ?
-                new Area(new AreaOptions(FakeLandValueCalculator.Instance, persistedArea, ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()))
+                new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, persistedArea, ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()))
                 : new Area(
                     options: new AreaOptions(
-                        landValueCalculator: FakeLandValueCalculator.Instance, 
+                        getLandValueCalculator: () => FakeLandValueCalculator.Instance, 
                         terraformingOptions: terraFormingOptions,
                         processOptions: ProcessOptions,
                         getCityServiceStrengthLevels: () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()

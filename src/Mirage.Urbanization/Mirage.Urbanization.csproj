@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICityServiceStrengthLevels.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="LogEventArgs.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Statistics\CityServiceStatistics.cs" />

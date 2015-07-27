@@ -29,7 +29,7 @@ namespace Mirage.Urbanization
             _createZoneInfoFinder = () => new ZoneInfoFinder(
                 queryObject => _zoneInfoGrid
                     .GetZoneInfoFor(queryObject));
-            _zoneInfoGrid = new ZoneInfoGrid(options.GetZoneWidthAndHeight(), options.LandValueCalculator);
+            _zoneInfoGrid = new ZoneInfoGrid(options.GetZoneWidthAndHeight(), options.GetLandValueCalculator());
 
             options.WithTerraformingOptions(terraFormingOptions =>
             {
@@ -227,13 +227,15 @@ namespace Mirage.Urbanization
 
             var zoneClusters = GetZoneClusterConsumptions<BaseZoneClusterConsumption>();
 
-            var growthZones =
-                new HashSet<BaseGrowthZoneClusterConsumption>(
-                    zoneClusters.OfType<BaseGrowthZoneClusterConsumption>());
+            var growthZones = zoneClusters
+                .OfType<BaseGrowthZoneClusterConsumption>()
+                .ToHashSet();
 
             var connector = new GrowthZoneConnector(_zoneInfoGrid, cancellationToken);
 
             connector.DecreasePopulation(growthZones);
+
+            growthZones.RemoveWhere(x => !_areaOptions.GetLandValueCalculator().AllowsForGrowth(x));
 
             // Outside influence which powers initial growth...
             {

@@ -27,12 +27,12 @@ namespace Mirage.Urbanization.Simulation
                 action(_persistedSimulation);
         }
 
-        public AreaOptions GetAreaOptions(Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
+        public AreaOptions GetAreaOptions(Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels, Func<ILandValueCalculator> getLandValueCalculator)
         {
             if (_terraformingOptions != null && _persistedSimulation == null)
-                return new AreaOptions(LandValueCalculator.Instance, _terraformingOptions, ProcessOptions, getCityServiceStrengthLevels);
+                return new AreaOptions(getLandValueCalculator, _terraformingOptions, ProcessOptions, getCityServiceStrengthLevels);
             else if (_persistedSimulation != null && _terraformingOptions == null)
-                return new AreaOptions(LandValueCalculator.Instance, _persistedSimulation.PersistedArea, ProcessOptions, getCityServiceStrengthLevels);
+                return new AreaOptions(getLandValueCalculator, _persistedSimulation.PersistedArea, ProcessOptions, getCityServiceStrengthLevels);
             else
                 throw new InvalidOperationException();
         }

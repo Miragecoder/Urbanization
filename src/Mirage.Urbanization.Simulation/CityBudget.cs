@@ -35,11 +35,7 @@ namespace Mirage.Urbanization.Simulation
 
         public void RaiseCityBudgetValueChangedEvent()
         {
-            var onCityBudgetValueChanged = OnCityBudgetValueChanged;
-            if (onCityBudgetValueChanged != null)
-            {
-                onCityBudgetValueChanged(this, new CityBudgetValueChangedEventArgs(this));
-            }
+            OnCityBudgetValueChanged?.Invoke(this, new CityBudgetValueChangedEventArgs(this));
         }
 
         public PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics, ICityBudgetConfiguration cityBudgetConfiguration)

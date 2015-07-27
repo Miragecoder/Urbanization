@@ -19,10 +19,7 @@ namespace Mirage.Urbanization.Simulation
             _getProjectedIncome = getProjectedIncome;
         }
 
-        public int GetProjectedIncome(ISet<PersistedCityStatisticsWithFinancialData> cityStatistics)
-        {
-            return _getProjectedIncome(cityStatistics);
-        }
+        public int GetProjectedIncome(ISet<PersistedCityStatisticsWithFinancialData> cityStatistics) => _getProjectedIncome(cityStatistics);
 
         private static readonly TaxDefinition ResidentialTaxDefinition = new TaxDefinition("Residential", x => x.ResidentialTaxRate, x => x.Sum(y => y.ResidentialTaxIncome));
         private static readonly TaxDefinition CommercialTaxDefinition = new TaxDefinition("Commercial", x => x.CommercialTaxRate, x => x.Sum(y => y.CommercialTaxIncome));
@@ -40,10 +37,14 @@ namespace Mirage.Urbanization.Simulation
 
         public const decimal DefaultTaxRate = 0.07M;
 
-        public override IEnumerable<decimal> GetSelectableRatePercentages()
+        public override IEnumerable<decimal> GetSelectableRatePercentages() => GetSelectableTaxRatePercentages();
+
+        private static readonly ISet<decimal> SelectableTaxRatePercentages 
+            = new HashSet<decimal>(Enumerable.Range(0, 20).Select(x => (decimal) x/100)); 
+
+        public static IEnumerable<decimal> GetSelectableTaxRatePercentages()
         {
-            return Enumerable.Range(0, 20)
-                .Select(x => (decimal)x / 100);
-        }
+            return SelectableTaxRatePercentages;
+        } 
     }
 }

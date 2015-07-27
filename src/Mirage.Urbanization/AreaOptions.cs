@@ -10,39 +10,41 @@ namespace Mirage.Urbanization
         private readonly PersistedArea _persistedArea;
 
         private readonly Func<ICityServiceStrengthLevels> _getCityServiceStrengthLevels;
+
+        private readonly Func<ILandValueCalculator> _getLandValueCalculator;
         public ICityServiceStrengthLevels GetCityServiceStrengthLevels()
         {
             return _getCityServiceStrengthLevels();
         }
 
-        public AreaOptions(ILandValueCalculator landValueCalculator, 
+        public AreaOptions(Func<ILandValueCalculator> getLandValueCalculator, 
             TerraformingOptions terraformingOptions, 
             ProcessOptions processOptions,
             Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
-            : this(landValueCalculator, processOptions, getCityServiceStrengthLevels)
+            : this(getLandValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
             if (terraformingOptions == null) throw new ArgumentNullException(nameof(terraformingOptions));
             _terraformingOptions = terraformingOptions;
         }
 
         private AreaOptions(
-            ILandValueCalculator landValueCalculator, 
+            Func<ILandValueCalculator> getLandValueCalculator, 
             ProcessOptions processOptions,
             Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
         {
-            if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
+            if (getLandValueCalculator == null) throw new ArgumentNullException(nameof(getLandValueCalculator));
             if (processOptions == null) throw new ArgumentNullException(nameof(processOptions));
             if (getCityServiceStrengthLevels == null) throw new ArgumentNullException(nameof(getCityServiceStrengthLevels));
             ProcessOptions = processOptions;
-            LandValueCalculator = landValueCalculator;
+            _getLandValueCalculator = getLandValueCalculator;
             _getCityServiceStrengthLevels = getCityServiceStrengthLevels;
         }
 
-        public AreaOptions(ILandValueCalculator landValueCalculator, 
+        public AreaOptions(Func<ILandValueCalculator> getLandValueCalculator, 
             PersistedArea persistedArea, 
             ProcessOptions processOptions,
             Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
-            : this(landValueCalculator, processOptions, getCityServiceStrengthLevels)
+            : this(getLandValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
             if (persistedArea == null) throw new ArgumentNullException(nameof(persistedArea));
             _persistedArea = persistedArea;
@@ -59,7 +61,7 @@ namespace Mirage.Urbanization
         }
 
         public ProcessOptions ProcessOptions { get; }
-        public ILandValueCalculator LandValueCalculator { get; }
+        public ILandValueCalculator GetLandValueCalculator() => _getLandValueCalculator();
 
         public int GetZoneWidthAndHeight()
         {
