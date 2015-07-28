@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newCityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +55,7 @@
             this.enableMoneyCheatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.cityBudgetLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -61,7 +63,6 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
-            this.debugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -275,6 +276,13 @@
             this.toggleOverlayNumbers.Size = new System.Drawing.Size(252, 26);
             this.toggleOverlayNumbers.Text = "Toggle overlay numbers";
             // 
+            // debugWindowToolStripMenuItem
+            // 
+            this.debugWindowToolStripMenuItem.Name = "debugWindowToolStripMenuItem";
+            this.debugWindowToolStripMenuItem.Size = new System.Drawing.Size(252, 26);
+            this.debugWindowToolStripMenuItem.Text = "Log output";
+            this.debugWindowToolStripMenuItem.Click += new System.EventHandler(this.debugWindowToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -329,13 +337,6 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
-            // debugWindowToolStripMenuItem
-            // 
-            this.debugWindowToolStripMenuItem.Name = "debugWindowToolStripMenuItem";
-            this.debugWindowToolStripMenuItem.Size = new System.Drawing.Size(252, 26);
-            this.debugWindowToolStripMenuItem.Text = "Log output";
-            this.debugWindowToolStripMenuItem.Click += new System.EventHandler(this.debugWindowToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -343,6 +344,7 @@
             this.ClientSize = new System.Drawing.Size(782, 553);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "Main Form";
