@@ -8,9 +8,20 @@ namespace Mirage.Urbanization.Vehicles
 {
     internal class ShipController : BaseStructureVehicleController<IShip, SeaPortZoneClusterConsumption>
     {
+        private readonly TimeSpan _shipInsertionInterval;
+        private readonly int _shipSpeedInMilliSeconds;
+        internal const int AmountOfShipsPerHarbour = 2;
+
         public ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
+            :this(getZoneInfosFunc, TimeSpan.FromSeconds(5), 500)
+        {
+            
+        }
+        internal ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc, TimeSpan shipInsertionInterval, int shipSpeedInMilliSeconds)
             : base(getZoneInfosFunc)
         {
+            _shipInsertionInterval = shipInsertionInterval;
+            _shipSpeedInMilliSeconds = shipSpeedInMilliSeconds;
             _candidatesCache = new SimpleCache<ISet<IZoneInfo>>(() => new HashSet<IZoneInfo>(GetZoneInfosFunc()
                 .Where(IsSuitableForShip)), new TimeSpan(0, 1, 0));
         }
@@ -19,11 +30,11 @@ namespace Mirage.Urbanization.Vehicles
 
         private DateTime _lastShipInsertion = DateTime.Now;
 
-        private bool NewShipCanBeInserted => DateTime.Now.AddSeconds(-5) > _lastShipInsertion;
+        private bool NewShipCanBeInserted => DateTime.Now.Add(-_shipInsertionInterval) > _lastShipInsertion;
 
         protected override void PrepareVehiclesWithStructures(SeaPortZoneClusterConsumption[] structures)
         {
-            int desiredAmountOfShips = structures.Count() * 2;
+            int desiredAmountOfShips = structures.Count() * AmountOfShipsPerHarbour;
 
             var candidates = _candidatesCache.GetValue();
 
@@ -39,7 +50,7 @@ namespace Mirage.Urbanization.Vehicles
 
                 if (candidate != null)
                 {
-                    Vehicles.Add(new Ship(GetZoneInfosFunc, candidate));
+                    Vehicles.Add(new Ship(GetZoneInfosFunc, candidate, _shipSpeedInMilliSeconds));
                     _lastShipInsertion = DateTime.Now;
                 }
                 else
@@ -58,9 +69,12 @@ namespace Mirage.Urbanization.Vehicles
 
         private class Ship : BaseVehicle, IShip
         {
-            public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
+            protected override int SpeedInMilliseconds { get; }
+
+            public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition, int speedInMilliseconds)
                 : base(getZoneInfosFunc, currentPosition)
             {
+                SpeedInMilliseconds = speedInMilliseconds;
                 _pathEnumeratorTask = new Task<IEnumerator<ShipPathNode>>(() =>
                 {
                     var pathNode = new ShipPathNode(CurrentPosition);
@@ -104,8 +118,6 @@ namespace Mirage.Urbanization.Vehicles
 
                 return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
             }
-
-            protected override int SpeedInMilliseconds => 500;
 
             private class ShipPathNode
             {

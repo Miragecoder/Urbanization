@@ -494,7 +494,7 @@ namespace Mirage.Urbanization
                         .ToArray();
 
                     if (queryResults.Any(x => x.QueryResult.HasNoMatch))
-                        return new AreaConsumptionResult(consumption, true, "Cannot build across map boundaries."
+                        return new AreaConsumptionResult(consumption, false, "Cannot build across map boundaries."
                             );
 
                     var consumeAreaOperations = queryResults
