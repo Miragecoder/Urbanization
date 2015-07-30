@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="DistanceTrackerTest.cs" />
     <Compile Include="PathfindingTest.cs" />
+    <Compile Include="RandomTerraformerTest.cs" />
     <Compile Include="TestCity.cs" />
     <Compile Include="ZonesAndAreasTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
