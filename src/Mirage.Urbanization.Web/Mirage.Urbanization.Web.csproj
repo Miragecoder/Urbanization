@@ -94,9 +94,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SimulationHub.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimulationHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +105,27 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Www\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\jquery-1.6.4-vsdoc.js" />
+    <EmbeddedResource Include="Scripts\jquery-1.6.4.js" />
+    <EmbeddedResource Include="Scripts\jquery-1.6.4.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.2.0.js" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.2.0.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mirage.Urbanization.Resources\Mirage.Urbanization.Tilesets.csproj">
+      <Project>{73bbfbfd-14a4-40ea-87b5-e1bf9baf42f7}</Project>
+      <Name>Mirage.Urbanization.Tilesets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
+      <Project>{5a699402-01ae-484e-a489-fd500e868a0c}</Project>
+      <Name>Mirage.Urbanization.Simulation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
+      <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
+      <Name>Mirage.Urbanization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

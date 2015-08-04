@@ -61,6 +61,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         }
 
         public Color Color => Color.Firebrick;
+        public string ColorName => Color.Name;
 
         public TrafficDensity GetTrafficDensity()
         {
