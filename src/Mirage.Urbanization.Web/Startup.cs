@@ -18,21 +18,6 @@ using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, objec
 
 namespace Mirage.Urbanization.Web
 {
-    public class TileMiddleware
-    {
-        private readonly AppFunc _param;
-
-        public TileMiddleware(AppFunc param)
-        {
-            _param = param;
-        }
-
-        public async Task Invoke(IOwinContext context)
-        {
-
-        }
-    }
-
     public class Startup
     {
         public void Configuration(IAppBuilder app)

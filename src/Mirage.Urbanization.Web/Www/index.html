@@ -73,7 +73,9 @@
 
                             if (zoneInfo.bitmapLayerOne !== 0) {
                                 drawImageFunction(zoneInfo, function (x) { return x.bitmapLayerOne; });
-                                drawImageFunction(zoneInfo, function (x) { return x.bitmapLayerTwo; });
+                                if (zoneInfo.bitmapLayerTwo !== 0) {
+                                    drawImageFunction(zoneInfo, function (x) { return x.bitmapLayerTwo; });
+                                }
                             } else {
                                 context.beginPath();
                                 context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);

@@ -12,18 +12,27 @@ namespace Mirage.Urbanization.Web
     {
         static void Main(string[] args)
         {
-            using (Microsoft.Owin.Hosting.WebApp.Start<Startup>("http://localhost:9000"))
+            var simulationSession = new SimulationSession(
+                new SimulationOptions(new Func<TerraformingOptions>(() =>
+                {
+                    var t = new TerraformingOptions();
+                    t.HorizontalRiver = t.VerticalRiver = false;
+                    t.SetWoodlands(80);
+                    t.SetZoneWidthAndHeight(120);
+                    return t;
+                })(), new ProcessOptions(() => false, () => false)));
+            using (var server = new GameServer(simulationSession, "http://localhost:9000/"))
             {
-                SimulationHub.Instance.StartSimulation();
+                server.StartServer();
+                simulationSession.StartSimulation();
 
                 Logger.Instance.OnLogMessage += (s, e) => Console.WriteLine(e.CreatedOn + " " + e.LogMessage);
 
                 Console.WriteLine("Press CTRL + C to quit...");
-                bool sentry = true;
+                var sentry = true;
                 Console.CancelKeyPress += (s, e) =>
                 {
                     sentry = false;
-                    SimulationHub.Instance.Dispose();
                 };
 
                 while (sentry)
