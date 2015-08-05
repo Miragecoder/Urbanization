@@ -35,9 +35,7 @@
             };
 
             $.connection.hub.start().done(function () {
-
-                simulation.server.getCurrentState();
-
+                
                 var imageCache = {};
 
                 var drawImageFunction = function (zoneInfo, selectBitmapLayer) {

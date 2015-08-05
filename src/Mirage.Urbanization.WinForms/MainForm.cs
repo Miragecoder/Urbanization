@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Persistence;
+using Mirage.Urbanization.Web;
 using Mirage.Urbanization.WinForms.Overlay;
 
 namespace Mirage.Urbanization.WinForms
@@ -110,6 +111,7 @@ namespace Mirage.Urbanization.WinForms
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             WithAreaRenderHelper(helper => helper.Stop());
+            webServer?.Dispose();
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -343,5 +345,16 @@ namespace Mirage.Urbanization.WinForms
         {
             _logWindowFormManager.Show(this);
         }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            WithAreaRenderHelper(helper =>
+            {
+                webServer = new GameServer(helper.SimulationSession, "http://localhost:9000/");
+                webServer.StartServer();
+            });
+        }
+
+        private GameServer webServer;
     }
 }

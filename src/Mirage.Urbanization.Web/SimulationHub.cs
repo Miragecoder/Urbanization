@@ -31,37 +31,5 @@ namespace Mirage.Urbanization.Web
                     throw new InvalidOperationException();
             }
         }
-
-        public void GetCurrentState()
-        {
-            CurrentSimulation.With(session =>
-            {
-
-                var zoneInfos = session.Area.EnumerateZoneInfos()
-                    .Select(zoneInfo => new
-                    {
-                        key = $"{zoneInfo.Point.X}_{zoneInfo.Point.Y}",
-                        bitmapLayerOne = TilesetProvider
-                            .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerOne),
-                        bitmapLayerTwo = TilesetProvider
-                            .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerTwo),
-                        point = new
-                        {
-                            x = zoneInfo.Point.X,
-                            y = zoneInfo.Point.Y
-                        },
-                        color = zoneInfo.ZoneConsumptionState.GetZoneConsumption().ColorName,
-                        zoneConsumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption().Name,
-                        landValue = zoneInfo.GetLastLandValueResult().WithResultIfHasMatch(r => r.ValueInUnits),
-                        lastTravelDistance = zoneInfo.GetLastAverageTravelDistance(),
-                        crime = zoneInfo.GetLastQueryCrimeResult().WithResultIfHasMatch(r => r.ValueInUnits),
-                        fireHazard = zoneInfo.GetLastQueryFireHazardResult().WithResultIfHasMatch(r => r.ValueInUnits),
-                        pollution = zoneInfo.GetLastQueryPollutionResult().WithResultIfHasMatch(r => r.ValueInUnits)
-                    }).ToArray();
-
-                Clients.Caller.submitZoneInfos(zoneInfos);
-
-            });
-        }
     }
 }

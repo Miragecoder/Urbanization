@@ -37,6 +37,10 @@
     <ApplicationIcon>urbanization.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>
     </Reference>
@@ -175,6 +179,10 @@
     <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
       <Project>{5a699402-01ae-484e-a489-fd500e868a0c}</Project>
       <Name>Mirage.Urbanization.Simulation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization.Web\Mirage.Urbanization.Web.csproj">
+      <Project>{e80d47e8-22c1-4ce4-ac67-7f3ab2fcbfe7}</Project>
+      <Name>Mirage.Urbanization.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
       <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
