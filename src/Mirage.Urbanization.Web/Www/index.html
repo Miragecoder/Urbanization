@@ -4,6 +4,7 @@
     <title>Urbanization</title>
 </head>
 <body>
+    <button id="logGridButton">Log grid</button>
     <canvas id="gameCanvas"></canvas>
     <!--Script references. -->
     <!--Reference the jQuery library. -->
@@ -14,10 +15,15 @@
     <script src="signalr/hubs"></script>
     <!--Add script to update the page and send messages.-->
     <script type="text/javascript">
+        var logGrid;
         $(function () {
             var simulation = $.connection.simulationHub;
 
             var grid = {};
+
+            $('#logGridButton').click(function () {
+                console.log(grid);
+            });
 
             simulation.client.submitZoneInfos = function (values) {
                 for (var i in values) {
@@ -29,13 +35,31 @@
             };
 
             $.connection.hub.start().done(function () {
+
                 simulation.server.getCurrentState();
+
+                var imageCache = {};
+
+                var drawImageFunction = function (zoneInfo, selectBitmapLayer) {
+                    if (imageCache.hasOwnProperty(selectBitmapLayer(zoneInfo)) && imageCache[selectBitmapLayer(zoneInfo)] !== null) {
+                        var canvas = document.getElementById('gameCanvas');
+                        var context = canvas.getContext('2d');
+                        context.drawImage(imageCache[selectBitmapLayer(zoneInfo)], zoneInfo.point.x * 25, zoneInfo.point.y * 25);
+                    } else {
+                        var tileImage = new Image();
+                        tileImage.src = '/tile/' + selectBitmapLayer(zoneInfo);
+                        tileImage.onload = function () {
+                            var canvas = document.getElementById('gameCanvas');
+                            var context = canvas.getContext('2d');
+                            context.drawImage(tileImage, zoneInfo.point.x * 25, zoneInfo.point.y * 25);
+                            imageCache[selectBitmapLayer(zoneInfo)] = tileImage;
+                        };
+                    }
+                };
 
                 setInterval(function () {
                     var canvas = document.getElementById('gameCanvas');
                     var context = canvas.getContext('2d');
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    var drawCounter = 0;
 
                     for (var i in grid) {
                         if (grid.hasOwnProperty(i)) {
@@ -46,14 +70,20 @@
                             if (canvas.height < zoneInfo.point.y * 25)
                                 canvas.height = zoneInfo.point.y * 25;
 
-                            context.beginPath();
-                            context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
-                            context.fillStyle = zoneInfo.color;
-                            context.fill();
-                            drawCounter++;
+
+                            if (zoneInfo.bitmapLayerOne !== 0) {
+                                drawImageFunction(zoneInfo, function (x) { return x.bitmapLayerOne; });
+                                drawImageFunction(zoneInfo, function (x) { return x.bitmapLayerTwo; });
+                            } else {
+                                context.beginPath();
+                                context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                                context.fillStyle = zoneInfo.color;
+                                context.fill();
+                            }
+
                         }
                     }
-                }, 3000);
+                }, 1000);
             });
         });
     </script>

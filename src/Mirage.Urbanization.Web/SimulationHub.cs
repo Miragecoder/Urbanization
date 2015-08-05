@@ -14,9 +14,9 @@ namespace Mirage.Urbanization.Web
             new SimulationOptions(new Func<TerraformingOptions>(() =>
             {
                 var t = new TerraformingOptions();
-                t.HorizontalRiver = t.VerticalRiver = true;
+                t.HorizontalRiver = t.VerticalRiver = false;
                 t.SetWoodlands(80);
-                t.SetZoneWidthAndHeight(70);
+                t.SetZoneWidthAndHeight(120);
                 return t;
             })(), new ProcessOptions(() => false, () => false)));
 
@@ -26,6 +26,10 @@ namespace Mirage.Urbanization.Web
                 .Select(zoneInfo => new
                 {
                     key = $"{zoneInfo.Point.X}_{zoneInfo.Point.Y}",
+                    bitmapLayerOne = TilesetProvider
+                        .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerOne),
+                    bitmapLayerTwo = TilesetProvider
+                        .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerTwo),
                     point = new
                     {
                         x = zoneInfo.Point.X,
