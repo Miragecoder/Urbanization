@@ -49,6 +49,7 @@
     <Compile Include="AnimatedBitmap.cs" />
     <Compile Include="AnimatedNetworkZoneTileset.cs" />
     <Compile Include="BitmapAccessor.cs" />
+    <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BitmapSegmenter.cs" />
     <Compile Include="INetworkZoneTileset.cs" />
     <Compile Include="ITilesetAccessor.cs" />

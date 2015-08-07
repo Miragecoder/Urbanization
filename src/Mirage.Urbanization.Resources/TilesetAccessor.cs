@@ -23,51 +23,17 @@ namespace Mirage.Urbanization.Tilesets
             );
         }
 
-        private readonly INetworkZoneTileset _woodNetworkZoneTileset = new NetworkZoneTileset(
-            bitmapEastWest: BitmapAccessor.NetworkZones.Wood.WoodEastWest,
-            bitmapNorthWest: BitmapAccessor.NetworkZones.Wood.WoodNorthWest,
-            bitmapWestNorthEast: BitmapAccessor.NetworkZones.Wood.WoodWestNorthEast,
-            bitmapNorthEastSouthWest: BitmapAccessor.NetworkZones.Wood.WoodNorthWestEastSouth,
-            bitmapEast: BitmapAccessor.NetworkZones.Wood.WoodEast,
-            bitmapNoDirection: BitmapAccessor.NetworkZones.Wood.WoodNoDirection
-        );
+        private readonly INetworkZoneTileset _woodNetworkZoneTileset;
 
-        private readonly INetworkZoneTileset _parkNetworkZoneTileset = new NetworkZoneTileset(
-            bitmapEastWest: BitmapAccessor.NetworkZones.Park.WoodEastWest,
-            bitmapNorthWest: BitmapAccessor.NetworkZones.Park.WoodNorthWest,
-            bitmapWestNorthEast: BitmapAccessor.NetworkZones.Park.WoodWestNorthEast,
-            bitmapNorthEastSouthWest: BitmapAccessor.NetworkZones.Park.WoodNorthWestEastSouth,
-            bitmapEast: BitmapAccessor.NetworkZones.Park.WoodEast,
-            bitmapNoDirection: BitmapAccessor.NetworkZones.Park.WoodNoDirection
-        );
+        private readonly INetworkZoneTileset _parkNetworkZoneTileset;
 
-        private readonly INetworkZoneTileset _railNetworkZoneTileset = new NetworkZoneTileset(
-            bitmapEastWest: BitmapAccessor.NetworkZones.Rail.RailEastWest,
-            bitmapNorthWest: BitmapAccessor.NetworkZones.Rail.RailNorthWest,
-            bitmapWestNorthEast: BitmapAccessor.NetworkZones.Rail.RailWestNorthEast,
-            bitmapNorthEastSouthWest: BitmapAccessor.NetworkZones.Rail.RailNorthWestEastSouth,
-            bitmapEast: BitmapAccessor.NetworkZones.Rail.RailEast,
-            bitmapNoDirection: BitmapAccessor.NetworkZones.Rail.RailNoDirection
-        );
+        private readonly INetworkZoneTileset _railNetworkZoneTileset;
 
-        private readonly INetworkZoneTileset _powerNetworkZoneTileset = new NetworkZoneTileset(
-            bitmapEastWest: BitmapAccessor.NetworkZones.Power.PowerEastWest,
-            bitmapNorthWest: BitmapAccessor.NetworkZones.Power.PowerNorthWest,
-            bitmapWestNorthEast: BitmapAccessor.NetworkZones.Power.PowerWestNorthEast,
-            bitmapNorthEastSouthWest: BitmapAccessor.NetworkZones.Power.PowerNorthWestEastSouth,
-            bitmapEast: BitmapAccessor.NetworkZones.Power.PowerEast,
-            bitmapNoDirection: BitmapAccessor.NetworkZones.Power.PowerNoDirection
-        );
+        private readonly INetworkZoneTileset _powerNetworkZoneTileset;
 
-        private readonly INetworkZoneTileset _waterNetworkZoneTileset = new NetworkZoneTileset(
-            bitmapEastWest: BitmapAccessor.NetworkZones.Water.WaterEastWest,
-            bitmapNorthWest: BitmapAccessor.NetworkZones.Water.WaterNorthWest,
-            bitmapWestNorthEast: BitmapAccessor.NetworkZones.Water.WaterWestNorthEast,
-            bitmapNorthEastSouthWest: BitmapAccessor.NetworkZones.Water.WaterNorthWestEastSouth,
-            bitmapEast: BitmapAccessor.NetworkZones.Water.WaterEast,
-            bitmapNoDirection: BitmapAccessor.NetworkZones.Water.WaterNoDirection
-        );
+        private readonly INetworkZoneTileset _waterNetworkZoneTileset;
 
+        private readonly BitmapAccessor _bitmapAccessor = new BitmapAccessor();
 
         public bool TryGetBitmapFor(IAreaZoneConsumption consumption, out BitmapLayer bitmapLayer)
         {
@@ -76,7 +42,7 @@ namespace Mirage.Urbanization.Tilesets
 
             if (consumption is RubbishZoneConsumption)
             {
-                bitmapOne = BitmapAccessor.Rubbish;
+                bitmapOne = _bitmapAccessor.Rubbish;
             }
             else if (consumption is BaseNetworkZoneConsumption)
             {
@@ -86,7 +52,7 @@ namespace Mirage.Urbanization.Tilesets
                 {
                     if (consumption is RoadZoneConsumption)
                     {
-                        bitmapOne = BitmapAccessor.NetworkZones.Road.GetBitmapFor(networkConsumption as RoadZoneConsumption);
+                        bitmapOne = _bitmapAccessor.NetworkZonesInstance.RoadInstance.GetBitmapFor(networkConsumption as RoadZoneConsumption);
                     }
                     else if (consumption is RailRoadZoneConsumption)
                     {
@@ -120,41 +86,41 @@ namespace Mirage.Urbanization.Tilesets
                 if (intersection.NorthSouthZoneConsumption is RoadZoneConsumption ||
                     intersection.EastWestZoneConsumption is RoadZoneConsumption)
                 {
-                    bitmapLayer = BitmapAccessor.NetworkZones.Road.GetBitmapLayerFor(intersection);
+                    bitmapLayer = _bitmapAccessor.NetworkZonesInstance.RoadInstance.GetBitmapLayerFor(intersection);
                 }
                 else if (intersection.NorthSouthZoneConsumption is RailRoadZoneConsumption
                     && intersection.EastWestZoneConsumption is PowerLineConsumption)
                 {
-                    bitmapOne = BitmapAccessor.NetworkZones.RailNorthSouthPowerEastWest;
+                    bitmapOne = _bitmapAccessor.NetworkZonesInstance.RailNorthSouthPowerEastWest;
                 }
                 else if (intersection.NorthSouthZoneConsumption is PowerLineConsumption
                     && intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
                 {
-                    bitmapOne = BitmapAccessor.NetworkZones.PowerNorthSouthRailEastWest.Value;
+                    bitmapOne = _bitmapAccessor.NetworkZonesInstance.PowerNorthSouthRailEastWest.Value;
                 }
                 else if (intersection.NorthSouthZoneConsumption is PowerLineConsumption
                          && intersection.EastWestZoneConsumption is WaterZoneConsumption)
                 {
                     bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
-                    bitmapTwo = BitmapAccessor.NetworkZones.PowerNorthSouthWaterEastWest;
+                    bitmapTwo = _bitmapAccessor.NetworkZonesInstance.PowerNorthSouthWaterEastWest;
                 }
                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption
                          && intersection.EastWestZoneConsumption is PowerLineConsumption)
                 {
                     bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
-                    bitmapTwo = BitmapAccessor.NetworkZones.WaterNorthSouthPowerEastWest.Value;
+                    bitmapTwo = _bitmapAccessor.NetworkZonesInstance.WaterNorthSouthPowerEastWest.Value;
                 }
                 else if (intersection.NorthSouthZoneConsumption is RailRoadZoneConsumption
                          && intersection.EastWestZoneConsumption is WaterZoneConsumption)
                 {
                     bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
-                    bitmapTwo = BitmapAccessor.NetworkZones.RailNorthSouthWaterEastWest;
+                    bitmapTwo = _bitmapAccessor.NetworkZonesInstance.RailNorthSouthWaterEastWest;
                 }
                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption
                          && intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
                 {
                     bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
-                    bitmapTwo = BitmapAccessor.NetworkZones.WaterNorthSouthRailEastWest.Value;
+                    bitmapTwo = _bitmapAccessor.NetworkZonesInstance.WaterNorthSouthRailEastWest.Value;
                 }
                 else throw new InvalidOperationException();
             }
@@ -174,35 +140,35 @@ namespace Mirage.Urbanization.Tilesets
 
                     if (parentConsumption is CoalPowerPlantZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.PowerPlant.GetCurrentBitmapFrame();
+                        selectedBitmap = _bitmapAccessor.PowerPlant.GetCurrentBitmapFrame();
                     }
                     else if (parentConsumption is NuclearPowerPlantZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.NuclearPowerplant;
+                        selectedBitmap = _bitmapAccessor.NuclearPowerplant;
                     }
                     else if (parentConsumption is PoliceStationZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.Police;
+                        selectedBitmap = _bitmapAccessor.Police;
                     }
                     else if (parentConsumption is FireStationZoneclusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.FireStation;
+                        selectedBitmap = _bitmapAccessor.FireStation;
                     }
                     else if (parentConsumption is TrainStationZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.TrainStation;
+                        selectedBitmap = _bitmapAccessor.TrainStation;
                     }
                     else if (parentConsumption is AirportZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.Airport;
+                        selectedBitmap = _bitmapAccessor.Airport;
                     }
                     else if (parentConsumption is SeaPortZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.SeaPort;
+                        selectedBitmap = _bitmapAccessor.SeaPort;
                     }
                     else if (parentConsumption is StadiumZoneClusterConsumption)
                     {
-                        selectedBitmap = BitmapAccessor.Stadium;
+                        selectedBitmap = _bitmapAccessor.Stadium;
                     }
 
                     var baseGrowthZoneConsumption = parentConsumption as BaseGrowthZoneClusterConsumption;
@@ -216,26 +182,26 @@ namespace Mirage.Urbanization.Tilesets
                             if (residentialZoneConsumption.RenderAsHouse(zoneClusterMemberConsumption))
                             {
                                 bitmapOne =
-                                    BitmapSelectorCollections.ResidentialHouseCollection.GetBitmapFor(
+                                    BitmapSelectorCollectionsInstance.ResidentialHouseCollection.GetBitmapFor(
                                         zoneClusterMemberConsumption);
 
                                 bitmapLayer = new BitmapLayer(bitmapOne);
                                 return true;
                             }
 
-                            selectedBitmap = BitmapSelectorCollections
+                            selectedBitmap = BitmapSelectorCollectionsInstance
                                 .ResidentialCollection
                                 .GetBitmapFor(baseGrowthZoneConsumption);
                         }
                         else if (baseGrowthZoneConsumption is CommercialZoneClusterConsumption)
                         {
-                            selectedBitmap = BitmapSelectorCollections
+                            selectedBitmap = BitmapSelectorCollectionsInstance
                                 .CommercialCollection
                                 .GetBitmapFor(baseGrowthZoneConsumption);
                         }
                         else if (baseGrowthZoneConsumption is IndustrialZoneClusterConsumption)
                         {
-                            selectedBitmap = BitmapSelectorCollections
+                            selectedBitmap = BitmapSelectorCollectionsInstance
                                 .IndustrialCollection
                                 .GetBitmapFor(baseGrowthZoneConsumption);
                         }
@@ -246,7 +212,7 @@ namespace Mirage.Urbanization.Tilesets
                 {
                     if (zoneClusterMemberConsumption.IsCentralClusterMember && showHasNoElectricitySymbol && DateTime.Now.Millisecond > 500)
                     {
-                        bitmapOne = BitmapAccessor.GrowthZones.NoElectricity;
+                        bitmapOne = _bitmapAccessor.GrowthZonesInstance.NoElectricity;
                     }
                     else
                     {
@@ -269,7 +235,53 @@ namespace Mirage.Urbanization.Tilesets
 
         }
 
+        internal BitmapSelectorCollections BitmapSelectorCollectionsInstance = new BitmapSelectorCollections();
+
         private readonly BitmapSegmenter bitmapSegmenter = new BitmapSegmenter();
+
+        public TilesetAccessor()
+        {
+            _waterNetworkZoneTileset = new NetworkZoneTileset(
+                bitmapEastWest: _bitmapAccessor.NetworkZonesInstance.WaterInstance.WaterEastWest,
+                bitmapNorthWest: _bitmapAccessor.NetworkZonesInstance.WaterInstance.WaterNorthWest,
+                bitmapWestNorthEast: _bitmapAccessor.NetworkZonesInstance.WaterInstance.WaterWestNorthEast,
+                bitmapNorthEastSouthWest: _bitmapAccessor.NetworkZonesInstance.WaterInstance.WaterNorthWestEastSouth,
+                bitmapEast: _bitmapAccessor.NetworkZonesInstance.WaterInstance.WaterEast,
+                bitmapNoDirection: _bitmapAccessor.NetworkZonesInstance.WaterInstance.WaterNoDirection
+                );
+            _powerNetworkZoneTileset = new NetworkZoneTileset(
+                bitmapEastWest: _bitmapAccessor.NetworkZonesInstance.PowerInstance.PowerEastWest,
+                bitmapNorthWest: _bitmapAccessor.NetworkZonesInstance.PowerInstance.PowerNorthWest,
+                bitmapWestNorthEast: _bitmapAccessor.NetworkZonesInstance.PowerInstance.PowerWestNorthEast,
+                bitmapNorthEastSouthWest: _bitmapAccessor.NetworkZonesInstance.PowerInstance.PowerNorthWestEastSouth,
+                bitmapEast: _bitmapAccessor.NetworkZonesInstance.PowerInstance.PowerEast,
+                bitmapNoDirection: _bitmapAccessor.NetworkZonesInstance.PowerInstance.PowerNoDirection
+                );
+            _railNetworkZoneTileset = new NetworkZoneTileset(
+                bitmapEastWest: _bitmapAccessor.NetworkZonesInstance.RailInstance.RailEastWest,
+                bitmapNorthWest: _bitmapAccessor.NetworkZonesInstance.RailInstance.RailNorthWest,
+                bitmapWestNorthEast: _bitmapAccessor.NetworkZonesInstance.RailInstance.RailWestNorthEast,
+                bitmapNorthEastSouthWest: _bitmapAccessor.NetworkZonesInstance.RailInstance.RailNorthWestEastSouth,
+                bitmapEast: _bitmapAccessor.NetworkZonesInstance.RailInstance.RailEast,
+                bitmapNoDirection: _bitmapAccessor.NetworkZonesInstance.RailInstance.RailNoDirection
+                );
+            _parkNetworkZoneTileset = new NetworkZoneTileset(
+                bitmapEastWest: _bitmapAccessor.NetworkZonesInstance.ParkInstance.WoodEastWest,
+                bitmapNorthWest: _bitmapAccessor.NetworkZonesInstance.ParkInstance.WoodNorthWest,
+                bitmapWestNorthEast: _bitmapAccessor.NetworkZonesInstance.ParkInstance.WoodWestNorthEast,
+                bitmapNorthEastSouthWest: _bitmapAccessor.NetworkZonesInstance.ParkInstance.WoodNorthWestEastSouth,
+                bitmapEast: _bitmapAccessor.NetworkZonesInstance.ParkInstance.WoodEast,
+                bitmapNoDirection: _bitmapAccessor.NetworkZonesInstance.ParkInstance.WoodNoDirection
+                );
+            _woodNetworkZoneTileset = new NetworkZoneTileset(
+                bitmapEastWest: _bitmapAccessor.NetworkZonesInstance.WoodInstance.WoodEastWest,
+                bitmapNorthWest: _bitmapAccessor.NetworkZonesInstance.WoodInstance.WoodNorthWest,
+                bitmapWestNorthEast: _bitmapAccessor.NetworkZonesInstance.WoodInstance.WoodWestNorthEast,
+                bitmapNorthEastSouthWest: _bitmapAccessor.NetworkZonesInstance.WoodInstance.WoodNorthWestEastSouth,
+                bitmapEast: _bitmapAccessor.NetworkZonesInstance.WoodInstance.WoodEast,
+                bitmapNoDirection: _bitmapAccessor.NetworkZonesInstance.WoodInstance.WoodNoDirection
+                );
+        }
 
         public Size GetAreaSize(IReadOnlyArea area)
         {

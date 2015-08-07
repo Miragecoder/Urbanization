@@ -75,9 +75,9 @@ namespace Mirage.Urbanization.Tilesets
         }
     }
 
-    internal static class BitmapSelectorCollections
+    internal class BitmapSelectorCollections
     {
-        internal static readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> CommercialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
+        internal readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> CommercialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity == 0,
                 new BitmapSelector(new[] { BitmapAccessor.GetImage("GrowthZones.Commercial.empty.png") })
             ),
@@ -97,7 +97,7 @@ namespace Mirage.Urbanization.Tilesets
             )
         );
 
-        internal static readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> IndustrialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
+        internal readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> IndustrialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity == 0,
                 new BitmapSelector(BitmapAccessor.GetImage("GrowthZones.Industrial.empty.png"))
             ),
@@ -109,7 +109,7 @@ namespace Mirage.Urbanization.Tilesets
                             BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a1.png"),
                             BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a2.png"),
                             BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a3.png")
-                        ), 
+                        ),
                     }
                 )
             ),
@@ -121,13 +121,13 @@ namespace Mirage.Urbanization.Tilesets
                             BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a1.png"),
                             BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a2.png"),
                             BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a3.png")
-                        ), 
+                        ),
                     }
                 )
             )
         );
 
-        internal static readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> ResidentialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
+        internal readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> ResidentialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity <= 8,
                 new BitmapSelector(BitmapAccessor.GetImage("GrowthZones.Residential.empty.png"))
             ),
@@ -146,7 +146,7 @@ namespace Mirage.Urbanization.Tilesets
             )
         );
 
-        internal static readonly GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption> ResidentialHouseCollection = new GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption>(
+        internal readonly GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption> ResidentialHouseCollection = new GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption>(
             new GrowthZonePredicateAndBitmapSelector<ZoneClusterMemberConsumption>(x =>
             {
                 var growthZone = x.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption;
@@ -164,18 +164,18 @@ namespace Mirage.Urbanization.Tilesets
 
     }
 
-    public static class MiscBitmaps
+    public class MiscBitmaps
     {
-        public static readonly DirectionalBitmap Plane = new DirectionalBitmap(BitmapAccessor.GetImage("airplane.png"));
-        public static readonly DirectionalBitmap Train = new DirectionalBitmap(BitmapAccessor.GetImage("train.png"));
+        public readonly DirectionalBitmap Plane = new DirectionalBitmap(BitmapAccessor.GetImage("airplane.png"));
+        public readonly DirectionalBitmap Train = new DirectionalBitmap(BitmapAccessor.GetImage("train.png"));
 
-        public static DirectionalBitmap GetShipBitmapFrame()
+        public DirectionalBitmap GetShipBitmapFrame()
         {
             return DateTime.Now.Millisecond % 400 > 200 ? ShipFrameOne : ShipFrameTwo;
         }
 
-        public static readonly DirectionalBitmap ShipFrameOne = new DirectionalBitmap(BitmapAccessor.GetImage("shipanim1.png"));
-        public static readonly DirectionalBitmap ShipFrameTwo = new DirectionalBitmap(BitmapAccessor.GetImage("shipanim2.png"));
+        public readonly DirectionalBitmap ShipFrameOne = new DirectionalBitmap(BitmapAccessor.GetImage("shipanim1.png"));
+        public readonly DirectionalBitmap ShipFrameTwo = new DirectionalBitmap(BitmapAccessor.GetImage("shipanim2.png"));
     }
 
     public class DirectionalBitmap
@@ -227,55 +227,73 @@ namespace Mirage.Urbanization.Tilesets
         }
     }
 
-    internal static class BitmapAccessor
+    internal class BitmapAccessor
     {
-        public static readonly AnimatedBitmap PowerPlant = new AnimatedBitmap(250, GetImage("coal1.png"), GetImage("coal2.png"), GetImage("coal3.png"), GetImage("coal4.png"));
+        public readonly AnimatedBitmap PowerPlant = new AnimatedBitmap(250, GetImage("coal1.png"), GetImage("coal2.png"), GetImage("coal3.png"), GetImage("coal4.png"));
 
-        public static readonly Bitmap TrainStation = GetImage("trainstation.png");
-        public static readonly Bitmap Airport = GetImage("airport.png");
+        public readonly Bitmap TrainStation = GetImage("trainstation.png");
+        public readonly Bitmap Airport = GetImage("airport.png");
 
-        public static readonly Bitmap NuclearPowerplant = GetImage("nuclear.png");
-        public static readonly Bitmap Police = GetImage("police.png");
-        public static readonly Bitmap FireStation = GetImage("firestation.png");
-        public static readonly Bitmap SeaPort = GetImage("seaport.png");
-        public static readonly Bitmap Stadium = GetImage("stadium.png");
+        public readonly Bitmap NuclearPowerplant = GetImage("nuclear.png");
+        public readonly Bitmap Police = GetImage("police.png");
+        public readonly Bitmap FireStation = GetImage("firestation.png");
+        public readonly Bitmap SeaPort = GetImage("seaport.png");
+        public readonly Bitmap Stadium = GetImage("stadium.png");
 
-        public static class GrowthZones
+        public GrowthZones GrowthZonesInstance = new GrowthZones();
+
+        public class GrowthZones
         {
-            public static readonly Bitmap NoElectricity = GetImage("GrowthZones.noelectricity.png");
+            public readonly Bitmap NoElectricity = GetImage("GrowthZones.noelectricity.png");
         }
-        public static readonly Bitmap Rubbish = GetImage("rubbish.png");
+        public readonly Bitmap Rubbish = GetImage("rubbish.png");
 
-        public static class NetworkZones
+        public NetworkZones NetworkZonesInstance = new NetworkZones();
+
+        public class NetworkZones
         {
-            public static readonly Bitmap RailNorthSouthRoadEastWest = GetImage("NetworkZones.railnsroadew.png");
-            public static readonly Lazy<Bitmap> RoadNorthSouthRailEastWest = new Lazy<Bitmap>(() =>
-                RailNorthSouthRoadEastWest.Get90DegreesRotatedClone()
-            );
+            public readonly Bitmap RailNorthSouthRoadEastWest = GetImage("NetworkZones.railnsroadew.png");
+            public readonly Lazy<Bitmap> RoadNorthSouthRailEastWest;
 
-            public static readonly Bitmap WaterNorthSouthRoadEastWest = GetImage("NetworkZones.waternsroadew.png");
-            public static readonly Lazy<Bitmap> RoadNorthSouthWaterEastWest = new Lazy<Bitmap>(() =>
-                WaterNorthSouthRoadEastWest.Get90DegreesRotatedClone()
-            );
+            public readonly Bitmap WaterNorthSouthRoadEastWest = GetImage("NetworkZones.waternsroadew.png");
+            public readonly Lazy<Bitmap> RoadNorthSouthWaterEastWest;
 
-            public static readonly Bitmap PowerNorthSouthRoadEastWest = GetImage("NetworkZones.powernsroadew.png");
-            public static readonly Lazy<Bitmap> RoadNorthSouthPowerEastWest = new Lazy<Bitmap>(() =>
-                PowerNorthSouthRoadEastWest.Get90DegreesRotatedClone()
-            );
+            public readonly Bitmap PowerNorthSouthRoadEastWest = GetImage("NetworkZones.powernsroadew.png");
+            public readonly Lazy<Bitmap> RoadNorthSouthPowerEastWest;
 
-            public static readonly Bitmap RailNorthSouthWaterEastWest = GetImage("NetworkZones.railnswaterew.png");
-            public static readonly Lazy<Bitmap> WaterNorthSouthRailEastWest = new Lazy<Bitmap>(() =>
-                RailNorthSouthWaterEastWest.Get90DegreesRotatedClone());
+            public readonly Bitmap RailNorthSouthWaterEastWest = GetImage("NetworkZones.railnswaterew.png");
+            public readonly Lazy<Bitmap> WaterNorthSouthRailEastWest;
 
-            public static readonly Bitmap PowerNorthSouthWaterEastWest = GetImage("NetworkZones.powernswaterew.png");
-            public static readonly Lazy<Bitmap> WaterNorthSouthPowerEastWest = new Lazy<Bitmap>(() =>
-                PowerNorthSouthWaterEastWest.Get90DegreesRotatedClone());
+            public readonly Bitmap PowerNorthSouthWaterEastWest = GetImage("NetworkZones.powernswaterew.png");
+            public readonly Lazy<Bitmap> WaterNorthSouthPowerEastWest;
 
 
-            public static readonly Bitmap RailNorthSouthPowerEastWest = GetImage("NetworkZones.railnspowerew.png");
-            public static readonly Lazy<Bitmap> PowerNorthSouthRailEastWest = new Lazy<Bitmap>(() =>
-                RailNorthSouthPowerEastWest.Get90DegreesRotatedClone()
-            );
+            public readonly Bitmap RailNorthSouthPowerEastWest = GetImage("NetworkZones.railnspowerew.png");
+            public readonly Lazy<Bitmap> PowerNorthSouthRailEastWest;
+
+            public NetworkZones()
+            {
+                PowerNorthSouthRailEastWest = new Lazy<Bitmap>(() =>
+                    RailNorthSouthPowerEastWest.Get90DegreesRotatedClone()
+                    );
+                WaterNorthSouthPowerEastWest = new Lazy<Bitmap>(() =>
+                    PowerNorthSouthWaterEastWest.Get90DegreesRotatedClone());
+                WaterNorthSouthRailEastWest = new Lazy<Bitmap>(() =>
+                    RailNorthSouthWaterEastWest.Get90DegreesRotatedClone());
+                RoadNorthSouthPowerEastWest = new Lazy<Bitmap>(() =>
+                    PowerNorthSouthRoadEastWest.Get90DegreesRotatedClone()
+                    );
+                RoadNorthSouthWaterEastWest = new Lazy<Bitmap>(() =>
+                    WaterNorthSouthRoadEastWest.Get90DegreesRotatedClone()
+                    );
+                RoadNorthSouthRailEastWest = new Lazy<Bitmap>(() =>
+                    RailNorthSouthRoadEastWest.Get90DegreesRotatedClone()
+                    );
+
+                RoadInstance = new Road(WaterInstance, NetworkZonesInstance);
+            }
+
+            public readonly NetworkZones NetworkZonesInstance = new NetworkZones();
 
             private static NetworkZoneTileset GenerateNetworkZoneTileSet(string formatter)
             {
@@ -289,19 +307,29 @@ namespace Mirage.Urbanization.Tilesets
                 );
             }
 
-            public static class Road
-            {
-                public static readonly NetworkZoneTileset RoadZoneTileSet =
-                    GenerateNetworkZoneTileSet("NetworkZones.Road.road{0}.png");
+            public readonly Road RoadInstance;
 
-                public static Bitmap GetBitmapFor(RoadZoneConsumption consumption)
+            public class Road
+            {
+                private readonly Water _waterInstance;
+                private readonly NetworkZones _networkZones;
+                public readonly NetworkZoneTileset RoadZoneTileSet;
+
+                public Road(Water waterInstance, NetworkZones networkZones)
+                {
+                    _waterInstance = waterInstance;
+                    _networkZones = networkZones;
+                    RoadZoneTileSet = GenerateNetworkZoneTileSet("NetworkZones.Road.road{0}.png");
+                }
+
+                public Bitmap GetBitmapFor(RoadZoneConsumption consumption)
                 {
                     switch (consumption.GetTrafficDensity())
                     {
                         case TrafficDensity.Low:
-                            return TrafficAnim.Low.GetBitmapFor(consumption);
+                            return TrafficAnimInstance.Low.GetBitmapFor(consumption);
                         case TrafficDensity.High:
-                            return TrafficAnim.High.GetBitmapFor(consumption);
+                            return TrafficAnimInstance.High.GetBitmapFor(consumption);
                         case TrafficDensity.None:
                             return RoadZoneTileSet.GetBitmapFor(consumption);
                         default:
@@ -309,16 +337,16 @@ namespace Mirage.Urbanization.Tilesets
                     }
                 }
 
-                public static BitmapLayer GetBitmapLayerFor(IIntersectingZoneConsumption intersection)
+                public BitmapLayer GetBitmapLayerFor(IIntersectingZoneConsumption intersection)
                 {
-                    if (intersection.GetIntersectingTypes().Any(x => x == typeof (WaterZoneConsumption)))
+                    if (intersection.GetIntersectingTypes().Any(x => x == typeof(WaterZoneConsumption)))
                     {
-                        return new BitmapLayer(Water.WaterNorthWestEastSouth, GetBitmapFor(intersection));
+                        return new BitmapLayer(_waterInstance.WaterNorthWestEastSouth, GetBitmapFor(intersection));
                     }
                     return new BitmapLayer(GetBitmapFor(intersection));
                 }
 
-                private static Bitmap GetBitmapFor(IIntersectingZoneConsumption intersection)
+                private Bitmap GetBitmapFor(IIntersectingZoneConsumption intersection)
                 {
                     if (intersection.EastWestZoneConsumption is RoadZoneConsumption ^
                         intersection.NorthSouthZoneConsumption is RoadZoneConsumption)
@@ -330,27 +358,27 @@ namespace Mirage.Urbanization.Tilesets
 
                                 if (intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
                                 {
-                                    return RoadNorthSouthRailEastWest.Value;
+                                    return _networkZones.RoadNorthSouthRailEastWest.Value;
                                 }
                                 else if (intersection.NorthSouthZoneConsumption is RailRoadZoneConsumption)
                                 {
-                                    return RailNorthSouthRoadEastWest;
+                                    return _networkZones.RailNorthSouthRoadEastWest;
                                 }
                                 else if (intersection.EastWestZoneConsumption is PowerLineConsumption)
                                 {
-                                    return RoadNorthSouthPowerEastWest.Value;
+                                    return _networkZones.RoadNorthSouthPowerEastWest.Value;
                                 }
                                 else if (intersection.NorthSouthZoneConsumption is PowerLineConsumption)
                                 {
-                                    return PowerNorthSouthRoadEastWest;
+                                    return _networkZones.PowerNorthSouthRoadEastWest;
                                 }
                                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption)
                                 {
-                                    return WaterNorthSouthRoadEastWest;
+                                    return _networkZones.WaterNorthSouthRoadEastWest;
                                 }
                                 else if (intersection.EastWestZoneConsumption is WaterZoneConsumption)
                                 {
-                                    return RoadNorthSouthWaterEastWest.Value;
+                                    return _networkZones.RoadNorthSouthWaterEastWest.Value;
                                 }
                                 else
                                 {
@@ -358,9 +386,9 @@ namespace Mirage.Urbanization.Tilesets
                                 }
 
                             case TrafficDensity.Low:
-                                return TrafficAnim.Low.GetBitmapFor(intersection);
+                                return TrafficAnimInstance.Low.GetBitmapFor(intersection);
                             case TrafficDensity.High:
-                                return TrafficAnim.High.GetBitmapFor(intersection);
+                                return TrafficAnimInstance.High.GetBitmapFor(intersection);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -368,40 +396,48 @@ namespace Mirage.Urbanization.Tilesets
                     else throw new ArgumentException("Invalid intersection was specified.", nameof(intersection));
                 }
 
-                public static class TrafficAnim
-                {
-                    private static readonly InfiniteEnumeratorCycler Cycler = new InfiniteEnumeratorCycler();
+                public TrafficAnim TrafficAnimInstance = new TrafficAnim();
 
-                    public static readonly AnimatedRoadNetworkZoneTileset Low = new AnimatedRoadNetworkZoneTileset(
-                        frameTileSets: EnumerateLowFrames()
-                            .Select(frameName => GenerateNetworkZoneTileSet(frameName + ".road{0}.png"))
-                            .ToArray(),
-                        powerNorthSouthRoadEastWestFrames: EnumerateLowFrames()
-                            .Select(frameName => GetImage(frameName + ".powernsroadew.png"))
-                            .ToArray(),
-                        railNorthSouthRoadEastWestFrames: EnumerateLowFrames()
-                            .Select(frameName => GetImage(frameName + ".railnsroadew.png"))
-                            .ToArray(),
-                        waterNorthSouthRoadEastWestFrames: EnumerateLowFrames()
-                            .Select(frameName => GetImage(frameName + ".waternsroadew.png"))
-                            .ToArray(),
-                        cycler: Cycler
-                    );
-                    public static readonly AnimatedRoadNetworkZoneTileset High = new AnimatedRoadNetworkZoneTileset(
-                        frameTileSets: EnumerateHighFrames()
-                            .Select(frameName => GenerateNetworkZoneTileSet(frameName + ".road{0}.png"))
-                            .ToArray(),
-                        powerNorthSouthRoadEastWestFrames: EnumerateHighFrames()
-                            .Select(frameName => GetImage(frameName + ".powernsroadew.png"))
-                            .ToArray(),
-                        railNorthSouthRoadEastWestFrames: EnumerateHighFrames()
-                            .Select(frameName => GetImage(frameName + ".railnsroadew.png"))
-                            .ToArray(),
-                        waterNorthSouthRoadEastWestFrames: EnumerateHighFrames()
-                            .Select(frameName => GetImage(frameName + ".waternsroadew.png"))
-                            .ToArray(),
-                        cycler: Cycler
-                    );
+                public class TrafficAnim
+                {
+                    private readonly InfiniteEnumeratorCycler Cycler = new InfiniteEnumeratorCycler();
+
+                    public readonly AnimatedRoadNetworkZoneTileset Low;
+                    public readonly AnimatedRoadNetworkZoneTileset High;
+
+                    public TrafficAnim()
+                    {
+                        High = new AnimatedRoadNetworkZoneTileset(
+                            frameTileSets: EnumerateHighFrames()
+                                .Select(frameName => GenerateNetworkZoneTileSet(frameName + ".road{0}.png"))
+                                .ToArray(),
+                            powerNorthSouthRoadEastWestFrames: EnumerateHighFrames()
+                                .Select(frameName => GetImage(frameName + ".powernsroadew.png"))
+                                .ToArray(),
+                            railNorthSouthRoadEastWestFrames: EnumerateHighFrames()
+                                .Select(frameName => GetImage(frameName + ".railnsroadew.png"))
+                                .ToArray(),
+                            waterNorthSouthRoadEastWestFrames: EnumerateHighFrames()
+                                .Select(frameName => GetImage(frameName + ".waternsroadew.png"))
+                                .ToArray(),
+                            cycler: Cycler
+                            );
+                        Low = new AnimatedRoadNetworkZoneTileset(
+                            frameTileSets: EnumerateLowFrames()
+                                .Select(frameName => GenerateNetworkZoneTileSet(frameName + ".road{0}.png"))
+                                .ToArray(),
+                            powerNorthSouthRoadEastWestFrames: EnumerateLowFrames()
+                                .Select(frameName => GetImage(frameName + ".powernsroadew.png"))
+                                .ToArray(),
+                            railNorthSouthRoadEastWestFrames: EnumerateLowFrames()
+                                .Select(frameName => GetImage(frameName + ".railnsroadew.png"))
+                                .ToArray(),
+                            waterNorthSouthRoadEastWestFrames: EnumerateLowFrames()
+                                .Select(frameName => GetImage(frameName + ".waternsroadew.png"))
+                                .ToArray(),
+                            cycler: Cycler
+                            );
+                    }
 
                     private static IEnumerable<string> EnumerateLowFrames()
                     {
@@ -418,50 +454,64 @@ namespace Mirage.Urbanization.Tilesets
                     }
                 }
             }
-            public static class Rail
+
+            public Rail RailInstance = new Rail();
+
+            public class Rail
             {
-                public static readonly Bitmap RailNoDirection = GetImage("NetworkZones.Rail.rail.png");
-                public static readonly Bitmap RailEast = GetImage("NetworkZones.Rail.raile.png");
-                public static readonly Bitmap RailEastWest = GetImage("NetworkZones.Rail.railew.png");
-                public static readonly Bitmap RailNorthWest = GetImage("NetworkZones.Rail.railnw.png");
-                public static readonly Bitmap RailWestNorthEast = GetImage("NetworkZones.Rail.railnwe.png");
-                public static readonly Bitmap RailNorthWestEastSouth = GetImage("NetworkZones.Rail.railnwes.png");
+                public readonly Bitmap RailNoDirection = GetImage("NetworkZones.Rail.rail.png");
+                public readonly Bitmap RailEast = GetImage("NetworkZones.Rail.raile.png");
+                public readonly Bitmap RailEastWest = GetImage("NetworkZones.Rail.railew.png");
+                public readonly Bitmap RailNorthWest = GetImage("NetworkZones.Rail.railnw.png");
+                public readonly Bitmap RailWestNorthEast = GetImage("NetworkZones.Rail.railnwe.png");
+                public readonly Bitmap RailNorthWestEastSouth = GetImage("NetworkZones.Rail.railnwes.png");
             }
-            public static class Power
+
+            public Power PowerInstance = new Power();
+
+            public class Power
             {
-                public static readonly Bitmap PowerNoDirection = GetImage("NetworkZones.Power.power.png");
-                public static readonly Bitmap PowerEast = GetImage("NetworkZones.Power.powere.png");
-                public static readonly Bitmap PowerEastWest = GetImage("NetworkZones.Power.powerew.png");
-                public static readonly Bitmap PowerNorthWest = GetImage("NetworkZones.Power.powernw.png");
-                public static readonly Bitmap PowerWestNorthEast = GetImage("NetworkZones.Power.powernwe.png");
-                public static readonly Bitmap PowerNorthWestEastSouth = GetImage("NetworkZones.Power.powernwes.png");
+                public readonly Bitmap PowerNoDirection = GetImage("NetworkZones.Power.power.png");
+                public readonly Bitmap PowerEast = GetImage("NetworkZones.Power.powere.png");
+                public readonly Bitmap PowerEastWest = GetImage("NetworkZones.Power.powerew.png");
+                public readonly Bitmap PowerNorthWest = GetImage("NetworkZones.Power.powernw.png");
+                public readonly Bitmap PowerWestNorthEast = GetImage("NetworkZones.Power.powernwe.png");
+                public readonly Bitmap PowerNorthWestEastSouth = GetImage("NetworkZones.Power.powernwes.png");
             }
-            public static class Wood
+
+            public Wood WoodInstance = new Wood();
+
+            public class Wood
             {
-                public static readonly Bitmap WoodNoDirection = GetImage("NetworkZones.Wood.wood.png");
-                public static readonly Bitmap WoodEast = GetImage("NetworkZones.Wood.woode.png");
-                public static readonly Bitmap WoodEastWest = GetImage("NetworkZones.Wood.woodew.png");
-                public static readonly Bitmap WoodNorthWest = GetImage("NetworkZones.Wood.woodnw.png");
-                public static readonly Bitmap WoodWestNorthEast = GetImage("NetworkZones.Wood.woodnwe.png");
-                public static readonly Bitmap WoodNorthWestEastSouth = GetImage("NetworkZones.Wood.woodnwes.png");
+                public readonly Bitmap WoodNoDirection = GetImage("NetworkZones.Wood.wood.png");
+                public readonly Bitmap WoodEast = GetImage("NetworkZones.Wood.woode.png");
+                public readonly Bitmap WoodEastWest = GetImage("NetworkZones.Wood.woodew.png");
+                public readonly Bitmap WoodNorthWest = GetImage("NetworkZones.Wood.woodnw.png");
+                public readonly Bitmap WoodWestNorthEast = GetImage("NetworkZones.Wood.woodnwe.png");
+                public readonly Bitmap WoodNorthWestEastSouth = GetImage("NetworkZones.Wood.woodnwes.png");
             }
-            public static class Park
+
+            public Park ParkInstance = new Park();
+
+            public class Park
             {
-                public static readonly Bitmap WoodNoDirection = GetImage("NetworkZones.Park.park.png");
-                public static readonly Bitmap WoodEast = GetImage("NetworkZones.Park.parke.png");
-                public static readonly Bitmap WoodEastWest = GetImage("NetworkZones.Park.parkew.png");
-                public static readonly Bitmap WoodNorthWest = GetImage("NetworkZones.Park.parknw.png");
-                public static readonly Bitmap WoodWestNorthEast = GetImage("NetworkZones.Park.parknwe.png");
-                public static readonly Bitmap WoodNorthWestEastSouth = GetImage("NetworkZones.Park.parknwes.png");
+                public readonly Bitmap WoodNoDirection = GetImage("NetworkZones.Park.park.png");
+                public readonly Bitmap WoodEast = GetImage("NetworkZones.Park.parke.png");
+                public readonly Bitmap WoodEastWest = GetImage("NetworkZones.Park.parkew.png");
+                public readonly Bitmap WoodNorthWest = GetImage("NetworkZones.Park.parknw.png");
+                public readonly Bitmap WoodWestNorthEast = GetImage("NetworkZones.Park.parknwe.png");
+                public readonly Bitmap WoodNorthWestEastSouth = GetImage("NetworkZones.Park.parknwes.png");
             }
-            public static class Water
+            public Water WaterInstance = new Water();
+
+            public class Water
             {
-                public static readonly Bitmap WaterNoDirection = GetImage("NetworkZones.Water.water.png");
-                public static readonly Bitmap WaterEast = GetImage("NetworkZones.Water.watere.png");
-                public static readonly Bitmap WaterEastWest = GetImage("NetworkZones.Water.waterew.png");
-                public static readonly Bitmap WaterNorthWest = GetImage("NetworkZones.Water.waternw.png");
-                public static readonly Bitmap WaterWestNorthEast = GetImage("NetworkZones.Water.waternwe.png");
-                public static readonly Bitmap WaterNorthWestEastSouth = GetImage("NetworkZones.Water.waternwes.png");
+                public readonly Bitmap WaterNoDirection = GetImage("NetworkZones.Water.water.png");
+                public readonly Bitmap WaterEast = GetImage("NetworkZones.Water.watere.png");
+                public readonly Bitmap WaterEastWest = GetImage("NetworkZones.Water.waterew.png");
+                public readonly Bitmap WaterNorthWest = GetImage("NetworkZones.Water.waternw.png");
+                public readonly Bitmap WaterWestNorthEast = GetImage("NetworkZones.Water.waternwe.png");
+                public readonly Bitmap WaterNorthWestEastSouth = GetImage("NetworkZones.Water.waternwes.png");
             }
         }
 
@@ -472,50 +522,6 @@ namespace Mirage.Urbanization.Tilesets
             if (file == null)
                 throw new ArgumentException("Could not extract resource stream for file: " + name, nameof(name));
             return new Bitmap(Image.FromStream(file));
-        }
-    }
-
-    public static class BitmapExtensions
-    {
-        public static Bitmap Get90DegreesRotatedClone(this Bitmap bitmap)
-        {
-            if (bitmap == null)
-                throw new ArgumentNullException(nameof(bitmap));
-            var clone = bitmap.Clone() as Bitmap;
-            if (clone == null)
-                throw new ArgumentException(
-                    String.Format("Could not clone 'bitmap' into a new {0} instance.", typeof(Bitmap).Name), nameof(bitmap));
-
-            clone.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            return clone;
-        }
-
-        public static Bitmap RotateImage(this Bitmap bmp, float angle)
-        {
-            Bitmap rotatedImage = new Bitmap(bmp.Width, bmp.Height);
-            using (Graphics g = Graphics.FromImage(rotatedImage))
-            {
-                g.TranslateTransform(bmp.Width / 2, bmp.Height / 2); //set the rotation point as the center into the matrix
-                g.RotateTransform(angle); //rotate
-                g.TranslateTransform(-bmp.Width / 2, -bmp.Height / 2); //restore rotation point into the matrix
-                g.DrawImage(bmp, new Point(0, 0)); //draw the image on the new bitmap
-            }
-
-            return rotatedImage;
-        }
-
-        public static Bitmap RotateTrainImage(this Bitmap bmp, float angle)
-        {
-            Bitmap rotatedImage = new Bitmap(bmp.Width * 2, bmp.Height * 2);
-            using (Graphics g = Graphics.FromImage(rotatedImage))
-            {
-                g.TranslateTransform(bmp.Width / 2, bmp.Height / 2); //set the rotation point as the center into the matrix
-                g.RotateTransform(angle); //rotate
-                g.TranslateTransform(-(bmp.Width / 2), -(bmp.Height / 2)); //restore rotation point into the matrix
-                g.DrawImage(bmp, new Point(0, 0)); //draw the image on the new bitmap
-            }
-
-            return rotatedImage;
         }
     }
 }

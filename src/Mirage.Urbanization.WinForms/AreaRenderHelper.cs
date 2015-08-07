@@ -168,6 +168,8 @@ namespace Mirage.Urbanization.WinForms
 
         private readonly object _locker = new object();
 
+        private readonly MiscBitmaps MiscBitmapsInstance = new MiscBitmaps();
+
         private IGraphicsManagerWrapper CreateGraphicsManagerWrapperWithFactory(Func<Panel, Action, IGraphicsManagerWrapper> graphicsManagerWrapper)
         {
             return graphicsManagerWrapper(_canvasPanel, () =>
@@ -215,11 +217,11 @@ namespace Mirage.Urbanization.WinForms
                             Bitmap bitmap;
 
                             if (airplane is IAirplane)
-                                bitmap = MiscBitmaps.Plane.GetBitmap(orientation);
+                                bitmap = MiscBitmapsInstance.Plane.GetBitmap(orientation);
                             else if (airplane is ITrain)
-                                bitmap = MiscBitmaps.Train.GetBitmap(orientation);
+                                bitmap = MiscBitmapsInstance.Train.GetBitmap(orientation);
                             else if (airplane is IShip)
-                                bitmap = MiscBitmaps.GetShipBitmapFrame().GetBitmap(orientation);
+                                bitmap = MiscBitmapsInstance.GetShipBitmapFrame().GetBitmap(orientation);
                             else
                                 throw new InvalidOperationException();
 
