@@ -126,6 +126,12 @@
     </Compile>
     <Compile Include="ToolstripMenuInitializer.cs" />
     <Compile Include="ToolstripMenuOptionChangedEventArgs.cs" />
+    <Compile Include="WebServerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebServerForm.Designer.cs">
+      <DependentUpon>WebServerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ZoneRenderInfo.cs" />
     <Compile Include="ZoneSelectionPanelCreator.cs" />
     <Compile Include="ZoomMode.cs" />
@@ -156,6 +162,9 @@
     </Compile>
     <EmbeddedResource Include="StatisticsForm.resx">
       <DependentUpon>StatisticsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WebServerForm.resx">
+      <DependentUpon>WebServerForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

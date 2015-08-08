@@ -248,7 +248,12 @@ namespace Mirage.Urbanization.Tilesets
         }
         public readonly Bitmap Rubbish = GetImage("rubbish.png");
 
-        public NetworkZones NetworkZonesInstance = new NetworkZones();
+        public NetworkZones NetworkZonesInstance;
+
+        public BitmapAccessor()
+        {
+            NetworkZonesInstance = new NetworkZones();
+        }
 
         public class NetworkZones
         {
@@ -290,10 +295,8 @@ namespace Mirage.Urbanization.Tilesets
                     RailNorthSouthRoadEastWest.Get90DegreesRotatedClone()
                     );
 
-                RoadInstance = new Road(WaterInstance, NetworkZonesInstance);
+                RoadInstance = new Road(WaterInstance, this);
             }
-
-            public readonly NetworkZones NetworkZonesInstance = new NetworkZones();
 
             private static NetworkZoneTileset GenerateNetworkZoneTileSet(string formatter)
             {

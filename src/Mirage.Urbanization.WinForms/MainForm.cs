@@ -111,7 +111,6 @@ namespace Mirage.Urbanization.WinForms
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             WithAreaRenderHelper(helper => helper.Stop());
-            webServer?.Dispose();
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -346,15 +345,21 @@ namespace Mirage.Urbanization.WinForms
             _logWindowFormManager.Show(this);
         }
 
+        private WebServerForm _webserverForm;
+
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            WithAreaRenderHelper(helper =>
-            {
-                webServer = new GameServer(helper.SimulationSession, "http://localhost:9000/");
-                webServer.StartServer();
-            });
+            if (_webserverForm == null)
+                WithAreaRenderHelper(helper =>
+                {
+                    _webserverForm = new WebServerForm(helper.SimulationSession);
+                    _webserverForm.Show(this);
+                    _webserverForm.Closed += (s, x) =>
+                    {
+                        _webserverForm.Dispose();
+                        _webserverForm = null;
+                    };
+                });
         }
-
-        private GameServer webServer;
     }
 }

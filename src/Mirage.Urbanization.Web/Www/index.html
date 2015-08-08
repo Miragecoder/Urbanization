@@ -30,8 +30,12 @@
                     if (values.hasOwnProperty(i)) {
                         var value = values[i];
                         grid[value.key] = value;
+                        grid[value.key].drawn = false;
                     }
                 }
+                setTimeout(function() {
+                    simulation.server.requestZoneInfoSubmission();
+                }, 5);
             };
 
             $.connection.hub.start().done(function () {
@@ -54,6 +58,7 @@
                         };
                     }
                 };
+                simulation.server.requestZoneInfoSubmission();
 
                 setInterval(function () {
                     var canvas = document.getElementById('gameCanvas');
@@ -62,6 +67,7 @@
                     for (var i in grid) {
                         if (grid.hasOwnProperty(i)) {
                             var zoneInfo = grid[i];
+                            if (zoneInfo.drawn) continue;
 
                             if (canvas.width < zoneInfo.point.x * 25)
                                 canvas.width = zoneInfo.point.x * 25;
@@ -80,7 +86,7 @@
                                 context.fillStyle = zoneInfo.color;
                                 context.fill();
                             }
-
+                            zoneInfo.drawn = true;
                         }
                     }
                 }, 1000);
