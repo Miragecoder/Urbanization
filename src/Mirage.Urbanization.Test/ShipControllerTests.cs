@@ -83,9 +83,11 @@ namespace Mirage.Urbanization.Test
         }
 
         [TestMethod]
+        [Ignore]
         public void ShipControllerWithMultipleHarbours()
         {
-            TestWithAmountOfHarbors(5);
+            foreach (var i in Enumerable.Range(1, 15))
+                TestWithAmountOfHarbors(i);
         }
     }
 }
