@@ -9,7 +9,7 @@ namespace Mirage.Urbanization
     {
         public static QueryResult<ZoneInfo> GetZoneInfoOn(this ZonePoint zonePoint, Area area)
         {
-            return new QueryResult<ZoneInfo>(area.EnumerateZoneInfos().Single(x => x.Point == zonePoint));
+            return QueryResult<ZoneInfo>.Create(area.EnumerateZoneInfos().Single(x => x.Point == zonePoint));
         }
 
         public static Orientation OrientationTo(this ZonePoint x, ZonePoint y)

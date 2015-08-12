@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Mirage.Urbanization.GrowthPathFinding;
 using Mirage.Urbanization.Networks;
 using Mirage.Urbanization.Persistence;
@@ -165,19 +166,21 @@ namespace Mirage.Urbanization
 
         public IMiscCityStatistics CalculateMiscCityStatistics(CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
-            var queryCrimeResults = new HashSet<IQueryCrimeResult>(EnumerateZoneInfos().Select(x => x.QueryCrime()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
+            HashSet<IQueryCrimeResult> queryCrimeResults = new HashSet<IQueryCrimeResult>();
+            HashSet<IQueryLandValueResult> queryLandValueResults = new HashSet<IQueryLandValueResult>();
+            HashSet<IQueryPollutionResult> queryPollutionResults = new HashSet<IQueryPollutionResult>();
+            HashSet<IQueryFireHazardResult> queryFireHazardResults = new HashSet<IQueryFireHazardResult>();
+            HashSet<BaseGrowthZoneClusterConsumption> zoneClusters = new HashSet<BaseGrowthZoneClusterConsumption> ();
 
-            token.ThrowIfCancellationRequested();
-            var queryLandValueResults = new HashSet<IQueryLandValueResult>(EnumerateZoneInfos().Select(x => x.QueryLandValue()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-            token.ThrowIfCancellationRequested();
-            var queryPollutionResults = new HashSet<IQueryPollutionResult>(EnumerateZoneInfos().Select(x => x.QueryPollution()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-            token.ThrowIfCancellationRequested();
-            var queryFireHazardResults = new HashSet<IQueryFireHazardResult>(EnumerateZoneInfos().Select(x => x.QueryFireHazard()).Where(x => x.HasMatch).Select(x => x.MatchingObject));
-
-            token.ThrowIfCancellationRequested();
+            foreach (var zoneInfo in EnumerateZoneInfos())
+            {
+                token.ThrowIfCancellationRequested();
+                zoneInfo.QueryCrime().WithResultIfHasMatch(c => queryCrimeResults.Add(c));
+                zoneInfo.QueryLandValue().WithResultIfHasMatch(l => queryLandValueResults.Add(l));
+                zoneInfo.QueryPollution().WithResultIfHasMatch(p => queryPollutionResults.Add(p));
+                zoneInfo.QueryFireHazard().WithResultIfHasMatch(f => queryFireHazardResults.Add(f));
+                zoneInfo.GetAsZoneCluster<BaseGrowthZoneClusterConsumption>().WithResultIfHasMatch(x => zoneClusters.Add(x));
+            }
 
             var deterioriatingInfrastructures = new HashSet<string>();
 
@@ -194,14 +197,7 @@ namespace Mirage.Urbanization
             if (deterioriatingInfrastructures.Any())
                 RaiseAreaMessageEvent((string.Join(" and ", deterioriatingInfrastructures) + " infrastructure is deterioriating due to lack of funding.").FirstCharToUpper());
 
-            var travelDistances = new HashSet<BaseGrowthZoneClusterConsumption>(
-                    EnumerateZoneInfos()
-                    .Select(x => x.ConsumptionState.GetZoneConsumption())
-                    .OfType<ZoneClusterMemberConsumption>()
-                    .Where(x => x.IsCentralClusterMember)
-                    .Select(x => x.ParentBaseZoneClusterConsumption)
-                    .OfType<BaseGrowthZoneClusterConsumption>()
-                )
+            var travelDistances = zoneClusters
                 .Select(x => x.ZoneClusterMembers.First(y => y.IsCentralClusterMember))
                 .Select(x => x.GetZoneInfo())
                 .Select(x => x.WithResultIfHasMatch(y => y.GetLastAverageTravelDistance()))
@@ -217,7 +213,7 @@ namespace Mirage.Urbanization
             );
         }
 
-        public IGrowthZoneStatistics PerformGrowthSimulationCycle(CancellationToken cancellationToken)
+        public async Task<IGrowthZoneStatistics> PerformGrowthSimulationCycle(CancellationToken cancellationToken)
         {
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
@@ -309,7 +305,7 @@ namespace Mirage.Urbanization
                     continue;
                 }
                 if (_areaOptions.ProcessOptions.GetStepByStepGrowthCyclingToggled())
-                    Thread.Sleep(500);
+                    await Task.Delay(500, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
 
                 poweredCluster

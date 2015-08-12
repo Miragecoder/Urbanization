@@ -48,7 +48,7 @@ namespace Mirage.Urbanization.WinForms
         public QueryResult<SolidBrush> GetBrushFor(DataMeterValueCategory dataMeterValueCategory)
         {
             if (DataMeterValueBrushes.ContainsKey(dataMeterValueCategory))
-                return new QueryResult<SolidBrush>(DataMeterValueBrushes[dataMeterValueCategory]);
+                return QueryResult<SolidBrush>.Create(DataMeterValueBrushes[dataMeterValueCategory]);
             return QueryResult<SolidBrush>.Empty;
         }
     }

@@ -151,7 +151,7 @@ namespace Mirage.Urbanization
                     .GetPollutionInUnits(match.QueryObject)
                 ).Sum();
 
-            _lastQueryPollutionResult = new QueryResult<IQueryPollutionResult>(pollution > 0 ? new QueryPollutionResult(pollution) : null);
+            _lastQueryPollutionResult = QueryResult<IQueryPollutionResult>.Create(pollution > 0 ? new QueryPollutionResult(pollution) : null);
             return _lastQueryPollutionResult;
         }
 
@@ -180,7 +180,7 @@ namespace Mirage.Urbanization
                 ConsumptionState.WithNetworkMember<RoadZoneConsumption>(roadZoneConsumption => pollutionBehaviour = roadZoneConsumption.PollutionBehaviour);
             }
 
-            return new QueryResult<IPollutionBehaviour>(pollutionBehaviour);
+            return QueryResult<IPollutionBehaviour>.Create(pollutionBehaviour);
         }
 
         public QueryResult<ICrimeBehaviour> GetCrimeBehaviour()
@@ -193,7 +193,7 @@ namespace Mirage.Urbanization
                 crimeBehaviour =
                     (consumptionState as ZoneClusterMemberConsumption).ParentBaseZoneClusterConsumption.CrimeBehaviour;
             }
-            return new QueryResult<ICrimeBehaviour>(crimeBehaviour);
+            return QueryResult<ICrimeBehaviour>.Create(crimeBehaviour);
         }
 
         private QueryResult<IQueryCrimeResult> _lastQueryCrimeResult;
@@ -201,7 +201,7 @@ namespace Mirage.Urbanization
         {
             if (!this.ConsumptionState.GetIsZoneClusterMember())
             {
-                return _lastQueryCrimeResult = new QueryResult<IQueryCrimeResult>();
+                return _lastQueryCrimeResult = QueryResult<IQueryCrimeResult>.Create(null);
             }
 
             int crimeInUnits = (from match in GetSurroundingZoneInfosDiamond(20)
@@ -215,7 +215,7 @@ namespace Mirage.Urbanization
                     .GetCrimeInUnits(match.QueryObject)
                 ).Sum();
 
-            return _lastQueryCrimeResult = new QueryResult<IQueryCrimeResult>(new QueryCrimeResult(crimeInUnits));
+            return _lastQueryCrimeResult = QueryResult<IQueryCrimeResult>.Create(new QueryCrimeResult(crimeInUnits));
         }
 
         public QueryResult<IQueryCrimeResult> GetLastQueryCrimeResult()
@@ -233,7 +233,7 @@ namespace Mirage.Urbanization
                 FireHazardBehaviour =
                     (consumptionState as ZoneClusterMemberConsumption).ParentBaseZoneClusterConsumption.FireHazardBehaviour;
             }
-            return new QueryResult<IFireHazardBehaviour>(FireHazardBehaviour);
+            return QueryResult<IFireHazardBehaviour>.Create(FireHazardBehaviour);
         }
 
         private QueryResult<IQueryFireHazardResult> _lastQueryFireHazardResult;
@@ -241,7 +241,7 @@ namespace Mirage.Urbanization
         {
             if (!this.ConsumptionState.GetIsZoneClusterMember())
             {
-                return _lastQueryFireHazardResult = new QueryResult<IQueryFireHazardResult>();
+                return _lastQueryFireHazardResult = QueryResult<IQueryFireHazardResult>.Create();
             }
 
             int FireHazardInUnits = (from match in GetSurroundingZoneInfosDiamond(20)
@@ -255,7 +255,7 @@ namespace Mirage.Urbanization
                     .GetFireHazardInUnits(match.QueryObject)
                 ).Sum();
 
-            return _lastQueryFireHazardResult = new QueryResult<IQueryFireHazardResult>(new QueryFireHazardResult(FireHazardInUnits));
+            return _lastQueryFireHazardResult = QueryResult<IQueryFireHazardResult>.Create(new QueryFireHazardResult(FireHazardInUnits));
         }
 
         public QueryResult<IQueryFireHazardResult> GetLastQueryFireHazardResult()
@@ -276,17 +276,17 @@ namespace Mirage.Urbanization
             var consumption = ConsumptionState.GetZoneConsumption();
 
             if (consumption is TNetworkZoneConsumption)
-                return new QueryResult<TNetworkZoneConsumption>(consumption as TNetworkZoneConsumption);
+                return QueryResult<TNetworkZoneConsumption>.Create(consumption as TNetworkZoneConsumption);
 
             if (consumption is IntersectingZoneConsumption)
             {
-                return new QueryResult<TNetworkZoneConsumption>((consumption as IntersectingZoneConsumption)
+                return QueryResult<TNetworkZoneConsumption>.Create((consumption as IntersectingZoneConsumption)
                     .GetIntersectingZoneConsumptions()
                     .OfType<TNetworkZoneConsumption>()
                     .SingleOrDefault()
                     );
             }
-            return new QueryResult<TNetworkZoneConsumption>();
+            return QueryResult<TNetworkZoneConsumption>.Create();
         }
 
         public void WithNetworkConsumptionIf<TNetworkZoneConsumption>(Action<TNetworkZoneConsumption> action)
@@ -308,7 +308,7 @@ namespace Mirage.Urbanization
             T value = null;
 
             WithZoneClusterIf<T>(x => value = x);
-            return new QueryResult<T>(value);
+            return QueryResult<T>.Create(value);
         }
 
         public void WithZoneClusterIf<T>(Action<T> action) where T : BaseZoneClusterConsumption

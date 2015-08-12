@@ -79,7 +79,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             var road = (NorthSouthZoneConsumption as RoadZoneConsumption) ??
                        (EastWestZoneConsumption as RoadZoneConsumption);
 
-            return new QueryResult<RoadZoneConsumption>(road);
+            return QueryResult<RoadZoneConsumption>.Create(road);
         }
 
         public int GetTrafficDensityAsInt()

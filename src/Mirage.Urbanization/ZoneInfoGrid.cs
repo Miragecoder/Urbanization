@@ -64,7 +64,7 @@ namespace Mirage.Urbanization
                 })
                 : ZoneInfos.FirstOrDefault(x => x.Value.ConsumptionState.GetZoneConsumption() == zoneConsumption);
 
-            return new QueryResult<IZoneInfo>(match.Value);
+            return QueryResult<IZoneInfo>.Create(match.Value);
         }
     }
 }

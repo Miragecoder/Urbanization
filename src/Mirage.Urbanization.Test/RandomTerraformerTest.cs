@@ -13,8 +13,8 @@ namespace Mirage.Urbanization.Test
         private ZoneInfoGrid InitializeZoneInfoGrid(bool withHorizontalRiver, bool withVerticalRiver, bool withWoodlands)
         {
             var r = new RandomTerraformer(
-                () => new WaterZoneConsumption(new ZoneInfoFinder(x => new QueryResult<IZoneInfo>())),
-                () => new WoodlandZoneConsumption(new ZoneInfoFinder(x => new QueryResult<IZoneInfo>())));
+                () => new WaterZoneConsumption(new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create())),
+                () => new WoodlandZoneConsumption(new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create())));
             var zoneInfoGrid = new ZoneInfoGrid(100, MockRepository.GenerateMock<ILandValueCalculator>());
 
             var options = new TerraformingOptions()

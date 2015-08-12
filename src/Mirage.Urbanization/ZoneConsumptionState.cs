@@ -70,7 +70,7 @@ namespace Mirage.Urbanization
         public QueryResult<ZoneClusterMemberConsumption> QueryAsZoneClusterMember()
         {
             var consumption = GetZoneConsumption() as ZoneClusterMemberConsumption;
-            return new QueryResult<ZoneClusterMemberConsumption>(consumption);
+            return QueryResult<ZoneClusterMemberConsumption>.Create(consumption);
         }
 
         public void WithNetworkMember<TBaseNetworkZoneConsumption>(Action<TBaseNetworkZoneConsumption> action)

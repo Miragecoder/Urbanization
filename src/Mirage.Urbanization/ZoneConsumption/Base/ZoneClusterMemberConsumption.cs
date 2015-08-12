@@ -39,7 +39,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public QueryResult<BaseGrowthZoneClusterConsumption> QueryParentAsBaseGrowthZoneClusterConsumption()
         {
-            return new QueryResult<BaseGrowthZoneClusterConsumption>(ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption);
+            return QueryResult<BaseGrowthZoneClusterConsumption>.Create(ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption);
         }
 
         public T GetParentAs<T>() where T : BaseZoneClusterConsumption
