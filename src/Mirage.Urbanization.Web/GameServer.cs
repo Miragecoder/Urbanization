@@ -9,11 +9,15 @@ namespace Mirage.Urbanization.Web
 {
     public class GameServer : IDisposable
     {
+        public static GameServer Instance;
+
         private readonly ISimulationSession _simulationSession;
         private readonly string _url;
         private IDisposable _webServer;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly NeverEndingTask _looper;
+
+        public ISimulationSession SimulationSession => _simulationSession;
 
         public GameServer(ISimulationSession simulationSession, string url)
         {
@@ -48,7 +52,12 @@ namespace Mirage.Urbanization.Web
                     .Clients
                     .All
                     .submitZoneInfos(zoneInfos);
+
             }, _cancellationTokenSource.Token);
+
+            if (Instance == null)
+                Instance = this;
+            else throw new InvalidOperationException();
         }
 
         public void StartServer()
@@ -62,6 +71,7 @@ namespace Mirage.Urbanization.Web
             _cancellationTokenSource.Cancel();
             _looper.Wait();
             _webServer?.Dispose();
+            Instance = null;
         }
     }
 }

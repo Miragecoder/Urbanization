@@ -42,7 +42,7 @@ namespace Mirage.Urbanization.Web
 
 
             app.UseErrorPage();
-            app.MapSignalR(new HubConfiguration());
+            app.MapSignalR(new HubConfiguration() { EnableDetailedErrors = true });
             app.UseFileServer(new FileServerOptions()
             {
                 FileSystem = new EmbeddedResourceFileSystem(Assembly.GetAssembly(GetType()), "Mirage.Urbanization.Web.Www"),
