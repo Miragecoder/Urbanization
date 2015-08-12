@@ -106,6 +106,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Www\icons\manifest.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Www\index.html" />
@@ -130,6 +131,41 @@
       <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
       <Name>Mirage.Urbanization</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Mirage.Urbanization.WinForms\urbanization.ico">
+      <Link>Www\urbanization.ico</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\icons\android-chrome-144x144.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-192x192.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-36x36.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-48x48.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-72x72.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-96x96.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-114x114.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-120x120.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-144x144.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-152x152.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-180x180.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-57x57.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-60x60.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-72x72.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-76x76.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-precomposed.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon.png" />
+    <EmbeddedResource Include="Www\icons\browserconfig.xml" />
+    <EmbeddedResource Include="Www\icons\favicon-16x16.png" />
+    <EmbeddedResource Include="Www\icons\favicon-194x194.png" />
+    <EmbeddedResource Include="Www\icons\favicon-32x32.png" />
+    <EmbeddedResource Include="Www\icons\favicon-96x96.png" />
+    <EmbeddedResource Include="Www\icons\favicon.ico" />
+    <EmbeddedResource Include="Www\icons\mstile-144x144.png" />
+    <EmbeddedResource Include="Www\icons\mstile-150x150.png" />
+    <EmbeddedResource Include="Www\icons\mstile-310x150.png" />
+    <EmbeddedResource Include="Www\icons\mstile-310x310.png" />
+    <EmbeddedResource Include="Www\icons\mstile-70x70.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

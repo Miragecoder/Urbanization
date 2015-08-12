@@ -34,7 +34,7 @@ namespace Mirage.Urbanization.Simulation
                     await Task.Delay(2000, _token);
                 }
                 // ReSharper disable once FunctionNeverReturns
-            }, _token,TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            }, _token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
         public void Wait()

@@ -27,67 +27,9 @@ namespace Mirage.Urbanization.Web
 
     public class SimulationHub : Hub
     {
-        private static readonly IDictionary<dynamic, IDictionary<ClientZonePoint, ClientZoneInfo>> ResponseCache = new Dictionary<dynamic, IDictionary<ClientZonePoint, ClientZoneInfo>>(); 
-        public void RequestZoneInfoSubmission()
+        public void SubmitZoneInfos(List<ClientZoneInfo> clientZoneInfos)
         {
-            var caller = Clients.Caller;
-            Task.Run(() =>
-            {
-                CurrentSimulation.With(simulationSession =>
-                {
-                    var zoneInfos = simulationSession.Area.EnumerateZoneInfos()
-                        .Select(zoneInfo => new ClientZoneInfo
-                        {
-                            key = $"{zoneInfo.Point.X}_{zoneInfo.Point.Y}",
-                            bitmapLayerOne = TilesetProvider
-                                .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerOne),
-                            bitmapLayerTwo = TilesetProvider
-                                .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerTwo),
-                            point = new ClientZonePoint
-                            {
-                                x = zoneInfo.Point.X,
-                                y = zoneInfo.Point.Y
-                            },
-                            color = zoneInfo.ZoneConsumptionState.GetZoneConsumption().ColorName
-                        }).ToList();
-
-                    if (!ResponseCache.ContainsKey(caller))
-                    {
-                        ResponseCache.Add(caller, zoneInfos.ToDictionary(x => x.point, x => x));
-                        caller.submitZoneInfos(zoneInfos);
-                    }
-                    else
-                    {
-                        caller.submitZoneInfos(zoneInfos.Where(x => ResponseCache[caller][x.point].GetIdentityString() != x.GetIdentityString()));
-                        ResponseCache[caller] = zoneInfos.ToDictionary(x => x.point, x => x);
-                    }
-
-
-
-                });
-            });
-        }
-
-        public static class CurrentSimulation
-        {
-            private static ISimulationSession _instance;
-
-            public static void Set(ISimulationSession simulationSession)
-            {
-                if (_instance == null)
-                    _instance = simulationSession;
-                else
-                    throw new InvalidOperationException();
-            }
-
-            public static void With(Action<ISimulationSession> action)
-            {
-                var instance = _instance;
-                if (instance != null)
-                    action(_instance);
-                else
-                    throw new InvalidOperationException();
-            }
+            Clients.All.submitZoneInfos(clientZoneInfos);
         }
     }
 }
