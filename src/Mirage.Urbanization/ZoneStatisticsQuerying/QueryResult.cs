@@ -8,7 +8,14 @@ namespace Mirage.Urbanization.ZoneStatisticsQuerying
         public T MatchingObject { get; }
         public bool HasMatch => MatchingObject != null;
         public bool HasNoMatch => !HasMatch;
-        public QueryResult(T @object = null) { MatchingObject = @object; }
+        protected QueryResult(T @object = null) { MatchingObject = @object; }
+
+        public static QueryResult<T> Create(T @object = null)
+        {
+            return @object != null
+                ? new QueryResult<T>(@object)
+                : Empty;
+        }  
 
         public void WithResultIfHasMatch(Action<T> action)
         {
@@ -23,8 +30,7 @@ namespace Mirage.Urbanization.ZoneStatisticsQuerying
         public static readonly QueryResult<T> Empty = new QueryResult<T>();
     }
 
-    public class QueryResult<TMatchingObject, TQuery> : QueryResult<TMatchingObject>
-        where TMatchingObject : class
+    public class QueryResult<TMatchingObject, TQuery> : QueryResult<TMatchingObject> where TMatchingObject : class
         where TQuery : class
     {
         public TQuery QueryObject { get; }

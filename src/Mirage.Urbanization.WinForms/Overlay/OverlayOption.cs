@@ -34,7 +34,7 @@ namespace Mirage.Urbanization.WinForms.Overlay
         {
             Name = name;
             _toggleShowNumbersFunc = toggleShowNumbersFunc;
-            _getDataMeterFunc = new QueryResult<Func<ZoneInfoDataMeter>>(getDataMeterFunc);
+            _getDataMeterFunc = QueryResult<Func<ZoneInfoDataMeter>>.Create(getDataMeterFunc);
         }
 
         public void Render(IReadOnlyZoneInfo zoneInfo, Rectangle rectangle, IGraphicsWrapper graphics)

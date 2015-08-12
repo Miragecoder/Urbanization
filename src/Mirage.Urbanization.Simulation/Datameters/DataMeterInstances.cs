@@ -35,7 +35,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 100,
                 "Traffic",
                 x => x.PersistedCityStatistics.TrafficNumbers.Average,
-                x => new QueryResult<IZoneConsumptionWithTraffic>(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
+                x => QueryResult<IZoneConsumptionWithTraffic>.Create(x.ZoneConsumptionState.GetZoneConsumption() as IZoneConsumptionWithTraffic)
                     .WithResultIfHasMatch(y => y.GetTrafficDensityAsInt()),
                 true,
                 Enumerable.Empty<Type>().ToArray()

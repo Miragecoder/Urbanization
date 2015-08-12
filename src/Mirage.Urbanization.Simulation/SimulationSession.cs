@@ -111,12 +111,12 @@ namespace Mirage.Urbanization.Simulation
 
             _cityBudgetConfiguration = persistedCityBudgetConfiguration ?? new PersistedCityBudgetConfiguration();
 
-            _growthSimulationTask = new NeverEndingTask("Growth simulation", () =>
+            _growthSimulationTask = new NeverEndingTask("Growth simulation", async () =>
             {
                 if (!PowerAndMiscStatisticsLoaded)
                     return;
 
-                var growthZoneStatistics = _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token);
+                var growthZoneStatistics = await _area.PerformGrowthSimulationCycle(_cancellationTokenSource.Token);
 
                 _persistedCityStatisticsCollection.Add(
                        _cityBudget.ProcessFinances(new PersistedCityStatistics(
@@ -184,7 +184,7 @@ namespace Mirage.Urbanization.Simulation
 
         public QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics()
         {
-            return new QueryResult<PersistedCityStatisticsWithFinancialData>(
+            return QueryResult<PersistedCityStatisticsWithFinancialData>.Create(
                 _persistedCityStatisticsCollection
                 .GetAll()
                 .OrderByDescending(x => x.PersistedCityStatistics.TimeCode)

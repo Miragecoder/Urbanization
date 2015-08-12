@@ -26,7 +26,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
                     (currentScore, percentageScore) => currentScore / (1 + percentageScore.IssueAmount)
                 );
 
-            return new QueryResult<IQueryLandValueResult>(new QueryLandValueResult((int)Math.Round(newScore)));
+            return QueryResult<IQueryLandValueResult>.Create(new QueryLandValueResult((int)Math.Round(newScore)));
         }
 
         private class IssueResult

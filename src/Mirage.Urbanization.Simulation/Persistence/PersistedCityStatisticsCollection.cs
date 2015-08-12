@@ -19,7 +19,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
 
         public QueryResult<PersistedCityStatisticsWithFinancialData> GetMostRecentPersistedCityStatistics()
         {
-            return new QueryResult<PersistedCityStatisticsWithFinancialData>(_mostRecentStatistics);
+            return QueryResult<PersistedCityStatisticsWithFinancialData>.Create(_mostRecentStatistics);
         }
 
         public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAll()

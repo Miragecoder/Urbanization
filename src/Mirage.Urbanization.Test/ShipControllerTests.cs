@@ -30,7 +30,7 @@ namespace Mirage.Urbanization.Test
 
             var harbourFactory = new Func<SeaPortZoneClusterConsumption>(
                 () => new SeaPortZoneClusterConsumption(
-                    () => new ZoneInfoFinder(x => new QueryResult<IZoneInfo>(area.EnumerateZoneInfos().SingleOrDefault(y => y.ConsumptionState.GetZoneConsumption() == x))),
+                    () => new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create(area.EnumerateZoneInfos().SingleOrDefault(y => y.ConsumptionState.GetZoneConsumption() == x))),
                     new ElectricitySupplierBehaviour(10)));
 
             foreach (var iteration in Enumerable.Range(0, numberOfHarbours))

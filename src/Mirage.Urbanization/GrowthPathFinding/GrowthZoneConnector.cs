@@ -179,7 +179,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
                     _growthZonesAndTravelDistances[origin].Add(pathLength);
                 });
             }
-            return new QueryResult<Action>(result);
+            return QueryResult<Action>.Create(result);
         }
 
         public void ApplyAverageTravelDistances()
