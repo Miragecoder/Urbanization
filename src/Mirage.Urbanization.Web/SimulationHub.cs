@@ -44,21 +44,34 @@ namespace Mirage.Urbanization.Web
 
         public void RequestMenuStructure()
         {
-            Task.Run(() => Clients.Caller.submitMenuStructure(
-                GameServer
-                .Instance
-                .SimulationSession
-                .Area
-                .GetSupportedZoneConsumptionFactories()
-                .Select(x => x.Invoke())
-                .Select(x =>
-                new
-                {
-                    name = x.Name,
-                    cost = x.Cost,
-                    keyChar = x.KeyChar
-                })
-            ));
+            Task.Run(() =>
+            {
+                Clients.Caller.submitMenuStructure(
+                    GameServer
+                        .Instance
+                        .SimulationSession
+                        .Area
+                        .GetSupportedZoneConsumptionFactories()
+                        .Select(x => x.Invoke())
+                        .Select(x =>
+                            new
+                            {
+                                name = x.Name,
+                                cost = x.Cost,
+                                keyChar = x.KeyChar
+                            })
+                    );
+
+                GlobalHost
+                    .ConnectionManager
+                    .GetHubContext<SimulationHub>()
+                    .Clients
+                    .All
+                    .submitZoneInfos(GameServer.Instance.SimulationSession.Area.EnumerateZoneInfos()
+                            .Select(x => x.ToClientZoneInfo()).ToList()
+                        );
+
+            });
         }
     }
 }

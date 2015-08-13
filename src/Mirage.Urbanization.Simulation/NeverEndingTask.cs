@@ -10,13 +10,15 @@ namespace Mirage.Urbanization.Simulation
         private readonly string _description;
         private readonly Action _taskAction;
         private readonly CancellationToken _token;
+        private readonly int _pause;
         private Task _task;
-        public NeverEndingTask(string description, Action taskAction, CancellationToken token)
+        public NeverEndingTask(string description, Action taskAction, CancellationToken token, int pause = 2000)
         {
             if (taskAction == null) throw new ArgumentNullException(nameof(taskAction));
             _description = description;
             _taskAction = taskAction;
             _token = token;
+            _pause = pause;
         }
 
         public void Start()
@@ -31,7 +33,7 @@ namespace Mirage.Urbanization.Simulation
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description}...");
                     _taskAction();
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description} completed in {stopWatch.Elapsed}.");
-                    await Task.Delay(2000, _token);
+                    await Task.Delay(_pause, _token);
                 }
                 // ReSharper disable once FunctionNeverReturns
             }, _token, TaskCreationOptions.LongRunning, TaskScheduler.Default);

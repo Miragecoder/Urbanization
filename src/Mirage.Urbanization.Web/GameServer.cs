@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,32 +29,44 @@ namespace Mirage.Urbanization.Web
 
             _simulationSession = simulationSession;
             _url = url;
+
+            simulationSession.Area.ZoneInfoUpdated += (sender, e) =>
+            {
+                GlobalHost
+                    .ConnectionManager
+                    .GetHubContext<SimulationHub>()
+                    .Clients
+                    .All
+                    .submitAndDraw(e.ZoneInfo.ToClientZoneInfo());
+            };
+
+            List<ClientZoneInfo> previous = null;
+
             _looper = new NeverEndingTask("asd", () =>
             {
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
-                    .Select(zoneInfo => new ClientZoneInfo
-                    {
-                        key = $"{zoneInfo.Point.X}_{zoneInfo.Point.Y}",
-                        bitmapLayerOne = TilesetProvider
-                            .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerOne),
-                        bitmapLayerTwo = TilesetProvider
-                            .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerTwo),
-                        point = new ClientZonePoint
-                        {
-                            x = zoneInfo.Point.X,
-                            y = zoneInfo.Point.Y
-                        },
-                        color = zoneInfo.ZoneConsumptionState.GetZoneConsumption().ColorName,
-                    }).ToList();
+                    .Select(zoneInfo => zoneInfo.ToClientZoneInfo()).ToList();
+
+                var toBeSubmitted = zoneInfos;
+
+                if (previous != null)
+                {
+                    var previousUids = previous.Select(x => x.GetIdentityString()).ToHashSet();
+
+                    toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
+
+                }
 
                 GlobalHost
                     .ConnectionManager
                     .GetHubContext<SimulationHub>()
                     .Clients
                     .All
-                    .submitZoneInfos(zoneInfos);
+                    .submitZoneInfos(toBeSubmitted);
 
-            }, _cancellationTokenSource.Token);
+                previous = zoneInfos;
+
+            }, _cancellationTokenSource.Token, 250);
 
             if (Instance == null)
                 Instance = this;

@@ -99,6 +99,7 @@
     <Compile Include="GameServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadOnlyZoneInfoExtensions.cs" />
     <Compile Include="SimulationHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TilesetProvider.cs" />

@@ -115,6 +115,8 @@ namespace Mirage.Urbanization
         public IVehicleController<ITrain> TrainController { get; }
         public IVehicleController<IAirplane> AirplaneController { get; }
         public IVehicleController<IShip> ShipController { get; }
+
+        public event EventHandler<ZoneInfoEventArgs> ZoneInfoUpdated;
         public int AmountOfZonesX => AmountOfZonesY;
 
         public int AmountOfZonesY
@@ -415,6 +417,25 @@ namespace Mirage.Urbanization
 
             OnAreaConsumptionResult?.Invoke(this, new AreaConsumptionResultEventArgs(result));
 
+            /*if (consumption is IAreaZoneClusterConsumption)
+            {
+                foreach (
+                    var zoneInfo in
+                        (consumption as IAreaZoneClusterConsumption)
+                            .ZoneClusterMembers
+                            .Select(x => x.GetZoneInfo())
+                            .Where(x => x.HasMatch)
+                            .Select(x => x.MatchingObject))
+                {
+                    ZoneInfoUpdated?.Invoke(this, new ZoneInfoEventArgs(zoneInfo));
+
+                }
+            }
+            else
+            {
+                ZoneInfoUpdated?.Invoke(this, new ZoneInfoEventArgs(readOnlyZoneInfo));
+            }*/
+
             return result;
         }
 
@@ -506,6 +527,7 @@ namespace Mirage.Urbanization
                     {
                         foreach (var consumeAreaOperation in consumeAreaOperations)
                             consumeAreaOperation.Apply();
+
                         return new AreaConsumptionResult(consumption, true, consumeAreaOperations.First().Description);
                     }
                     return new AreaConsumptionResult(consumption, false, string.Join(", ", consumeAreaOperations

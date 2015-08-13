@@ -35,30 +35,70 @@
 <script src="signalr/hubs"></script>
 <!--Add script to update the page and send messages.-->
 <script type="text/javascript">
-    var logGrid;
+    var zoneInfos = {};
     $(function() {
         var simulation = $.connection.simulationHub;
+        var buttonDefinitionStates = {};
+        var currentButton = null;
+        var imageCache = {};
+        var canvas = document.getElementById('gameCanvas');
 
-        var grid = {};
+        var persistZoneInfo = function (zoneInfo) {
+            zoneInfos[zoneInfo.key] = zoneInfo;
+            zoneInfos[zoneInfo.key].drawn = false;
+        };
 
-        $('#logGridButton').click(function() {
-            console.log(grid);
-        });
-
-        simulation.client.submitZoneInfos = function(values) {
-            for (var i in values) {
-                if (values.hasOwnProperty(i)) {
-                    var value = values[i];
-                    grid[value.key] = value;
-                    grid[value.key].drawn = false;
-                }
+        var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapLayer) {
+            var context = canvas.getContext('2d');
+            if (imageCache.hasOwnProperty(selectBitmapLayer(zoneInfo)) && imageCache[selectBitmapLayer(zoneInfo)] !== null) {
+                context.drawImage(imageCache[selectBitmapLayer(zoneInfo)], zoneInfo.point.x * 25, zoneInfo.point.y * 25);
+            } else {
+                var tileImage = new Image();
+                tileImage.src = '/tile/' + selectBitmapLayer(zoneInfo);
+                tileImage.onload = function () {
+                    context.drawImage(tileImage, zoneInfo.point.x * 25, zoneInfo.point.y * 25);
+                    imageCache[selectBitmapLayer(zoneInfo)] = tileImage;
+                };
             }
         };
 
-        var buttonDefinitionStates = {};
+        var drawZoneInfo = function (zoneInfo) {
 
-        var currentButton = null;
+            if (canvas.width < zoneInfo.point.x * 25)
+                canvas.width = zoneInfo.point.x * 25;
+            if (canvas.height < zoneInfo.point.y * 25)
+                canvas.height = zoneInfo.point.y * 25;
 
+            if (zoneInfo.bitmapLayerOne !== 0) {
+                drawZoneInfoForBitmapLayer(zoneInfo, function (x) { return x.bitmapLayerOne; });
+                if (zoneInfo.bitmapLayerTwo !== 0) {
+                    drawZoneInfoForBitmapLayer(zoneInfo, function (x) { return x.bitmapLayerTwo; });
+                }
+            } else {
+                var context = canvas.getContext('2d');
+                context.beginPath();
+                context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                context.fillStyle = zoneInfo.color;
+                context.fill();
+            }
+
+            zoneInfo.drawn = true;
+        };
+
+        simulation.client.submitAndDraw = function (zoneInfo) {
+            persistZoneInfo(zoneInfo);
+            drawZoneInfo(zoneInfo);
+        };
+
+        simulation.client.submitZoneInfos = function (zoneInfos) {
+            for (var i in zoneInfos) {
+                if (zoneInfos.hasOwnProperty(i)) {
+                    var zoneInfo = zoneInfos[i];
+                    persistZoneInfo(zoneInfo);
+                    drawZoneInfo(zoneInfo);
+                }
+            }
+        };
 
         simulation.client.submitMenuStructure = function(incomingButtonDefinitions) {
             console.log('Invocation of submitMenuStructure');
@@ -77,7 +117,6 @@
             })();
 
             for (var i in buttonDefinitionStates) {
-                console.log(i);
                 if (buttonDefinitionStates.hasOwnProperty(i)) {
                     var buttonDefinitionState = buttonDefinitionStates[i];
                     var buttonBar = document.getElementById('buttonBar');
@@ -104,9 +143,6 @@
 
             console.log('Hub started succesfully. Initiating post-hub startup phase...');
 
-            var imageCache = {};
-            var canvas = document.getElementById('gameCanvas');
-
             function getMousePos(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 return {
@@ -119,8 +155,6 @@
 
             canvas.addEventListener('mousemove', function (evt) {
                 var mousePos = getMousePos(canvas, evt);
-                //console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
-                //console.log('Cell position:' + Math.round(mousePos.x / 25) + ',' + Math.round(mousePos.y / 25));
                 currentFocusedCell = { x: Math.round(mousePos.x / 25), y: Math.round(mousePos.y / 25)};
             }, false);
 
@@ -130,55 +164,7 @@
                 }
             });
 
-            var drawImageFunction = function(zoneInfo, selectBitmapLayer) {
-                if (imageCache.hasOwnProperty(selectBitmapLayer(zoneInfo)) && imageCache[selectBitmapLayer(zoneInfo)] !== null) {
-                    
-                    var context = canvas.getContext('2d');
-                    context.drawImage(imageCache[selectBitmapLayer(zoneInfo)], zoneInfo.point.x * 25, zoneInfo.point.y * 25);
-                } else {
-                    var tileImage = new Image();
-                    tileImage.src = '/tile/' + selectBitmapLayer(zoneInfo);
-                    tileImage.onload = function() {
-                        var canvas = document.getElementById('gameCanvas');
-                        var context = canvas.getContext('2d');
-                        context.drawImage(tileImage, zoneInfo.point.x * 25, zoneInfo.point.y * 25);
-                        imageCache[selectBitmapLayer(zoneInfo)] = tileImage;
-                    };
-                }
-            };
-
             simulation.server.requestMenuStructure();
-
-            setInterval(function() {
-                var canvas = document.getElementById('gameCanvas');
-                var context = canvas.getContext('2d');
-
-                for (var i in grid) {
-                    if (grid.hasOwnProperty(i)) {
-                        var zoneInfo = grid[i];
-                        if (zoneInfo.drawn) continue;
-
-                        if (canvas.width < zoneInfo.point.x * 25)
-                            canvas.width = zoneInfo.point.x * 25;
-                        if (canvas.height < zoneInfo.point.y * 25)
-                            canvas.height = zoneInfo.point.y * 25;
-
-                        if (zoneInfo.bitmapLayerOne !== 0) {
-                            drawImageFunction(zoneInfo, function(x) { return x.bitmapLayerOne; });
-                            if (zoneInfo.bitmapLayerTwo !== 0) {
-                                drawImageFunction(zoneInfo, function(x) { return x.bitmapLayerTwo; });
-                            }
-                        } else {
-                            context.beginPath();
-                            context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
-                            context.fillStyle = zoneInfo.color;
-                            context.fill();
-                        }
-
-                        zoneInfo.drawn = true;
-                    }
-                }
-            }, 1000);
             console.log('Post-hub startup phase completed.');
         });
     });

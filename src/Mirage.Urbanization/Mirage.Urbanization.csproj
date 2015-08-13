@@ -69,6 +69,7 @@
     <Compile Include="ZoneConsumption\ISingleZoneConsumptionWithPollutionBehaviour.cs" />
     <Compile Include="ZoneConsumption\ParkZoneConsumption.cs" />
     <Compile Include="ZoneConsumption\StadiumZoneClusterConsumption.cs" />
+    <Compile Include="ZoneInfoEventArgs.cs" />
     <Compile Include="ZoneStatisticsQuerying\IQueryCellValueResult.cs" />
     <Compile Include="ZoneStatisticsQuerying\IQueryCrimeResult.cs" />
     <Compile Include="ZoneStatisticsQuerying\IQueryFireHazardResult.cs" />

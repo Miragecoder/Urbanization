@@ -21,7 +21,7 @@ namespace Mirage.Urbanization.Web
                     t.SetZoneWidthAndHeight(120);
                     return t;
                 })(), new ProcessOptions(() => false, () => false)));
-            using (var server = new GameServer(simulationSession, "http://localhost/"))
+            using (var server = new GameServer(simulationSession, "http://+:80/"))
             {
                 server.StartServer();
                 simulationSession.StartSimulation();
