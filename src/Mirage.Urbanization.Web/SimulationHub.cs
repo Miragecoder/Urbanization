@@ -60,7 +60,7 @@ namespace Mirage.Urbanization.Web
                                 name = x.Name,
                                 cost = x.Cost,
                                 keyChar = x.KeyChar,
-                                clickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag
+                                isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag
                             })
                     );
 
