@@ -21,8 +21,7 @@ namespace Mirage.Urbanization.WinForms
                         x.Checked = false;
                     item.Checked = true;
                     _currentOption = localOption;
-                    if (OnSelectionChanged != null)
-                        OnSelectionChanged(this, new ToolstripMenuOptionChangedEventArgs<TOption>(_currentOption));
+                    OnSelectionChanged?.Invoke(this, new ToolstripMenuOptionChangedEventArgs<TOption>(_currentOption));
                 };
 
                 targetToopToolStripMenuItem.DropDownItems.Add(item);

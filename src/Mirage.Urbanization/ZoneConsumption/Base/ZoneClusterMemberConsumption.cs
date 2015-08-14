@@ -10,6 +10,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     {
         public override char KeyChar { get { throw new NotImplementedException(); } }
 
+        public override BuildStyle BuildStyle { get { throw new NotImplementedException(); } }
+
         public int Id { get; } = Random.Next(0, Int32.MaxValue);
 
         private static readonly Random Random = new Random();

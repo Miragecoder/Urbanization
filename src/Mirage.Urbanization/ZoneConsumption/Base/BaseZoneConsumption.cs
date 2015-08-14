@@ -12,6 +12,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public string ColorName => ColorTranslator.ToHtml(Color);
 
         public abstract int Cost { get; }
+        public abstract BuildStyle BuildStyle { get; }
 
         public abstract IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption);
     }

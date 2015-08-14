@@ -12,6 +12,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public char KeyChar { get { throw new NotImplementedException(); } }
 
+        public BuildStyle BuildStyle { get { throw new NotImplementedException();} }
+
         public IGetCanOverrideWithResult GetCanOverrideWith(IAreaZoneConsumption consumption)
         {
             if (consumption is EmptyZoneConsumption)

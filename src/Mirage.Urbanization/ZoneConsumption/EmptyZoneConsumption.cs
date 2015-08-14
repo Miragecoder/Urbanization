@@ -8,6 +8,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override string Name => "Clear";
 
         public override char KeyChar => 'd';
+        public override BuildStyle BuildStyle => BuildStyle.ClickAndDrag;
 
         public override Color Color => DefaultColor;
 

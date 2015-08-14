@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Web
 {
@@ -58,7 +59,8 @@ namespace Mirage.Urbanization.Web
                             {
                                 name = x.Name,
                                 cost = x.Cost,
-                                keyChar = x.KeyChar
+                                keyChar = x.KeyChar,
+                                clickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag
                             })
                     );
 

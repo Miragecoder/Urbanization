@@ -11,6 +11,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public abstract int Cost { get; }
 
+        public BuildStyle BuildStyle => BuildStyle.SingleClick;
+
         public abstract IPollutionBehaviour PollutionBehaviour { get; }
         public abstract ICrimeBehaviour CrimeBehaviour { get; }
         public abstract IFireHazardBehaviour FireHazardBehaviour { get; }
