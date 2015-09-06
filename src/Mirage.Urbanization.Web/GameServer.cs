@@ -41,8 +41,13 @@ namespace Mirage.Urbanization.Web
             };
 
             List<ClientZoneInfo> previous = null;
+            
+            _simulationSession.OnAreaMessage += SimulationSession_OnAreaMessage;
+            _simulationSession.OnYearAndOrMonthChanged += SimulationSession_OnYearAndOrMonthChanged;
+            _simulationSession.OnCityBudgetValueChanged += SimulationSession_OnCityBudgetValueChanged;
+            _simulationSession.OnAreaHotMessage += SimulationSession_OnAreaHotMessage;
 
-            _looper = new NeverEndingTask("asd", () =>
+            _looper = new NeverEndingTask("SignalR Game state submission", () =>
             {
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(zoneInfo => zoneInfo.ToClientZoneInfo()).ToList();
@@ -73,6 +78,54 @@ namespace Mirage.Urbanization.Web
             else throw new InvalidOperationException();
         }
 
+        private void SimulationSession_OnAreaHotMessage(object sender, SimulationSessionHotMessageEventArgs e)
+        {
+            GlobalHost
+                .ConnectionManager
+                .GetHubContext<SimulationHub>()
+                .Clients
+                .All
+                .submitAreaHotMessage(new
+                {
+                    title = e.Title,
+                    message = e.Message
+                });
+        }
+
+        private void SimulationSession_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
+        {
+            GlobalHost
+                .ConnectionManager
+                .GetHubContext<SimulationHub>()
+                .Clients
+                .All
+                .submitCityBudgetValue(new
+                {
+                    currentAmount = e.EventData.CurrentAmountDescription,
+                    projectedIncome = e.EventData.ProjectedIncomeDescription
+                });
+        }
+
+        private void SimulationSession_OnYearAndOrMonthChanged(object sender, EventArgsWithData<IYearAndMonth> e)
+        {
+            GlobalHost
+                .ConnectionManager
+                .GetHubContext<SimulationHub>()
+                .Clients
+                .All
+                .submitYearAndMonth(e.EventData.GetCurrentDescription());
+        }
+
+        private static void SimulationSession_OnAreaMessage(object sender, SimulationSessionMessageEventArgs e)
+        {
+            GlobalHost
+                .ConnectionManager
+                .GetHubContext<SimulationHub>()
+                .Clients
+                .All
+                .submitAreaMessage(e.Message);
+        }
+
         public void StartServer()
         {
             _webServer = Microsoft.Owin.Hosting.WebApp.Start<Startup>(_url);
@@ -81,6 +134,10 @@ namespace Mirage.Urbanization.Web
 
         public void Dispose()
         {
+            _simulationSession.OnAreaMessage -= SimulationSession_OnAreaMessage;
+            _simulationSession.OnYearAndOrMonthChanged -= SimulationSession_OnYearAndOrMonthChanged;
+            _simulationSession.OnCityBudgetValueChanged -= SimulationSession_OnCityBudgetValueChanged;
+            _simulationSession.OnAreaHotMessage -= SimulationSession_OnAreaHotMessage;
             _cancellationTokenSource.Cancel();
             _looper.Wait();
             _webServer?.Dispose();

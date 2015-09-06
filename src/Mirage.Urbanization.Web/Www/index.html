@@ -41,6 +41,7 @@
             width: 100%;
             margin: 0 auto;
             text-align: left;
+            overflow: scroll;
         }
     </style>
 </head>
@@ -48,6 +49,12 @@
 <body>
     <div class="header-container">
         <div id="buttonBar">
+        </div>
+        <div id="labelBar">
+            <span id="currentYearAndMonthLabel">Ready</span> <span>|</span>
+            <span id="currentFundsLabel">Ready</span> <span>|</span>
+            <span id="projectedIncomeLabel">Ready</span> <span>|</span>
+            <span id="areaMessageLabel">Ready</span>
         </div>
     </div>
     <canvas id="gameCanvas"></canvas>
@@ -110,6 +117,23 @@
 
                 zoneInfo.drawn = true;
             };
+
+            simulation.client.submitAreaMessage = function (message) {
+                document.getElementById('areaMessageLabel').innerHTML = message;
+            }
+
+            simulation.client.submitAreaHotMessage = function (message) {
+                alert(message.title + '\n' + message.message);
+            }
+
+            simulation.client.submitYearAndMonth = function (message) {
+                document.getElementById('currentYearAndMonthLabel').innerHTML = message;
+            }
+
+            simulation.client.submitCityBudgetValue = function (e) {
+                document.getElementById('currentFundsLabel').innerHTML = e.currentAmount;
+                document.getElementById('projectedIncomeLabel').innerHTML = e.projectedIncome;
+            }
 
             simulation.client.submitAndDraw = function (zoneInfo) {
                 persistZoneInfo(zoneInfo);

@@ -12,8 +12,10 @@ namespace Mirage.Urbanization.Simulation
         private int _projectedIncome;
 
         public int CurrentAmount => _currentAmount;
+        public string CurrentAmountDescription => $"Current amount: {_currentAmount.ToString("C")}";
 
         public int ProjectedIncome => _projectedIncome;
+        public string ProjectedIncomeDescription => $"Projected income: {_projectedIncome.ToString("C")}";
 
         private void AddProjectedIncome(int amount)
         {

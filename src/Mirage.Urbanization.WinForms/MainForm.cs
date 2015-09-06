@@ -179,7 +179,13 @@ namespace Mirage.Urbanization.WinForms
                     statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message; }));
 
             _areaRenderHelper.SimulationSession.OnAreaHotMessage +=
-                (_sender, _e) => MessageBox.Show(_e.Message, _e.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                (_sender, _e) =>
+                {
+                    if (_webserverForm == null)
+                        MessageBox.Show(_e.Message, _e.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else
+                        statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message; }));
+                };
 
             _areaRenderHelper.SimulationSession.OnCityBudgetValueChanged +=
                 (_sender, _e) =>
@@ -190,18 +196,18 @@ namespace Mirage.Urbanization.WinForms
                             new
                             {
                                 LabelControl = cityBudgetLabel,
-                                TextFormatter = "Current funds: {0}",
+                                Text = _e.EventData.CurrentAmountDescription,
                                 Amount = _e.EventData.CurrentAmount
                             },
                             new
                             {
                                 LabelControl = projectedIncomeLabel,
-                                TextFormatter = "Projected income: {0}",
+                                Text = _e.EventData.ProjectedIncomeDescription,
                                 Amount = _e.EventData.ProjectedIncome
                             }
                         })
                         {
-                            x.LabelControl.Text = string.Format(x.TextFormatter, x.Amount.ToString("C"));
+                            x.LabelControl.Text = x.Text;
                             x.LabelControl.ForeColor = x.Amount >= 0
                                 ? SystemColors.ControlText
                                 : Color.Red;
