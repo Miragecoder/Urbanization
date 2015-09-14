@@ -49,6 +49,18 @@ http://hibernatingrhinos.com/oss/rhino-mocks
 
 http://blogs.msdn.com/b/bclteam/p/immutable.aspx
 
+#### SignalR:
+
+http://signalr.net/
+
+#### JQuery:
+
+http://jquery.com/
+
+#### JQuery(UI):
+
+https://jqueryui.com/
+
 ## License
 
 This project uses the MIT license. See 'license.txt' for more info.
