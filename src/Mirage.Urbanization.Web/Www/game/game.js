@@ -1,16 +1,24 @@
 ﻿var zoneInfos = {};
 
 $(function () {
-    $("#budgetDialog").dialog({
-        modal: true,
-        autoOpen: false
-    });
 
-    // Link to open the dialog
-    $("#budgetDialogButton").click(function (event) {
-        $("#budgetDialog").dialog('open');
-        event.preventDefault();
-    });
+    // Dialog and corresponding button registration
+    (function () {
+        var registerDialog = function (dialogId, dialogButtonId) {
+            $(dialogId).dialog({
+                modal: true,
+                autoOpen: false
+            });
+
+            // Link to open the dialog
+            $(dialogButtonId).click(function (event) {
+                $(dialogId).dialog('open');
+                event.preventDefault();
+            });
+        };
+        registerDialog("#budgetDialog", "#budgetDialogButton");
+        registerDialog("#cityEvaluationDialog", "#evaluationDialogButton");
+    })();
 
     var simulation = $.connection.simulationHub;
     var buttonDefinitionStates = {};
