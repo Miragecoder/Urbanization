@@ -16,7 +16,7 @@ namespace Mirage.Urbanization.WinForms
 {
     public partial class EvaluationForm : FormWithCityStatisticsEvent
     {
-        public EvaluationForm(SimulationRenderHelper helper) :base(helper)
+        public EvaluationForm(SimulationRenderHelper helper) : base(helper)
         {
             InitializeComponent();
         }
@@ -28,42 +28,36 @@ namespace Mirage.Urbanization.WinForms
             groupBox1.BeginInvoke(new MethodInvoker(() =>
             {
 
-            AddLabelValue("Population", cityStatistics.Population.ToString("N0"), dataGridView1);
-            AddLabelValue("Assessed value", cityStatistics.AssessedValue.ToString("C"), dataGridView1);
-            AddLabelValue("Category", cityStatistics.CityCategory, dataGridView1);
-            AddLabelValue("Current funds", cityStatistics.CurrentAmountOfFunds.ToString("C"), dataGridView2);
-            AddLabelValue("Projected income", cityStatistics.CurrentProjectedAmountOfFunds.ToString("C"), dataGridView2);
+                AddLabelValue("Population", cityStatistics.Population.ToString("N0"), dataGridView1);
+                AddLabelValue("Assessed value", cityStatistics.AssessedValue.ToString("C"), dataGridView1);
+                AddLabelValue("Category", cityStatistics.CityCategory, dataGridView1);
+                AddLabelValue("Current funds", cityStatistics.CurrentAmountOfFunds.ToString("C"), dataGridView2);
+                AddLabelValue("Projected income", cityStatistics.CurrentProjectedAmountOfFunds.ToString("C"), dataGridView2);
 
-            listBox1.DataSource = cityStatistics
-                .DataMeterResults
-                .Where(x => x.ValueCategory > DataMeterValueCategory.None)
-                .OrderByDescending(x => x.PercentageScore)
-                .Select(x => string.Format("{0} - {1} ({2}%)", x.Name, x.ValueCategory, x.PercentageScoreString))
-                .ToList();
+                listBox1.DataSource = cityStatistics
+                    .DataMeterResults
+                    .Where(x => x.ValueCategory > DataMeterValueCategory.None)
+                    .OrderByDescending(x => x.PercentageScore)
+                    .Select(x => string.Format("{0} - {1} ({2}%)", x.Name, x.ValueCategory, x.PercentageScoreString))
+                    .ToList();
 
-            var negativeOpinion = cityStatistics
-                .DataMeterResults
-                .Average(x => x.PercentageScore);
-
-            var positiveOpinion = 1 - negativeOpinion;
-
-            listBox2.DataSource =
-                new[]
-                {
+                listBox2.DataSource =
+                    new[]
+                    {
                     new
                     {
-                        Percentage = negativeOpinion.ToString("P"),
+                        Percentage = cityStatistics.GetNegativeOpinion().ToString("P"),
                         Name = "Negative"
                     },
                     new
                     {
-                        Percentage = positiveOpinion.ToString("P"),
+                        Percentage = cityStatistics.GetPositiveOpinion().ToString("P"),
                         Name = "Positive"
                     }
-                }
-                .OrderByDescending(x => x.Percentage)
-                .Select(x => x.Name + ' ' + x.Percentage)
-                .ToList();
+                    }
+                    .OrderByDescending(x => x.Percentage)
+                    .Select(x => x.Name + ' ' + x.Percentage)
+                    .ToList();
 
             }));
         }
