@@ -41,10 +41,6 @@ http://sharpdx.org/
 
 http://hibernatingrhinos.com/oss/rhino-mocks
 
-#### RhinoMocks:
-
-http://hibernatingrhinos.com/oss/rhino-mocks
-
 #### System.Collections.Immutable:
 
 http://blogs.msdn.com/b/bclteam/p/immutable.aspx
