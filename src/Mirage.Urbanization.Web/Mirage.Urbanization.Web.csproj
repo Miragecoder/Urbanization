@@ -96,10 +96,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CityBudgetPanelPublisher.cs" />
+    <Compile Include="ClientMessages\CityServiceState.cs" />
+    <Compile Include="ClientMessages\CityBudgetState.cs" />
+    <Compile Include="ClientMessages\CityTaxState.cs" />
+    <Compile Include="ClientMessages\ClientZoneInfo.cs" />
+    <Compile Include="ClientMessages\ClientZonePoint.cs" />
     <Compile Include="GameServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadOnlyZoneInfoExtensions.cs" />
     <Compile Include="SimulationHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TilesetProvider.cs" />
@@ -113,11 +118,11 @@
     <EmbeddedResource Include="Www\index.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\jquery-1.6.4-vsdoc.js" />
-    <EmbeddedResource Include="Scripts\jquery-1.6.4.js" />
-    <EmbeddedResource Include="Scripts\jquery-1.6.4.min.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.2.0.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <EmbeddedResource Include="Www\scripts\jquery-1.6.4-vsdoc.js" />
+    <EmbeddedResource Include="Www\scripts\jquery-1.6.4.js" />
+    <EmbeddedResource Include="Www\scripts\jquery-1.6.4.min.js" />
+    <EmbeddedResource Include="Www\scripts\jquery.signalR-2.2.0.js" />
+    <EmbeddedResource Include="Www\scripts\jquery.signalR-2.2.0.min.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Urbanization.Resources\Mirage.Urbanization.Tilesets.csproj">
@@ -167,6 +172,35 @@
     <EmbeddedResource Include="Www\icons\mstile-310x150.png" />
     <EmbeddedResource Include="Www\icons\mstile-310x310.png" />
     <EmbeddedResource Include="Www\icons\mstile-70x70.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\css\jquery-ui.css" />
+    <EmbeddedResource Include="Www\css\jquery-ui.theme.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\css\jquery-ui.min.css" />
+    <EmbeddedResource Include="Www\css\jquery-ui.structure.min.css" />
+    <EmbeddedResource Include="Www\scripts\jquery-ui.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\Images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_flat_10_000000_40x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_222222_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_228ef1_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_ef8c08_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_ffd27a_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_ffffff_256x240.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\game\game.css" />
+    <EmbeddedResource Include="Www\game\game.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,23 +9,6 @@ using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Web
 {
-    public struct ClientZoneInfo
-    {
-        public string key { get; set; }
-        public int bitmapLayerOne { get; set; }
-        public int bitmapLayerTwo { get; set; }
-        public ClientZonePoint point { get; set; }
-        public string color { get; set; }
-        public string GetIdentityString() => $"{key}_{bitmapLayerOne}_{bitmapLayerTwo}_{point.GetIdentityString()}_{color}";
-    }
-
-    public struct ClientZonePoint
-    {
-        public int x { get; set; }
-        public int y { get; set; }
-        public string GetIdentityString() => $"{x}_{y}";
-    }
-
     public class SimulationHub : Hub
     {
         public void ConsumeZone(string name, string x, string y)
@@ -37,8 +20,10 @@ namespace Mirage.Urbanization.Web
                 .EnumerateZoneInfos()
                 .Single(zone => zone.Point == new ZonePoint() { X = int.Parse(x), Y = int.Parse(y) });
 
-            var factory = session.Area.GetSupportedZoneConsumptionFactories()
-                    .Single(fact => fact.Invoke().Name == name);
+            var factory = session
+                .Area
+                .GetSupportedZoneConsumptionFactories()
+                .Single(fact => fact.Invoke().Name == name);
 
             session.ConsumeZoneAt(target, factory());
         }
@@ -70,7 +55,7 @@ namespace Mirage.Urbanization.Web
                     .Clients
                     .All
                     .submitZoneInfos(GameServer.Instance.SimulationSession.Area.EnumerateZoneInfos()
-                            .Select(x => x.ToClientZoneInfo()).ToList()
+                            .Select(ClientZoneInfo.Create).ToList()
                         );
 
             });

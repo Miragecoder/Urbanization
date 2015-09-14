@@ -1,10 +1,9 @@
 namespace Mirage.Urbanization.Web
 {
-    public static class ReadOnlyZoneInfoExtensions
+    public struct ClientZoneInfo
     {
-        public static ClientZoneInfo ToClientZoneInfo(this IReadOnlyZoneInfo zoneInfo)
-        {
-            return new ClientZoneInfo
+        public static ClientZoneInfo Create(IReadOnlyZoneInfo zoneInfo)
+            => new ClientZoneInfo
             {
                 key = $"{zoneInfo.Point.X}_{zoneInfo.Point.Y}",
                 bitmapLayerOne = TilesetProvider
@@ -18,6 +17,12 @@ namespace Mirage.Urbanization.Web
                 },
                 color = zoneInfo.ZoneConsumptionState.GetZoneConsumption().ColorName,
             };
-        }
+
+        public string key { get; set; }
+        public int bitmapLayerOne { get; set; }
+        public int bitmapLayerTwo { get; set; }
+        public ClientZonePoint point { get; set; }
+        public string color { get; set; }
+        public string GetIdentityString() => $"{key}_{bitmapLayerOne}_{bitmapLayerTwo}_{point.GetIdentityString()}_{color}";
     }
 }

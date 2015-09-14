@@ -8,18 +8,18 @@ namespace Mirage.Urbanization.Simulation
 {
     public class TaxDefinition : BudgetComponentDefinition
     {
-        private readonly Func<ISet<PersistedCityStatisticsWithFinancialData>, int> _getProjectedIncome;
+        private readonly Func<IEnumerable<PersistedCityStatisticsWithFinancialData>, int> _getProjectedIncome;
 
         private TaxDefinition(
             string name,
             Expression<Func<ICityBudgetConfiguration, decimal>> currentRate,
-            Func<ISet<PersistedCityStatisticsWithFinancialData>, int> getProjectedIncome)
+            Func<IEnumerable<PersistedCityStatisticsWithFinancialData>, int> getProjectedIncome)
             :base(name,currentRate)
         {
             _getProjectedIncome = getProjectedIncome;
         }
 
-        public int GetProjectedIncome(ISet<PersistedCityStatisticsWithFinancialData> cityStatistics) => _getProjectedIncome(cityStatistics);
+        public int GetProjectedIncome(IEnumerable<PersistedCityStatisticsWithFinancialData> cityStatistics) => _getProjectedIncome(cityStatistics);
 
         private static readonly TaxDefinition ResidentialTaxDefinition = new TaxDefinition("Residential", x => x.ResidentialTaxRate, x => x.Sum(y => y.ResidentialTaxIncome));
         private static readonly TaxDefinition CommercialTaxDefinition = new TaxDefinition("Commercial", x => x.CommercialTaxRate, x => x.Sum(y => y.CommercialTaxIncome));

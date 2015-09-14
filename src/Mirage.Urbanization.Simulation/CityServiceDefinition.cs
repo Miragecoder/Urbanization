@@ -8,18 +8,18 @@ namespace Mirage.Urbanization.Simulation
 {
     public class CityServiceDefinition : BudgetComponentDefinition
     {
-        private readonly Func<ISet<PersistedCityStatisticsWithFinancialData>, int> _getProjectedExpensesFunc;
+        private readonly Func<IEnumerable<PersistedCityStatisticsWithFinancialData>, int> _getProjectedExpensesFunc;
 
         private CityServiceDefinition(
             string name,
             Expression<Func<ICityBudgetConfiguration, decimal>> currentRate,
-            Func<ISet<PersistedCityStatisticsWithFinancialData>, int> getProjectedExpensesFunc)
+            Func<IEnumerable<PersistedCityStatisticsWithFinancialData>, int> getProjectedExpensesFunc)
             : base(name, currentRate)
         {
             _getProjectedExpensesFunc = getProjectedExpensesFunc;
         }
 
-        public int GetProjectedExpenses(ISet<PersistedCityStatisticsWithFinancialData> cityStatistics)
+        public int GetProjectedExpenses(IEnumerable<PersistedCityStatisticsWithFinancialData> cityStatistics)
         {
             return _getProjectedExpensesFunc(cityStatistics);
         }

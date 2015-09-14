@@ -192,6 +192,22 @@ namespace Mirage.Urbanization.Simulation
             );
         }
 
+        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear()
+        {
+            var statistics = GetRecentStatistics();
+
+            if (statistics.HasMatch)
+            {
+                return statistics
+                    .MatchingObject
+                    .CombineWithYearMates(GetAllCityStatistics())
+                    .ToList();
+            }
+            return Enumerable
+                .Empty<PersistedCityStatisticsWithFinancialData>()
+                .ToList();
+        }
+
         public event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;
 
         public PersistedSimulation GeneratePersistedArea()

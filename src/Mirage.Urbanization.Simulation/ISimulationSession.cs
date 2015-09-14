@@ -18,6 +18,8 @@ namespace Mirage.Urbanization.Simulation
 
         QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics();
 
+        IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear();
+
         IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics(); 
 
         event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;

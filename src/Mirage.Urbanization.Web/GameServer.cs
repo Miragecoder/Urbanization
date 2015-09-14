@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.Simulation.Persistence;
 
 namespace Mirage.Urbanization.Web
 {
@@ -37,7 +38,7 @@ namespace Mirage.Urbanization.Web
                     .GetHubContext<SimulationHub>()
                     .Clients
                     .All
-                    .submitAndDraw(e.ZoneInfo.ToClientZoneInfo());
+                    .submitAndDraw(ClientZoneInfo.Create(e.ZoneInfo));
             };
 
             List<ClientZoneInfo> previous = null;
@@ -50,7 +51,7 @@ namespace Mirage.Urbanization.Web
             _looper = new NeverEndingTask("SignalR Game state submission", () =>
             {
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
-                    .Select(zoneInfo => zoneInfo.ToClientZoneInfo()).ToList();
+                    .Select(ClientZoneInfo.Create).ToList();
 
                 var toBeSubmitted = zoneInfos;
 
@@ -59,7 +60,6 @@ namespace Mirage.Urbanization.Web
                     var previousUids = previous.Select(x => x.GetIdentityString()).ToHashSet();
 
                     toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
-
                 }
 
                 GlobalHost
@@ -92,6 +92,8 @@ namespace Mirage.Urbanization.Web
                 });
         }
 
+        private readonly CityBudgetPanelPublisher _cityBudgetPanelPublisher = new CityBudgetPanelPublisher();
+
         private void SimulationSession_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
         {
             GlobalHost
@@ -101,6 +103,7 @@ namespace Mirage.Urbanization.Web
                 .All
                 .submitCityBudgetValue(new
                 {
+                    cityBudgetState = _cityBudgetPanelPublisher.GenerateCityBudgetState(_simulationSession),
                     currentAmount = e.EventData.CurrentAmountDescription,
                     projectedIncome = e.EventData.ProjectedIncomeDescription
                 });
