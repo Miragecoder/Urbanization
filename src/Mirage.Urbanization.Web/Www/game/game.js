@@ -176,49 +176,53 @@ $(function () {
 
         console.log('Hub started succesfully. Initiating post-hub startup phase...');
 
-        function getMousePos(canvas, evt) {
-            var rect = canvas.getBoundingClientRect();
-            return {
-                x: evt.clientX - rect.left,
-                y: evt.clientY - rect.top
-            };
-        }
+        // Mouse events and handlers
+        (function () {
 
-        var currentFocusedCell = { x: 0, y: 0 };
-        var lastConsumedCell = {};
-
-        var isNetworkZoning = false;
-
-        var consumeZone = function (button, cell) {
-            if (lastConsumedCell.x !== cell.x || lastConsumedCell.y !== cell.y) {
-                simulation.server.consumeZone(button.name, cell.x, cell.y);
-                lastConsumedCell = cell;
+            function getMousePos(targetCanvas, evt) {
+                var rect = targetCanvas.getBoundingClientRect();
+                return {
+                    x: evt.clientX - rect.left,
+                    y: evt.clientY - rect.top
+                };
             }
-        }
 
-        canvas.addEventListener('mousemove', function (evt) {
-            var mousePos = getMousePos(canvas, evt);
-            currentFocusedCell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
-            if (isNetworkZoning) {
-                consumeZone(currentButton, currentFocusedCell);
+            var currentFocusedCell = { x: 0, y: 0 };
+            var lastConsumedCell = {};
+
+            var isNetworkZoning = false;
+
+            var consumeZone = function (button, cell) {
+                if (lastConsumedCell.x !== cell.x || lastConsumedCell.y !== cell.y) {
+                    simulation.server.consumeZone(button.name, cell.x, cell.y);
+                    lastConsumedCell = cell;
+                }
             }
-        }, false);
 
-        canvas.addEventListener('mousedown', function () {
-            if (currentButton !== null && currentButton.isClickAndDrag) {
-                isNetworkZoning = true;
-            }
-        });
+            canvas.addEventListener('mousemove', function (evt) {
+                var mousePos = getMousePos(canvas, evt);
+                currentFocusedCell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
+                if (isNetworkZoning) {
+                    consumeZone(currentButton, currentFocusedCell);
+                }
+            }, false);
 
-        canvas.addEventListener('mouseup', function () {
-            isNetworkZoning = false;
-        });
+            canvas.addEventListener('mousedown', function () {
+                if (currentButton !== null && currentButton.isClickAndDrag) {
+                    isNetworkZoning = true;
+                }
+            });
 
-        canvas.addEventListener('click', function () {
-            if (currentButton !== null) {
-                consumeZone(currentButton, currentFocusedCell);
-            }
-        });
+            canvas.addEventListener('mouseup', function () {
+                isNetworkZoning = false;
+            });
+
+            canvas.addEventListener('click', function () {
+                if (currentButton !== null) {
+                    consumeZone(currentButton, currentFocusedCell);
+                }
+            });
+        })();
 
         simulation.server.requestMenuStructure();
         console.log('Post-hub startup phase completed.');
