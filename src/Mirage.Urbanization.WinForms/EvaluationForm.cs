@@ -34,11 +34,8 @@ namespace Mirage.Urbanization.WinForms
                 AddLabelValue("Current funds", cityStatistics.CurrentAmountOfFunds.ToString("C"), dataGridView2);
                 AddLabelValue("Projected income", cityStatistics.CurrentProjectedAmountOfFunds.ToString("C"), dataGridView2);
 
-                listBox1.DataSource = cityStatistics
-                    .DataMeterResults
-                    .Where(x => x.ValueCategory > DataMeterValueCategory.None)
-                    .OrderByDescending(x => x.PercentageScore)
-                    .Select(x => string.Format("{0} - {1} ({2}%)", x.Name, x.ValueCategory, x.PercentageScoreString))
+                listBox1.DataSource = cityStatistics.GetIssueDataMeterResults()
+                    .Select(x => $"{x.Name} - {x.ValueCategory} ({x.PercentageScoreString}%)")
                     .ToList();
 
                 listBox2.DataSource =

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Persistence;
+using Mirage.Urbanization.Web.ClientMessages;
 
 namespace Mirage.Urbanization.Web
 {
@@ -42,7 +43,7 @@ namespace Mirage.Urbanization.Web
             };
 
             List<ClientZoneInfo> previous = null;
-            
+
             _simulationSession.OnAreaMessage += SimulationSession_OnAreaMessage;
             _simulationSession.OnYearAndOrMonthChanged += SimulationSession_OnYearAndOrMonthChanged;
             _simulationSession.OnCityBudgetValueChanged += SimulationSession_OnCityBudgetValueChanged;
@@ -111,12 +112,47 @@ namespace Mirage.Urbanization.Web
 
         private void SimulationSession_OnYearAndOrMonthChanged(object sender, EventArgsWithData<IYearAndMonth> e)
         {
-            GlobalHost
-                .ConnectionManager
-                .GetHubContext<SimulationHub>()
-                .Clients
-                .All
-                .submitYearAndMonth(e.EventData.GetCurrentDescription());
+            SimulationSession.GetRecentStatistics().WithResultIfHasMatch(cityStatistics =>
+            {
+                var cityStatisticsView = new CityStatisticsView(cityStatistics);
+
+                GlobalHost
+                    .ConnectionManager
+                    .GetHubContext<SimulationHub>()
+                    .Clients
+                    .All
+                    .onYearAndMonthChanged(new YearAndMonthChangedState
+                    {
+                        yearAndMonthDescription = e.EventData.GetCurrentDescription(),
+                        overallLabelsAndValues = new[]
+                        {
+                            new LabelAndValue { label = "Population", value = cityStatisticsView.Population.ToString("N0") },
+                            new LabelAndValue { label = "Assessed value", value = cityStatisticsView.AssessedValue.ToString("C0") },
+                            new LabelAndValue { label = "Category", value = cityStatisticsView.CityCategory }
+                        },
+                        generalOpinion = new[]
+                        {
+                            new { Opinion = cityStatisticsView.GetPositiveOpinion(), Label = "Positive" },
+                            new { Opinion = cityStatisticsView.GetNegativeOpinion(), Label = "Negative" }
+                        }
+                        .OrderByDescending(y => y.Opinion)
+                        .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion.ToString("P1")}" })
+                        .ToArray(),
+                        cityBudgetLabelsAndValues = new[]
+                        {
+                            new LabelAndValue { label = "Current funds", value = cityStatisticsView.CurrentAmountOfFunds.ToString("C0")},
+                            new LabelAndValue { label = "Projected income", value = cityStatisticsView.CurrentProjectedAmountOfFunds.ToString("C0")},
+                        },
+                        issueLabelAndValues = cityStatisticsView
+                            .GetIssueDataMeterResults()
+                            .Select(x => new LabelAndValue()
+                            {
+                                label = x.Name,
+                                value = $"{x.ValueCategory} ({x.PercentageScoreString}%)"
+                            })
+                            .ToArray()
+                    });
+            });
         }
 
         private static void SimulationSession_OnAreaMessage(object sender, SimulationSessionMessageEventArgs e)

@@ -102,6 +102,7 @@
     <Compile Include="ClientMessages\CityTaxState.cs" />
     <Compile Include="ClientMessages\ClientZoneInfo.cs" />
     <Compile Include="ClientMessages\ClientZonePoint.cs" />
+    <Compile Include="ClientMessages\YearAndMonthChangedState.cs" />
     <Compile Include="GameServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

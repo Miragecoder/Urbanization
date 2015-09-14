@@ -75,55 +75,84 @@ $(function () {
     simulation.client.submitAreaHotMessage = function (message) {
         alert(message.title + '\n' + message.message);
     }
-
-    simulation.client.submitYearAndMonth = function (message) {
-        document.getElementById('currentYearAndMonthLabel').innerHTML = message;
-    }
-
-    var CityBudgetStateService = function () {
-        var currentCityBudgetState;
+    var EventPublisherService = function () {
+        var currentState;
         var listeners = [];
-        this.loadNewBudgetState = function (cityBudgetState) {
-            currentCityBudgetState = cityBudgetState;
+        this.loadNewState = function (incomingState) {
+            currentState = incomingState;
             for (var i in listeners) {
                 if (listeners.hasOwnProperty(i)) {
-                    listeners[i](cityBudgetState);
+                    listeners[i](incomingState);
                 }
             }
         }
-        this.addOnNewBudgetStateListener = function (listener) {
+        this.addOnNewStateListener = function (listener) {
             listeners.push(listener);
         }
     };
 
-    var cityBudgetStateService = new CityBudgetStateService();
-    cityBudgetStateService.addOnNewBudgetStateListener(function (cityBudgetState) {
-        $('#budgetTaxTable').empty();
-        var taxStates = cityBudgetState.taxStates;
+    // City evaluation
+    (function () {
+        var cityEvaluationStateService = new EventPublisherService();
+        cityEvaluationStateService.addOnNewStateListener(function (cityEvaluationState) {
 
-        $('#budgetTaxTable').append('<tr><th colspan="2">Taxes</th></tr>');
-        for (var i in taxStates) {
-            if (taxStates.hasOwnProperty(i)) {
-                var taxState = taxStates[i];
-                $('#budgetTaxTable').append('<tr><td>' + taxState.name + '</td><td>' + taxState.projectedIncome + '</td></tr>');
-            }
+            var handleLabelAndValueTable = function (tableId, labelAndValueSet, title) {
+                $(tableId).empty();
+
+                $(tableId).append('<tr><th colspan="2">' + title + '</th></tr>');
+                for (var i in labelAndValueSet) {
+                    if (labelAndValueSet.hasOwnProperty(i)) {
+                        var x = labelAndValueSet[i];
+                        $(tableId).append('<tr><td>' + x.label + '</td><td>' + x.value + '</td></tr>');
+                    }
+                }
+            };
+            handleLabelAndValueTable('#cityEvaluationOverallTable', cityEvaluationState.overallLabelsAndValues, 'Overall');
+            handleLabelAndValueTable('#cityEvaluationBudgetTable', cityEvaluationState.cityBudgetLabelsAndValues, 'City budget');
+            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, 'Issues');
+            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, 'General opinion');
+
+        });
+
+
+        simulation.client.onYearAndMonthChanged = function (yearAndMonthChangedState) {
+            document.getElementById('currentYearAndMonthLabel').innerHTML = yearAndMonthChangedState.yearAndMonthDescription;
+            cityEvaluationStateService.loadNewState(yearAndMonthChangedState);
         }
-        var cityServiceStates = cityBudgetState.cityServiceStates;
+    })();
 
-        $('#budgetTaxTable').append('<tr><th colspan="2">City services</th></tr>');
-        for (var i in cityServiceStates) {
-            if (cityServiceStates.hasOwnProperty(i)) {
-                var cityServiceState = cityServiceStates[i];
-                $('#budgetTaxTable').append('<tr><td>' + cityServiceState.name + '</td><td>' + cityServiceState.projectedExpenses + '</td></tr>');
+    // City budget
+    (function () {
+        var cityBudgetStateService = new EventPublisherService();
+        cityBudgetStateService.addOnNewStateListener(function (cityBudgetState) {
+            $('#budgetTaxTable').empty();
+            var taxStates = cityBudgetState.taxStates;
+
+            $('#budgetTaxTable').append('<tr><th colspan="2">Taxes</th></tr>');
+            for (var i in taxStates) {
+                if (taxStates.hasOwnProperty(i)) {
+                    var taxState = taxStates[i];
+                    $('#budgetTaxTable').append('<tr><td>' + taxState.name + '</td><td>' + taxState.projectedIncome + '</td></tr>');
+                }
             }
-        }
-    });
+            var cityServiceStates = cityBudgetState.cityServiceStates;
 
-    simulation.client.submitCityBudgetValue = function (e) {
-        document.getElementById('currentFundsLabel').innerHTML = e.currentAmount;
-        document.getElementById('projectedIncomeLabel').innerHTML = e.projectedIncome;
-        cityBudgetStateService.loadNewBudgetState(e.cityBudgetState);
-    }
+            $('#budgetTaxTable').append('<tr><th colspan="2">City services</th></tr>');
+            for (var i in cityServiceStates) {
+                if (cityServiceStates.hasOwnProperty(i)) {
+                    var cityServiceState = cityServiceStates[i];
+                    $('#budgetTaxTable').append('<tr><td>' + cityServiceState.name + '</td><td>' + cityServiceState.projectedExpenses + '</td></tr>');
+                }
+            }
+        });
+
+        simulation.client.submitCityBudgetValue = function (e) {
+            document.getElementById('currentFundsLabel').innerHTML = e.currentAmount;
+            document.getElementById('projectedIncomeLabel').innerHTML = e.projectedIncome;
+            cityBudgetStateService.loadNewState(e.cityBudgetState);
+        }
+
+    })();
 
     simulation.client.submitAndDraw = function (zoneInfo) {
         persistZoneInfo(zoneInfo);

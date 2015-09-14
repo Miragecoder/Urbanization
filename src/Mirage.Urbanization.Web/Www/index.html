@@ -44,11 +44,21 @@
     </div>
     <canvas id="gameCanvas"></canvas>
     <div id="budgetDialog" title="City budget">
-        <table id="budgetTaxTable">
-        </table>
+        <table id="budgetTaxTable"></table>
     </div>
     <div id="cityEvaluationDialog" title="City evaluation">
-        <table id="cityEvaluationTable"></table>
+        <table id="cityEvaluationTable">
+            <tbody>
+                <tr>
+                    <td><table id="cityEvaluationOverallTable"></table></td>
+                    <td><table id="cityEvaluationIssuesTable"></table></td>
+                </tr>
+                <tr>
+                    <td><table id="cityEvaluationBudgetTable"></table></td>
+                    <td><table id="cityEvaluationGeneralOpinionTable"></table></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <!--Script references. -->
