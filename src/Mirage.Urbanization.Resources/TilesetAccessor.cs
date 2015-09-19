@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
+using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
@@ -16,11 +17,11 @@ namespace Mirage.Urbanization.Tilesets
 
         public Size ResizeToTileWidthAndSize(Size size)
         {
-            decimal resizeMultiplier = (decimal)TileWidthAndSizeInPixels / 25;
+            decimal resizeMultiplier = (decimal) TileWidthAndSizeInPixels/25;
             return new Size(
-                Convert.ToInt32(Math.Round(size.Width * resizeMultiplier)),
-                Convert.ToInt32(Math.Round(size.Height * resizeMultiplier))
-            );
+                Convert.ToInt32(Math.Round(size.Width*resizeMultiplier)),
+                Convert.ToInt32(Math.Round(size.Height*resizeMultiplier))
+                );
         }
 
         private readonly INetworkZoneTileset _woodNetworkZoneTileset;
@@ -52,7 +53,9 @@ namespace Mirage.Urbanization.Tilesets
                 {
                     if (consumption is RoadZoneConsumption)
                     {
-                        bitmapOne = _bitmapAccessor.NetworkZonesInstance.RoadInstance.GetBitmapFor(networkConsumption as RoadZoneConsumption);
+                        bitmapOne =
+                            _bitmapAccessor.NetworkZonesInstance.RoadInstance.GetBitmapFor(
+                                networkConsumption as RoadZoneConsumption);
                     }
                     else if (consumption is RailRoadZoneConsumption)
                     {
@@ -89,37 +92,45 @@ namespace Mirage.Urbanization.Tilesets
                     bitmapLayer = _bitmapAccessor.NetworkZonesInstance.RoadInstance.GetBitmapLayerFor(intersection);
                 }
                 else if (intersection.NorthSouthZoneConsumption is RailRoadZoneConsumption
-                    && intersection.EastWestZoneConsumption is PowerLineConsumption)
+                         && intersection.EastWestZoneConsumption is PowerLineConsumption)
                 {
                     bitmapOne = _bitmapAccessor.NetworkZonesInstance.RailNorthSouthPowerEastWest;
                 }
                 else if (intersection.NorthSouthZoneConsumption is PowerLineConsumption
-                    && intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
+                         && intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
                 {
                     bitmapOne = _bitmapAccessor.NetworkZonesInstance.PowerNorthSouthRailEastWest.Value;
                 }
                 else if (intersection.NorthSouthZoneConsumption is PowerLineConsumption
                          && intersection.EastWestZoneConsumption is WaterZoneConsumption)
                 {
-                    bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
+                    bitmapOne =
+                        _waterNetworkZoneTileset.GetBitmapFor(
+                            intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
                     bitmapTwo = _bitmapAccessor.NetworkZonesInstance.PowerNorthSouthWaterEastWest;
                 }
                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption
                          && intersection.EastWestZoneConsumption is PowerLineConsumption)
                 {
-                    bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
+                    bitmapOne =
+                        _waterNetworkZoneTileset.GetBitmapFor(
+                            intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
                     bitmapTwo = _bitmapAccessor.NetworkZonesInstance.WaterNorthSouthPowerEastWest.Value;
                 }
                 else if (intersection.NorthSouthZoneConsumption is RailRoadZoneConsumption
                          && intersection.EastWestZoneConsumption is WaterZoneConsumption)
                 {
-                    bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
+                    bitmapOne =
+                        _waterNetworkZoneTileset.GetBitmapFor(
+                            intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
                     bitmapTwo = _bitmapAccessor.NetworkZonesInstance.RailNorthSouthWaterEastWest;
                 }
                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption
                          && intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
                 {
-                    bitmapOne = _waterNetworkZoneTileset.GetBitmapFor(intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
+                    bitmapOne =
+                        _waterNetworkZoneTileset.GetBitmapFor(
+                            intersection.GetZoneConsumptionOfType<WaterZoneConsumption>());
                     bitmapTwo = _bitmapAccessor.NetworkZonesInstance.WaterNorthSouthRailEastWest.Value;
                 }
                 else throw new InvalidOperationException();
@@ -177,7 +188,8 @@ namespace Mirage.Urbanization.Tilesets
                     {
                         if (baseGrowthZoneConsumption is ResidentialZoneClusterConsumption)
                         {
-                            var residentialZoneConsumption = baseGrowthZoneConsumption as ResidentialZoneClusterConsumption;
+                            var residentialZoneConsumption =
+                                baseGrowthZoneConsumption as ResidentialZoneClusterConsumption;
 
                             if (residentialZoneConsumption.RenderAsHouse(zoneClusterMemberConsumption))
                             {
@@ -210,18 +222,19 @@ namespace Mirage.Urbanization.Tilesets
 
                 if (selectedBitmap != null)
                 {
-                    if (zoneClusterMemberConsumption.IsCentralClusterMember && showHasNoElectricitySymbol && DateTime.Now.Millisecond > 500)
+                    if (zoneClusterMemberConsumption.IsCentralClusterMember && showHasNoElectricitySymbol &&
+                        DateTime.Now.Millisecond > 500)
                     {
                         bitmapOne = _bitmapAccessor.GrowthZonesInstance.NoElectricity;
                     }
                     else
                     {
                         bitmapOne = bitmapSegmenter.GetSegment(
-                            image: selectedBitmap, 
-                            x: zoneClusterMemberConsumption.PositionInClusterX, 
-                            y: zoneClusterMemberConsumption.PositionInClusterY, 
+                            image: selectedBitmap,
+                            x: zoneClusterMemberConsumption.PositionInClusterX,
+                            y: zoneClusterMemberConsumption.PositionInClusterY,
                             multiplier: DefaultTileWidthAndSizeInPixels
-                        );
+                            );
                     }
                 }
             }
@@ -286,9 +299,66 @@ namespace Mirage.Urbanization.Tilesets
         public Size GetAreaSize(IReadOnlyArea area)
         {
             return new Size(
-                width: area.AmountOfZonesX * TileWidthAndSizeInPixels,
-                height: area.AmountOfZonesY * TileWidthAndSizeInPixels
-            );
+                width: area.AmountOfZonesX*TileWidthAndSizeInPixels,
+                height: area.AmountOfZonesY*TileWidthAndSizeInPixels
+                );
+        }
+
+        public IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle airplane,
+            MiscBitmaps miscBitmapsInstance)
+        {
+
+            if (airplane.PreviousPreviousPreviousPreviousPosition == null)
+                yield break;
+
+            foreach (var pair in new[]
+            {
+                new
+                {
+                    Render = (airplane is ITrain),
+                    First = airplane.CurrentPosition,
+                    Second = airplane.PreviousPosition,
+                    Third = airplane.PreviousPreviousPosition,
+                    Head = true
+                },
+                new
+                {
+                    Render = true,
+                    First = airplane.PreviousPosition,
+                    Second = airplane.PreviousPreviousPosition,
+                    Third = airplane.PreviousPreviousPreviousPosition,
+                    Head = false
+                },
+                new
+                {
+                    Render = (airplane is ITrain),
+                    First = airplane.PreviousPreviousPosition,
+                    Second = airplane.PreviousPreviousPreviousPosition,
+                    Third = airplane.PreviousPreviousPreviousPreviousPosition,
+                    Head = false
+                }
+            })
+            {
+                var orientation = (pair.Third.Point != pair.First.Point)
+                    ? pair.Third.Point.OrientationTo(pair.First.Point)
+                    : pair.Second.Point.OrientationTo(pair.First.Point);
+
+                Bitmap bitmap;
+
+                if (airplane is IAirplane)
+                    bitmap = miscBitmapsInstance.Plane.GetBitmap(orientation);
+                else if (airplane is ITrain)
+                    bitmap = miscBitmapsInstance.Train.GetBitmap(orientation);
+                else if (airplane is IShip)
+                    bitmap = miscBitmapsInstance.GetShipBitmapFrame().GetBitmap(orientation);
+                else
+                    throw new InvalidOperationException();
+
+                if (pair.Render)
+                {
+                    yield return new VehicleBitmapAndPoint(bitmap, pair.Second, pair.Third);
+                }
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
+using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Tilesets
@@ -11,6 +14,21 @@ namespace Mirage.Urbanization.Tilesets
         Size ResizeToTileWidthAndSize(Size size);
 
         Size GetAreaSize(IReadOnlyArea area);
+        IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle airplane, MiscBitmaps miscBitmapsInstance);
+    }
+
+    public class VehicleBitmapAndPoint
+    {
+        public VehicleBitmapAndPoint(Bitmap bitmap, IReadOnlyZoneInfo second, IReadOnlyZoneInfo third)
+        {
+            Bitmap = bitmap;
+            Second = second;
+            Third = third;
+        }
+
+        public IReadOnlyZoneInfo Second { get; }
+        public IReadOnlyZoneInfo Third { get; }
+        public Bitmap Bitmap { get; }
     }
 
     public class BitmapLayerOperation

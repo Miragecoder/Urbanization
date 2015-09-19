@@ -200,50 +200,32 @@ namespace Mirage.Urbanization.WinForms
 
                     controller.ForEachActiveVehicle(airplane =>
                     {
-                        if (airplane.PreviousPreviousPreviousPreviousPosition == null)
-                            return;
-
-                        foreach (var pair in new[]
-                    {
-                        new { Render = (airplane is ITrain), First = airplane.CurrentPosition, Second = airplane.PreviousPosition, Third = airplane.PreviousPreviousPosition, Head = true},
-                        new { Render = true, First = airplane.PreviousPosition, Second = airplane.PreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPosition, Head = false},
-                        new { Render = (airplane is ITrain), First = airplane.PreviousPreviousPosition, Second = airplane.PreviousPreviousPreviousPosition, Third = airplane.PreviousPreviousPreviousPreviousPosition, Head = false}
-                    })
+                        foreach (var bitmapAndPoint in _tilesetAccessor.GetBitmapsAndPointsFor(airplane, MiscBitmapsInstance))
                         {
-                            var orientation = (pair.Third.Point != pair.First.Point)
-                                ? pair.Third.Point.OrientationTo(pair.First.Point)
-                                : pair.Second.Point.OrientationTo(pair.First.Point);
+                            var pointOne =
+                                _zoneRenderInfos[bitmapAndPoint.Third].GetRectangle()
+                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Size));
+                            var pointTwo =
+                                _zoneRenderInfos[bitmapAndPoint.Second].GetRectangle()
+                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Size));
 
-                            Bitmap bitmap;
+                            var distanceX =
+                                Convert.ToInt32(pointOne.Location.X +
+                                                ((pointTwo.Location.X - pointOne.Location.X) * airplane.Progress));
+                            var distanceY =
+                                Convert.ToInt32(pointOne.Location.Y +
+                                                ((pointTwo.Location.Y - pointOne.Location.Y) * airplane.Progress));
 
-                            if (airplane is IAirplane)
-                                bitmap = MiscBitmapsInstance.Plane.GetBitmap(orientation);
-                            else if (airplane is ITrain)
-                                bitmap = MiscBitmapsInstance.Train.GetBitmap(orientation);
-                            else if (airplane is IShip)
-                                bitmap = MiscBitmapsInstance.GetShipBitmapFrame().GetBitmap(orientation);
-                            else
-                                throw new InvalidOperationException();
+                            var currentRectangle = _zoneRenderInfos[bitmapAndPoint.Second]
+                                .GetRectangle()
+                                .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Size));
 
-                            if (pair.Render)
-                            {
-                                var pointOne = _zoneRenderInfos[pair.Third].GetRectangle().ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size));
-                                var pointTwo = _zoneRenderInfos[pair.Second].GetRectangle().ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size));
+                            currentRectangle.Location = new Point(distanceX, distanceY);
 
-                                var distanceX = Convert.ToInt32(pointOne.Location.X + ((pointTwo.Location.X - pointOne.Location.X) * airplane.Progress));
-                                var distanceY = Convert.ToInt32(pointOne.Location.Y + ((pointTwo.Location.Y - pointOne.Location.Y) * airplane.Progress));
-
-                                var currentRectangle = _zoneRenderInfos[pair.Second]
-                                    .GetRectangle()
-                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmap.Size));
-
-                                currentRectangle.Location = new Point(distanceX, distanceY);
-
-                                _graphicsManager.GetGraphicsWrapper().DrawImage(
-                                    bitmap: bitmap,
-                                    rectangle: currentRectangle
-                                    );
-                            }
+                            _graphicsManager.GetGraphicsWrapper().DrawImage(
+                                bitmap: bitmapAndPoint.Bitmap,
+                                rectangle: currentRectangle
+                                );
                         }
                     });
                 }

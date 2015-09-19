@@ -107,7 +107,7 @@ namespace Mirage.Urbanization.Vehicles
                 {
                     if (!_currentTrainNetwork.Contains(CurrentPosition))
                     {
-                        CurrentPosition = _currentTrainNetwork.First();
+                        Trail.Enqueue(_currentTrainNetwork.First());
                     }
                     else
                     {
