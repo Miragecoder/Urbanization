@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <div class="header-container">
+    <div class="header-container" style="z-index: 4">
         <div id="miscButtonBar">
             <button id="budgetDialogButton">City budget</button>
             <button id="evaluationDialogButton">City evaluation</button>
@@ -42,7 +42,12 @@
             <span id="areaMessageLabel">Ready</span>
         </div>
     </div>
-    <canvas id="gameCanvas"></canvas>
+    <div style="position: relative;">
+        <canvas id="gameCanvasLayer1" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+        <canvas id="gameCanvasLayer2" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+        <canvas id="gameCanvasLayer3" style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+        <canvas id="gameCanvasLayer4" style="position: absolute; left: 0; top: 0; z-index: 3;"></canvas>
+    </div>
     <div id="budgetDialog" title="City budget">
         <table id="budgetTaxTable"></table>
     </div>

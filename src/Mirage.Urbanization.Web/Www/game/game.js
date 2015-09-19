@@ -12,7 +12,7 @@ $(function () {
 
             // Link to open the dialog
             $(dialogButtonId).click(function (event) {
-                $(dialogId).dialog('open');
+                $(dialogId).dialog("open");
                 event.preventDefault();
             });
         };
@@ -24,20 +24,25 @@ $(function () {
     var buttonDefinitionStates = {};
     var currentButton = null;
     var imageCache = {};
-    var canvas = document.getElementById('gameCanvas');
+    var canvasLayer1 = document.getElementById("gameCanvasLayer1");
+    var canvasLayer2 = document.getElementById("gameCanvasLayer2");
+    var canvasLayer3 = document.getElementById("gameCanvasLayer3");
+    var canvasLayer4 = document.getElementById("gameCanvasLayer4");
+
+    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4];
 
     var persistZoneInfo = function (zoneInfo) {
         zoneInfos[zoneInfo.key] = zoneInfo;
         zoneInfos[zoneInfo.key].drawn = false;
     };
 
-    var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapLayer) {
-        var context = canvas.getContext('2d');
+    var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapLayer, selectCanvas) {
+        var context = selectCanvas().getContext("2d");
         if (imageCache.hasOwnProperty(selectBitmapLayer(zoneInfo)) && imageCache[selectBitmapLayer(zoneInfo)] !== null) {
             context.drawImage(imageCache[selectBitmapLayer(zoneInfo)], zoneInfo.point.x * 25, zoneInfo.point.y * 25);
         } else {
             var tileImage = new Image();
-            tileImage.src = '/tile/' + selectBitmapLayer(zoneInfo);
+            tileImage.src = "/tile/" + selectBitmapLayer(zoneInfo);
             tileImage.onload = function () {
                 context.drawImage(tileImage, zoneInfo.point.x * 25, zoneInfo.point.y * 25);
                 imageCache[selectBitmapLayer(zoneInfo)] = tileImage;
@@ -47,18 +52,29 @@ $(function () {
 
     var drawZoneInfo = function (zoneInfo) {
 
-        if (canvas.width < zoneInfo.point.x * 25)
-            canvas.width = zoneInfo.point.x * 25;
-        if (canvas.height < zoneInfo.point.y * 25)
-            canvas.height = zoneInfo.point.y * 25;
+
+        for (var i = 0; i < canvasLayers.length; i++) {
+            var canvasLayer = canvasLayers[i];
+            if (canvasLayer.width < zoneInfo.point.x * 25)
+                canvasLayer.width = zoneInfo.point.x * 25;
+            if (canvasLayer.height < zoneInfo.point.y * 25)
+                canvasLayer.height = zoneInfo.point.y * 25;
+        }
 
         if (zoneInfo.bitmapLayerOne !== 0) {
-            drawZoneInfoForBitmapLayer(zoneInfo, function (x) { return x.bitmapLayerOne; });
+            drawZoneInfoForBitmapLayer(zoneInfo,
+                function (x) { return x.bitmapLayerOne; },
+                function () { return canvasLayer1; });
+
             if (zoneInfo.bitmapLayerTwo !== 0) {
-                drawZoneInfoForBitmapLayer(zoneInfo, function (x) { return x.bitmapLayerTwo; });
+                drawZoneInfoForBitmapLayer(zoneInfo,
+                    function (x) { return x.bitmapLayerTwo; },
+                    function () { return canvasLayer3; });
+            } else {
+                canvasLayer3.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
             }
         } else {
-            var context = canvas.getContext('2d');
+            var context = canvasLayer1.getContext("2d");
             context.beginPath();
             context.fillStyle = zoneInfo.color;
             context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
@@ -69,11 +85,11 @@ $(function () {
     };
 
     simulation.client.submitAreaMessage = function (message) {
-        document.getElementById('areaMessageLabel').innerHTML = message;
+        document.getElementById("areaMessageLabel").innerHTML = message;
     }
 
     simulation.client.submitAreaHotMessage = function (message) {
-        alert(message.title + '\n' + message.message);
+        alert(message.title + "\n" + message.message);
     }
     var EventPublisherService = function () {
         var currentState;
@@ -99,24 +115,24 @@ $(function () {
             var handleLabelAndValueTable = function (tableId, labelAndValueSet, title) {
                 $(tableId).empty();
 
-                $(tableId).append('<tr><th colspan="2">' + title + '</th></tr>');
+                $(tableId).append("<tr><th colspan=\"2\">" + title + "</th></tr>");
                 for (var i in labelAndValueSet) {
                     if (labelAndValueSet.hasOwnProperty(i)) {
                         var x = labelAndValueSet[i];
-                        $(tableId).append('<tr><td>' + x.label + '</td><td>' + x.value + '</td></tr>');
+                        $(tableId).append("<tr><td>" + x.label + "</td><td>" + x.value + "</td></tr>");
                     }
                 }
             };
-            handleLabelAndValueTable('#cityEvaluationOverallTable', cityEvaluationState.overallLabelsAndValues, 'Overall');
-            handleLabelAndValueTable('#cityEvaluationBudgetTable', cityEvaluationState.cityBudgetLabelsAndValues, 'City budget');
-            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, 'Issues');
-            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, 'General opinion');
+            handleLabelAndValueTable("#cityEvaluationOverallTable", cityEvaluationState.overallLabelsAndValues, "Overall");
+            handleLabelAndValueTable("#cityEvaluationBudgetTable", cityEvaluationState.cityBudgetLabelsAndValues, "City budget");
+            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, "Issues");
+            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, "General opinion");
 
         });
 
 
         simulation.client.onYearAndMonthChanged = function (yearAndMonthChangedState) {
-            document.getElementById('currentYearAndMonthLabel').innerHTML = yearAndMonthChangedState.yearAndMonthDescription;
+            document.getElementById("currentYearAndMonthLabel").innerHTML = yearAndMonthChangedState.yearAndMonthDescription;
             cityEvaluationStateService.loadNewState(yearAndMonthChangedState);
         }
     })();
@@ -125,30 +141,30 @@ $(function () {
     (function () {
         var cityBudgetStateService = new EventPublisherService();
         cityBudgetStateService.addOnNewStateListener(function (cityBudgetState) {
-            $('#budgetTaxTable').empty();
+            $("#budgetTaxTable").empty();
             var taxStates = cityBudgetState.taxStates;
 
-            $('#budgetTaxTable').append('<tr><th colspan="2">Taxes</th></tr>');
+            $("#budgetTaxTable").append("<tr><th colspan=\"2\">Taxes</th></tr>");
             for (var i in taxStates) {
                 if (taxStates.hasOwnProperty(i)) {
                     var taxState = taxStates[i];
-                    $('#budgetTaxTable').append('<tr><td>' + taxState.name + '</td><td>' + taxState.projectedIncome + '</td></tr>');
+                    $("#budgetTaxTable").append("<tr><td>" + taxState.name + "</td><td>" + taxState.projectedIncome + "</td></tr>");
                 }
             }
             var cityServiceStates = cityBudgetState.cityServiceStates;
 
-            $('#budgetTaxTable').append('<tr><th colspan="2">City services</th></tr>');
+            $("#budgetTaxTable").append("<tr><th colspan=\"2\">City services</th></tr>");
             for (var i in cityServiceStates) {
                 if (cityServiceStates.hasOwnProperty(i)) {
                     var cityServiceState = cityServiceStates[i];
-                    $('#budgetTaxTable').append('<tr><td>' + cityServiceState.name + '</td><td>' + cityServiceState.projectedExpenses + '</td></tr>');
+                    $("#budgetTaxTable").append("<tr><td>" + cityServiceState.name + "</td><td>" + cityServiceState.projectedExpenses + "</td></tr>");
                 }
             }
         });
 
         simulation.client.submitCityBudgetValue = function (e) {
-            document.getElementById('currentFundsLabel').innerHTML = e.currentAmount;
-            document.getElementById('projectedIncomeLabel').innerHTML = e.projectedIncome;
+            document.getElementById("currentFundsLabel").innerHTML = e.currentAmount;
+            document.getElementById("projectedIncomeLabel").innerHTML = e.projectedIncome;
             cityBudgetStateService.loadNewState(e.cityBudgetState);
         }
 
@@ -170,7 +186,7 @@ $(function () {
     };
 
     simulation.client.submitMenuStructure = function (incomingButtonDefinitions) {
-        console.log('Invocation of submitMenuStructure');
+        console.log("Invocation of submitMenuStructure");
         (function () {
             for (var p in incomingButtonDefinitions) {
                 if (incomingButtonDefinitions.hasOwnProperty(p)) {
@@ -188,9 +204,9 @@ $(function () {
         for (var i in buttonDefinitionStates) {
             if (buttonDefinitionStates.hasOwnProperty(i)) {
                 var buttonDefinitionState = buttonDefinitionStates[i];
-                var buttonBar = document.getElementById('buttonBar');
+                var buttonBar = document.getElementById("buttonBar");
                 if (!buttonDefinitionState.drawn) {
-                    var newButtonElement = document.createElement('button');
+                    var newButtonElement = document.createElement("button");
                     newButtonElement.innerHTML = buttonDefinitionState.buttonDefinition.name;
                     buttonBar.appendChild(newButtonElement);
 
@@ -200,7 +216,7 @@ $(function () {
                             currentButton = x.buttonDefinition;
                         };
                     }
-                    newButtonElement.addEventListener('click', registerButton(buttonDefinitionState));
+                    newButtonElement.addEventListener("click", registerButton(buttonDefinitionState));
 
                     buttonDefinitionState.drawn = true;
                 }
@@ -211,7 +227,7 @@ $(function () {
 
     $.connection.hub.start().done(function () {
 
-        console.log('Hub started succesfully. Initiating post-hub startup phase...');
+        console.log("Hub started succesfully. Initiating post-hub startup phase...");
 
         // Mouse events and handlers
         (function () {
@@ -236,25 +252,25 @@ $(function () {
                 }
             }
 
-            canvas.addEventListener('mousemove', function (evt) {
-                var mousePos = getMousePos(canvas, evt);
+            canvasLayer4.addEventListener("mousemove", function (evt) {
+                var mousePos = getMousePos(canvasLayer1, evt);
                 currentFocusedCell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
                 if (isNetworkZoning) {
                     consumeZone(currentButton, currentFocusedCell);
                 }
             }, false);
 
-            canvas.addEventListener('mousedown', function () {
+            canvasLayer4.addEventListener("mousedown", function () {
                 if (currentButton !== null && currentButton.isClickAndDrag) {
                     isNetworkZoning = true;
                 }
             });
 
-            canvas.addEventListener('mouseup', function () {
+            canvasLayer4.addEventListener("mouseup", function () {
                 isNetworkZoning = false;
             });
 
-            canvas.addEventListener('click', function () {
+            canvasLayer4.addEventListener("click", function () {
                 if (currentButton !== null) {
                     consumeZone(currentButton, currentFocusedCell);
                 }
@@ -262,6 +278,6 @@ $(function () {
         })();
 
         simulation.server.requestMenuStructure();
-        console.log('Post-hub startup phase completed.');
+        console.log("Post-hub startup phase completed.");
     });
 });

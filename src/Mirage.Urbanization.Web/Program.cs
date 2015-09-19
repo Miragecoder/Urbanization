@@ -16,7 +16,7 @@ namespace Mirage.Urbanization.Web
                 new SimulationOptions(new Func<TerraformingOptions>(() =>
                 {
                     var t = new TerraformingOptions();
-                    t.HorizontalRiver = t.VerticalRiver = false;
+                    t.HorizontalRiver = t.VerticalRiver = true;
                     t.SetWoodlands(80);
                     t.SetZoneWidthAndHeight(120);
                     return t;
