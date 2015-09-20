@@ -913,7 +913,7 @@ if ( rnotwhite.test( "\xA0" ) ) {
 	trimRight = /[\s\xA0]+$/;
 }
 
-// All jQuery objects should point back to these
+// All jQuery objects should pointOne back to these
 rootjQuery = jQuery(document);
 
 // Cleanup functions for the document ready method
@@ -2446,7 +2446,7 @@ boolHook = {
 			// Remove boolean attributes when set to false
 			jQuery.removeAttr( elem, name );
 		} else {
-			// value is true since we know at this point it's type boolean and not false
+			// value is true since we know at this pointOne it's type boolean and not false
 			// Set boolean attributes to the same name and set the DOM property
 			propName = jQuery.propFix[ name ] || name;
 			if ( propName in elem ) {

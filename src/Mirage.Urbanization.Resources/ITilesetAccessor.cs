@@ -14,21 +14,27 @@ namespace Mirage.Urbanization.Tilesets
         Size ResizeToTileWidthAndSize(Size size);
 
         Size GetAreaSize(IReadOnlyArea area);
-        IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle airplane, MiscBitmaps miscBitmapsInstance);
+        IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle, MiscBitmaps miscBitmapsInstance);
     }
 
     public class VehicleBitmapAndPoint
     {
-        public VehicleBitmapAndPoint(Bitmap bitmap, IReadOnlyZoneInfo second, IReadOnlyZoneInfo third)
+        public VehicleBitmapAndPoint(
+            Bitmap bitmap, 
+            IReadOnlyZoneInfo second, 
+            IReadOnlyZoneInfo third,
+            IVehicle vehicle)
         {
             Bitmap = bitmap;
             Second = second;
             Third = third;
+            Vehicle = vehicle;
         }
 
         public IReadOnlyZoneInfo Second { get; }
         public IReadOnlyZoneInfo Third { get; }
         public Bitmap Bitmap { get; }
+        public IVehicle Vehicle { get; }
     }
 
     public class BitmapLayerOperation

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Persistence;
+using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.Web.ClientMessages;
 
 namespace Mirage.Urbanization.Web
@@ -69,6 +70,17 @@ namespace Mirage.Urbanization.Web
                     .Clients
                     .All
                     .submitZoneInfos(toBeSubmitted);
+
+                var list = new List<ClientVehiclePositionInfo>();
+                foreach (var vehicleController in _simulationSession.Area.EnumerateVehicleControllers())
+                {
+                    vehicleController
+                        .ForEachActiveVehicle(vehicle => { list.AddRange(TilesetProvider.GetBitmapsAndPointsFor(vehicle).Select(ClientVehiclePositionInfo.Create)); });
+                }
+
+                GlobalHost.ConnectionManager.GetHubContext<SimulationHub>().Clients.All.submitVehicleStates(list);
+
+
 
                 previous = zoneInfos;
 

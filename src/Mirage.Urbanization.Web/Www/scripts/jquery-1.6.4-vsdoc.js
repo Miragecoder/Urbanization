@@ -2963,7 +2963,7 @@ jQuery.prototype.add = function( selector, context ) {
 ///     A string representing a selector expression to find additional elements to add to the set of matched elements.
 /// </param>
 /// <param name="context" domElement="true">
-///     The point in the document at which the selector should begin matching; similar to the context argument of the $(selector, context) method.
+///     The pointOne in the document at which the selector should begin matching; similar to the context argument of the $(selector, context) method.
 /// </param>
 /// <returns type="jQuery" />
 

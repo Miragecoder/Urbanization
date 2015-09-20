@@ -304,37 +304,37 @@ namespace Mirage.Urbanization.Tilesets
                 );
         }
 
-        public IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle airplane,
+        public IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle,
             MiscBitmaps miscBitmapsInstance)
         {
 
-            if (airplane.PreviousPreviousPreviousPreviousPosition == null)
+            if (vehicle.PreviousPreviousPreviousPreviousPosition == null)
                 yield break;
 
             foreach (var pair in new[]
             {
                 new
                 {
-                    Render = (airplane is ITrain),
-                    First = airplane.CurrentPosition,
-                    Second = airplane.PreviousPosition,
-                    Third = airplane.PreviousPreviousPosition,
+                    Render = (vehicle is ITrain),
+                    First = vehicle.CurrentPosition,
+                    Second = vehicle.PreviousPosition,
+                    Third = vehicle.PreviousPreviousPosition,
                     Head = true
                 },
                 new
                 {
                     Render = true,
-                    First = airplane.PreviousPosition,
-                    Second = airplane.PreviousPreviousPosition,
-                    Third = airplane.PreviousPreviousPreviousPosition,
+                    First = vehicle.PreviousPosition,
+                    Second = vehicle.PreviousPreviousPosition,
+                    Third = vehicle.PreviousPreviousPreviousPosition,
                     Head = false
                 },
                 new
                 {
-                    Render = (airplane is ITrain),
-                    First = airplane.PreviousPreviousPosition,
-                    Second = airplane.PreviousPreviousPreviousPosition,
-                    Third = airplane.PreviousPreviousPreviousPreviousPosition,
+                    Render = (vehicle is ITrain),
+                    First = vehicle.PreviousPreviousPosition,
+                    Second = vehicle.PreviousPreviousPreviousPosition,
+                    Third = vehicle.PreviousPreviousPreviousPreviousPosition,
                     Head = false
                 }
             })
@@ -345,18 +345,18 @@ namespace Mirage.Urbanization.Tilesets
 
                 Bitmap bitmap;
 
-                if (airplane is IAirplane)
+                if (vehicle is IAirplane)
                     bitmap = miscBitmapsInstance.Plane.GetBitmap(orientation);
-                else if (airplane is ITrain)
+                else if (vehicle is ITrain)
                     bitmap = miscBitmapsInstance.Train.GetBitmap(orientation);
-                else if (airplane is IShip)
+                else if (vehicle is IShip)
                     bitmap = miscBitmapsInstance.GetShipBitmapFrame().GetBitmap(orientation);
                 else
                     throw new InvalidOperationException();
 
                 if (pair.Render)
                 {
-                    yield return new VehicleBitmapAndPoint(bitmap, pair.Second, pair.Third);
+                    yield return new VehicleBitmapAndPoint(bitmap, pair.Second, pair.Third, vehicle);
                 }
             }
         }

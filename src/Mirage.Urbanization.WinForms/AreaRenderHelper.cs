@@ -185,12 +185,7 @@ namespace Mirage.Urbanization.WinForms
                     .Select(rect => rect.RenderZoneInto(_graphicsManager.GetGraphicsWrapper(), rect.GetRectangle().Contains(currentCursorPoint)))
                     .ToArray();
 
-                foreach (var controller in new[]
-                {
-                    SimulationSession.Area.ShipController,
-                    SimulationSession.Area.TrainController,
-                    SimulationSession.Area.AirplaneController as IVehicleController<IMoveableVehicle>
-                })
+                foreach (var controller in SimulationSession.Area.EnumerateVehicleControllers())
                 {
                     if (controller == SimulationSession.Area.TrainController)
                     {

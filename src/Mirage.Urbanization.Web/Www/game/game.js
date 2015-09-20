@@ -36,16 +36,16 @@ $(function () {
         zoneInfos[zoneInfo.key].drawn = false;
     };
 
-    var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapLayer, selectCanvas) {
+    var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
         var context = selectCanvas().getContext("2d");
-        if (imageCache.hasOwnProperty(selectBitmapLayer(zoneInfo)) && imageCache[selectBitmapLayer(zoneInfo)] !== null) {
-            context.drawImage(imageCache[selectBitmapLayer(zoneInfo)], zoneInfo.point.x * 25, zoneInfo.point.y * 25);
+        if (imageCache.hasOwnProperty(selectBitmapHashCode(zoneInfo)) && imageCache[selectBitmapHashCode(zoneInfo)] !== null) {
+            context.drawImage(imageCache[selectBitmapHashCode(zoneInfo)], selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
         } else {
             var tileImage = new Image();
-            tileImage.src = "/tile/" + selectBitmapLayer(zoneInfo);
+            tileImage.src = "/tile/" + selectBitmapHashCode(zoneInfo);
             tileImage.onload = function () {
-                context.drawImage(tileImage, zoneInfo.point.x * 25, zoneInfo.point.y * 25);
-                imageCache[selectBitmapLayer(zoneInfo)] = tileImage;
+                context.drawImage(tileImage, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                imageCache[selectBitmapHashCode(zoneInfo)] = tileImage;
             };
         }
     };
@@ -64,12 +64,14 @@ $(function () {
         if (zoneInfo.bitmapLayerOne !== 0) {
             drawZoneInfoForBitmapLayer(zoneInfo,
                 function (x) { return x.bitmapLayerOne; },
-                function () { return canvasLayer1; });
+                function () { return canvasLayer1; },
+                function (x) { return x.point; });
 
             if (zoneInfo.bitmapLayerTwo !== 0) {
                 drawZoneInfoForBitmapLayer(zoneInfo,
                     function (x) { return x.bitmapLayerTwo; },
-                    function () { return canvasLayer3; });
+                    function () { return canvasLayer3; },
+                    function (x) { return x.point; });
             } else {
                 canvasLayer3.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
             }
@@ -224,6 +226,20 @@ $(function () {
         }
         $("input[type=submit], a, button").button();
     };
+
+    simulation.client.submitVehicleStates = function (vehicleStates) {
+        canvasLayer2.getContext("2d").clearRect(0, 0, canvasLayer2.width, canvasLayer2.height);
+        canvasLayer4.getContext("2d").clearRect(0, 0, canvasLayer4.width, canvasLayer4.height);
+        for (var i in vehicleStates) {
+            if (vehicleStates.hasOwnProperty(i)) {
+                var vehicleState = vehicleStates[i];
+                drawZoneInfoForBitmapLayer(vehicleState,
+                    function (x) { return x.bitmapId; },
+                    function () { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
+                    function (x) { return x.pointOne; });
+            }
+        }
+    }
 
     $.connection.hub.start().done(function () {
 

@@ -117,6 +117,13 @@ namespace Mirage.Urbanization
         public IVehicleController<IShip> ShipController { get; }
 
         public event EventHandler<ZoneInfoEventArgs> ZoneInfoUpdated;
+        public IEnumerable<IVehicleController<IMoveableVehicle>> EnumerateVehicleControllers()
+        {
+            yield return TrainController;
+            yield return AirplaneController;
+            yield return ShipController;
+        }
+
         public int AmountOfZonesX => AmountOfZonesY;
 
         public int AmountOfZonesY

@@ -23,5 +23,7 @@ namespace Mirage.Urbanization
         IVehicleController<IAirplane> AirplaneController { get; }
         IVehicleController<IShip> ShipController { get; }
         event EventHandler<ZoneInfoEventArgs> ZoneInfoUpdated;
+
+        IEnumerable<IVehicleController<IMoveableVehicle>> EnumerateVehicleControllers();
     }
 }
