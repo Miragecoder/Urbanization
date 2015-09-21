@@ -48,6 +48,11 @@ $(function () {
                 imageCache[selectBitmapHashCode(zoneInfo)] = tileImage;
             };
         }
+        return {
+            clearRect: function(targetContext) {
+                targetContext.clearRect(selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25, 25, 25);
+            }
+        };
     };
 
     var drawZoneInfo = function (zoneInfo) {
@@ -227,16 +232,31 @@ $(function () {
         $("input[type=submit], a, button").button();
     };
 
+
+    var previouslyDrawnVehicleTiles = [];
     simulation.client.submitVehicleStates = function (vehicleStates) {
+
+        var contextOne = canvasLayer2.getContext("2d");
+        var contextTwo = canvasLayer4.getContext("2d");
+        var cancelObj;
+
+        while (previouslyDrawnVehicleTiles.length) {
+            cancelObj = previouslyDrawnVehicleTiles.pop();
+            cancelObj.clearRect(contextOne);
+            cancelObj.clearRect(contextTwo);
+        }
+
         canvasLayer2.getContext("2d").clearRect(0, 0, canvasLayer2.width, canvasLayer2.height);
         canvasLayer4.getContext("2d").clearRect(0, 0, canvasLayer4.width, canvasLayer4.height);
         for (var i in vehicleStates) {
             if (vehicleStates.hasOwnProperty(i)) {
                 var vehicleState = vehicleStates[i];
-                drawZoneInfoForBitmapLayer(vehicleState,
+                cancelObj = drawZoneInfoForBitmapLayer(vehicleState,
                     function (x) { return x.bitmapId; },
                     function () { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
                     function (x) { return x.pointOne; });
+
+                previouslyDrawnVehicleTiles.push(cancelObj);
             }
         }
     }
