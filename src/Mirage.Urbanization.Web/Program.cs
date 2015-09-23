@@ -5,41 +5,38 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
+using Topshelf;
 
 namespace Mirage.Urbanization.Web
 {
-    static class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            var simulationSession = new SimulationSession(
-                new SimulationOptions(new Func<TerraformingOptions>(() =>
-                {
-                    var t = new TerraformingOptions();
-                    t.HorizontalRiver = t.VerticalRiver = true;
-                    t.SetWoodlands(80);
-                    t.SetZoneWidthAndHeight(120);
-                    return t;
-                })(), new ProcessOptions(() => false, () => false)));
-            using (var server = new GameServer(simulationSession, "http://+:80/", true))
+            HostFactory.Run(x =>
             {
-                server.StartServer();
-                simulationSession.StartSimulation();
+                var simulationSession = new SimulationSession(
+                    new SimulationOptions(new Func<TerraformingOptions>(() =>
+                    {
+                        var t = new TerraformingOptions();
+                        t.HorizontalRiver = t.VerticalRiver = true;
+                        t.SetWoodlands(80);
+                        t.SetZoneWidthAndHeight(120);
+                        return t;
+                    })(), new ProcessOptions(() => false, () => false)));
 
-                Logger.Instance.OnLogMessage += (s, e) => Console.WriteLine(e.CreatedOn + " " + e.LogMessage);
-
-                Console.WriteLine("Press CTRL + C to quit...");
-                var sentry = true;
-                Console.CancelKeyPress += (s, e) =>
+                x.Service<GameServer>(s =>
                 {
-                    sentry = false;
-                };
+                    s.ConstructUsing(name => new GameServer(simulationSession, "http://+:80/", true));
+                    s.WhenStarted(tc => tc.StartServer());
+                    s.WhenStopped(tc => tc.Dispose());
+                });
+                x.RunAsLocalSystem();
 
-                while (sentry)
-                {
-                    System.Threading.Thread.Sleep(500);
-                }
-            }
+                x.SetDescription("Hosts the Urbanization web server on TCP Port 80 on all network devices. (For more information, see: https://github.com/Miragecoder/Urbanization)");
+                x.SetDisplayName("Urbanization Web Server");
+                x.SetServiceName("Urbanization");
+            });
         }
     }
 }

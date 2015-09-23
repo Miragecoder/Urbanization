@@ -57,6 +57,10 @@ http://jquery.com/
 
 https://jqueryui.com/
 
+#### Topshelf:
+
+https://topshelf-project.com/
+
 ## License
 
 This project uses the MIT license. See 'license.txt' for more info.
