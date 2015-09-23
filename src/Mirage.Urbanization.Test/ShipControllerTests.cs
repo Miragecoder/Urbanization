@@ -46,7 +46,7 @@ namespace Mirage.Urbanization.Test
             IZoneInfo previousPosition = null;
             foreach (var attempt in Enumerable.Range(0, 10))
             {
-                shipController.ForEachActiveVehicle(ship =>
+                shipController.ForEachActiveVehicle(true, ship =>
                 {
                     if (!shipDict.ContainsKey(ship))
                         shipDict.Add(ship, null);
@@ -63,7 +63,7 @@ namespace Mirage.Urbanization.Test
             {
                 System.Threading.Thread.Sleep(10);
 
-                shipController.ForEachActiveVehicle(ship =>
+                shipController.ForEachActiveVehicle(true, ship =>
                 {
                     Assert.AreNotSame(previousPosition, ship.CurrentPosition);
                     previousPosition = ship.CurrentPosition;

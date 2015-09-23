@@ -17,9 +17,10 @@ namespace Mirage.Urbanization.Vehicles
 
         protected abstract void PerformMoveCycle();
 
-        public void ForEachActiveVehicle(Action<TVehicle> vehicleAction)
+        public void ForEachActiveVehicle(bool moveVehicles, Action<TVehicle> vehicleAction)
         {
-            PerformMoveCycle();
+            if(moveVehicles)
+                PerformMoveCycle();
 
             foreach (var vehicle in Vehicles)
             {

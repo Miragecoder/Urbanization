@@ -193,7 +193,7 @@ namespace Mirage.Urbanization.WinForms
                             continuation.DrawSecondLayer();
                     }
 
-                    controller.ForEachActiveVehicle(airplane =>
+                    controller.ForEachActiveVehicle(true, airplane =>
                     {
                         foreach (var bitmapAndPoint in _tilesetAccessor.GetBitmapsAndPointsFor(airplane, MiscBitmapsInstance))
                         {

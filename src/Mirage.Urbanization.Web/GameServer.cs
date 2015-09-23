@@ -17,13 +17,14 @@ namespace Mirage.Urbanization.Web
 
         private readonly ISimulationSession _simulationSession;
         private readonly string _url;
+        private readonly bool _controlVehicles;
         private IDisposable _webServer;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly NeverEndingTask _looper;
 
         public ISimulationSession SimulationSession => _simulationSession;
 
-        public GameServer(ISimulationSession simulationSession, string url)
+        public GameServer(ISimulationSession simulationSession, string url, bool controlVehicles)
         {
             if (simulationSession == null)
                 throw new ArgumentNullException(nameof(simulationSession));
@@ -32,6 +33,7 @@ namespace Mirage.Urbanization.Web
 
             _simulationSession = simulationSession;
             _url = url;
+            _controlVehicles = controlVehicles;
 
             simulationSession.Area.ZoneInfoUpdated += (sender, e) =>
             {
@@ -75,7 +77,7 @@ namespace Mirage.Urbanization.Web
                 foreach (var vehicleController in _simulationSession.Area.EnumerateVehicleControllers())
                 {
                     vehicleController
-                        .ForEachActiveVehicle(vehicle => { list.AddRange(TilesetProvider.GetBitmapsAndPointsFor(vehicle).Select(ClientVehiclePositionInfo.Create)); });
+                        .ForEachActiveVehicle(_controlVehicles, vehicle => { list.AddRange(TilesetProvider.GetBitmapsAndPointsFor(vehicle).Select(ClientVehiclePositionInfo.Create)); });
                 }
 
                 GlobalHost.ConnectionManager.GetHubContext<SimulationHub>().Clients.All.submitVehicleStates(list);
