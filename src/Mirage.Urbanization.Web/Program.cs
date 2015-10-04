@@ -28,7 +28,11 @@ namespace Mirage.Urbanization.Web
                 x.Service<GameServer>(s =>
                 {
                     s.ConstructUsing(name => new GameServer(simulationSession, "http://+:80/", true));
-                    s.WhenStarted(tc => tc.StartServer());
+                    s.WhenStarted(tc =>
+                    {
+                        tc.StartServer();
+                        simulationSession.StartSimulation();
+                    });
                     s.WhenStopped(tc => tc.Dispose());
                 });
                 x.RunAsLocalSystem();
