@@ -1,6 +1,4 @@
-﻿var zoneInfos = {};
-
-$(function () {
+﻿$(function () {
 
     // Dialog and corresponding button registration
     (function () {
@@ -31,21 +29,34 @@ $(function () {
 
     var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4];
 
-    var persistZoneInfo = function (zoneInfo) {
-        zoneInfos[zoneInfo.key] = zoneInfo;
-        zoneInfos[zoneInfo.key].drawn = false;
-    };
-
     var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
         var context = selectCanvas().getContext("2d");
         if (imageCache.hasOwnProperty(selectBitmapHashCode(zoneInfo)) && imageCache[selectBitmapHashCode(zoneInfo)] !== null) {
-            context.drawImage(imageCache[selectBitmapHashCode(zoneInfo)], selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
-        } else {
+            var image = imageCache[selectBitmapHashCode(zoneInfo)];
+
+            if (image.isLoaded) {
+                context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+            } else {
+                image.drawPendingZones.push(function() {
+                    context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                });
+            }
+        } 
+        else {
             var tileImage = new Image();
+            tileImage.drawPendingZones = [];
+            imageCache[selectBitmapHashCode(zoneInfo)] = tileImage;
             tileImage.src = "/tile/" + selectBitmapHashCode(zoneInfo);
             tileImage.onload = function () {
+                tileImage.isLoaded = true;
                 context.drawImage(tileImage, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
-                imageCache[selectBitmapHashCode(zoneInfo)] = tileImage;
+                if (tileImage.drawPendingZones !== null) {
+                    for (var i in tileImage.drawPendingZones) {
+                        if (tileImage.drawPendingZones.hasOwnProperty(i)) {
+                            tileImage.drawPendingZones[i]();
+                        }
+                    }
+                }
             };
         }
         return {
@@ -178,7 +189,6 @@ $(function () {
     })();
 
     simulation.client.submitAndDraw = function (zoneInfo) {
-        persistZoneInfo(zoneInfo);
         drawZoneInfo(zoneInfo);
     };
 
@@ -186,7 +196,6 @@ $(function () {
         for (var i in zoneInfos) {
             if (zoneInfos.hasOwnProperty(i)) {
                 var zoneInfo = zoneInfos[i];
-                persistZoneInfo(zoneInfo);
                 drawZoneInfo(zoneInfo);
             }
         }

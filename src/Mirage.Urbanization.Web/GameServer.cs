@@ -52,7 +52,7 @@ namespace Mirage.Urbanization.Web
             _simulationSession.OnCityBudgetValueChanged += SimulationSession_OnCityBudgetValueChanged;
             _simulationSession.OnAreaHotMessage += SimulationSession_OnAreaHotMessage;
 
-            var zoneInfoBatchLooper = new BatchEnumerator<IReadOnlyZoneInfo>(_simulationSession.Area.EnumerateZoneInfos().ToList());
+            var zoneInfoBatchLooper = new LoopBatchEnumerator<IReadOnlyZoneInfo>(_simulationSession.Area.EnumerateZoneInfos().ToList());
 
             _looper = new NeverEndingTask("SignalR Game state submission", async () =>
             {
@@ -62,6 +62,8 @@ namespace Mirage.Urbanization.Web
                     .Clients
                     .All
                     .submitZoneInfos(zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create));
+
+                await Task.Delay(3);
 
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(ClientZoneInfo.Create).ToList();
@@ -82,7 +84,9 @@ namespace Mirage.Urbanization.Web
                     .All
                     .submitZoneInfos(toBeSubmitted);
 
-                await Task.Delay(5);
+                previous = zoneInfos;
+
+                await Task.Delay(3);
 
                 try
                 {
@@ -108,14 +112,12 @@ namespace Mirage.Urbanization.Web
                         .All
                         .submitVehicleStates(list);
 
-                    await Task.Delay(5);
+                    await Task.Delay(3);
                 }
                 catch (Exception ex)
                 {
                     Logger.Instance.WriteLine("Possible race condition-based exception:: " + ex);
                 }
-
-                previous = zoneInfos;
 
             }, _cancellationTokenSource.Token, 10);
 

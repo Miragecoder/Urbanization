@@ -26,14 +26,21 @@ namespace Mirage.Urbanization.Web
             {
                 if (context.Request.Path.Value.StartsWith("/tile/"))
                 {
-                    var bitmap = TilesetProvider.GetBitmapForHashcode(Convert.ToInt32(
-                        context.Request.Path.Value.Split('/').Last()));
-
-                    using (var stream = new MemoryStream())
+                    try
                     {
-                        bitmap.Save(stream, ImageFormat.Png);
-                        context.Response.ContentType = "image/png";
-                        await context.Response.WriteAsync(stream.ToArray());
+                        var bitmap = TilesetProvider.GetBitmapForHashcode(Convert.ToInt32(
+                            context.Request.Path.Value.Split('/').Last()));
+
+                        using (var stream = new MemoryStream())
+                        {
+                            bitmap.Save(stream, ImageFormat.Png);
+                            context.Response.ContentType = "image/png";
+                            await context.Response.WriteAsync(stream.ToArray());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance.WriteLine("An unhandled exception occurred whilst processing tile image request: " + ex);
                     }
                     return;
                 }

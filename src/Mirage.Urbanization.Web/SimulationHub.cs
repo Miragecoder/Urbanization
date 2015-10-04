@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Web
@@ -30,7 +31,7 @@ namespace Mirage.Urbanization.Web
 
         public void RequestMenuStructure()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 Clients.Caller.submitMenuStructure(
                     GameServer
@@ -48,6 +49,36 @@ namespace Mirage.Urbanization.Web
                                 isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag
                             })
                     );
+                await Task.Delay(1000);
+
+                Clients.Caller
+                    .submitZoneInfos(GameServer
+                        .Instance
+                        .SimulationSession
+                        .Area
+                        .EnumerateZoneInfos()
+                        .Reverse()
+                        .Take(5)
+                        .Select(ClientZoneInfo.Create)
+                    );
+
+                await Task.Delay(1000);
+
+                var initialState = GameServer
+                    .Instance
+                    .SimulationSession
+                    .Area
+                    .EnumerateZoneInfos()
+                    .Where(x => x.ZoneConsumptionState.GetZoneConsumption().GetType() != typeof (EmptyZoneConsumption))
+                    .ToList();
+
+                foreach (var batchState in initialState.GetBatched())
+                {
+                    Clients.Caller
+                        .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
+
+                    await Task.Delay(200);
+                }
             });
         }
     }
