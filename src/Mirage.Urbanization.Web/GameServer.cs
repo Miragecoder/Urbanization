@@ -51,8 +51,8 @@ namespace Mirage.Urbanization.Web
             _simulationSession.OnYearAndOrMonthChanged += SimulationSession_OnYearAndOrMonthChanged;
             _simulationSession.OnCityBudgetValueChanged += SimulationSession_OnCityBudgetValueChanged;
             _simulationSession.OnAreaHotMessage += SimulationSession_OnAreaHotMessage;
-
-            _looper = new NeverEndingTask("SignalR Game state submission", () =>
+            
+            _looper = new NeverEndingTask("SignalR Game state submission", async () =>
             {
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(ClientZoneInfo.Create).ToList();
@@ -73,16 +73,36 @@ namespace Mirage.Urbanization.Web
                     .All
                     .submitZoneInfos(toBeSubmitted);
 
-                var list = new List<ClientVehiclePositionInfo>();
-                foreach (var vehicleController in _simulationSession.Area.EnumerateVehicleControllers())
+                await Task.Delay(5);
+
+                try
                 {
-                    vehicleController
-                        .ForEachActiveVehicle(_controlVehicles, vehicle => { list.AddRange(TilesetProvider.GetBitmapsAndPointsFor(vehicle).Select(ClientVehiclePositionInfo.Create)); });
+                    var list = new List<ClientVehiclePositionInfo>();
+                    foreach (var vehicleController in _simulationSession.Area.EnumerateVehicleControllers())
+                    {
+                        vehicleController
+                            .ForEachActiveVehicle(_controlVehicles,
+                                vehicle =>
+                                {
+                                    list.AddRange(TilesetProvider
+                                        .GetBitmapsAndPointsFor(vehicle)
+                                        .Select(ClientVehiclePositionInfo.Create)
+                                    );
+
+                                });
+                    }
+
+                    GlobalHost
+                        .ConnectionManager
+                        .GetHubContext<SimulationHub>()
+                        .Clients
+                        .All
+                        .submitVehicleStates(list);
                 }
-
-                GlobalHost.ConnectionManager.GetHubContext<SimulationHub>().Clients.All.submitVehicleStates(list);
-
-
+                catch (Exception ex)
+                {
+                    Logger.Instance.WriteLine("Possible race condition-based exception:: " + ex);
+                }
 
                 previous = zoneInfos;
 

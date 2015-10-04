@@ -8,11 +8,11 @@ namespace Mirage.Urbanization.Simulation
     public class NeverEndingTask
     {
         private readonly string _description;
-        private readonly Action _taskAction;
+        private readonly Func<Task> _taskAction;
         private readonly CancellationToken _token;
         private readonly int _pause;
         private Task _task;
-        public NeverEndingTask(string description, Action taskAction, CancellationToken token, int pause = 2000)
+        public NeverEndingTask(string description, Func<Task> taskAction, CancellationToken token, int pause = 2000)
         {
             if (taskAction == null) throw new ArgumentNullException(nameof(taskAction));
             _description = description;
@@ -31,7 +31,7 @@ namespace Mirage.Urbanization.Simulation
                     stopWatch.Restart();
 
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description}...");
-                    _taskAction();
+                    await _taskAction();
                     Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description} completed in {stopWatch.Elapsed}.");
                     await Task.Delay(_pause, _token);
                 }
