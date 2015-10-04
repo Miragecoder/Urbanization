@@ -48,16 +48,6 @@ namespace Mirage.Urbanization.Web
                                 isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag
                             })
                     );
-
-                GlobalHost
-                    .ConnectionManager
-                    .GetHubContext<SimulationHub>()
-                    .Clients
-                    .All
-                    .submitZoneInfos(GameServer.Instance.SimulationSession.Area.EnumerateZoneInfos()
-                            .Select(ClientZoneInfo.Create).ToList()
-                        );
-
             });
         }
     }

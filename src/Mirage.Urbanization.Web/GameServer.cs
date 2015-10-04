@@ -51,9 +51,18 @@ namespace Mirage.Urbanization.Web
             _simulationSession.OnYearAndOrMonthChanged += SimulationSession_OnYearAndOrMonthChanged;
             _simulationSession.OnCityBudgetValueChanged += SimulationSession_OnCityBudgetValueChanged;
             _simulationSession.OnAreaHotMessage += SimulationSession_OnAreaHotMessage;
-            
+
+            var zoneInfoBatchLooper = new BatchEnumerator<IReadOnlyZoneInfo>(_simulationSession.Area.EnumerateZoneInfos().ToList());
+
             _looper = new NeverEndingTask("SignalR Game state submission", async () =>
             {
+                GlobalHost
+                    .ConnectionManager
+                    .GetHubContext<SimulationHub>()
+                    .Clients
+                    .All
+                    .submitZoneInfos(zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create));
+
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(ClientZoneInfo.Create).ToList();
 
@@ -98,6 +107,8 @@ namespace Mirage.Urbanization.Web
                         .Clients
                         .All
                         .submitVehicleStates(list);
+
+                    await Task.Delay(5);
                 }
                 catch (Exception ex)
                 {
@@ -106,7 +117,7 @@ namespace Mirage.Urbanization.Web
 
                 previous = zoneInfos;
 
-            }, _cancellationTokenSource.Token, 250);
+            }, _cancellationTokenSource.Token, 10);
 
             if (Instance == null)
                 Instance = this;

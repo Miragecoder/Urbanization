@@ -306,6 +306,10 @@ $(function () {
                 isNetworkZoning = false;
             });
 
+            canvasLayer4.addEventListener("mouseleave", function () {
+                isNetworkZoning = false;
+            });
+
             canvasLayer4.addEventListener("click", function () {
                 if (currentButton !== null) {
                     consumeZone(currentButton, currentFocusedCell);
