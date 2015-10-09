@@ -46,7 +46,8 @@ namespace Mirage.Urbanization.Web
                                 name = x.Name,
                                 cost = x.Cost,
                                 keyChar = x.KeyChar,
-                                isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag
+                                isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag,
+                                isClearButton = x.GetType() == typeof(EmptyZoneConsumption)
                             })
                     );
                 await Task.Delay(1000);

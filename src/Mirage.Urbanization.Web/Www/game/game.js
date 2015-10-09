@@ -20,14 +20,15 @@
 
     var simulation = $.connection.simulationHub;
     var buttonDefinitionStates = {};
-    var currentButton = null;
+    var currentButton = null, clearButton = null;
     var imageCache = {};
     var canvasLayer1 = document.getElementById("gameCanvasLayer1");
     var canvasLayer2 = document.getElementById("gameCanvasLayer2");
     var canvasLayer3 = document.getElementById("gameCanvasLayer3");
     var canvasLayer4 = document.getElementById("gameCanvasLayer4");
+    var canvasLayer5 = document.getElementById("gameCanvasLayer5");
 
-    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4];
+    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5];
 
     var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
         var context = selectCanvas().getContext("2d");
@@ -234,6 +235,10 @@
                     }
                     newButtonElement.addEventListener("click", registerButton(buttonDefinitionState));
 
+                    if (buttonDefinitionState.buttonDefinition.isClearButton) {
+                        clearButton = buttonDefinitionState.buttonDefinition;
+                    }
+
                     buttonDefinitionState.drawn = true;
                 }
             }
@@ -284,46 +289,106 @@
                     y: evt.clientY - rect.top
                 };
             }
+            (function () {
+                var currentFocusedCell = { x: 0, y: 0 };
+                var lastConsumedCell = null;
 
-            var currentFocusedCell = { x: 0, y: 0 };
-            var lastConsumedCell = {};
+                var isNetworkZoning = false;
+                var isNetworkDemolishing = false;
 
-            var isNetworkZoning = false;
+                var consumeZone = function (button, cell) {
+                    if (lastConsumedCell === null
+                        || lastConsumedCell.x !== cell.x
+                        || lastConsumedCell.y !== cell.y) {
+                        simulation.server.consumeZone(button.name, cell.x, cell.y);
+                        lastConsumedCell = cell;
 
-            var consumeZone = function (button, cell) {
-                if (lastConsumedCell.x !== cell.x || lastConsumedCell.y !== cell.y) {
-                    simulation.server.consumeZone(button.name, cell.x, cell.y);
-                    lastConsumedCell = cell;
+                        var context = canvasLayer5.getContext("2d");
+                        context.globalAlpha = 0.5;
+                        context.beginPath();
+                        context.fillStyle = "red";
+                        context.rect(cell.x * 25, cell.y * 25, 25, 25);
+                        context.fill();
+                        setTimeout(function () {
+                            var half = 25 / 2;
+                            var quarter = half / 2;
+                            context.clearRect(cell.x * 25, cell.y * 25, 25, 25);
+                            context.beginPath();
+                            context.fillStyle = "orange";
+                            context.rect((cell.x * 25) + quarter, (cell.y * 25) + quarter, 25 - half, 25 - half);
+                            context.fill();
+                        }, 100);
+                        setTimeout(function () {
+                            context.clearRect(cell.x * 25, cell.y * 25, 25, 25);
+                        }, 300);
+                    }
                 }
-            }
 
-            canvasLayer4.addEventListener("mousemove", function (evt) {
-                var mousePos = getMousePos(canvasLayer1, evt);
-                currentFocusedCell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
-                if (isNetworkZoning) {
-                    consumeZone(currentButton, currentFocusedCell);
-                }
-            }, false);
+                var previousHighlight = null;
 
-            canvasLayer4.addEventListener("mousedown", function () {
-                if (currentButton !== null && currentButton.isClickAndDrag) {
-                    isNetworkZoning = true;
-                }
-            });
+                canvasLayer5.addEventListener("mousemove", function (evt) {
+                    var mousePos = getMousePos(canvasLayer1, evt);
+                    var cell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
+                    currentFocusedCell = cell;
 
-            canvasLayer4.addEventListener("mouseup", function () {
-                isNetworkZoning = false;
-            });
+                    if (previousHighlight !== null
+                        && (previousHighlight.cell.x !== cell.x || previousHighlight.cell.y !== cell.y)) {
+                        previousHighlight.clear();
+                        if (isNetworkZoning) {
+                            consumeZone(isNetworkDemolishing ? clearButton : currentButton, currentFocusedCell);
+                        }
+                    }
 
-            canvasLayer4.addEventListener("mouseleave", function () {
-                isNetworkZoning = false;
-            });
+                    previousHighlight = {
+                        cell: cell,
+                        clear: function () {
+                            var context = canvasLayer5.getContext("2d");
+                            context.clearRect((cell.x * 25) - 10, (cell.y * 25) - 10, 25 + 20, 25 + 20);
+                        },
+                        draw: function () {
+                            var context = canvasLayer5.getContext("2d");
+                            context.globalAlpha = 0.5;
+                            context.beginPath();
+                            context.strokeStyle = "red";
+                            context.lineWidth = 1;
+                            context.rect(cell.x * 25, cell.y * 25, 25, 25);
+                            context.stroke();
+                        }
+                    };
 
-            canvasLayer4.addEventListener("click", function () {
-                if (currentButton !== null) {
-                    consumeZone(currentButton, currentFocusedCell);
-                }
-            });
+                    previousHighlight.draw();
+
+                }, false);
+
+                canvasLayer5.addEventListener("mousedown", function (ev) {
+                    console.log(ev.which);
+                    if (currentButton !== null && currentButton.isClickAndDrag) {
+                        isNetworkZoning = true;
+                        isNetworkDemolishing = ev.which === 3;
+                        consumeZone(isNetworkDemolishing ? clearButton : currentButton, currentFocusedCell);
+                    }
+                });
+
+                canvasLayer5.addEventListener("mouseup", function () {
+                    isNetworkDemolishing = isNetworkZoning = false;
+                });
+
+                canvasLayer5.addEventListener("mouseleave", function () {
+                    isNetworkDemolishing = isNetworkZoning = false;
+                });
+
+                canvasLayer5.addEventListener("click", function (ev) {
+                    console.log(ev.which);
+                    if (currentButton !== null) {
+                        consumeZone(ev.which !== 3 ? currentButton : clearButton, currentFocusedCell);
+                    }
+                });
+
+                canvasLayer5.addEventListener('contextmenu', function (ev) {
+                    ev.preventDefault();
+                    return false;
+                }, false);
+            })();
         })();
 
         simulation.server.requestMenuStructure();
