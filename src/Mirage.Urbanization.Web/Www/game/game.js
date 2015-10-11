@@ -68,7 +68,6 @@
 
     var drawZoneInfo = function (zoneInfo) {
 
-
         for (var i = 0; i < canvasLayers.length; i++) {
             var canvasLayer = canvasLayers[i];
             if (canvasLayer.width < zoneInfo.point.x * 25)
@@ -251,34 +250,35 @@
         $("input[type=submit], a, button").button();
     };
 
+    (function () {
+        var previouslyDrawnVehicleTiles = [];
+        simulation.client.submitVehicleStates = function (vehicleStates) {
 
-    var previouslyDrawnVehicleTiles = [];
-    simulation.client.submitVehicleStates = function (vehicleStates) {
+            var contextOne = canvasLayer2.getContext("2d");
+            var contextTwo = canvasLayer4.getContext("2d");
+            var cancelObj;
 
-        var contextOne = canvasLayer2.getContext("2d");
-        var contextTwo = canvasLayer4.getContext("2d");
-        var cancelObj;
+            while (previouslyDrawnVehicleTiles.length) {
+                cancelObj = previouslyDrawnVehicleTiles.pop();
+                cancelObj.clearRect(contextOne);
+                cancelObj.clearRect(contextTwo);
+            }
 
-        while (previouslyDrawnVehicleTiles.length) {
-            cancelObj = previouslyDrawnVehicleTiles.pop();
-            cancelObj.clearRect(contextOne);
-            cancelObj.clearRect(contextTwo);
-        }
+            canvasLayer2.getContext("2d").clearRect(0, 0, canvasLayer2.width, canvasLayer2.height);
+            canvasLayer4.getContext("2d").clearRect(0, 0, canvasLayer4.width, canvasLayer4.height);
+            for (var i in vehicleStates) {
+                if (vehicleStates.hasOwnProperty(i)) {
+                    var vehicleState = vehicleStates[i];
+                    cancelObj = drawZoneInfoForBitmapLayer(vehicleState,
+                        function (x) { return x.bitmapId; },
+                        function () { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
+                        function (x) { return x.pointOne; });
 
-        canvasLayer2.getContext("2d").clearRect(0, 0, canvasLayer2.width, canvasLayer2.height);
-        canvasLayer4.getContext("2d").clearRect(0, 0, canvasLayer4.width, canvasLayer4.height);
-        for (var i in vehicleStates) {
-            if (vehicleStates.hasOwnProperty(i)) {
-                var vehicleState = vehicleStates[i];
-                cancelObj = drawZoneInfoForBitmapLayer(vehicleState,
-                    function (x) { return x.bitmapId; },
-                    function () { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
-                    function (x) { return x.pointOne; });
-
-                previouslyDrawnVehicleTiles.push(cancelObj);
+                    previouslyDrawnVehicleTiles.push(cancelObj);
+                }
             }
         }
-    }
+    })();
 
     $.connection.hub.start().done(function () {
 
