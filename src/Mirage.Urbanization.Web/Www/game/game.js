@@ -27,7 +27,6 @@
     var canvasLayer3 = document.getElementById("gameCanvasLayer3");
     var canvasLayer4 = document.getElementById("gameCanvasLayer4");
     var canvasLayer5 = document.getElementById("gameCanvasLayer5");
-
     var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5];
 
     var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
@@ -234,9 +233,15 @@
                         };
                     }
                     newButtonElement.addEventListener("click", registerButton(buttonDefinitionState));
-
                     if (buttonDefinitionState.buttonDefinition.isClearButton) {
-                        clearButton = buttonDefinitionState.buttonDefinition;
+                        if (clearButton === null)
+                            clearButton = buttonDefinitionState.buttonDefinition;
+                        else {
+                            throw {
+                                name: "Multiple 'clear'-buttons detected",
+                                message: "Multiple 'clear'-buttons were registered. Only the presence of a single 'clear'-button is supported."
+                            };
+                        }
                     }
 
                     buttonDefinitionState.drawn = true;
@@ -293,9 +298,39 @@
                 var currentFocusedCell = { x: 0, y: 0 };
                 var lastConsumedCell = null;
 
-                var isNetworkZoning = false;
-                var isNetworkDemolishing = false;
+                var clickAndDragState = null;
 
+                (function () {
+                    var ClickDragState = function () {
+                        var isNetworkZoning = false;
+                        var isNetworkDemolishing = false;
+
+                        this.reset = function () {
+                            isNetworkZoning = isNetworkDemolishing = false;
+                        }
+
+                        this.activateNetworkZoning = function () {
+                            this.reset();
+                            isNetworkZoning = true;
+                        }
+
+                        this.activateNetworkDemolishing = function () {
+                            this.reset();
+                            isNetworkDemolishing = true;
+                        }
+
+                        this.getIsNetworkZoning = function () {
+                            return isNetworkZoning;
+                        }
+
+                        this.getIsNetworkDemolishing = function () {
+                            return isNetworkDemolishing;
+                        }
+                    }
+
+                    clickAndDragState = new ClickDragState();
+                }());
+                
                 var consumeZone = function (button, cell) {
                     if (lastConsumedCell === null
                         || lastConsumedCell.x !== cell.x
@@ -334,8 +369,10 @@
                     if (previousHighlight !== null
                         && (previousHighlight.cell.x !== cell.x || previousHighlight.cell.y !== cell.y)) {
                         previousHighlight.clear();
-                        if (isNetworkZoning) {
-                            consumeZone(isNetworkDemolishing ? clearButton : currentButton, currentFocusedCell);
+                        if (clickAndDragState.getIsNetworkZoning()) {
+                            consumeZone(currentButton, currentFocusedCell);
+                        } else if (clickAndDragState.getIsNetworkDemolishing()) {
+                            consumeZone(clearButton, currentFocusedCell);
                         }
                     }
 
@@ -361,24 +398,26 @@
                 }, false);
 
                 canvasLayer5.addEventListener("mousedown", function (ev) {
-                    console.log(ev.which);
-                    if (currentButton !== null && currentButton.isClickAndDrag) {
-                        isNetworkZoning = true;
-                        isNetworkDemolishing = ev.which === 3;
-                        consumeZone(isNetworkDemolishing ? clearButton : currentButton, currentFocusedCell);
+                    if (currentButton !== null) {
+                        if (ev.which === 3) {
+                            clickAndDragState.activateNetworkDemolishing();
+                            consumeZone(clearButton, currentFocusedCell);
+                        } else if (currentButton.isClickAndDrag) {
+                            clickAndDragState.activateNetworkZoning();
+                            consumeZone(currentButton, currentFocusedCell);
+                        }
                     }
                 });
 
                 canvasLayer5.addEventListener("mouseup", function () {
-                    isNetworkDemolishing = isNetworkZoning = false;
+                    clickAndDragState.reset();
                 });
 
                 canvasLayer5.addEventListener("mouseleave", function () {
-                    isNetworkDemolishing = isNetworkZoning = false;
+                    clickAndDragState.reset();
                 });
 
                 canvasLayer5.addEventListener("click", function (ev) {
-                    console.log(ev.which);
                     if (currentButton !== null) {
                         consumeZone(ev.which !== 3 ? currentButton : clearButton, currentFocusedCell);
                     }
