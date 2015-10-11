@@ -29,6 +29,8 @@
     var canvasLayer5 = document.getElementById("gameCanvasLayer5");
     var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5];
 
+    canvasLayer5.onselectstart = function () { return false; }
+
     var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
         var context = selectCanvas().getContext("2d");
         if (imageCache.hasOwnProperty(selectBitmapHashCode(zoneInfo)) && imageCache[selectBitmapHashCode(zoneInfo)] !== null) {
@@ -326,6 +328,20 @@
                         this.getIsNetworkDemolishing = function () {
                             return isNetworkDemolishing;
                         }
+
+                        this.getStateAsString = function () {
+                            if (isNetworkZoning && !isNetworkDemolishing) {
+                                return "isNetworkZoning";
+                            } else if (isNetworkDemolishing && !isNetworkZoning) {
+                                return "isNetworkDemolishing";
+                            } else if (!isNetworkDemolishing && !isNetworkZoning) {
+                                return "none";
+                            }
+                            throw {
+                                name: "Current state of ClickDragState is invalid",
+                                message: "ClickDragState cannot be both in 'networkZoning' and 'networkDemolishing' state."
+                            };
+                        }
                     }
 
                     clickAndDragState = new ClickDragState();
@@ -334,9 +350,11 @@
                 var consumeZone = function (button, cell) {
                     if (lastConsumedCell === null
                         || lastConsumedCell.x !== cell.x
-                        || lastConsumedCell.y !== cell.y) {
+                        || lastConsumedCell.y !== cell.y
+                        || lastConsumedCell.button !== button) {
                         simulation.server.consumeZone(button.name, cell.x, cell.y);
                         lastConsumedCell = cell;
+                        lastConsumedCell.button = button;
 
                         var context = canvasLayer5.getContext("2d");
                         context.globalAlpha = 0.5;
@@ -367,7 +385,7 @@
                     currentFocusedCell = cell;
 
                     if (previousHighlight !== null
-                        && (previousHighlight.cell.x !== cell.x || previousHighlight.cell.y !== cell.y)) {
+                        && (previousHighlight.cell.x !== cell.x || previousHighlight.cell.y !== cell.y || previousHighlight.clickDragState !== clickDragState.getStateAsString())) {
                         previousHighlight.clear();
                         if (clickAndDragState.getIsNetworkZoning()) {
                             consumeZone(currentButton, currentFocusedCell);
@@ -390,7 +408,8 @@
                             context.lineWidth = 1;
                             context.rect(cell.x * 25, cell.y * 25, 25, 25);
                             context.stroke();
-                        }
+                        },
+                        clickDragState: clickAndDragState.getStateAsString()
                     };
 
                     previousHighlight.draw();
