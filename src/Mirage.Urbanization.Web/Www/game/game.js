@@ -27,9 +27,10 @@
     var canvasLayer3 = document.getElementById("gameCanvasLayer3");
     var canvasLayer4 = document.getElementById("gameCanvasLayer4");
     var canvasLayer5 = document.getElementById("gameCanvasLayer5");
-    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5];
+    var canvasLayer6 = document.getElementById("gameCanvasLayer6");
+    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5, canvasLayer6];
 
-    canvasLayer5.onselectstart = function () { return false; }
+    canvasLayer6.onselectstart = function () { return false; }
 
     var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
         var context = selectCanvas().getContext("2d");
@@ -356,7 +357,7 @@
                         lastConsumedCell = cell;
                         lastConsumedCell.button = button;
 
-                        var context = canvasLayer5.getContext("2d");
+                        var context = canvasLayer6.getContext("2d");
                         context.globalAlpha = 0.5;
                         context.beginPath();
                         context.fillStyle = "red";
@@ -379,7 +380,7 @@
 
                 var previousHighlight = null;
 
-                canvasLayer5.addEventListener("mousemove", function (evt) {
+                canvasLayer6.addEventListener("mousemove", function (evt) {
                     var mousePos = getMousePos(canvasLayer1, evt);
                     var cell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
                     currentFocusedCell = cell;
@@ -397,11 +398,11 @@
                     previousHighlight = {
                         cell: cell,
                         clear: function () {
-                            var context = canvasLayer5.getContext("2d");
+                            var context = canvasLayer6.getContext("2d");
                             context.clearRect((cell.x * 25) - 10, (cell.y * 25) - 10, 25 + 20, 25 + 20);
                         },
                         draw: function () {
-                            var context = canvasLayer5.getContext("2d");
+                            var context = canvasLayer6.getContext("2d");
                             context.globalAlpha = 0.5;
                             context.beginPath();
                             context.strokeStyle = "red";
@@ -416,7 +417,7 @@
 
                 }, false);
 
-                canvasLayer5.addEventListener("mousedown", function (ev) {
+                canvasLayer6.addEventListener("mousedown", function (ev) {
                     if (currentButton !== null) {
                         if (ev.which === 3) {
                             clickAndDragState.activateNetworkDemolishing();
@@ -428,21 +429,21 @@
                     }
                 });
 
-                canvasLayer5.addEventListener("mouseup", function () {
+                canvasLayer6.addEventListener("mouseup", function () {
                     clickAndDragState.reset();
                 });
 
-                canvasLayer5.addEventListener("mouseleave", function () {
+                canvasLayer6.addEventListener("mouseleave", function () {
                     clickAndDragState.reset();
                 });
 
-                canvasLayer5.addEventListener("click", function (ev) {
+                canvasLayer6.addEventListener("click", function (ev) {
                     if (currentButton !== null) {
                         consumeZone(ev.which !== 3 ? currentButton : clearButton, currentFocusedCell);
                     }
                 });
 
-                canvasLayer5.addEventListener('contextmenu', function (ev) {
+                canvasLayer6.addEventListener('contextmenu', function (ev) {
                     ev.preventDefault();
                     return false;
                 }, false);
