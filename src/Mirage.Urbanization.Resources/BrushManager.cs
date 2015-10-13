@@ -4,9 +4,9 @@ using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
 
-namespace Mirage.Urbanization.WinForms
+namespace Mirage.Urbanization.Tilesets
 {
-    internal class BrushManager
+    public class BrushManager
     {
         private BrushManager() { }
 

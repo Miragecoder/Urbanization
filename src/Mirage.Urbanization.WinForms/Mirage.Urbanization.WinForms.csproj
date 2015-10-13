@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaRenderHelper.cs" />
-    <Compile Include="BrushManager.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="BudgetForm.cs">
       <SubType>Form</SubType>

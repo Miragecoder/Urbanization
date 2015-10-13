@@ -40,11 +40,11 @@
             if (image.isLoaded) {
                 context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
             } else {
-                image.drawPendingZones.push(function() {
+                image.drawPendingZones.push(function () {
                     context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
                 });
             }
-        } 
+        }
         else {
             var tileImage = new Image();
             tileImage.drawPendingZones = [];
@@ -63,11 +63,13 @@
             };
         }
         return {
-            clearRect: function(targetContext) {
+            clearRect: function (targetContext) {
                 targetContext.clearRect(selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25, 25, 25);
             }
         };
     };
+
+    var currentDataMeter = "";
 
     var drawZoneInfo = function (zoneInfo) {
 
@@ -78,6 +80,35 @@
             if (canvasLayer.height < zoneInfo.point.y * 25)
                 canvasLayer.height = zoneInfo.point.y * 25;
         }
+
+        (function () {
+            if (currentDataMeter === "") {
+                return;
+            }
+
+            var matches = $.grep(zoneInfo.dataMeterResults, function (e) { return e.name === currentDataMeter; });
+
+            if (matches.length === 1) {
+                var dataMeterResult = matches[0];
+                console.log(dataMeterResult.level + " - " + dataMeterResult.name);
+
+                if (dataMeterResult.colour !== "") {
+                    var context = canvasLayer5.getContext("2d");
+                    context.beginPath();
+                    context.fillStyle = dataMeterResult.colour;
+                    context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                    context.fill();
+                } else {
+                    canvasLayer5.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                }
+            } else {
+                throw {
+                    name: "Missing datameter.",
+                    message: "Data Meter '" + currentDataMeter + "' is not contained within the specified ZoneInfo."
+                }
+            }
+
+        }());
 
         if (zoneInfo.bitmapLayerOne !== 0) {
             drawZoneInfoForBitmapLayer(zoneInfo,
@@ -203,7 +234,40 @@
         }
     };
 
-    simulation.client.submitMenuStructure = function (incomingButtonDefinitions) {
+    simulation.client.submitMenuStructure = function (request) {
+
+
+        var createButton = function (text, target, clickHandler) {
+            var newButtonElement = document.createElement("button");
+            newButtonElement.innerHTML = "OL: " + text;
+            target.appendChild(newButtonElement);
+            newButtonElement.addEventListener("click", clickHandler);
+            return newButtonElement;
+        };
+        var miscButtonBar = document.getElementById("miscButtonBar");
+
+        (function () {
+            var registerDataMeter = function (dataMeter) {
+                createButton(dataMeter, miscButtonBar, function (e) {
+                    currentDataMeter = dataMeter;
+                    canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
+                });
+            };
+
+            var dataMeterInstances = request.dataMeterInstances;
+
+            registerDataMeter("");
+
+            for (var d in dataMeterInstances) {
+                if (dataMeterInstances.hasOwnProperty(d)) {
+                    var dataMeter = dataMeterInstances[d];
+                    registerDataMeter(dataMeter);
+                };
+            };
+        })();
+
+
+        var incomingButtonDefinitions = request.buttonDefinitions;
         console.log("Invocation of submitMenuStructure");
         (function () {
             for (var p in incomingButtonDefinitions) {
@@ -347,7 +411,7 @@
 
                     clickAndDragState = new ClickDragState();
                 }());
-                
+
                 var consumeZone = function (button, cell) {
                     if (lastConsumedCell === null
                         || lastConsumedCell.x !== cell.x
@@ -385,8 +449,10 @@
                     var cell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
                     currentFocusedCell = cell;
 
-                    if (previousHighlight !== null
-                        && (previousHighlight.cell.x !== cell.x || previousHighlight.cell.y !== cell.y || previousHighlight.clickDragState !== clickDragState.getStateAsString())) {
+                    if (previousHighlight !== null && (
+                            previousHighlight.cell.x !== cell.x
+                            || previousHighlight.cell.y !== cell.y
+                            || previousHighlight.clickDragState !== clickAndDragState.getStateAsString())) {
                         previousHighlight.clear();
                         if (clickAndDragState.getIsNetworkZoning()) {
                             consumeZone(currentButton, currentFocusedCell);

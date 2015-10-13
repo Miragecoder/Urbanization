@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
@@ -34,13 +35,19 @@ namespace Mirage.Urbanization.Web
             Task.Run(async () =>
             {
                 Clients.Caller.submitMenuStructure(
-                    GameServer
-                        .Instance
-                        .SimulationSession
-                        .Area
-                        .GetSupportedZoneConsumptionFactories()
-                        .Select(x => x.Invoke())
-                        .Select(x =>
+                    new
+                    {
+                        dataMeterInstances = DataMeterInstances
+                            .DataMeters
+                            .Select(x => x.Name),
+
+                        buttonDefinitions = GameServer
+                            .Instance
+                            .SimulationSession
+                            .Area
+                            .GetSupportedZoneConsumptionFactories()
+                            .Select(x => x.Invoke())
+                            .Select(x =>
                             new
                             {
                                 name = x.Name,
@@ -49,6 +56,7 @@ namespace Mirage.Urbanization.Web
                                 isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag,
                                 isClearButton = x.GetType() == typeof(EmptyZoneConsumption)
                             })
+                    }
                     );
                 await Task.Delay(1000);
 

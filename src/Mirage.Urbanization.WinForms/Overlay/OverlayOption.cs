@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Mirage.Urbanization.Simulation.Datameters;
+using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.WinForms.Rendering;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
 
