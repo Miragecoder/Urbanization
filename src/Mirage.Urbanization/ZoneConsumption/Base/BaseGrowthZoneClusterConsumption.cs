@@ -15,6 +15,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         private static readonly Random Random = new Random();
         public override IFireHazardBehaviour FireHazardBehaviour { get; }
 
+
         protected BaseGrowthZoneClusterConsumption(
             Func<ZoneInfoFinder> createZoneInfoFinderFunc, 
             Color color)

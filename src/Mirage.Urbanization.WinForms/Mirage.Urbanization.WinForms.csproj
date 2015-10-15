@@ -37,6 +37,10 @@
     <ApplicationIcon>urbanization.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>
     </Reference>
@@ -61,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaRenderHelper.cs" />
-    <Compile Include="BrushManager.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="BudgetForm.cs">
       <SubType>Form</SubType>
@@ -122,6 +125,12 @@
     </Compile>
     <Compile Include="ToolstripMenuInitializer.cs" />
     <Compile Include="ToolstripMenuOptionChangedEventArgs.cs" />
+    <Compile Include="WebServerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebServerForm.Designer.cs">
+      <DependentUpon>WebServerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ZoneRenderInfo.cs" />
     <Compile Include="ZoneSelectionPanelCreator.cs" />
     <Compile Include="ZoomMode.cs" />
@@ -153,6 +162,9 @@
     <EmbeddedResource Include="StatisticsForm.resx">
       <DependentUpon>StatisticsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WebServerForm.resx">
+      <DependentUpon>WebServerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -176,6 +188,10 @@
       <Project>{5a699402-01ae-484e-a489-fd500e868a0c}</Project>
       <Name>Mirage.Urbanization.Simulation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization.Web\Mirage.Urbanization.Web.csproj">
+      <Project>{e80d47e8-22c1-4ce4-ac67-7f3ab2fcbfe7}</Project>
+      <Name>Mirage.Urbanization.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
       <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
       <Name>Mirage.Urbanization</Name>
@@ -192,6 +208,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SharpDX.2.6.3\build\SharpDX.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpDX.2.6.3\build\SharpDX.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)Mirage.Urbanization.WinForms.exe.config $(TargetDir)Mirage.Urbanization.Web.exe.config</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

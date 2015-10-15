@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mirage.Urbanization.Vehicles
 {
@@ -10,29 +11,30 @@ namespace Mirage.Urbanization.Vehicles
         protected BaseVehicle(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition)
         {
             GetZoneInfosFunc = getZoneInfosFunc;
-            CurrentPosition = currentPosition;
+            Trail.Enqueue(currentPosition);
         }
+
+        protected readonly Queue<IZoneInfo> Trail = new Queue<IZoneInfo>(); 
 
         protected void Move(IZoneInfo next)
         {
-            PreviousPreviousPreviousPreviousPosition = PreviousPreviousPreviousPosition;
-            PreviousPreviousPreviousPosition = PreviousPreviousPosition;
-            PreviousPreviousPosition = PreviousPosition;
-
-            PreviousPosition = CurrentPosition;
-
-            CurrentPosition = next;
+            Trail.Enqueue(next);
+            if (Trail.Count == 6)
+                Trail.Dequeue();
+            else if (Trail.Count > 6)
+                throw new InvalidOperationException();
         }
 
-        public IZoneInfo PreviousPreviousPreviousPreviousPosition { get; protected set; }
-        public IZoneInfo PreviousPreviousPreviousPosition { get; protected set; }
-        public IZoneInfo PreviousPreviousPosition { get; protected set; }
-        public IZoneInfo PreviousPosition { get; protected set; }
-        public IZoneInfo CurrentPosition { get; protected set; }
+        public IZoneInfo PreviousPreviousPreviousPreviousPosition => Trail.Reverse().Skip(4).FirstOrDefault();
+        public IZoneInfo PreviousPreviousPreviousPosition => Trail.Reverse().Skip(3).FirstOrDefault();
+        public IZoneInfo PreviousPreviousPosition => Trail.Reverse().Skip(2).FirstOrDefault();
+        public IZoneInfo PreviousPosition => Trail.Reverse().Skip(1).FirstOrDefault();
+        public IZoneInfo CurrentPosition => Trail.Reverse().FirstOrDefault();
 
         private DateTime _lastChange = DateTime.Now;
 
         public bool CanBeRemoved => CurrentPosition == null || _lastChange < DateTime.Now.AddSeconds(-3);
+        public IEnumerable<IZoneInfo> TraversePath() => Trail.Reverse();
 
         protected abstract int SpeedInMilliseconds { get; }
 

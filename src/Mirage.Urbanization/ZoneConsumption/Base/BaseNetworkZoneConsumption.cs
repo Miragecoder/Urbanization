@@ -28,6 +28,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     public abstract class BaseNetworkZoneConsumption : BaseSingleZoneConsumption
     {
         protected readonly ZoneInfoFinder NeighborNavigator;
+        public override BuildStyle BuildStyle => BuildStyle.ClickAndDrag;
 
         protected BaseNetworkZoneConsumption(ZoneInfoFinder neighborNavigator)
         {

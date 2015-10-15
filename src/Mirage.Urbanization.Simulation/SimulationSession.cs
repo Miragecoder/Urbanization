@@ -138,17 +138,19 @@ namespace Mirage.Urbanization.Simulation
 
             }, _cancellationTokenSource.Token);
 
-            _powerTask = new NeverEndingTask("Power grid scan", () =>
+            _powerTask = new NeverEndingTask("Power grid scan", async () =>
              {
                  _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                  _lastPowerGridStatistics = _area.CalculatePowergridStatistics();
+                 await Task.FromResult(true);
              }, _cancellationTokenSource.Token);
 
-            _crimeAndPollutionTask = new NeverEndingTask("Crime and pollution calculation", () =>
+            _crimeAndPollutionTask = new NeverEndingTask("Crime and pollution calculation", async () =>
             {
                 _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                 _lastMiscCityStatistics = _area.CalculateMiscCityStatistics(_cancellationTokenSource.Token);
-             }, _cancellationTokenSource.Token);
+                await Task.FromResult(true);
+            }, _cancellationTokenSource.Token);
 
 
             _cityBudget.OnCityBudgetValueChanged += (sender, e) =>
@@ -190,6 +192,22 @@ namespace Mirage.Urbanization.Simulation
                 .OrderByDescending(x => x.PersistedCityStatistics.TimeCode)
                 .FirstOrDefault()
             );
+        }
+
+        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear()
+        {
+            var statistics = GetRecentStatistics();
+
+            if (statistics.HasMatch)
+            {
+                return statistics
+                    .MatchingObject
+                    .CombineWithYearMates(GetAllCityStatistics())
+                    .ToList();
+            }
+            return Enumerable
+                .Empty<PersistedCityStatisticsWithFinancialData>()
+                .ToList();
         }
 
         public event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;

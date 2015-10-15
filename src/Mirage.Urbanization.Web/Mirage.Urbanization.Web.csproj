@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E80D47E8-22C1-4CE4-AC67-7F3AB2FCBFE7}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mirage.Urbanization.Web</RootNamespace>
+    <AssemblyName>Mirage.Urbanization.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Mirage.Urbanization.Web.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.3.0.1\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.3.0.1\lib\net45\Microsoft.Owin.FileSystems.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Topshelf, Version=3.2.150.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Topshelf.3.2.0\lib\net40-full\Topshelf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CityBudgetPanelPublisher.cs" />
+    <Compile Include="ClientMessages\CityServiceState.cs" />
+    <Compile Include="ClientMessages\CityBudgetState.cs" />
+    <Compile Include="ClientMessages\CityTaxState.cs" />
+    <Compile Include="ClientMessages\ClientZoneInfo.cs" />
+    <Compile Include="ClientMessages\ClientZonePoint.cs" />
+    <Compile Include="ClientMessages\YearAndMonthChangedState.cs" />
+    <Compile Include="GameServer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimulationHub.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="TilesetProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <EmbeddedResource Include="Www\icons\manifest.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\scripts\jquery-1.6.4-vsdoc.js" />
+    <EmbeddedResource Include="Www\scripts\jquery-1.6.4.js" />
+    <EmbeddedResource Include="Www\scripts\jquery-1.6.4.min.js" />
+    <EmbeddedResource Include="Www\scripts\jquery.signalR-2.2.0.js" />
+    <EmbeddedResource Include="Www\scripts\jquery.signalR-2.2.0.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mirage.Urbanization.Resources\Mirage.Urbanization.Tilesets.csproj">
+      <Project>{73bbfbfd-14a4-40ea-87b5-e1bf9baf42f7}</Project>
+      <Name>Mirage.Urbanization.Tilesets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
+      <Project>{5a699402-01ae-484e-a489-fd500e868a0c}</Project>
+      <Name>Mirage.Urbanization.Simulation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
+      <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
+      <Name>Mirage.Urbanization</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Mirage.Urbanization.WinForms\urbanization.ico">
+      <Link>Www\urbanization.ico</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\icons\android-chrome-144x144.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-192x192.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-36x36.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-48x48.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-72x72.png" />
+    <EmbeddedResource Include="Www\icons\android-chrome-96x96.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-114x114.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-120x120.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-144x144.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-152x152.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-180x180.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-57x57.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-60x60.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-72x72.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-76x76.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon-precomposed.png" />
+    <EmbeddedResource Include="Www\icons\apple-touch-icon.png" />
+    <EmbeddedResource Include="Www\icons\browserconfig.xml" />
+    <EmbeddedResource Include="Www\icons\favicon-16x16.png" />
+    <EmbeddedResource Include="Www\icons\favicon-194x194.png" />
+    <EmbeddedResource Include="Www\icons\favicon-32x32.png" />
+    <EmbeddedResource Include="Www\icons\favicon-96x96.png" />
+    <EmbeddedResource Include="Www\icons\favicon.ico" />
+    <EmbeddedResource Include="Www\icons\mstile-144x144.png" />
+    <EmbeddedResource Include="Www\icons\mstile-150x150.png" />
+    <EmbeddedResource Include="Www\icons\mstile-310x150.png" />
+    <EmbeddedResource Include="Www\icons\mstile-310x310.png" />
+    <EmbeddedResource Include="Www\icons\mstile-70x70.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\css\jquery-ui.css" />
+    <EmbeddedResource Include="Www\css\jquery-ui.theme.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\css\jquery-ui.min.css" />
+    <EmbeddedResource Include="Www\css\jquery-ui.structure.min.css" />
+    <EmbeddedResource Include="Www\scripts\jquery-ui.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\Images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_flat_10_000000_40x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_222222_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_228ef1_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_ef8c08_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_ffd27a_256x240.png" />
+    <EmbeddedResource Include="Www\Images\ui-icons_ffffff_256x240.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Www\game\game.css" />
+    <EmbeddedResource Include="Www\game\game.js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

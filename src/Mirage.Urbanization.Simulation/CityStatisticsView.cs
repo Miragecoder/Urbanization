@@ -18,6 +18,12 @@ namespace Mirage.Urbanization.Simulation
             _issueDataMeterResultsLazy = new Lazy<IList<DataMeterResult>>(() => DataMeterInstances.GetDataMeterResults(cityStatistics, x => x.RepresentsIssue).ToList());
         }
 
+        public decimal GetNegativeOpinion() => _issueDataMeterResultsLazy
+            .Value
+            .Average(x => x.PercentageScore);
+        public decimal GetPositiveOpinion() => 1 - GetNegativeOpinion();
+
+
         public int Population => _cityStatistics.PersistedCityStatistics.GlobalZonePopulationStatistics.Sum;
         public decimal AssessedValue => _cityStatistics.PersistedCityStatistics.LandValueNumbers.Sum;
 
@@ -27,5 +33,9 @@ namespace Mirage.Urbanization.Simulation
         public string CityCategory => CityCategoryDefinition.GetForPopulation(Population).Name;
 
         public IList<DataMeterResult> DataMeterResults => _issueDataMeterResultsLazy.Value;
+
+        public IEnumerable<DataMeterResult> GetIssueDataMeterResults() => DataMeterResults
+            .Where(x => x.ValueCategory > DataMeterValueCategory.None)
+            .OrderByDescending(x => x.PercentageScore);
     }
 }

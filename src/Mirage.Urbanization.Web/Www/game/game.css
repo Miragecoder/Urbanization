@@ -1,0 +1,18 @@
+﻿body {
+    margin: 0;
+    background-color: BurlyWood;
+    font: 62.5% "Trebuchet MS", sans-serif;
+}
+
+.header-container {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    text-align: left;
+}
+
+#buttonBar {
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+}

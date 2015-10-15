@@ -17,9 +17,10 @@ namespace Mirage.Urbanization.Vehicles
 
         protected abstract void PerformMoveCycle();
 
-        public void ForEachActiveVehicle(Action<TVehicle> vehicleAction)
+        public void ForEachActiveVehicle(bool moveVehicles, Action<TVehicle> vehicleAction)
         {
-            PerformMoveCycle();
+            if(moveVehicles)
+                PerformMoveCycle();
 
             foreach (var vehicle in Vehicles)
             {
@@ -107,7 +108,7 @@ namespace Mirage.Urbanization.Vehicles
                 {
                     if (!_currentTrainNetwork.Contains(CurrentPosition))
                     {
-                        CurrentPosition = _currentTrainNetwork.First();
+                        Trail.Enqueue(_currentTrainNetwork.First());
                     }
                     else
                     {

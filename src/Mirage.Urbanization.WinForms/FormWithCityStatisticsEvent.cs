@@ -18,7 +18,8 @@ namespace Mirage.Urbanization.WinForms
             helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdatePrivate(helper.SimulationSession.GetAllCityStatistics(), y.EventData);
         }
 
-        private void UpdatePrivate(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, PersistedCityStatisticsWithFinancialData current)
+        private void UpdatePrivate(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, 
+            PersistedCityStatisticsWithFinancialData current)
         {
             if (!IsHandleCreated) return;
 

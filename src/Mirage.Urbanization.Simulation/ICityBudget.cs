@@ -6,7 +6,12 @@ namespace Mirage.Urbanization.Simulation
     public interface ICityBudget
     {
         int CurrentAmount { get; }
+
+        string CurrentAmountDescription { get; }
+
         int ProjectedIncome { get; }
+
+        string ProjectedIncomeDescription { get; }
         PersistedCityStatisticsWithFinancialData ProcessFinances(PersistedCityStatistics persistedCityStatistics, ICityBudgetConfiguration cityBudget);
         void AddProjectedIncomeToCurrentAmount();
         event EventHandler<CityBudgetValueChangedEventArgs> OnCityBudgetValueChanged;

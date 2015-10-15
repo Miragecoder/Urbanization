@@ -20,7 +20,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
         public decimal PercentageScore { get; }
 
         public string PercentageScoreString => PercentageScore.ToString("P");
-        public DataMeterValueCategory ValueCategory { get; }
+        public DataMeterValueCategory ValueCategory { get; }        
 
         public int Amount { get; }
     }
