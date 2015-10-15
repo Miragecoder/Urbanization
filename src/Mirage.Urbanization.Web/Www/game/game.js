@@ -90,10 +90,11 @@
 
             if (matches.length === 1) {
                 var dataMeterResult = matches[0];
-                console.log(dataMeterResult.level + " - " + dataMeterResult.name);
 
                 if (dataMeterResult.colour !== "") {
                     var context = canvasLayer5.getContext("2d");
+                    context.clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                    context.globalAlpha = 0.5;
                     context.beginPath();
                     context.fillStyle = dataMeterResult.colour;
                     context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
@@ -251,6 +252,10 @@
                 createButton(dataMeter, miscButtonBar, function (e) {
                     currentDataMeter = dataMeter;
                     canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
+
+                    if (currentDataMeter !== "") {
+                        simulation.server.requestZonesFor(currentDataMeter);
+                    }
                 });
             };
 

@@ -30,6 +30,30 @@ namespace Mirage.Urbanization.Web
             session.ConsumeZoneAt(target, factory());
         }
 
+        public void RequestZonesFor(string dataMeter)
+        {
+            Task.Run(async () =>
+            {
+                var initialState = GameServer
+                    .Instance
+                    .SimulationSession
+                    .Area
+                    .EnumerateZoneInfos()
+                    .Where(x => DataMeterInstances.DataMeters.Single(y => y.Name == dataMeter).GetDataMeterResult(x).ValueCategory != DataMeterValueCategory.None)
+                    .ToList();
+
+                foreach (var batchState in initialState.GetBatched())
+                {
+                    Clients.Caller
+                        .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
+
+                    await Task.Delay(200);
+                }
+
+                Clients.Caller.submitZoneInfos();
+            });
+        }
+
         public void RequestMenuStructure()
         {
             Task.Run(async () =>
