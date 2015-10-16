@@ -7,7 +7,7 @@ namespace Mirage.Urbanization
     {
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerable) => new HashSet<T>(enumerable);
 
-        public static IEnumerable<IEnumerable<T>> GetBatched<T>(this IEnumerable<T> enumerable)
+        public static IEnumerable<IEnumerable<T>> GetBatched<T>(this IEnumerable<T> enumerable, int batchSize)
         {
             var enumerator = enumerable.GetEnumerator();
             while (true)

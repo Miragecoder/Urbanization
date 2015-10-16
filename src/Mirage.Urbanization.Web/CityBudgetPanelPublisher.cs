@@ -16,7 +16,7 @@ namespace Mirage.Urbanization.Web
                     .Select(x => new CityServiceState
                     {
                         name = x.Name,
-                        projectedExpenses = x.GetProjectedExpenses(statistics).ToString("C")
+                        projectedExpenses = x.GetProjectedExpenses(statistics)
                     })
                     .ToArray(),
                 taxStates = TaxDefinition
@@ -24,8 +24,9 @@ namespace Mirage.Urbanization.Web
                     .Select(x => new CityTaxState
                     {
                         name = x.Name,
-                        projectedIncome = x.GetProjectedIncome(statistics).ToString("C")
-                    }).ToArray()
+                        projectedIncome = x.GetProjectedIncome(statistics)
+                    })
+                    .ToArray()
             };
         }
     }

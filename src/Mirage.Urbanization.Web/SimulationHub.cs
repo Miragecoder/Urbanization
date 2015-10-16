@@ -42,7 +42,7 @@ namespace Mirage.Urbanization.Web
                     .Where(x => DataMeterInstances.DataMeters.Single(y => y.WebId == dataMeterWebId).GetDataMeterResult(x).ValueCategory != DataMeterValueCategory.None)
                     .ToList();
 
-                foreach (var batchState in initialState.GetBatched())
+                foreach (var batchState in initialState.GetBatched(100))
                 {
                     Clients.Caller
                         .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
@@ -105,7 +105,7 @@ namespace Mirage.Urbanization.Web
                     .Where(x => x.ZoneConsumptionState.GetZoneConsumption().GetType() != typeof(EmptyZoneConsumption))
                     .ToList();
 
-                foreach (var batchState in initialState.GetBatched())
+                foreach (var batchState in initialState.GetBatched(50))
                 {
                     Clients.Caller
                         .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));

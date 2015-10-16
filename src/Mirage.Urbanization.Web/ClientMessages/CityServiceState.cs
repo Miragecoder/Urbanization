@@ -9,6 +9,6 @@ namespace Mirage.Urbanization.Web.ClientMessages
     public class CityServiceState
     {
         public string name { get; set; }
-        public string projectedExpenses { get; set; }
+        public decimal projectedExpenses { get; set; }
     }
 }

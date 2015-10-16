@@ -16,3 +16,19 @@
     margin: 0 auto;
     text-align: left;
 }
+
+th {
+    text-align: left;
+}
+
+.currencycol {
+    text-align: right;
+}
+.currencycol span {
+    float: left;
+}
+
+td {
+    border: solid 1px #cd853f;
+    padding: 0.5em 1em 0.5em;
+}

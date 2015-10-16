@@ -2,10 +2,11 @@
 
     // Dialog and corresponding button registration
     (function () {
-        var registerDialog = function (dialogId, dialogButtonId) {
+        var registerDialog = function (dialogId, dialogButtonId, width) {
             $(dialogId).dialog({
                 modal: true,
-                autoOpen: false
+                autoOpen: false,
+                width: width
             });
 
             // Link to open the dialog
@@ -14,8 +15,8 @@
                 event.preventDefault();
             });
         };
-        registerDialog("#budgetDialog", "#budgetDialogButton");
-        registerDialog("#cityEvaluationDialog", "#evaluationDialogButton");
+        registerDialog("#budgetDialog", "#budgetDialogButton", 300);
+        registerDialog("#cityEvaluationDialog", "#evaluationDialogButton", 400);
     })();
 
     var simulation = $.connection.simulationHub;
@@ -162,21 +163,25 @@
         var cityEvaluationStateService = new EventPublisherService();
         cityEvaluationStateService.addOnNewStateListener(function (cityEvaluationState) {
 
-            var handleLabelAndValueTable = function (tableId, labelAndValueSet, title) {
+            var handleLabelAndValueTable = function (tableId, labelAndValueSet, title, isCurrency) {
                 $(tableId).empty();
 
                 $(tableId).append("<tr><th colspan=\"2\">" + title + "</th></tr>");
                 for (var i in labelAndValueSet) {
                     if (labelAndValueSet.hasOwnProperty(i)) {
                         var x = labelAndValueSet[i];
-                        $(tableId).append("<tr><td>" + x.label + "</td><td>" + x.value + "</td></tr>");
+                        if (isCurrency) {
+                            $(tableId).append("<tr><td>" + x.label + "</td><td class=\"currencycol\"><span>$</span>" + x.value + "</td></tr>");
+                        } else {
+                            $(tableId).append("<tr><td>" + x.label + "</td><td>" + x.value + "</td></tr>");
+                        }
                     }
                 }
             };
-            handleLabelAndValueTable("#cityEvaluationOverallTable", cityEvaluationState.overallLabelsAndValues, "Overall");
-            handleLabelAndValueTable("#cityEvaluationBudgetTable", cityEvaluationState.cityBudgetLabelsAndValues, "City budget");
-            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, "Issues");
-            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, "General opinion");
+            handleLabelAndValueTable("#cityEvaluationOverallTable", cityEvaluationState.overallLabelsAndValues, "Overall", false);
+            handleLabelAndValueTable("#cityEvaluationBudgetTable", cityEvaluationState.cityBudgetLabelsAndValues, "City budget", true);
+            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, "Issues", false);
+            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, "General opinion", false);
 
         });
 
@@ -189,27 +194,46 @@
 
     // City budget
     (function () {
+        var numberFormat = new Intl.NumberFormat();
+
         var cityBudgetStateService = new EventPublisherService();
         cityBudgetStateService.addOnNewStateListener(function (cityBudgetState) {
             $("#budgetTaxTable").empty();
             var taxStates = cityBudgetState.taxStates;
 
+            var writeTaxStateRow = function (taxState) {
+                $("#budgetTaxTable").append("<tr><td>" + taxState.name + "</td><td class=\"currencycol\"><span>$</span>" + taxState.projectedIncome + "</td></tr>");
+            }
+
             $("#budgetTaxTable").append("<tr><th colspan=\"2\">Taxes</th></tr>");
             for (var i in taxStates) {
                 if (taxStates.hasOwnProperty(i)) {
                     var taxState = taxStates[i];
-                    $("#budgetTaxTable").append("<tr><td>" + taxState.name + "</td><td>" + taxState.projectedIncome + "</td></tr>");
+                    writeTaxStateRow(taxState);
                 }
             }
+            writeTaxStateRow(cityBudgetState.totalTaxState);
             var cityServiceStates = cityBudgetState.cityServiceStates;
+
+            var writeCityServiceStateRow = function (cityServiceState) {
+                $("#budgetTaxTable").append("<tr><td>" + cityServiceState.name + "</td><td class=\"currencycol\"><span>$</span> " + cityServiceState.projectedExpenses + "</td></tr>");
+            }
 
             $("#budgetTaxTable").append("<tr><th colspan=\"2\">City services</th></tr>");
             for (var i in cityServiceStates) {
                 if (cityServiceStates.hasOwnProperty(i)) {
                     var cityServiceState = cityServiceStates[i];
-                    $("#budgetTaxTable").append("<tr><td>" + cityServiceState.name + "</td><td>" + cityServiceState.projectedExpenses + "</td></tr>");
+                    writeCityServiceStateRow(cityServiceState);
                 }
             }
+            writeCityServiceStateRow(cityBudgetState.totalCityServiceState);
+
+            $("#budgetTaxTable").append("<tr><th colspan=\"2\">Totals</th></tr>");
+            writeTaxStateRow(cityBudgetState.totalTaxState);
+            cityBudgetState.totalCityServiceState.projectedExpenses = (0 - cityBudgetState.totalCityServiceState.projectedExpenses);
+            writeCityServiceStateRow(cityBudgetState.totalCityServiceState);
+            $("#budgetTaxTable").append("<tr><td>Projected income</td><td class=\"currencycol\"><span>$</span> " + (cityBudgetState.totalTaxState.projectedIncome + cityBudgetState.totalCityServiceState.projectedExpenses) + "</td></tr>");
+
         });
 
         simulation.client.submitCityBudgetValue = function (e) {

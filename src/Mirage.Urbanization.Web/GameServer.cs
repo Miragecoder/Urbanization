@@ -63,7 +63,7 @@ namespace Mirage.Urbanization.Web
                     .All
                     .submitZoneInfos(zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create));
 
-                await Task.Delay(10);
+                await Task.Delay(20);
 
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(ClientZoneInfo.Create).ToList();
@@ -77,7 +77,7 @@ namespace Mirage.Urbanization.Web
                     toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
                 }
 
-                foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched())
+                foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched(40))
                 {
                     GlobalHost
                         .ConnectionManager
@@ -85,12 +85,12 @@ namespace Mirage.Urbanization.Web
                         .Clients
                         .All
                         .submitZoneInfos(toBeSubmittedBatch);
-                    await Task.Delay(10);
+                    await Task.Delay(20);
                 }
 
                 previous = zoneInfos;
 
-                await Task.Delay(10);
+                await Task.Delay(20);
 
                 try
                 {
@@ -191,8 +191,8 @@ namespace Mirage.Urbanization.Web
                         .ToArray(),
                         cityBudgetLabelsAndValues = new[]
                         {
-                            new LabelAndValue { label = "Current funds", value = cityStatisticsView.CurrentAmountOfFunds.ToString("C0")},
-                            new LabelAndValue { label = "Projected income", value = cityStatisticsView.CurrentProjectedAmountOfFunds.ToString("C0")},
+                            new LabelAndValue { label = "Current funds", value = cityStatisticsView.CurrentAmountOfFunds.ToString()},
+                            new LabelAndValue { label = "Projected income", value = cityStatisticsView.CurrentProjectedAmountOfFunds.ToString()},
                         },
                         issueLabelAndValues = cityStatisticsView
                             .GetIssueDataMeterResults()
