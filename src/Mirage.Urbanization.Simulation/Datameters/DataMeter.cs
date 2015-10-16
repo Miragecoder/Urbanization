@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Mirage.Urbanization.Simulation.Persistence;
 
 namespace Mirage.Urbanization.Simulation.Datameters
@@ -12,6 +13,10 @@ namespace Mirage.Urbanization.Simulation.Datameters
         private readonly IReadOnlyCollection<Threshold> _thresholds;
 
         private readonly Lazy<int> _measureUnitSumLazy;
+
+        private static int AmountOfWebIds = 0;
+
+        public int WebId { get; } = Interlocked.Add(ref AmountOfWebIds, 1);
 
         public string Name { get; }
 
@@ -45,7 +50,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         public DataMeterResult GetDataMeterResult(int amount)
         {
-            return new DataMeterResult(Name, amount, GetPercentageScore(amount), GetScoreCategory(amount));
+            return new DataMeterResult(this, amount, GetPercentageScore(amount), GetScoreCategory(amount));
         }
 
         private DataMeterValueCategory GetScoreCategory(int amount)

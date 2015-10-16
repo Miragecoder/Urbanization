@@ -63,7 +63,7 @@ namespace Mirage.Urbanization.Web
                     .All
                     .submitZoneInfos(zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create));
 
-                await Task.Delay(3);
+                await Task.Delay(10);
 
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(ClientZoneInfo.Create).ToList();
@@ -77,16 +77,20 @@ namespace Mirage.Urbanization.Web
                     toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
                 }
 
-                GlobalHost
-                    .ConnectionManager
-                    .GetHubContext<SimulationHub>()
-                    .Clients
-                    .All
-                    .submitZoneInfos(toBeSubmitted);
+                foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched())
+                {
+                    GlobalHost
+                        .ConnectionManager
+                        .GetHubContext<SimulationHub>()
+                        .Clients
+                        .All
+                        .submitZoneInfos(toBeSubmittedBatch);
+                    await Task.Delay(10);
+                }
 
                 previous = zoneInfos;
 
-                await Task.Delay(3);
+                await Task.Delay(10);
 
                 try
                 {

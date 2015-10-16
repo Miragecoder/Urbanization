@@ -30,7 +30,7 @@ namespace Mirage.Urbanization.Web
             session.ConsumeZoneAt(target, factory());
         }
 
-        public void RequestZonesFor(string dataMeter)
+        public void RequestZonesFor(int dataMeterWebId)
         {
             Task.Run(async () =>
             {
@@ -39,7 +39,7 @@ namespace Mirage.Urbanization.Web
                     .SimulationSession
                     .Area
                     .EnumerateZoneInfos()
-                    .Where(x => DataMeterInstances.DataMeters.Single(y => y.Name == dataMeter).GetDataMeterResult(x).ValueCategory != DataMeterValueCategory.None)
+                    .Where(x => DataMeterInstances.DataMeters.Single(y => y.WebId == dataMeterWebId).GetDataMeterResult(x).ValueCategory != DataMeterValueCategory.None)
                     .ToList();
 
                 foreach (var batchState in initialState.GetBatched())
@@ -63,7 +63,7 @@ namespace Mirage.Urbanization.Web
                     {
                         dataMeterInstances = DataMeterInstances
                             .DataMeters
-                            .Select(x => x.Name),
+                            .Select(x => new { name = x.Name, webId = x.WebId }),
 
                         buttonDefinitions = GameServer
                             .Instance
@@ -102,7 +102,7 @@ namespace Mirage.Urbanization.Web
                     .SimulationSession
                     .Area
                     .EnumerateZoneInfos()
-                    .Where(x => x.ZoneConsumptionState.GetZoneConsumption().GetType() != typeof (EmptyZoneConsumption))
+                    .Where(x => x.ZoneConsumptionState.GetZoneConsumption().GetType() != typeof(EmptyZoneConsumption))
                     .ToList();
 
                 foreach (var batchState in initialState.GetBatched())

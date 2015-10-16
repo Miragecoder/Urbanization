@@ -2,20 +2,24 @@ namespace Mirage.Urbanization.Simulation.Datameters
 {
     public struct DataMeterResult
     {
+        private readonly DataMeter _dataMeter;
+
         public DataMeterResult(
-            string name, 
+            DataMeter dataMeter, 
             int amount, 
             decimal percentageScore, 
             DataMeterValueCategory valueCategory
         )
         {
-            Name = name;
+            _dataMeter = dataMeter;
             PercentageScore = percentageScore;
             ValueCategory = valueCategory;
             Amount = amount;
         }
 
-        public string Name { get; }
+        public string Name => _dataMeter.Name;
+
+        public int WebId => _dataMeter.WebId;
 
         public decimal PercentageScore { get; }
 

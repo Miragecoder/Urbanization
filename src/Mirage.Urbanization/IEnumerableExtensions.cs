@@ -13,7 +13,7 @@ namespace Mirage.Urbanization
             while (true)
             {
                 var currentBatch = new List<T>();
-                foreach (var iteration in Enumerable.Range(0, 150))
+                foreach (var iteration in Enumerable.Range(0, 50))
                 {
                     if (enumerator.MoveNext())
                         currentBatch.Add(enumerator.Current);

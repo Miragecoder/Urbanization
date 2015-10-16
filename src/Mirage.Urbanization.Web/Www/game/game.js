@@ -69,43 +69,43 @@
         };
     };
 
-    var currentDataMeter = "";
+    var currentDataMeter = { name: "None", webId: 0 };
 
     var drawZoneInfo = function (zoneInfo) {
 
         for (var i = 0; i < canvasLayers.length; i++) {
             var canvasLayer = canvasLayers[i];
-            if (canvasLayer.width < zoneInfo.point.x * 25)
-                canvasLayer.width = zoneInfo.point.x * 25;
-            if (canvasLayer.height < zoneInfo.point.y * 25)
-                canvasLayer.height = zoneInfo.point.y * 25;
+            if (canvasLayer.width < zoneInfo.x * 25)
+                canvasLayer.width = zoneInfo.x * 25;
+            if (canvasLayer.height < zoneInfo.y * 25)
+                canvasLayer.height = zoneInfo.y * 25;
         }
 
         (function () {
-            if (currentDataMeter === "") {
+            if (currentDataMeter.webId === 0) {
                 return;
             }
 
-            var matches = $.grep(zoneInfo.dataMeterResults, function (e) { return e.name === currentDataMeter; });
+            var matches = $.grep(zoneInfo.dataMeterResults, function (e) { return e.webId === currentDataMeter.webId; });
 
             if (matches.length === 1) {
                 var dataMeterResult = matches[0];
 
                 if (dataMeterResult.colour !== "") {
                     var context = canvasLayer5.getContext("2d");
-                    context.clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                    context.clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
                     context.globalAlpha = 0.5;
                     context.beginPath();
                     context.fillStyle = dataMeterResult.colour;
-                    context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                    context.rect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
                     context.fill();
                 } else {
-                    canvasLayer5.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                    canvasLayer5.getContext("2d").clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
                 }
             } else {
                 throw {
                     name: "Missing datameter.",
-                    message: "Data Meter '" + currentDataMeter + "' is not contained within the specified ZoneInfo."
+                    message: "Data Meter '" + currentDataMeter.name + "' is not contained within the specified ZoneInfo."
                 }
             }
 
@@ -115,25 +115,23 @@
             drawZoneInfoForBitmapLayer(zoneInfo,
                 function (x) { return x.bitmapLayerOne; },
                 function () { return canvasLayer1; },
-                function (x) { return x.point; });
+                function (x) { return x; });
 
             if (zoneInfo.bitmapLayerTwo !== 0) {
                 drawZoneInfoForBitmapLayer(zoneInfo,
                     function (x) { return x.bitmapLayerTwo; },
                     function () { return canvasLayer3; },
-                    function (x) { return x.point; });
+                    function (x) { return x; });
             } else {
-                canvasLayer3.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                canvasLayer3.getContext("2d").clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
             }
         } else {
             var context = canvasLayer1.getContext("2d");
             context.beginPath();
-            context.fillStyle = zoneInfo.color;
-            context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+            context.fillStyle = "BurlyWood";
+            context.rect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
             context.fill();
         }
-
-        zoneInfo.drawn = true;
     };
 
     simulation.client.submitAreaMessage = function (message) {
@@ -226,7 +224,13 @@
         drawZoneInfo(zoneInfo);
     };
 
+    var zoneInfosCaptured = false;
+
     simulation.client.submitZoneInfos = function (zoneInfos) {
+        if (zoneInfosCaptured === false) {
+            console.log(zoneInfos);
+            zoneInfosCaptured = true;
+        }
         for (var i in zoneInfos) {
             if (zoneInfos.hasOwnProperty(i)) {
                 var zoneInfo = zoneInfos[i];
@@ -249,19 +253,19 @@
 
         (function () {
             var registerDataMeter = function (dataMeter) {
-                createButton(dataMeter, miscButtonBar, function (e) {
+                createButton(dataMeter.name, miscButtonBar, function (e) {
                     currentDataMeter = dataMeter;
                     canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
 
-                    if (currentDataMeter !== "") {
-                        simulation.server.requestZonesFor(currentDataMeter);
+                    if (currentDataMeter.webId !== 0) {
+                        simulation.server.requestZonesFor(currentDataMeter.webId);
                     }
                 });
             };
 
             var dataMeterInstances = request.dataMeterInstances;
 
-            registerDataMeter("");
+            registerDataMeter(currentDataMeter);
 
             for (var d in dataMeterInstances) {
                 if (dataMeterInstances.hasOwnProperty(d)) {
@@ -273,7 +277,6 @@
 
 
         var incomingButtonDefinitions = request.buttonDefinitions;
-        console.log("Invocation of submitMenuStructure");
         (function () {
             for (var p in incomingButtonDefinitions) {
                 if (incomingButtonDefinitions.hasOwnProperty(p)) {
@@ -353,8 +356,6 @@
     })();
 
     $.connection.hub.start().done(function () {
-
-        console.log("Hub started succesfully. Initiating post-hub startup phase...");
 
         // Mouse events and handlers
         (function () {
@@ -522,6 +523,5 @@
         })();
 
         simulation.server.requestMenuStructure();
-        console.log("Post-hub startup phase completed.");
     });
 });
