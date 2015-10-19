@@ -82,36 +82,6 @@
                 canvasLayer.height = zoneInfo.y * 25;
         }
 
-        (function () {
-            if (currentDataMeter.webId === 0) {
-                return;
-            }
-
-            var matches = $.grep(zoneInfo.dataMeterResults, function (e) { return e.webId === currentDataMeter.webId; });
-
-            if (matches.length === 1) {
-                var dataMeterResult = matches[0];
-
-                if (dataMeterResult.colour !== "") {
-                    var context = canvasLayer5.getContext("2d");
-                    context.clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
-                    context.globalAlpha = 0.5;
-                    context.beginPath();
-                    context.fillStyle = dataMeterResult.colour;
-                    context.rect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
-                    context.fill();
-                } else {
-                    canvasLayer5.getContext("2d").clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
-                }
-            } else {
-                throw {
-                    name: "Missing datameter.",
-                    message: "Data Meter '" + currentDataMeter.name + "' is not contained within the specified ZoneInfo."
-                }
-            }
-
-        }());
-
         if (zoneInfo.bitmapLayerOne !== 0) {
             drawZoneInfoForBitmapLayer(zoneInfo,
                 function (x) { return x.bitmapLayerOne; },
@@ -247,14 +217,8 @@
     simulation.client.submitAndDraw = function (zoneInfo) {
         drawZoneInfo(zoneInfo);
     };
-
-    var zoneInfosCaptured = false;
-
+    
     simulation.client.submitZoneInfos = function (zoneInfos) {
-        if (zoneInfosCaptured === false) {
-            console.log(zoneInfos);
-            zoneInfosCaptured = true;
-        }
         for (var i in zoneInfos) {
             if (zoneInfos.hasOwnProperty(i)) {
                 var zoneInfo = zoneInfos[i];
@@ -263,8 +227,28 @@
         }
     };
 
-    simulation.client.submitMenuStructure = function (request) {
+    simulation.client.submitDataMeterInfos = function (zoneDataMeterInfos) {
 
+        for (var i in zoneDataMeterInfos) {
+            if (zoneDataMeterInfos.hasOwnProperty(i)) {
+                var zoneDataMeterInfo = zoneDataMeterInfos[i];
+
+                if (zoneDataMeterInfo.colour !== "") {
+                    var context = canvasLayer5.getContext("2d");
+                    context.clearRect(zoneDataMeterInfo.x * 25, zoneDataMeterInfo.y * 25, 25, 25);
+                    context.globalAlpha = 0.5;
+                    context.beginPath();
+                    context.fillStyle = zoneDataMeterInfo.colour;
+                    context.rect(zoneDataMeterInfo.x * 25, zoneDataMeterInfo.y * 25, 25, 25);
+                    context.fill();
+                } else {
+                    canvasLayer5.getContext("2d").clearRect(zoneDataMeterInfo.x * 25, zoneDataMeterInfo.y * 25, 25, 25);
+                }
+            }
+        }
+    }
+
+    simulation.client.submitMenuStructure = function (request) {
 
         var createButton = function (text, target, clickHandler) {
             var newButtonElement = document.createElement("button");
@@ -278,6 +262,7 @@
         (function () {
             var registerDataMeter = function (dataMeter) {
                 createButton(dataMeter.name, miscButtonBar, function (e) {
+                    simulation.server.joinDataMeterGroup(dataMeter.webId);
                     currentDataMeter = dataMeter;
                     canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
 

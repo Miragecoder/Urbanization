@@ -34,25 +34,35 @@ namespace Mirage.Urbanization.Web
         {
             Task.Run(async () =>
             {
+
                 var initialState = GameServer
                     .Instance
                     .SimulationSession
                     .Area
                     .EnumerateZoneInfos()
-                    .Where(x => DataMeterInstances.DataMeters.Single(y => y.WebId == dataMeterWebId).GetDataMeterResult(x).ValueCategory != DataMeterValueCategory.None)
-                    .ToList();
+                    .Select(x => ClientDataMeterZoneInfo.Create(x, DataMeterInstances.DataMeters.Single(y => y.WebId == dataMeterWebId)))
+                    .Where(x => !string.IsNullOrWhiteSpace(x.colour));
 
                 foreach (var batchState in initialState.GetBatched(100))
                 {
-                    Clients.Caller
-                        .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
+                    Clients.Caller.submitDataMeterInfos(batchState);
 
                     await Task.Delay(200);
                 }
-
-                Clients.Caller.submitZoneInfos();
             });
         }
+
+        public void JoinDataMeterGroup(int dataMeterId)
+        {
+            foreach (var x in DataMeterInstances.DataMeters.Select(x => x.WebId))
+            {
+                Groups.Remove(Context.ConnectionId, GetDataMeterGroupName(x));
+            }
+
+            Groups.Add(Context.ConnectionId, GetDataMeterGroupName(dataMeterId));
+        }
+
+        public static string GetDataMeterGroupName(int dataMeterId) => "dataMeter" + dataMeterId;
 
         public void RequestMenuStructure()
         {

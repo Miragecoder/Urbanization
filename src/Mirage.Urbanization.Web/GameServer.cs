@@ -5,12 +5,73 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
 using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.Web.ClientMessages;
 
 namespace Mirage.Urbanization.Web
 {
+    public struct ClientDataMeterZoneInfo
+    {
+        public static ClientDataMeterZoneInfo Create(IReadOnlyZoneInfo zoneInfo, ZoneInfoDataMeter zoneInfoDataMeter)
+        {
+            return new ClientDataMeterZoneInfo
+            {
+                colour = BrushManager
+                            .Instance
+                            .GetBrushFor(zoneInfoDataMeter.GetDataMeterResult(zoneInfo).ValueCategory)
+                            .WithResultIfHasMatch(brush => System.Drawing.ColorTranslator.ToHtml(brush.Color), string.Empty),
+                x = zoneInfo.Point.X,
+                y = zoneInfo.Point.Y
+            };
+        }
+
+        public int x { get; set; }
+        public int y { get; set; }
+        public string colour { get; set; }
+    }
+
+    public class DataMeterPublishState
+    {
+        public ZoneInfoDataMeter DataMeter { get; }
+        private readonly Func<IEnumerable<IReadOnlyZoneInfo>> _getZoneInfos;
+
+        public DataMeterPublishState(ZoneInfoDataMeter dataMeter, Func<IEnumerable<IReadOnlyZoneInfo>> getZoneInfos)
+        {
+            DataMeter = dataMeter;
+            _getZoneInfos = getZoneInfos;
+        }
+
+        public IEnumerable<ClientDataMeterZoneInfo> GetChanged()
+        {
+            var currentClientDataMeterStates = _getZoneInfos()
+                .Select(x => ClientDataMeterZoneInfo.Create(x, DataMeter))
+                .ToHashSet();
+
+            foreach (var x in currentClientDataMeterStates
+                .Except(_previousClientDataMeterStates))
+                yield return x;
+
+            _previousClientDataMeterStates = currentClientDataMeterStates;
+        }
+
+        private ISet<ClientDataMeterZoneInfo> _previousClientDataMeterStates = new HashSet<ClientDataMeterZoneInfo>(); 
+    }
+
+    public class DataMeterPublishStateManager
+    {
+        public IList<DataMeterPublishState> DataMeterPublishStates { get; }
+
+        public DataMeterPublishStateManager(ISimulationSession session)
+        {
+            DataMeterPublishStates = DataMeterInstances
+                .DataMeters
+                .Select(x => new DataMeterPublishState(x, session.Area.EnumerateZoneInfos))
+                .ToList();
+        }
+    }
+
     public class GameServer : IDisposable
     {
         public static GameServer Instance;
@@ -20,7 +81,7 @@ namespace Mirage.Urbanization.Web
         private readonly bool _controlVehicles;
         private IDisposable _webServer;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private readonly NeverEndingTask _looper;
+        private readonly NeverEndingTask _looper, _dataMeterStateLooper;
 
         public ISimulationSession SimulationSession => _simulationSession;
 
@@ -54,6 +115,26 @@ namespace Mirage.Urbanization.Web
 
             var zoneInfoBatchLooper = new LoopBatchEnumerator<IReadOnlyZoneInfo>(_simulationSession.Area.EnumerateZoneInfos().ToList());
 
+            var dataMeterStateManager = new DataMeterPublishStateManager(simulationSession);
+
+            _dataMeterStateLooper = new NeverEndingTask("Data meter state submission", async () =>
+            {
+                foreach (var x in dataMeterStateManager.DataMeterPublishStates)
+                {
+                    foreach (var batch in x.GetChanged().GetBatched(100))
+                    {
+                        GlobalHost
+                            .ConnectionManager.GetHubContext<SimulationHub>()
+                            .Clients
+                            .Group(SimulationHub.GetDataMeterGroupName(x.DataMeter.WebId))
+                            .submitDataMeterInfos(batch);
+                        await Task.Delay(10);
+                    }
+                }
+
+                await Task.Delay(20);
+            }, _cancellationTokenSource.Token, 10);
+
             _looper = new NeverEndingTask("SignalR Game state submission", async () =>
             {
                 GlobalHost
@@ -66,7 +147,8 @@ namespace Mirage.Urbanization.Web
                 await Task.Delay(20);
 
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
-                    .Select(ClientZoneInfo.Create).ToList();
+                    .Select(ClientZoneInfo.Create)
+                    .ToList();
 
                 var toBeSubmitted = zoneInfos;
 
@@ -220,6 +302,7 @@ namespace Mirage.Urbanization.Web
         {
             _webServer = Microsoft.Owin.Hosting.WebApp.Start<Startup>(_url);
             _looper.Start();
+            _dataMeterStateLooper.Start();
         }
 
         public void Dispose()
@@ -230,6 +313,7 @@ namespace Mirage.Urbanization.Web
             _simulationSession.OnAreaHotMessage -= SimulationSession_OnAreaHotMessage;
             _cancellationTokenSource.Cancel();
             _looper.Wait();
+            _dataMeterStateLooper.Wait();
             _webServer?.Dispose();
             Instance = null;
         }

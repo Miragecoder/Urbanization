@@ -13,6 +13,8 @@ namespace Mirage.Urbanization.Web
     {
         public static void Main()
         {
+            Logger.Instance.OnLogMessage += Instance_OnLogMessage;
+
             HostFactory.Run(x =>
             {
                 var simulationSession = new SimulationSession(
@@ -41,6 +43,11 @@ namespace Mirage.Urbanization.Web
                 x.SetDisplayName("Urbanization Web Server");
                 x.SetServiceName("Urbanization");
             });
+        }
+
+        private static void Instance_OnLogMessage(object sender, LogEventArgs e)
+        {
+            Console.WriteLine(e.CreatedOn + " -" + e.LogMessage);
         }
     }
 }
