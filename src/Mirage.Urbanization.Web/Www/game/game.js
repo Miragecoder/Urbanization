@@ -21,7 +21,13 @@
 
     var simulation = $.connection.simulationHub;
     var buttonDefinitionStates = {};
-    var currentButton = null, clearButton = null;
+    var dummyButton = {
+        horizontalCellOffset: 0,
+        verticalCellOffset: 0,
+        widthInCells: 1,
+        heightInCells: 1
+    };
+    var currentButton = dummyButton, clearButton = null;
     var imageCache = {};
     var canvasLayer1 = document.getElementById("gameCanvasLayer1");
     var canvasLayer2 = document.getElementById("gameCanvasLayer2");
@@ -217,7 +223,7 @@
     simulation.client.submitAndDraw = function (zoneInfo) {
         drawZoneInfo(zoneInfo);
     };
-    
+
     simulation.client.submitZoneInfos = function (zoneInfos) {
         for (var i in zoneInfos) {
             if (zoneInfos.hasOwnProperty(i)) {
@@ -464,37 +470,39 @@
                     var cell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
                     currentFocusedCell = cell;
 
-                    if (previousHighlight !== null && (
+                    if (previousHighlight === null || (
                             previousHighlight.cell.x !== cell.x
                             || previousHighlight.cell.y !== cell.y
                             || previousHighlight.clickDragState !== clickAndDragState.getStateAsString())) {
-                        previousHighlight.clear();
+
+                        if (previousHighlight !== null)
+                            previousHighlight.clear();
                         if (clickAndDragState.getIsNetworkZoning()) {
                             consumeZone(currentButton, currentFocusedCell);
                         } else if (clickAndDragState.getIsNetworkDemolishing()) {
                             consumeZone(clearButton, currentFocusedCell);
                         }
+
+                        previousHighlight = {
+                            cell: cell,
+                            clear: function () {
+                                var context = canvasLayer6.getContext("2d");
+                                context.clearRect(((cell.x + currentButton.horizontalCellOffset) * 25) - 50, ((cell.y + currentButton.verticalCellOffset) * 25) - 50, (currentButton.widthInCells * 25) + 60, (currentButton.heightInCells * 25) + 60);
+                            },
+                            draw: function () {
+                                var context = canvasLayer6.getContext("2d");
+                                context.globalAlpha = 0.5;
+                                context.beginPath();
+                                context.strokeStyle = "red";
+                                context.lineWidth = 1;
+                                context.rect((cell.x + currentButton.horizontalCellOffset) * 25, (cell.y + currentButton.verticalCellOffset) * 25, currentButton.widthInCells * 25, currentButton.heightInCells * 25);
+                                context.stroke();
+                            },
+                            clickDragState: clickAndDragState.getStateAsString()
+                        };
+
+                        previousHighlight.draw();
                     }
-
-                    previousHighlight = {
-                        cell: cell,
-                        clear: function () {
-                            var context = canvasLayer6.getContext("2d");
-                            context.clearRect((cell.x * 25) - 10, (cell.y * 25) - 10, 25 + 20, 25 + 20);
-                        },
-                        draw: function () {
-                            var context = canvasLayer6.getContext("2d");
-                            context.globalAlpha = 0.5;
-                            context.beginPath();
-                            context.strokeStyle = "red";
-                            context.lineWidth = 1;
-                            context.rect(cell.x * 25, cell.y * 25, 25, 25);
-                            context.stroke();
-                        },
-                        clickDragState: clickAndDragState.getStateAsString()
-                    };
-
-                    previousHighlight.draw();
 
                 }, false);
 

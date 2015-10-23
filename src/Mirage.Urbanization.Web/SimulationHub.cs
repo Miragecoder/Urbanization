@@ -88,7 +88,11 @@ namespace Mirage.Urbanization.Web
                                 cost = x.Cost,
                                 keyChar = x.KeyChar,
                                 isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag,
-                                isClearButton = x.GetType() == typeof(EmptyZoneConsumption)
+                                isClearButton = x.GetType() == typeof(EmptyZoneConsumption),
+                                widthInCells = (x as IAreaZoneClusterConsumption)?.WidthInCells ?? 1,
+                                heightInCells = (x as IAreaZoneClusterConsumption)?.HeightInCells ?? 1,
+                                horizontalCellOffset = (x as IAreaZoneClusterConsumption)?.HorizontalCellOffset ?? 0,
+                                verticalCellOffset = (x as IAreaZoneClusterConsumption)?.VerticalCellOffset ?? 0,
                             })
                     }
                     );

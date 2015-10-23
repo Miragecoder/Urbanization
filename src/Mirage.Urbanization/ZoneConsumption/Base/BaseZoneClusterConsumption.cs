@@ -27,6 +27,10 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public abstract string Name { get; }
         public abstract IReadOnlyCollection<ZoneClusterMemberConsumption> ZoneClusterMembers { get; }
+        public int WidthInCells => ZoneClusterMembers.GroupBy(x => x.PositionInClusterX).Count();
+        public int HeightInCells => ZoneClusterMembers.GroupBy(x => x.PositionInClusterY).Count();
+        public int HorizontalCellOffset => ZoneClusterMembers.Min(x => x.RelativeToParentCenterX);
+        public int VerticalCellOffset => ZoneClusterMembers.Min(x => x.RelativeToParentCenterY);
         public bool ClusterMembersAreUnlocked { get; private set; }
 
         protected DateTime DateTimeCreated { get; } = DateTime.Now;
