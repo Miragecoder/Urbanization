@@ -334,6 +334,14 @@
             }
         })();
 
+        var keysAndButtons = [];
+        
+        function handleKeyPress(e) {
+            keysAndButtons[String.fromCharCode(e.which)].click();
+        }
+
+        window.addEventListener("keypress", handleKeyPress, false);
+
         for (var i in buttonDefinitionStates) {
             if (buttonDefinitionStates.hasOwnProperty(i)) {
                 var buttonDefinitionState = buttonDefinitionStates[i];
@@ -349,6 +357,9 @@
                             currentButton = x.buttonDefinition;
                         };
                     }
+
+                    keysAndButtons[buttonDefinitionState.buttonDefinition.keyChar] = newButtonElement;
+
                     newButtonElement.addEventListener("click", registerButton(buttonDefinitionState));
                     if (buttonDefinitionState.buttonDefinition.isClearButton) {
                         if (clearButton === null)
@@ -499,7 +510,8 @@
                     currentFocusedCell = cell;
 
                     if (previousHighlight === null || (
-                            previousHighlight.cell.x !== cell.x
+                            previousHighlight.button !== currentButton
+                            || previousHighlight.cell.x !== cell.x
                             || previousHighlight.cell.y !== cell.y
                             || previousHighlight.clickDragState !== clickAndDragState.getStateAsString())) {
 
@@ -526,7 +538,8 @@
                                 context.rect((cell.x + currentButton.horizontalCellOffset) * 25, (cell.y + currentButton.verticalCellOffset) * 25, currentButton.widthInCells * 25, currentButton.heightInCells * 25);
                                 context.stroke();
                             },
-                            clickDragState: clickAndDragState.getStateAsString()
+                            clickDragState: clickAndDragState.getStateAsString(),
+                            button: currentButton
                         };
 
                         previousHighlight.draw();
