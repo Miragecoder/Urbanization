@@ -32,3 +32,14 @@ td {
     border: solid 1px #cd853f;
     padding: 0.5em 1em 0.5em;
 }
+
+#labelBar span {
+    background-color: rgba(255,255,255,0.7);
+    padding: 2px 10px;
+    border: solid 1px #66C;
+    margin-top: 14px;
+}
+
+#labelBar {
+    padding-top: 0.5em;
+}
