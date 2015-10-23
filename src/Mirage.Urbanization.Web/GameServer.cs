@@ -238,8 +238,8 @@ namespace Mirage.Urbanization.Web
                 .submitCityBudgetValue(new
                 {
                     cityBudgetState = _cityBudgetPanelPublisher.GenerateCityBudgetState(_simulationSession),
-                    currentAmount = e.EventData.CurrentAmountDescription,
-                    projectedIncome = e.EventData.ProjectedIncomeDescription
+                    currentAmount = e.EventData.CurrentAmount,
+                    projectedIncome = e.EventData.ProjectedIncome
                 });
         }
 

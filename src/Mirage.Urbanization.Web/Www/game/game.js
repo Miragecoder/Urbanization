@@ -1,13 +1,34 @@
 ﻿$(function () {
 
+    var raiseHotMessage = null;
+
     // Dialog and corresponding button registration
     (function () {
-        var registerDialog = function (dialogId, dialogButtonId, width) {
+
+        var setSpanText = function (spanId, spanText) {
+
+            var span = document.getElementById(spanId);
+
+            while (span.firstChild) {
+                span.removeChild(span.firstChild);
+            }
+            span.appendChild(document.createTextNode(spanText));
+        };
+
+
+
+
+        var registerDialog = function (dialogId, width) {
             $(dialogId).dialog({
                 modal: true,
                 autoOpen: false,
                 width: width
             });
+
+        }
+
+        var registerDialogWithButton = function (dialogId, dialogButtonId, width) {
+            registerDialog(dialogId, width);
 
             // Link to open the dialog
             $(dialogButtonId).click(function (event) {
@@ -15,8 +36,15 @@
                 event.preventDefault();
             });
         };
-        registerDialog("#budgetDialog", "#budgetDialogButton", 300);
-        registerDialog("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 300);
+        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        registerDialog("#hotMessageDialog", 200);
+
+        raiseHotMessage = function (title, message) {
+            $("#hotMessageDialog").dialog({ title: title }).dialog("open");
+            setSpanText("hotMessageText", message);
+        }
     })();
 
     var simulation = $.connection.simulationHub;
@@ -116,7 +144,7 @@
     }
 
     simulation.client.submitAreaHotMessage = function (message) {
-        alert(message.title + "\n" + message.message);
+        raiseHotMessage(message.title, message.message);
     }
     var EventPublisherService = function () {
         var currentState;
@@ -213,8 +241,8 @@
         });
 
         simulation.client.submitCityBudgetValue = function (e) {
-            document.getElementById("currentFundsLabel").innerHTML = e.currentAmount;
-            document.getElementById("projectedIncomeLabel").innerHTML = e.projectedIncome;
+            document.getElementById("currentFundsLabel").innerHTML = "Current funds: $ " + e.currentAmount;
+            document.getElementById("projectedIncomeLabel").innerHTML = "Projected income: $ " + e.projectedIncome;
             cityBudgetStateService.loadNewState(e.cityBudgetState);
         }
 
