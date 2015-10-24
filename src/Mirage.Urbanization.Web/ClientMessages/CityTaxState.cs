@@ -4,5 +4,6 @@ namespace Mirage.Urbanization.Web.ClientMessages
     {
         public string name { get; set; }
         public decimal projectedIncome { get; set; }
+        public string currentRate { get; set; }
     }
 }

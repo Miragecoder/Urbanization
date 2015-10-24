@@ -8,6 +8,7 @@ using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.Web
 {
@@ -63,6 +64,34 @@ namespace Mirage.Urbanization.Web
         }
 
         public static string GetDataMeterGroupName(int dataMeterId) => "dataMeter" + dataMeterId;
+
+        public void RaiseTax(string taxName) => MutateTax(taxName, (currentRate, selectableRate) => currentRate < selectableRate, x => x.First());
+        public void LowerTax(string taxName) => MutateTax(taxName, (currentRate, selectableRate) => currentRate > selectableRate, x => x.Last());
+
+        private void MutateTax(
+            string taxName, 
+            Func<decimal, decimal, bool> comparison,
+            Func<IEnumerable<decimal>, decimal> selector)
+        {
+            var budget = GameServer.Instance.SimulationSession.CityBudgetConfiguration;
+
+            TaxDefinition
+                .TaxDefinitions
+                .Single(x => x.Name == taxName)
+                .Pipe(taxdefinition =>
+                {
+                    taxdefinition
+                        .GetSelectableRatePercentages()
+                        .Where(selectableRate => comparison(taxdefinition.CurrentRate(budget), selectableRate))
+                        .Pipe(results =>
+                        {
+                            if (results.Any())
+                            {
+                                taxdefinition.SetCurrentRate(budget, selector(results));
+                            }
+                        });
+                });
+        }
 
         public void RequestMenuStructure()
         {

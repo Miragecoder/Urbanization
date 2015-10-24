@@ -37,7 +37,7 @@ namespace Mirage.Urbanization.Simulation
         public override IEnumerable<decimal> GetSelectableRatePercentages()
         {
             return Enumerable.Range(0, 101)
-                .Where(x => x % 5 == 0)
+                .Where(x => x % 10 == 0)
                 .Select(x => (decimal)x / 100);
         }
     }
