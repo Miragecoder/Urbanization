@@ -1,12 +1,35 @@
-﻿$(function () {
+﻿"use strict";
+$(function () {
+
+    var raiseHotMessage = null;
 
     // Dialog and corresponding button registration
     (function () {
-        var registerDialog = function (dialogId, dialogButtonId) {
+
+        var setSpanText = function (spanId, spanText) {
+
+            var span = document.getElementById(spanId);
+
+            while (span.firstChild) {
+                span.removeChild(span.firstChild);
+            }
+            span.appendChild(document.createTextNode(spanText));
+        };
+
+
+
+
+        var registerDialog = function (dialogId, width) {
             $(dialogId).dialog({
                 modal: true,
-                autoOpen: false
+                autoOpen: false,
+                width: width
             });
+
+        }
+
+        var registerDialogWithButton = function (dialogId, dialogButtonId, width) {
+            registerDialog(dialogId, width);
 
             // Link to open the dialog
             $(dialogButtonId).click(function (event) {
@@ -14,13 +37,26 @@
                 event.preventDefault();
             });
         };
-        registerDialog("#budgetDialog", "#budgetDialogButton");
-        registerDialog("#cityEvaluationDialog", "#evaluationDialogButton");
+        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500);
+        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        registerDialog("#hotMessageDialog", 200);
+
+        raiseHotMessage = function (title, message) {
+            $("#hotMessageDialog").dialog({ title: title }).dialog("open");
+            setSpanText("hotMessageText", message);
+        }
     })();
 
     var simulation = $.connection.simulationHub;
     var buttonDefinitionStates = {};
-    var currentButton = null, clearButton = null;
+    var dummyButton = {
+        horizontalCellOffset: 0,
+        verticalCellOffset: 0,
+        widthInCells: 1,
+        heightInCells: 1
+    };
+    var currentButton = dummyButton, clearButton = null;
     var imageCache = {};
     var canvasLayer1 = document.getElementById("gameCanvasLayer1");
     var canvasLayer2 = document.getElementById("gameCanvasLayer2");
@@ -69,71 +105,39 @@
         };
     };
 
-    var currentDataMeter = "";
+    var currentDataMeter = { name: "None", webId: 0 };
 
     var drawZoneInfo = function (zoneInfo) {
 
         for (var i = 0; i < canvasLayers.length; i++) {
             var canvasLayer = canvasLayers[i];
-            if (canvasLayer.width < zoneInfo.point.x * 25)
-                canvasLayer.width = zoneInfo.point.x * 25;
-            if (canvasLayer.height < zoneInfo.point.y * 25)
-                canvasLayer.height = zoneInfo.point.y * 25;
+            if (canvasLayer.width < zoneInfo.x * 25)
+                canvasLayer.width = zoneInfo.x * 25;
+            if (canvasLayer.height < zoneInfo.y * 25)
+                canvasLayer.height = zoneInfo.y * 25;
         }
-
-        (function () {
-            if (currentDataMeter === "") {
-                return;
-            }
-
-            var matches = $.grep(zoneInfo.dataMeterResults, function (e) { return e.name === currentDataMeter; });
-
-            if (matches.length === 1) {
-                var dataMeterResult = matches[0];
-
-                if (dataMeterResult.colour !== "") {
-                    var context = canvasLayer5.getContext("2d");
-                    context.clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
-                    context.globalAlpha = 0.5;
-                    context.beginPath();
-                    context.fillStyle = dataMeterResult.colour;
-                    context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
-                    context.fill();
-                } else {
-                    canvasLayer5.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
-                }
-            } else {
-                throw {
-                    name: "Missing datameter.",
-                    message: "Data Meter '" + currentDataMeter + "' is not contained within the specified ZoneInfo."
-                }
-            }
-
-        }());
 
         if (zoneInfo.bitmapLayerOne !== 0) {
             drawZoneInfoForBitmapLayer(zoneInfo,
                 function (x) { return x.bitmapLayerOne; },
                 function () { return canvasLayer1; },
-                function (x) { return x.point; });
+                function (x) { return x; });
 
             if (zoneInfo.bitmapLayerTwo !== 0) {
                 drawZoneInfoForBitmapLayer(zoneInfo,
                     function (x) { return x.bitmapLayerTwo; },
                     function () { return canvasLayer3; },
-                    function (x) { return x.point; });
+                    function (x) { return x; });
             } else {
-                canvasLayer3.getContext("2d").clearRect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+                canvasLayer3.getContext("2d").clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
             }
         } else {
             var context = canvasLayer1.getContext("2d");
             context.beginPath();
-            context.fillStyle = zoneInfo.color;
-            context.rect(zoneInfo.point.x * 25, zoneInfo.point.y * 25, 25, 25);
+            context.fillStyle = "BurlyWood";
+            context.rect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
             context.fill();
         }
-
-        zoneInfo.drawn = true;
     };
 
     simulation.client.submitAreaMessage = function (message) {
@@ -141,7 +145,7 @@
     }
 
     simulation.client.submitAreaHotMessage = function (message) {
-        alert(message.title + "\n" + message.message);
+        raiseHotMessage(message.title, message.message);
     }
     var EventPublisherService = function () {
         var currentState;
@@ -164,21 +168,25 @@
         var cityEvaluationStateService = new EventPublisherService();
         cityEvaluationStateService.addOnNewStateListener(function (cityEvaluationState) {
 
-            var handleLabelAndValueTable = function (tableId, labelAndValueSet, title) {
+            var handleLabelAndValueTable = function (tableId, labelAndValueSet, title, isCurrency) {
                 $(tableId).empty();
 
                 $(tableId).append("<tr><th colspan=\"2\">" + title + "</th></tr>");
                 for (var i in labelAndValueSet) {
                     if (labelAndValueSet.hasOwnProperty(i)) {
                         var x = labelAndValueSet[i];
-                        $(tableId).append("<tr><td>" + x.label + "</td><td>" + x.value + "</td></tr>");
+                        if (isCurrency) {
+                            $(tableId).append("<tr><td>" + x.label + "</td><td class=\"currencycol\"><span>$</span>" + x.value + "</td></tr>");
+                        } else {
+                            $(tableId).append("<tr><td>" + x.label + "</td><td>" + x.value + "</td></tr>");
+                        }
                     }
                 }
             };
-            handleLabelAndValueTable("#cityEvaluationOverallTable", cityEvaluationState.overallLabelsAndValues, "Overall");
-            handleLabelAndValueTable("#cityEvaluationBudgetTable", cityEvaluationState.cityBudgetLabelsAndValues, "City budget");
-            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, "Issues");
-            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, "General opinion");
+            handleLabelAndValueTable("#cityEvaluationOverallTable", cityEvaluationState.overallLabelsAndValues, "Overall", false);
+            handleLabelAndValueTable("#cityEvaluationBudgetTable", cityEvaluationState.cityBudgetLabelsAndValues, "City budget", true);
+            handleLabelAndValueTable("#cityEvaluationIssuesTable", cityEvaluationState.issueLabelAndValues, "Issues", false);
+            handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, "General opinion", false);
 
         });
 
@@ -191,32 +199,172 @@
 
     // City budget
     (function () {
+        var numberFormat = new Intl.NumberFormat();
+
         var cityBudgetStateService = new EventPublisherService();
         cityBudgetStateService.addOnNewStateListener(function (cityBudgetState) {
             $("#budgetTaxTable").empty();
             var taxStates = cityBudgetState.taxStates;
 
-            $("#budgetTaxTable").append("<tr><th colspan=\"2\">Taxes</th></tr>");
-            for (var i in taxStates) {
-                if (taxStates.hasOwnProperty(i)) {
-                    var taxState = taxStates[i];
-                    $("#budgetTaxTable").append("<tr><td>" + taxState.name + "</td><td>" + taxState.projectedIncome + "</td></tr>");
-                }
-            }
-            var cityServiceStates = cityBudgetState.cityServiceStates;
+            var writeHeader = function(nameHeader, projectedHeader, rateHeader, actions) {
+                var taxRow = document.createElement("tr");
 
-            $("#budgetTaxTable").append("<tr><th colspan=\"2\">City services</th></tr>");
-            for (var i in cityServiceStates) {
-                if (cityServiceStates.hasOwnProperty(i)) {
-                    var cityServiceState = cityServiceStates[i];
-                    $("#budgetTaxTable").append("<tr><td>" + cityServiceState.name + "</td><td>" + cityServiceState.projectedExpenses + "</td></tr>");
+                var addCell = function (name) {
+                    var labelCell = document.createElement("th");
+                    labelCell.innerHTML = name;
+                    taxRow.appendChild(labelCell);
+                };
+                addCell(nameHeader);
+                addCell(projectedHeader);
+                addCell(rateHeader);
+                addCell(actions);
+
+                document.getElementById("budgetTaxTable").appendChild(taxRow);
+            };
+
+            var writeTaxStateRow = function(taxState, isSummary, getName, getProjected, getRate, lowerFunc, raiseFunc) {
+                var taxRow = document.createElement("tr");
+
+                (function() {
+                    var labelCell = document.createElement("td");
+                    labelCell.innerHTML = getName(taxState);
+                    taxRow.appendChild(labelCell);
+                })();
+
+                (function() {
+                    var labelCell = document.createElement("td");
+                    labelCell.class = "currencycol";
+                    (function() {
+                        var span = document.createElement("span");
+                        span.innerHTML = "$";
+                        labelCell.appendChild(span);
+                    })();
+                    labelCell.innerHTML = getProjected(taxState);
+                    taxRow.appendChild(labelCell);
+                })();
+
+                if (isSummary) {
+                    var labelCell = document.createElement("td");
+                    labelCell.innerHTML = "";
+                    taxRow.appendChild(labelCell);
+                    var labelCell = document.createElement("td");
+                    labelCell.innerHTML = "";
+                    taxRow.appendChild(labelCell);
+                } else {
+                    (function () {
+                        var labelCell = document.createElement("td");
+                        labelCell.innerHTML = getRate(taxState);
+                        taxRow.appendChild(labelCell);
+                    })();
+
+                    (function() {
+                        var labelCell = document.createElement("td");
+                        taxRow.appendChild(labelCell);
+
+                        var disableButtons;
+
+                        var raiseButton = document.createElement("button");
+                        raiseButton.innerHTML = "Raise";
+                        raiseButton.addEventListener("click", function() {
+                            raiseFunc(simulation.server, taxState);
+                            disableButtons();
+                        });
+                        labelCell.appendChild(raiseButton);
+
+                        var dropButton = document.createElement("button");
+                        dropButton.innerHTML = "Lower";
+                        dropButton.addEventListener("click", function() {
+                            lowerFunc(simulation.server, taxState);
+                            disableButtons();
+                        });
+
+                        disableButtons = function() {
+                            dropButton.disabled = true;
+                            raiseButton.disabled = true;
+                        }
+
+                        labelCell.appendChild(dropButton);
+                    })();
                 }
-            }
+
+                document.getElementById("budgetTaxTable").appendChild(taxRow);
+            };
+            (function () {
+                writeHeader("Tax", "Projected income", "Current rate", "Actions");
+
+                for (var i in taxStates) {
+                    if (taxStates.hasOwnProperty(i)) {
+                        var taxState = taxStates[i];
+                        writeTaxStateRow(taxState,
+                            false,
+                            function (e) { return e.name; },
+                            function (e) { return e.projectedIncome; },
+                            function (e) { return e.currentRate; },
+                            function (server, taxState) { server.lowerTax(taxState.name); },
+                            function (server, taxState) { server.raiseTax(taxState.name); });
+                    }
+                }
+                writeTaxStateRow(cityBudgetState.totalTaxState,
+                    true,
+                    function (e) { return e.name; },
+                    function (e) { return e.projectedIncome; });
+            })();
+            (function () {
+                writeHeader("City services", "Projected expenses", "Current rate", "Actions");
+                for (var i in cityBudgetState.cityServiceStates) {
+                    if (cityBudgetState.cityServiceStates.hasOwnProperty(i)) {
+                        var cityServiceState = cityBudgetState.cityServiceStates[i];
+                        writeTaxStateRow(cityServiceState,
+                            false,
+                            function (e) { return e.name; },
+                            function (e) { return e.projectedExpenses; },
+                            function (e) { return e.currentRate; },
+                            function (server, cityServiceState) { server.lowerCityServiceFunding(cityServiceState.name); },
+                            function (server, cityServiceState) { server.raiseCityServiceFunding(cityServiceState.name); });
+                    }
+                }
+                writeTaxStateRow(cityBudgetState.totalCityServiceState,
+                    true,
+                    function (e) { return e.name; },
+                    function (e) { return e.projectedExpenses; });
+            })();
+
+            (function() {
+                var taxRow = document.createElement("tr");
+
+                (function () {
+                    var labelCell = document.createElement("th");
+                    labelCell.innerHTML = "Totals";
+                    labelCell.colSpan = 4;
+                    taxRow.appendChild(labelCell);
+                })();
+
+                document.getElementById("budgetTaxTable").appendChild(taxRow);
+            })();
+
+            (function () {
+                var addRow = function (label, value) {
+                    var taxRow = document.createElement("tr");
+                    var addCell = function (text) {
+                        var labelCell = document.createElement("td");
+                        labelCell.innerHTML = text;
+                        labelCell.colSpan = 2;
+                        taxRow.appendChild(labelCell);
+                    };
+                    addCell(label);
+                    addCell(value);
+                    document.getElementById("budgetTaxTable").appendChild(taxRow);
+                };
+
+                addRow("Projected income", cityBudgetState.totalTaxState.projectedIncome);
+                addRow("Projected expenses", (0 - cityBudgetState.totalCityServiceState.projectedExpenses));
+                addRow("Total income", cityBudgetState.totalTaxState.projectedIncome - cityBudgetState.totalCityServiceState.projectedExpenses);
+            })();
         });
 
         simulation.client.submitCityBudgetValue = function (e) {
-            document.getElementById("currentFundsLabel").innerHTML = e.currentAmount;
-            document.getElementById("projectedIncomeLabel").innerHTML = e.projectedIncome;
+            document.getElementById("currentFundsLabel").innerHTML = "Current funds: $ " + e.currentAmount;
+            document.getElementById("projectedIncomeLabel").innerHTML = "Projected income: $ " + e.projectedIncome;
             cityBudgetStateService.loadNewState(e.cityBudgetState);
         }
 
@@ -235,8 +383,28 @@
         }
     };
 
-    simulation.client.submitMenuStructure = function (request) {
+    simulation.client.submitDataMeterInfos = function (zoneDataMeterInfos) {
 
+        for (var i in zoneDataMeterInfos) {
+            if (zoneDataMeterInfos.hasOwnProperty(i)) {
+                var zoneDataMeterInfo = zoneDataMeterInfos[i];
+
+                if (zoneDataMeterInfo.colour !== "") {
+                    var context = canvasLayer5.getContext("2d");
+                    context.clearRect(zoneDataMeterInfo.x * 25, zoneDataMeterInfo.y * 25, 25, 25);
+                    context.globalAlpha = 0.5;
+                    context.beginPath();
+                    context.fillStyle = zoneDataMeterInfo.colour;
+                    context.rect(zoneDataMeterInfo.x * 25, zoneDataMeterInfo.y * 25, 25, 25);
+                    context.fill();
+                } else {
+                    canvasLayer5.getContext("2d").clearRect(zoneDataMeterInfo.x * 25, zoneDataMeterInfo.y * 25, 25, 25);
+                }
+            }
+        }
+    }
+
+    simulation.client.submitMenuStructure = function (request) {
 
         var createButton = function (text, target, clickHandler) {
             var newButtonElement = document.createElement("button");
@@ -249,19 +417,20 @@
 
         (function () {
             var registerDataMeter = function (dataMeter) {
-                createButton(dataMeter, miscButtonBar, function (e) {
+                createButton(dataMeter.name, miscButtonBar, function (e) {
+                    simulation.server.joinDataMeterGroup(dataMeter.webId);
                     currentDataMeter = dataMeter;
                     canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
 
-                    if (currentDataMeter !== "") {
-                        simulation.server.requestZonesFor(currentDataMeter);
+                    if (currentDataMeter.webId !== 0) {
+                        simulation.server.requestZonesFor(currentDataMeter.webId);
                     }
                 });
             };
 
             var dataMeterInstances = request.dataMeterInstances;
 
-            registerDataMeter("");
+            registerDataMeter(currentDataMeter);
 
             for (var d in dataMeterInstances) {
                 if (dataMeterInstances.hasOwnProperty(d)) {
@@ -273,7 +442,6 @@
 
 
         var incomingButtonDefinitions = request.buttonDefinitions;
-        console.log("Invocation of submitMenuStructure");
         (function () {
             for (var p in incomingButtonDefinitions) {
                 if (incomingButtonDefinitions.hasOwnProperty(p)) {
@@ -287,6 +455,14 @@
                 }
             }
         })();
+
+        var keysAndButtons = [];
+
+        function handleKeyPress(e) {
+            keysAndButtons[String.fromCharCode(e.which)].click();
+        }
+
+        window.addEventListener("keypress", handleKeyPress, false);
 
         for (var i in buttonDefinitionStates) {
             if (buttonDefinitionStates.hasOwnProperty(i)) {
@@ -303,6 +479,9 @@
                             currentButton = x.buttonDefinition;
                         };
                     }
+
+                    keysAndButtons[buttonDefinitionState.buttonDefinition.keyChar] = newButtonElement;
+
                     newButtonElement.addEventListener("click", registerButton(buttonDefinitionState));
                     if (buttonDefinitionState.buttonDefinition.isClearButton) {
                         if (clearButton === null)
@@ -353,8 +532,6 @@
     })();
 
     $.connection.hub.start().done(function () {
-
-        console.log("Hub started succesfully. Initiating post-hub startup phase...");
 
         // Mouse events and handlers
         (function () {
@@ -454,37 +631,41 @@
                     var cell = { x: Math.floor(mousePos.x / 25), y: Math.floor(mousePos.y / 25) };
                     currentFocusedCell = cell;
 
-                    if (previousHighlight !== null && (
-                            previousHighlight.cell.x !== cell.x
+                    if (previousHighlight === null || (
+                            previousHighlight.button !== currentButton
+                            || previousHighlight.cell.x !== cell.x
                             || previousHighlight.cell.y !== cell.y
                             || previousHighlight.clickDragState !== clickAndDragState.getStateAsString())) {
-                        previousHighlight.clear();
+
+                        if (previousHighlight !== null)
+                            previousHighlight.clear();
                         if (clickAndDragState.getIsNetworkZoning()) {
                             consumeZone(currentButton, currentFocusedCell);
                         } else if (clickAndDragState.getIsNetworkDemolishing()) {
                             consumeZone(clearButton, currentFocusedCell);
                         }
+
+                        previousHighlight = {
+                            cell: cell,
+                            clear: function () {
+                                var context = canvasLayer6.getContext("2d");
+                                context.clearRect(((cell.x + currentButton.horizontalCellOffset) * 25) - 50, ((cell.y + currentButton.verticalCellOffset) * 25) - 50, (currentButton.widthInCells * 25) + 60, (currentButton.heightInCells * 25) + 60);
+                            },
+                            draw: function () {
+                                var context = canvasLayer6.getContext("2d");
+                                context.globalAlpha = 0.5;
+                                context.beginPath();
+                                context.strokeStyle = "red";
+                                context.lineWidth = 1;
+                                context.rect((cell.x + currentButton.horizontalCellOffset) * 25, (cell.y + currentButton.verticalCellOffset) * 25, currentButton.widthInCells * 25, currentButton.heightInCells * 25);
+                                context.stroke();
+                            },
+                            clickDragState: clickAndDragState.getStateAsString(),
+                            button: currentButton
+                        };
+
+                        previousHighlight.draw();
                     }
-
-                    previousHighlight = {
-                        cell: cell,
-                        clear: function () {
-                            var context = canvasLayer6.getContext("2d");
-                            context.clearRect((cell.x * 25) - 10, (cell.y * 25) - 10, 25 + 20, 25 + 20);
-                        },
-                        draw: function () {
-                            var context = canvasLayer6.getContext("2d");
-                            context.globalAlpha = 0.5;
-                            context.beginPath();
-                            context.strokeStyle = "red";
-                            context.lineWidth = 1;
-                            context.rect(cell.x * 25, cell.y * 25, 25, 25);
-                            context.stroke();
-                        },
-                        clickDragState: clickAndDragState.getStateAsString()
-                    };
-
-                    previousHighlight.draw();
 
                 }, false);
 
@@ -522,6 +703,5 @@
         })();
 
         simulation.server.requestMenuStructure();
-        console.log("Post-hub startup phase completed.");
     });
 });

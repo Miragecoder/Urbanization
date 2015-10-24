@@ -8,6 +8,7 @@ using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.Web
 {
@@ -30,28 +31,77 @@ namespace Mirage.Urbanization.Web
             session.ConsumeZoneAt(target, factory());
         }
 
-        public void RequestZonesFor(string dataMeter)
+        public void RequestZonesFor(int dataMeterWebId)
         {
             Task.Run(async () =>
             {
+
                 var initialState = GameServer
                     .Instance
                     .SimulationSession
                     .Area
                     .EnumerateZoneInfos()
-                    .Where(x => DataMeterInstances.DataMeters.Single(y => y.Name == dataMeter).GetDataMeterResult(x).ValueCategory != DataMeterValueCategory.None)
-                    .ToList();
+                    .Select(x => ClientDataMeterZoneInfo.Create(x, DataMeterInstances.DataMeters.Single(y => y.WebId == dataMeterWebId)))
+                    .Where(x => !string.IsNullOrWhiteSpace(x.colour));
 
-                foreach (var batchState in initialState.GetBatched())
+                foreach (var batchState in initialState.GetBatched(100))
                 {
-                    Clients.Caller
-                        .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
+                    Clients.Caller.submitDataMeterInfos(batchState);
 
                     await Task.Delay(200);
                 }
-
-                Clients.Caller.submitZoneInfos();
             });
+        }
+
+        public void JoinDataMeterGroup(int dataMeterId)
+        {
+            foreach (var x in DataMeterInstances.DataMeters.Select(x => x.WebId))
+            {
+                Groups.Remove(Context.ConnectionId, GetDataMeterGroupName(x));
+            }
+
+            Groups.Add(Context.ConnectionId, GetDataMeterGroupName(dataMeterId));
+        }
+
+        public static string GetDataMeterGroupName(int dataMeterId) => "dataMeter" + dataMeterId;
+
+        public void RaiseCityServiceFunding(string cityService)
+            => RaiseBudgetComponent(CityServiceDefinition.CityServiceDefinitions, cityService);
+        public void LowerCityServiceFunding(string cityService)
+            => LowerBudgetComponent(CityServiceDefinition.CityServiceDefinitions, cityService);
+
+        public void RaiseTax(string taxName) => RaiseBudgetComponent(TaxDefinition.TaxDefinitions, taxName);
+        public void LowerTax(string taxName) => LowerBudgetComponent(TaxDefinition.TaxDefinitions, taxName);
+
+        private void RaiseBudgetComponent(IEnumerable<BudgetComponentDefinition> budgetComponentDefinitions, string taxName)
+            => MutateBudgetComponent(budgetComponentDefinitions, taxName, (currentRate, selectableRate) => currentRate < selectableRate, x => x.First());
+
+        private void LowerBudgetComponent(IEnumerable<BudgetComponentDefinition> budgetComponentDefinitions, string taxName)
+            => MutateBudgetComponent(budgetComponentDefinitions, taxName, (currentRate, selectableRate) => currentRate > selectableRate, x => x.Last());
+
+        private void MutateBudgetComponent(
+            IEnumerable<BudgetComponentDefinition> budgetComponentDefinitions,
+            string taxName,
+            Func<decimal, decimal, bool> comparison,
+            Func<IEnumerable<decimal>, decimal> selector)
+        {
+            var budget = GameServer.Instance.SimulationSession.CityBudgetConfiguration;
+
+            budgetComponentDefinitions
+                .Single(x => x.Name == taxName)
+                .Pipe(taxdefinition =>
+                {
+                    taxdefinition
+                        .GetSelectableRatePercentages()
+                        .Where(selectableRate => comparison(taxdefinition.CurrentRate(budget), selectableRate))
+                        .Pipe(results =>
+                        {
+                            if (results.Any())
+                            {
+                                taxdefinition.SetCurrentRate(budget, selector(results));
+                            }
+                        });
+                });
         }
 
         public void RequestMenuStructure()
@@ -63,7 +113,7 @@ namespace Mirage.Urbanization.Web
                     {
                         dataMeterInstances = DataMeterInstances
                             .DataMeters
-                            .Select(x => x.Name),
+                            .Select(x => new { name = x.Name, webId = x.WebId }),
 
                         buttonDefinitions = GameServer
                             .Instance
@@ -78,7 +128,11 @@ namespace Mirage.Urbanization.Web
                                 cost = x.Cost,
                                 keyChar = x.KeyChar,
                                 isClickAndDrag = x.BuildStyle == BuildStyle.ClickAndDrag,
-                                isClearButton = x.GetType() == typeof(EmptyZoneConsumption)
+                                isClearButton = x.GetType() == typeof(EmptyZoneConsumption),
+                                widthInCells = (x as IAreaZoneClusterConsumption)?.WidthInCells ?? 1,
+                                heightInCells = (x as IAreaZoneClusterConsumption)?.HeightInCells ?? 1,
+                                horizontalCellOffset = (x as IAreaZoneClusterConsumption)?.HorizontalCellOffset ?? 0,
+                                verticalCellOffset = (x as IAreaZoneClusterConsumption)?.VerticalCellOffset ?? 0,
                             })
                     }
                     );
@@ -102,10 +156,10 @@ namespace Mirage.Urbanization.Web
                     .SimulationSession
                     .Area
                     .EnumerateZoneInfos()
-                    .Where(x => x.ZoneConsumptionState.GetZoneConsumption().GetType() != typeof (EmptyZoneConsumption))
+                    .Where(x => x.ZoneConsumptionState.GetZoneConsumption().GetType() != typeof(EmptyZoneConsumption))
                     .ToList();
 
-                foreach (var batchState in initialState.GetBatched())
+                foreach (var batchState in initialState.GetBatched(50))
                 {
                     Clients.Caller
                         .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
