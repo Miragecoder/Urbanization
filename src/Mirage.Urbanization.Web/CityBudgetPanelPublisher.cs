@@ -16,7 +16,8 @@ namespace Mirage.Urbanization.Web
                     .Select(x => new CityServiceState
                     {
                         name = x.Name,
-                        projectedExpenses = x.GetProjectedExpenses(statistics)
+                        projectedExpenses = x.GetProjectedExpenses(statistics),
+                        currentRate = x.CurrentRate(session.CityBudgetConfiguration).ToString("P")
                     })
                     .ToArray(),
                 taxStates = TaxDefinition

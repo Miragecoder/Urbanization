@@ -65,18 +65,29 @@ namespace Mirage.Urbanization.Web
 
         public static string GetDataMeterGroupName(int dataMeterId) => "dataMeter" + dataMeterId;
 
-        public void RaiseTax(string taxName) => MutateTax(taxName, (currentRate, selectableRate) => currentRate < selectableRate, x => x.First());
-        public void LowerTax(string taxName) => MutateTax(taxName, (currentRate, selectableRate) => currentRate > selectableRate, x => x.Last());
+        public void RaiseCityServiceFunding(string cityService)
+            => RaiseBudgetComponent(CityServiceDefinition.CityServiceDefinitions, cityService);
+        public void LowerCityServiceFunding(string cityService)
+            => LowerBudgetComponent(CityServiceDefinition.CityServiceDefinitions, cityService);
 
-        private void MutateTax(
-            string taxName, 
+        public void RaiseTax(string taxName) => RaiseBudgetComponent(TaxDefinition.TaxDefinitions, taxName);
+        public void LowerTax(string taxName) => LowerBudgetComponent(TaxDefinition.TaxDefinitions, taxName);
+
+        private void RaiseBudgetComponent(IEnumerable<BudgetComponentDefinition> budgetComponentDefinitions, string taxName)
+            => MutateBudgetComponent(budgetComponentDefinitions, taxName, (currentRate, selectableRate) => currentRate < selectableRate, x => x.First());
+
+        private void LowerBudgetComponent(IEnumerable<BudgetComponentDefinition> budgetComponentDefinitions, string taxName)
+            => MutateBudgetComponent(budgetComponentDefinitions, taxName, (currentRate, selectableRate) => currentRate > selectableRate, x => x.Last());
+
+        private void MutateBudgetComponent(
+            IEnumerable<BudgetComponentDefinition> budgetComponentDefinitions,
+            string taxName,
             Func<decimal, decimal, bool> comparison,
             Func<IEnumerable<decimal>, decimal> selector)
         {
             var budget = GameServer.Instance.SimulationSession.CityBudgetConfiguration;
 
-            TaxDefinition
-                .TaxDefinitions
+            budgetComponentDefinitions
                 .Single(x => x.Name == taxName)
                 .Pipe(taxdefinition =>
                 {

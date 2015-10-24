@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿"use strict";
+$(function () {
 
     var raiseHotMessage = null;
 
@@ -36,7 +37,7 @@
                 event.preventDefault();
             });
         };
-        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 300);
+        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500);
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
         registerDialog("#hotMessageDialog", 200);
@@ -205,24 +206,40 @@
             $("#budgetTaxTable").empty();
             var taxStates = cityBudgetState.taxStates;
 
-            var writeTaxStateRow = function (taxState, isSummary) {
+            var writeHeader = function(nameHeader, projectedHeader, rateHeader, actions) {
                 var taxRow = document.createElement("tr");
 
-                (function () {
+                var addCell = function (name) {
+                    var labelCell = document.createElement("th");
+                    labelCell.innerHTML = name;
+                    taxRow.appendChild(labelCell);
+                };
+                addCell(nameHeader);
+                addCell(projectedHeader);
+                addCell(rateHeader);
+                addCell(actions);
+
+                document.getElementById("budgetTaxTable").appendChild(taxRow);
+            };
+
+            var writeTaxStateRow = function(taxState, isSummary, getName, getProjected, getRate, lowerFunc, raiseFunc) {
+                var taxRow = document.createElement("tr");
+
+                (function() {
                     var labelCell = document.createElement("td");
-                    labelCell.innerHTML = taxState.name;
+                    labelCell.innerHTML = getName(taxState);
                     taxRow.appendChild(labelCell);
                 })();
 
-                (function () {
+                (function() {
                     var labelCell = document.createElement("td");
                     labelCell.class = "currencycol";
-                    (function () {
+                    (function() {
                         var span = document.createElement("span");
                         span.innerHTML = "$";
                         labelCell.appendChild(span);
                     })();
-                    labelCell.innerHTML = taxState.projectedIncome;
+                    labelCell.innerHTML = getProjected(taxState);
                     taxRow.appendChild(labelCell);
                 })();
 
@@ -230,30 +247,38 @@
                     var labelCell = document.createElement("td");
                     labelCell.innerHTML = "";
                     taxRow.appendChild(labelCell);
+                    var labelCell = document.createElement("td");
+                    labelCell.innerHTML = "";
+                    taxRow.appendChild(labelCell);
                 } else {
                     (function () {
                         var labelCell = document.createElement("td");
-                        labelCell.innerHTML = taxState.currentRate;
+                        labelCell.innerHTML = getRate(taxState);
+                        taxRow.appendChild(labelCell);
+                    })();
+
+                    (function() {
+                        var labelCell = document.createElement("td");
                         taxRow.appendChild(labelCell);
 
                         var disableButtons;
 
                         var raiseButton = document.createElement("button");
                         raiseButton.innerHTML = "Raise";
-                        raiseButton.addEventListener("click", function () {
-                            simulation.server.raiseTax(taxState.name);
+                        raiseButton.addEventListener("click", function() {
+                            raiseFunc(simulation.server, taxState);
                             disableButtons();
                         });
                         labelCell.appendChild(raiseButton);
 
                         var dropButton = document.createElement("button");
                         dropButton.innerHTML = "Lower";
-                        dropButton.addEventListener("click", function () {
-                            simulation.server.lowerTax(taxState.name);
+                        dropButton.addEventListener("click", function() {
+                            lowerFunc(simulation.server, taxState);
                             disableButtons();
                         });
 
-                        disableButtons = function () {
+                        disableButtons = function() {
                             dropButton.disabled = true;
                             raiseButton.disabled = true;
                         }
@@ -263,42 +288,78 @@
                 }
 
                 document.getElementById("budgetTaxTable").appendChild(taxRow);
+            };
+            (function () {
+                writeHeader("Tax", "Projected income", "Current rate", "Actions");
 
-            }
-
-            $("#budgetTaxTable")
-                .append("<tr><th colspan=\"3\">Taxes</th></tr>")
-                .append("<tr><td>Tax</td><td>Projected income</td><td>Current rate</td></tr>");
-            for (var i in taxStates) {
-                if (taxStates.hasOwnProperty(i)) {
-                    var taxState = taxStates[i];
-                    writeTaxStateRow(taxState, false);
+                for (var i in taxStates) {
+                    if (taxStates.hasOwnProperty(i)) {
+                        var taxState = taxStates[i];
+                        writeTaxStateRow(taxState,
+                            false,
+                            function (e) { return e.name; },
+                            function (e) { return e.projectedIncome; },
+                            function (e) { return e.currentRate; },
+                            function (server, taxState) { server.lowerTax(taxState.name); },
+                            function (server, taxState) { server.raiseTax(taxState.name); });
+                    }
                 }
-            }
-            writeTaxStateRow(cityBudgetState.totalTaxState, true);
-
-
-            /*var cityServiceStates = cityBudgetState.cityServiceStates;
-
-            var writeCityServiceStateRow = function (cityServiceState) {
-                $("#budgetTaxTable").append("<tr><td>" + cityServiceState.name + "</td><td class=\"currencycol\"><span>$</span> " + cityServiceState.projectedExpenses + "</td></tr>");
-            }
-
-            $("#budgetTaxTable").append("<tr><th colspan=\"2\">City services</th></tr>");
-            for (var i in cityServiceStates) {
-                if (cityServiceStates.hasOwnProperty(i)) {
-                    var cityServiceState = cityServiceStates[i];
-                    writeCityServiceStateRow(cityServiceState);
+                writeTaxStateRow(cityBudgetState.totalTaxState,
+                    true,
+                    function (e) { return e.name; },
+                    function (e) { return e.projectedIncome; });
+            })();
+            (function () {
+                writeHeader("City services", "Projected expenses", "Current rate", "Actions");
+                for (var i in cityBudgetState.cityServiceStates) {
+                    if (cityBudgetState.cityServiceStates.hasOwnProperty(i)) {
+                        var cityServiceState = cityBudgetState.cityServiceStates[i];
+                        writeTaxStateRow(cityServiceState,
+                            false,
+                            function (e) { return e.name; },
+                            function (e) { return e.projectedExpenses; },
+                            function (e) { return e.currentRate; },
+                            function (server, cityServiceState) { server.lowerCityServiceFunding(cityServiceState.name); },
+                            function (server, cityServiceState) { server.raiseCityServiceFunding(cityServiceState.name); });
+                    }
                 }
-            }
-            writeCityServiceStateRow(cityBudgetState.totalCityServiceState);
+                writeTaxStateRow(cityBudgetState.totalCityServiceState,
+                    true,
+                    function (e) { return e.name; },
+                    function (e) { return e.projectedExpenses; });
+            })();
 
-            $("#budgetTaxTable").append("<tr><th colspan=\"2\">Totals</th></tr>");
-            writeTaxStateRow(cityBudgetState.totalTaxState);
-            cityBudgetState.totalCityServiceState.projectedExpenses = (0 - cityBudgetState.totalCityServiceState.projectedExpenses);
-            writeCityServiceStateRow(cityBudgetState.totalCityServiceState);
-            $("#budgetTaxTable").append("<tr><td>Projected income</td><td class=\"currencycol\"><span>$</span> " + (cityBudgetState.totalTaxState.projectedIncome + cityBudgetState.totalCityServiceState.projectedExpenses) + "</td></tr>");*/
+            (function() {
+                var taxRow = document.createElement("tr");
 
+                (function () {
+                    var labelCell = document.createElement("th");
+                    labelCell.innerHTML = "Totals";
+                    labelCell.colSpan = 4;
+                    taxRow.appendChild(labelCell);
+                })();
+
+                document.getElementById("budgetTaxTable").appendChild(taxRow);
+            })();
+
+            (function () {
+                var addRow = function (label, value) {
+                    var taxRow = document.createElement("tr");
+                    var addCell = function (text) {
+                        var labelCell = document.createElement("td");
+                        labelCell.innerHTML = text;
+                        labelCell.colSpan = 2;
+                        taxRow.appendChild(labelCell);
+                    };
+                    addCell(label);
+                    addCell(value);
+                    document.getElementById("budgetTaxTable").appendChild(taxRow);
+                };
+
+                addRow("Projected income", cityBudgetState.totalTaxState.projectedIncome);
+                addRow("Projected expenses", (0 - cityBudgetState.totalCityServiceState.projectedExpenses));
+                addRow("Total income", cityBudgetState.totalTaxState.projectedIncome - cityBudgetState.totalCityServiceState.projectedExpenses);
+            })();
         });
 
         simulation.client.submitCityBudgetValue = function (e) {
