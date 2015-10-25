@@ -57,7 +57,7 @@ namespace Mirage.Urbanization.WinForms
         }
 
         private readonly IList<GraphControlDefinition> _graphControlDefinitions = GraphDefinitions
-            .GenerateGraphDefinitions()
+            .Instances
             .Select(x => new GraphControlDefinition(x))
             .ToList();
 

@@ -113,8 +113,8 @@ namespace Mirage.Urbanization.Web
                     new
                     {
                         graphDefinitions = GraphDefinitions
-                            .GenerateGraphDefinitions()
-                            .Select(x => x.Title),
+                            .Instances
+                            .Select(x => new { title = x.Title, webId = x.WebId }),
 
                         dataMeterInstances = DataMeterInstances
                             .DataMeters

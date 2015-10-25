@@ -10,6 +10,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
+using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Simulation;
 using Owin;
 using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
@@ -20,28 +21,58 @@ namespace Mirage.Urbanization.Web
 {
     public class Startup
     {
+        private static readonly Lazy<IChartDrawer> ChartDrawer = new Lazy<IChartDrawer>(Mirage.Urbanization.Charts.ChartDrawerFactory.Create); 
+
+        static async Task ServeImage(IOwinContext context, Image image)
+        {
+            try
+            {
+                using (var stream = new MemoryStream())
+                {
+                    image.Save(stream, ImageFormat.Png);
+                    context.Response.ContentType = "image/png";
+                    await context.Response.WriteAsync(stream.ToArray());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteLine("An unhandled exception occurred whilst processing tile image request: " + ex);
+            }
+        }
+
         public void Configuration(IAppBuilder app)
         {
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path.Value.StartsWith("/tile/"))
+                if (context.Request.Path.Value.StartsWith("/graph/"))
                 {
-                    try
-                    {
-                        var bitmap = TilesetProvider.GetBitmapForHashcode(Convert.ToInt32(
-                            context.Request.Path.Value.Split('/').Last()));
+                    await context
+                        .Request
+                        .Path
+                        .Value
+                        .Split('/')
+                        .Reverse()
+                        .Skip(1)
+                        .First()
+                        .Pipe(x => Convert.ToInt32(x))
+                        .Pipe(graphWebId => GraphDefinitions
+                            .Instances
+                            .Single(x => x.WebId == graphWebId)
+                        )
+                        .Pipe(graphDefinition => ChartDrawer.Value.Draw(
+                            graphDefinition,
+                            GameServer.Instance.SimulationSession.GetAllCityStatistics(),
+                            SystemFonts.DefaultFont, new Size(500, 300))
+                        )
+                        .Pipe(image => ServeImage(context, image));
+                    return;
+                }
+                else if (context.Request.Path.Value.StartsWith("/tile/"))
+                {
+                    var bitmap = TilesetProvider.GetBitmapForHashcode(Convert.ToInt32(
+                        context.Request.Path.Value.Split('/').Last()));
 
-                        using (var stream = new MemoryStream())
-                        {
-                            bitmap.Save(stream, ImageFormat.Png);
-                            context.Response.ContentType = "image/png";
-                            await context.Response.WriteAsync(stream.ToArray());
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Instance.WriteLine("An unhandled exception occurred whilst processing tile image request: " + ex);
-                    }
+                    await ServeImage(context, bitmap);
                     return;
                 }
                 await next();

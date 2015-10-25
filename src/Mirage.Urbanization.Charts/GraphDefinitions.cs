@@ -8,7 +8,9 @@ namespace Mirage.Urbanization.Charts
 {
     public static class GraphDefinitions
     {
-        public static IEnumerable<GraphDefinition> GenerateGraphDefinitions()
+        public static IReadOnlyCollection<GraphDefinition> Instances = GenerateGraphDefinitions().ToList(); 
+
+        private static IEnumerable<GraphDefinition> GenerateGraphDefinitions()
         {
             yield return new GraphDefinition("Amount of zones",
                 new GraphSeries(

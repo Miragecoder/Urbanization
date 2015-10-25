@@ -14,11 +14,15 @@ namespace Mirage.Urbanization.Charts
 {
     public class GraphDefinition
     {
+        private static int WebIdCounter;
+
         public GraphDefinition(string title, params GraphSeries[] graphSeriesSet)
         {
             Title = title;
             GraphSeriesSet = graphSeriesSet;
         }
+
+        public int WebId { get; } = ++WebIdCounter;
 
         public string Title { get; }
         public IReadOnlyCollection<GraphSeries> GraphSeriesSet { get; }
