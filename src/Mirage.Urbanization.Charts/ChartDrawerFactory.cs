@@ -4,11 +4,13 @@ namespace Mirage.Urbanization.Charts
     {
         public static IChartDrawer Create()
         {
-            if (RuntimeInspection.IsRunningOnMono())
+            if (RuntimeInspection.IsRunningOnMono() || ForceZedGraph)
             {
-                
+                return new ZedGraphChartDrawer();
             }
             return new DataVisualizationChartDrawer();
         }
+
+        public static bool ForceZedGraph { get; set; }
     }
 }

@@ -36,6 +36,8 @@
             this.saveCityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCityAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cityBudgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,8 +65,8 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveCityDialog = new System.Windows.Forms.SaveFileDialog();
             this.openCityDialog = new System.Windows.Forms.OpenFileDialog();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.forceZedGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -136,6 +138,18 @@
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(272, 6);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(275, 34);
+            this.toolStripMenuItem1.Text = "Start webserver";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(272, 6);
             // 
             // exitToolStripMenuItem
             // 
@@ -240,7 +254,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(162, 34);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(240, 34);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // debugToolStripMenuItem
@@ -250,7 +264,9 @@
             this.enableMoneyCheatToolStripMenuItem,
             this.toolStripSeparator5,
             this.toggleOverlayNumbers,
-            this.debugWindowToolStripMenuItem});
+            this.debugWindowToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.forceZedGraphToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(87, 34);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -343,17 +359,18 @@
             this.openCityDialog.Filter = "XML files|*.xml";
             this.openCityDialog.Title = "Open city";
             // 
-            // toolStripMenuItem1
+            // toolStripSeparator6
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(275, 34);
-            this.toolStripMenuItem1.Text = "Start webserver";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(337, 6);
             // 
-            // toolStripSeparator1
+            // forceZedGraphToolStripMenuItem
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(272, 6);
+            this.forceZedGraphToolStripMenuItem.CheckOnClick = true;
+            this.forceZedGraphToolStripMenuItem.Name = "forceZedGraphToolStripMenuItem";
+            this.forceZedGraphToolStripMenuItem.Size = new System.Drawing.Size(340, 34);
+            this.forceZedGraphToolStripMenuItem.Text = "Force ZedGraph";
+            this.forceZedGraphToolStripMenuItem.Click += new System.EventHandler(this.forceZedGraphToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -364,7 +381,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "Main Form";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -416,6 +433,8 @@
         private System.Windows.Forms.ToolStripMenuItem debugWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem forceZedGraphToolStripMenuItem;
     }
 }
 

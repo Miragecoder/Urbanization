@@ -368,5 +368,10 @@ namespace Mirage.Urbanization.WinForms
                     };
                 });
         }
+
+        private void forceZedGraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChartDrawerFactory.ForceZedGraph = forceZedGraphToolStripMenuItem.Checked;
+        }
     }
 }

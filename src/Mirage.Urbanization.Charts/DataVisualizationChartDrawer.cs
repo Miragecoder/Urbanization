@@ -14,9 +14,9 @@ using Image = System.Drawing.Image;
 
 namespace Mirage.Urbanization.Charts
 {
-    internal class DataVisualizationChartDrawer : IChartDrawer
+    internal class DataVisualizationChartDrawer : BaseChartDrawer
     {
-        public Image Draw(
+        public override Image Draw(
             GraphDefinition graphDefinition,
             IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics,
             Font font,
@@ -34,21 +34,7 @@ namespace Mirage.Urbanization.Charts
 
                 chart.ChartAreas.Add("Test");
 
-                var dataTable = new DataTable();
-
-                dataTable.Columns.Add("Type", typeof(string));
-                dataTable.Columns.Add(graphDefinition.Title, typeof(int));
-                dataTable.Columns.Add("TimeCode", typeof(string));
-
-                foreach (var statistic in statistics)
-                {
-                    foreach (var col in graphDefinition.GraphSeriesSet)
-                    {
-                        dataTable.Rows.Add(col.Label, col.GetValue(statistic),
-                            statistic.PersistedCityStatistics.TimeCode.ToString(CultureInfo.InvariantCulture));
-                    }
-                }
-
+                var dataTable = ConvertIntoDataTable(graphDefinition, statistics);
 
                 chart.DataBindCrossTable(dataTable.Rows, "Type", "TimeCode", graphDefinition.Title, String.Empty);
 
