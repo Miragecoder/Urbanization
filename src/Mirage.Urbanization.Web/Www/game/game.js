@@ -28,18 +28,23 @@ $(function () {
 
         }
 
-        var registerDialogWithButton = function (dialogId, dialogButtonId, width) {
+        var registerDialogWithButton = function (dialogId, dialogButtonId, width, onClick) {
             registerDialog(dialogId, width);
 
             // Link to open the dialog
             $(dialogButtonId).click(function (event) {
                 $(dialogId).dialog("open");
                 event.preventDefault();
+                onClick();
             });
         };
-        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500);
-        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
-        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        var doNothing = function() {};
+
+        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500, doNothing);
+        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing);
+        registerDialogWithButton("#graphDialog", "#graphDialogButton", 800, function() {
+            document.getElementById("refreshChartsButton").click();
+        });
         registerDialog("#hotMessageDialog", 200);
 
         raiseHotMessage = function (title, message) {
@@ -404,7 +409,66 @@ $(function () {
         }
     }
 
+    var processGraphDefinitions = function (graphDefinitions) {
+        var graphTabs = document.getElementById("graphTabs");
+        var graphTabHeads = document.getElementById("graphTabHeads");
+
+        var refreshChartFunctions = [];
+
+        var counter = 1;
+        for (var g in graphDefinitions) {
+            if (graphDefinitions.hasOwnProperty(g)) {
+                var graphDefinition = graphDefinitions[g];
+
+                (function () {
+                    var li = document.createElement("li");
+                    var a = document.createElement("a");
+                    li.appendChild(a);
+                    a.href = "#graphTabs-" + counter;
+                    a.innerHTML = graphDefinition.title;
+                    graphTabHeads.appendChild(li);
+                })();
+
+                (function () {
+                    var div = document.createElement("div");
+                    div.id = "graphTabs-" + counter;
+
+                    var img = document.createElement("img");
+                    div.appendChild(img);
+
+                    var drawChart = null;
+
+                    (function() {
+                        var localGraphDef = graphDefinition;
+
+                        drawChart = function () {
+                            img.src = "/graph/" + localGraphDef.webId + "/" + new Date().getTime();
+                        };
+                    })();
+
+                    refreshChartFunctions.push(drawChart);
+
+                    graphTabs.appendChild(div);
+                    drawChart();
+                })();
+
+                counter++;
+            }
+        }
+
+        $("#refreshChartsButton").click(function() {
+            for (var f in refreshChartFunctions) {
+                if (refreshChartFunctions.hasOwnProperty(f)) {
+                    refreshChartFunctions[f]();
+                }
+            }
+        });
+        $("#graphTabs").tabs();
+    };
+
     simulation.client.submitMenuStructure = function (request) {
+
+        processGraphDefinitions(request.graphDefinitions);
 
         var createButton = function (text, target, clickHandler) {
             var newButtonElement = document.createElement("button");

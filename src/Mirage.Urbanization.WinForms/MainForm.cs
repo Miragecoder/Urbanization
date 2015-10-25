@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Persistence;
@@ -334,7 +335,7 @@ namespace Mirage.Urbanization.WinForms
             });
         }
 
-        private readonly SimulationRenderHelperFormManager<StatisticsForm> _statisticsFormManager = new SimulationRenderHelperFormManager<StatisticsForm>(helper => new StatisticsForm(helper));
+        private readonly SimulationRenderHelperFormManager<StatisticsForm> _statisticsFormManager = new SimulationRenderHelperFormManager<StatisticsForm>(helper => new StatisticsForm(helper, ChartDrawerFactory.Create));
 
         private void statisticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -366,6 +367,11 @@ namespace Mirage.Urbanization.WinForms
                         _webserverForm = null;
                     };
                 });
+        }
+
+        private void forceZedGraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChartDrawerFactory.ForceZedGraph = forceZedGraphToolStripMenuItem.Checked;
         }
     }
 }

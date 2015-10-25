@@ -115,7 +115,6 @@
     <Compile Include="Rendering\SharpDx\ConverterAndCacher.cs" />
     <Compile Include="Rendering\SharpDx\DxGraphicsManagerWrapper.cs" />
     <Compile Include="RenderZoneOptions.cs" />
-    <Compile Include="RuntimeInspection.cs" />
     <Compile Include="SimulationRenderHelperFormManager.cs" />
     <Compile Include="StatisticsForm.cs">
       <SubType>Form</SubType>
@@ -180,6 +179,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mirage.Urbanization.Charts\Mirage.Urbanization.Charts.csproj">
+      <Project>{bb0c4ff4-50b5-4d4b-887c-20f9e0775d1a}</Project>
+      <Name>Mirage.Urbanization.Charts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mirage.Urbanization.Resources\Mirage.Urbanization.Tilesets.csproj">
       <Project>{73bbfbfd-14a4-40ea-87b5-e1bf9baf42f7}</Project>
       <Name>Mirage.Urbanization.Tilesets</Name>
