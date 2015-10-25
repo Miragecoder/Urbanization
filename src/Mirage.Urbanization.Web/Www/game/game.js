@@ -39,7 +39,7 @@ $(function () {
         };
         registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500);
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
-        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400);
+        registerDialogWithButton("#graphDialog", "#graphDialogButton", 800);
         registerDialog("#hotMessageDialog", 200);
 
         raiseHotMessage = function (title, message) {
@@ -404,7 +404,41 @@ $(function () {
         }
     }
 
+    var processGraphDefinitions = function (graphDefinitions) {
+        var graphTabs = document.getElementById("graphTabs");
+        var graphTabHeads = document.getElementById("graphTabHeads");
+
+        var counter = 1;
+        for (var g in graphDefinitions) {
+            if (graphDefinitions.hasOwnProperty(g)) {
+                var graphDefinition = graphDefinitions[g];
+
+                (function () {
+                    var li = document.createElement("li");
+                    var a = document.createElement("a");
+                    li.appendChild(a);
+                    a.href = "#graphTabs-" + counter;
+                    a.innerHTML = graphDefinition;
+                    graphTabHeads.appendChild(li);
+                })();
+
+                (function () {
+                    var div = document.createElement("div");
+                    div.id = "graphTabs-" + counter;
+
+                    div.innerHTML = graphDefinition;
+                    graphTabs.appendChild(div);
+                })();
+
+                counter++;
+            }
+        }
+        $("#graphTabs").tabs();
+    };
+
     simulation.client.submitMenuStructure = function (request) {
+
+        processGraphDefinitions(request.graphDefinitions);
 
         var createButton = function (text, target, clickHandler) {
             var newButtonElement = document.createElement("button");

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
+using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.ZoneConsumption;
@@ -111,6 +112,10 @@ namespace Mirage.Urbanization.Web
                 Clients.Caller.submitMenuStructure(
                     new
                     {
+                        graphDefinitions = GraphDefinitions
+                            .GenerateGraphDefinitions()
+                            .Select(x => x.Title),
+
                         dataMeterInstances = DataMeterInstances
                             .DataMeters
                             .Select(x => new { name = x.Name, webId = x.WebId }),
