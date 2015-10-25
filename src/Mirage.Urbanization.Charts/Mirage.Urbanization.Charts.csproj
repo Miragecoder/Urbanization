@@ -43,15 +43,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChartDrawerFactory.cs" />
+    <Compile Include="DataVisualizationChartDrawer.cs" />
     <Compile Include="GraphDefinitions.cs" />
     <Compile Include="GraphSeries.cs" />
     <Compile Include="GraphDefinition.cs" />
+    <Compile Include="IChartDrawer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
       <Project>{5A699402-01AE-484E-A489-FD500E868A0C}</Project>
       <Name>Mirage.Urbanization.Simulation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
+      <Project>{06DC9742-27AE-4711-801A-11B2A43CAB8C}</Project>
+      <Name>Mirage.Urbanization</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

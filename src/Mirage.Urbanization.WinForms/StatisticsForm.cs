@@ -22,9 +22,12 @@ namespace Mirage.Urbanization.WinForms
 {
     public partial class StatisticsForm : FormWithCityStatisticsEvent
     {
-        public StatisticsForm(SimulationRenderHelper helper)
+        private readonly Lazy<IChartDrawer> _chartDrawer;
+
+        public StatisticsForm(SimulationRenderHelper helper, Func<IChartDrawer> createChartDrawerFunc)
             : base(helper)
         {
+            _chartDrawer = new Lazy<IChartDrawer>(createChartDrawerFunc);
             InitializeComponent();
 
             foreach (var tabPage in _graphControlDefinitions)
@@ -39,7 +42,7 @@ namespace Mirage.Urbanization.WinForms
                 .Select(graph => new
                 {
                     GraphControl = graph,
-                    Bitmap = graph.GraphDefinition.ProduceBitmapFor(statistics, graph.TabPage.Font, graph.TabPage.Size)
+                    Bitmap = _chartDrawer.Value.Draw(graph.GraphDefinition, statistics, graph.TabPage.Font, graph.TabPage.Size)
                 })
                 .ToList();
 
