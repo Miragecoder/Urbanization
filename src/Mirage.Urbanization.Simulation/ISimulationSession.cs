@@ -18,9 +18,9 @@ namespace Mirage.Urbanization.Simulation
 
         QueryResult<PersistedCityStatisticsWithFinancialData> GetRecentStatistics();
 
-        IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear();
+        IEnumerable<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear();
 
-        IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics(); 
+        IEnumerable<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics(); 
 
         event EventHandler<EventArgsWithData<IYearAndMonth>> OnYearAndOrMonthChanged;
         PersistedSimulation GeneratePersistedArea();

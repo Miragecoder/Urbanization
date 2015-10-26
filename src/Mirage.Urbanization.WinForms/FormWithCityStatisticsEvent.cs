@@ -18,7 +18,7 @@ namespace Mirage.Urbanization.WinForms
             helper.SimulationSession.CityStatisticsUpdated += (x, y) => UpdatePrivate(helper.SimulationSession.GetAllCityStatistics(), y.EventData);
         }
 
-        private void UpdatePrivate(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, 
+        private void UpdatePrivate(IEnumerable<PersistedCityStatisticsWithFinancialData> statistics, 
             PersistedCityStatisticsWithFinancialData current)
         {
             if (!IsHandleCreated) return;
@@ -26,7 +26,7 @@ namespace Mirage.Urbanization.WinForms
             Update(statistics, current);
         }
 
-        public virtual void Update(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics,
+        public virtual void Update(IEnumerable<PersistedCityStatisticsWithFinancialData> statistics,
             PersistedCityStatisticsWithFinancialData current)
         {
             throw new NotImplementedException();

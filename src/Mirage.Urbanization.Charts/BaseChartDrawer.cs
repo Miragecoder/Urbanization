@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.Charts
     {
         protected DataTable ConvertIntoDataTable(
             GraphDefinition graphDefinition,
-            IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics)
+            IEnumerable<PersistedCityStatisticsWithFinancialData> statistics)
         {
             var dataTable = new DataTable();
 
@@ -30,8 +30,8 @@ namespace Mirage.Urbanization.Charts
         }
 
         public abstract Image Draw(
-            GraphDefinition graphDefinition, 
-            IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, 
+            GraphDefinition graphDefinition,
+            IEnumerable<PersistedCityStatisticsWithFinancialData> statistics, 
             Font font, 
             Size size);
     }

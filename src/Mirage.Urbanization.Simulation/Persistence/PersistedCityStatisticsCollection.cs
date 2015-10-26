@@ -7,13 +7,16 @@ namespace Mirage.Urbanization.Simulation.Persistence
 {
     public class PersistedCityStatisticsCollection
     {
-        private ImmutableList<PersistedCityStatisticsWithFinancialData> _persistedCityStatistics = ImmutableList<PersistedCityStatisticsWithFinancialData>.Empty;
+        private ImmutableQueue<PersistedCityStatisticsWithFinancialData> _persistedCityStatistics = ImmutableQueue<PersistedCityStatisticsWithFinancialData>.Empty;
 
         private PersistedCityStatisticsWithFinancialData _mostRecentStatistics;
 
         public void Add(PersistedCityStatisticsWithFinancialData statistics)
         {
-            _persistedCityStatistics = _persistedCityStatistics.Add(statistics);
+            _persistedCityStatistics = _persistedCityStatistics.Enqueue(statistics);
+            if (_persistedCityStatistics.Count() > 2080)
+                _persistedCityStatistics = _persistedCityStatistics.Dequeue();
+
             _mostRecentStatistics = statistics;
         }
 
@@ -22,7 +25,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
             return QueryResult<PersistedCityStatisticsWithFinancialData>.Create(_mostRecentStatistics);
         }
 
-        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAll()
+        public IEnumerable<PersistedCityStatisticsWithFinancialData> GetAll()
         {
             return _persistedCityStatistics;
         }

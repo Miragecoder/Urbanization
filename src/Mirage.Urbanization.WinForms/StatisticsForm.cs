@@ -35,7 +35,7 @@ namespace Mirage.Urbanization.WinForms
         }
 
         public override void Update(
-            IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, 
+            IEnumerable<PersistedCityStatisticsWithFinancialData> statistics, 
             PersistedCityStatisticsWithFinancialData current)
         {
             var bitmapsAndControls = _graphControlDefinitions

@@ -21,7 +21,7 @@ namespace Mirage.Urbanization.WinForms
             InitializeComponent();
         }
 
-        public override void Update(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, PersistedCityStatisticsWithFinancialData current)
+        public override void Update(IEnumerable<PersistedCityStatisticsWithFinancialData> statistics, PersistedCityStatisticsWithFinancialData current)
         {
             var cityStatistics = new CityStatisticsView(current);
 

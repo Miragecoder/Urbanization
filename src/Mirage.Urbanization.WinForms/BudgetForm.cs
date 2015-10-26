@@ -42,7 +42,7 @@ namespace Mirage.Urbanization.WinForms
             this.Close();
         }
 
-        public override void Update(IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics, PersistedCityStatisticsWithFinancialData current)
+        public override void Update(IEnumerable<PersistedCityStatisticsWithFinancialData> statistics, PersistedCityStatisticsWithFinancialData current)
         {
             if (!IsHandleCreated) return;
 

@@ -18,7 +18,7 @@ namespace Mirage.Urbanization.Charts
     {
         public override Image Draw(
             GraphDefinition graphDefinition,
-            IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> statistics,
+            IEnumerable<PersistedCityStatisticsWithFinancialData> statistics,
             Font font,
             Size size)
         {

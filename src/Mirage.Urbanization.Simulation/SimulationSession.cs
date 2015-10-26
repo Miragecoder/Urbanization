@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -194,7 +195,7 @@ namespace Mirage.Urbanization.Simulation
             );
         }
 
-        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear()
+        public IEnumerable<PersistedCityStatisticsWithFinancialData> GetAllCityStatisticsForCurrentYear()
         {
             var statistics = GetRecentStatistics();
 
@@ -224,7 +225,7 @@ namespace Mirage.Urbanization.Simulation
 
         public event EventHandler<CityStatisticsUpdatedEventArgs> CityStatisticsUpdated;
 
-        public IReadOnlyCollection<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics()
+        public IEnumerable<PersistedCityStatisticsWithFinancialData> GetAllCityStatistics()
         {
             return _persistedCityStatisticsCollection.GetAll();
         }
