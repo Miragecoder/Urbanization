@@ -30,9 +30,17 @@ namespace Mirage.Urbanization.Simulation
                 {
                     stopWatch.Restart();
 
-                    Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description}...");
-                    await _taskAction();
-                    Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description} completed in {stopWatch.Elapsed}.");
+                    try
+                    {
+                        Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description}...");
+                        await _taskAction();
+                        Mirage.Urbanization.Logger.Instance.WriteLine($"Executing {_description} completed in {stopWatch.Elapsed}.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Mirage.Urbanization.Logger.Instance.LogException(ex, _description, 100);
+                        throw;
+                    }
                     await Task.Delay(_pause, _token);
                 }
                 // ReSharper disable once FunctionNeverReturns
