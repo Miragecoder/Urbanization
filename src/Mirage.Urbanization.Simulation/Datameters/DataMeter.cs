@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
     {
         private readonly Func<PersistedCityStatisticsWithFinancialData, int> _getValue;
 
-        private readonly IReadOnlyCollection<Threshold> _thresholds;
+        public IReadOnlyCollection<IThreshold> Thresholds { get; }
 
         private readonly Lazy<int> _measureUnitSumLazy;
 
@@ -28,19 +28,19 @@ namespace Mirage.Urbanization.Simulation.Datameters
             _getValue = getValue;
             RepresentsIssue = representsIssue;
 
-            _thresholds = Enumerable.Range(0, 5)
-                .Select(i => new Threshold(i * measureUnit, (DataMeterValueCategory)i))
+            Thresholds = Enumerable.Range(0, 5)
+                .Select(i => new Threshold(i * measureUnit, (i * measureUnit) + measureUnit, (DataMeterValueCategory)i))
                 .ToList();
 
             if (Enum
                 .GetValues(typeof(DataMeterValueCategory))
                 .Cast<DataMeterValueCategory>()
-                .Any(x => _thresholds.Count(y => y.Category.Equals(x)) != 1))
+                .Any(x => Thresholds.Count(y => y.Category.Equals(x)) != 1))
             {
                 throw new InvalidOperationException();
             }
 
-            _measureUnitSumLazy = new Lazy<int>(() => _thresholds.Max(x => x.MeasureUnitThreshold));
+            _measureUnitSumLazy = new Lazy<int>(() => Thresholds.Max(x => x.MaxMeasureUnitThreshold));
         }
 
         public DataMeterResult GetDataMeterResult(PersistedCityStatisticsWithFinancialData statistics)
@@ -55,9 +55,9 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private DataMeterValueCategory GetScoreCategory(int amount)
         {
-            return _thresholds
-                .Where(x => amount >= x.MeasureUnitThreshold)
-                .OrderByDescending(x => x.MeasureUnitThreshold)
+            return Thresholds
+                .Where(x => amount >= x.MinMeasureUnitThreshold)
+                .OrderByDescending(x => x.MinMeasureUnitThreshold)
                 .First()
                 .Category;
         }
@@ -67,15 +67,25 @@ namespace Mirage.Urbanization.Simulation.Datameters
             return Math.Round(((decimal)amount / _measureUnitSumLazy.Value), 2);
         }
 
-        private class Threshold
+        public interface IThreshold
+        {
+            DataMeterValueCategory Category { get; }
+
+            int MinMeasureUnitThreshold { get; }
+            int MaxMeasureUnitThreshold { get; }
+        }
+
+        private class Threshold : IThreshold
         {
             public DataMeterValueCategory Category { get; }
 
-            public int MeasureUnitThreshold { get; }
+            public int MinMeasureUnitThreshold { get; }
+            public int MaxMeasureUnitThreshold { get; }
 
-            public Threshold(int measureUnitTreshold, DataMeterValueCategory category)
+            public Threshold(int minMeasureUnitTreshold, int maxMeasureUnitThreshold, DataMeterValueCategory category)
             {
-                MeasureUnitThreshold = measureUnitTreshold;
+                MinMeasureUnitThreshold = minMeasureUnitTreshold;
+                MaxMeasureUnitThreshold = maxMeasureUnitThreshold;
                 Category = category;
             }
         }

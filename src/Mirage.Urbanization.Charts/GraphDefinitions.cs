@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
 
 namespace Mirage.Urbanization.Charts
@@ -68,12 +69,12 @@ namespace Mirage.Urbanization.Charts
                 );
 
             foreach (var x in
-                GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.CrimeNumbers, "Crime", Color.Red, Color.DarkRed)
-                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.FireHazardNumbers, "Fire hazard", Color.Red, Color.DarkRed))
-                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.PollutionNumbers, "Pollution", Color.Green, Color.DarkOliveGreen))
-                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.TrafficNumbers, "Traffic", Color.Blue, Color.DarkBlue))
-                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.LandValueNumbers, "Land value", Color.Yellow, Color.GreenYellow))
-                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.AverageTravelDistanceStatistics, "Travel distances", Color.Blue, Color.DarkBlue))
+                GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.CrimeNumbers, DataMeterInstances.CrimeDataMeter, "Crime", Color.Red, Color.DarkRed)
+                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.FireHazardNumbers, DataMeterInstances.FireHazardDataMeter, "Fire hazard", Color.Red, Color.DarkRed))
+                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.PollutionNumbers, DataMeterInstances.PollutionDataMeter, "Pollution", Color.Green, Color.DarkOliveGreen))
+                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.TrafficNumbers, DataMeterInstances.TrafficDataMeter, "Traffic", Color.Blue, Color.DarkBlue))
+                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.LandValueNumbers, DataMeterInstances.LandValueDataMeter, "Land value", Color.Yellow, Color.GreenYellow))
+                    .Concat(GetNumbarSummaryGraphs(x => x.PersistedCityStatistics.AverageTravelDistanceStatistics, DataMeterInstances.TravelDistanceDataMeter, "Travel distances", Color.Blue, Color.DarkBlue))
                 )
                 yield return x;
 
@@ -108,6 +109,7 @@ namespace Mirage.Urbanization.Charts
 
         private static IEnumerable<GraphDefinition> GetNumbarSummaryGraphs(
             Func<PersistedCityStatisticsWithFinancialData, PersistedNumberSummary> getNumberSummary,
+            DataMeter dataMeter,
             string title,
             Color primaryColor,
             Color secondaryColor)
@@ -115,15 +117,8 @@ namespace Mirage.Urbanization.Charts
             Func<PersistedCityStatisticsWithFinancialData, PersistedNumberSummary> getNumberSummarySafeFunc =
                 x => getNumberSummary(x) ?? PersistedNumberSummary.EmptyInstance;
 
-            yield return new GraphDefinition("Total " + title,
-                new GraphSeries(
-                    x => getNumberSummarySafeFunc(x).Sum,
-                    "Total",
-                    primaryColor
-                    )
-                );
-
-            yield return new GraphDefinition("Average " + title,
+            yield return new GraphDefinition(title,
+                dataMeter,
                 new GraphSeries(
                     x => getNumberSummarySafeFunc(x).Average,
                     "Average",

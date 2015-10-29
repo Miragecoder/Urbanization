@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI.DataVisualization.Charting;
 using System.Web.UI.WebControls;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
 using Image = System.Drawing.Image;
 
@@ -56,6 +57,18 @@ namespace Mirage.Urbanization.Charts
 
                     series.Color = graphDefinition.GraphSeriesSet.Single(x => x.Label == series.Name).Color;
                 }
+
+                graphDefinition.DataMeter.WithResultIfHasMatch(dataMeter =>
+                {
+                    foreach (var meter in dataMeter.Thresholds)
+                    {
+                        chart
+                            .ChartAreas[0]
+                            .AxisY
+                            .CustomLabels
+                            .Add(meter.MinMeasureUnitThreshold, meter.MaxMeasureUnitThreshold, meter.Category.ToString());
+                    }
+                });
 
                 chart.SaveImage(chartMemoryStream);
 
