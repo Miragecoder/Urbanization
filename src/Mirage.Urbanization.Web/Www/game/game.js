@@ -449,7 +449,6 @@ $(function () {
                     refreshChartFunctions.push(drawChart);
 
                     graphTabs.appendChild(div);
-                    drawChart();
                 })();
 
                 counter++;
