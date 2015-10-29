@@ -4,7 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web.UI.WebControls;
+using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 using ZedGraph;
 using Image = System.Drawing.Image;
 
@@ -52,6 +54,20 @@ namespace Mirage.Urbanization.Charts
                 }
 
                 chart.Title.Text = graphDefinition.Title;
+
+                graphDefinition.DataMeter.WithResultIfHasMatch(dataMeter =>
+                {
+                    chart.YAxis.ScaleFormatEvent += (pane, axis, val, index) =>
+                    {
+                        var meter = dataMeter.Thresholds.SingleOrDefault(
+                            x => x.MinMeasureUnitThreshold <= val && x.MaxMeasureUnitThreshold > val);
+
+                        if (meter != null)
+                            return meter.Category.ToString();
+                        return string.Empty;
+                    };
+
+                });
 
                 zg.AxisChange();
 

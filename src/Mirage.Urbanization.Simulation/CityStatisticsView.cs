@@ -35,7 +35,7 @@ namespace Mirage.Urbanization.Simulation
         public IList<DataMeterResult> DataMeterResults => _issueDataMeterResultsLazy.Value;
 
         public IEnumerable<DataMeterResult> GetIssueDataMeterResults() => DataMeterResults
-            .Where(x => x.ValueCategory > DataMeterValueCategory.None)
+            .Where(x => x.ValueCategory > DataMeterValueCategory.VeryLow)
             .OrderByDescending(x => x.PercentageScore);
     }
 }
