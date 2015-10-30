@@ -10,7 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     }
 
     public abstract class BaseGrowthZoneClusterConsumption : BaseImplementedZoneClusterConsumption, IAreaObjectWithSeed,
-        IBaseGrowthZoneClusterConsumptionInLoadContext
+        IBaseGrowthZoneClusterConsumptionInLoadContext, IAreaObjectWithPopulationDensity
     {
         private static readonly Random Random = new Random();
         public override IFireHazardBehaviour FireHazardBehaviour { get; }

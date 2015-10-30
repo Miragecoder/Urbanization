@@ -6,7 +6,7 @@ using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base
 {
-    public class ZoneClusterMemberConsumption : BaseZoneConsumption, IAreaObjectWithSeed
+    public class ZoneClusterMemberConsumption : BaseZoneConsumption, IAreaObjectWithSeed, IAreaObjectWithPopulationDensity
     {
         public override char KeyChar { get { throw new NotImplementedException(); } }
 
@@ -127,5 +127,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
                         color: color
                     );
         }
+
+        public int PopulationDensity => GetParentAs<BaseGrowthZoneClusterConsumption>().PopulationDensity;
     }
 }

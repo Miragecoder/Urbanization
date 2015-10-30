@@ -43,13 +43,13 @@ namespace Mirage.Urbanization.Tilesets
     }
 
     internal class GrowthZonePredicateAndBitmapSelector<T>
-        where T : IAreaObjectWithSeed
+        where T : IAreaObjectWithSeed, IAreaObjectWithPopulationDensity
     {
-        public Func<T, bool> Predicate { get; }
+        public Func<IAreaObjectWithPopulationDensity, bool> Predicate { get; }
 
         internal BitmapSelector BitmapSelector { get; }
 
-        public GrowthZonePredicateAndBitmapSelector(Func<T, bool> predicate, BitmapSelector bitmapSelector)
+        public GrowthZonePredicateAndBitmapSelector(Func<IAreaObjectWithPopulationDensity, bool> predicate, BitmapSelector bitmapSelector)
         {
             Predicate = predicate;
             BitmapSelector = bitmapSelector;
@@ -57,7 +57,7 @@ namespace Mirage.Urbanization.Tilesets
     }
 
     internal class GrowthZoneBitmapSelectorCollection<T>
-        where T : IAreaObjectWithSeed
+        where T : IAreaObjectWithSeed, IAreaObjectWithPopulationDensity
     {
         private readonly IList<GrowthZonePredicateAndBitmapSelector<T>> _predicateAndBitmapSelectors;
 
@@ -68,10 +68,22 @@ namespace Mirage.Urbanization.Tilesets
 
         public Bitmap GetBitmapFor(T cluster)
         {
+            var snapshot = new ClusterSnapshot(cluster);
             return _predicateAndBitmapSelectors
-                .Single(x => x.Predicate(cluster))
+                .Single(x => x.Predicate(snapshot))
                 .BitmapSelector
                 .SelectOneWithId(cluster.Id);
+        }
+
+        private struct ClusterSnapshot : IAreaObjectWithPopulationDensity
+        {
+            public ClusterSnapshot(T cluster)
+            {
+                Id = cluster.Id;
+                PopulationDensity = cluster.PopulationDensity;
+            }
+            public int Id { get; }
+            public int PopulationDensity { get; }
         }
     }
 
@@ -147,12 +159,7 @@ namespace Mirage.Urbanization.Tilesets
         );
 
         internal readonly GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption> ResidentialHouseCollection = new GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption>(
-            new GrowthZonePredicateAndBitmapSelector<ZoneClusterMemberConsumption>(x =>
-            {
-                var growthZone = x.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption;
-                if (growthZone == null) throw new InvalidOperationException();
-                return growthZone.PopulationDensity <= 8;
-            },
+            new GrowthZonePredicateAndBitmapSelector<ZoneClusterMemberConsumption>(x => x.PopulationDensity <= 8,
                 new BitmapSelector(
                     BitmapAccessor.GetImage("GrowthZones.Residential.Houses.d1q1n1.png"),
                     BitmapAccessor.GetImage("GrowthZones.Residential.Houses.d1q1n2.png"),

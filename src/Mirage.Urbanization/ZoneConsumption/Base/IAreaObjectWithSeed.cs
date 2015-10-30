@@ -4,4 +4,9 @@
     {
         int Id { get; }
     }
+
+    public interface IAreaObjectWithPopulationDensity : IAreaObjectWithSeed
+    {
+        int PopulationDensity { get; }
+    }
 }
