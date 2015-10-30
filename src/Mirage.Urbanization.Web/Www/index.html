@@ -35,6 +35,7 @@
             <button id="evaluationDialogButton">Evaluation</button>
             <button id="graphDialogButton">Statistics</button>
             <button id="overlayDialogButton">Overlay</button>
+            <button id="aboutDialogButton">About</button>
         </div>
         <div id="labelBar" style="z-index: 0">
             <span id="currentYearAndMonthLabel">Ready</span>
@@ -51,10 +52,11 @@
         <canvas id="gameCanvasLayer5" style="position: absolute; left: 0; top: 0; z-index: 4;"></canvas>
         <canvas id="gameCanvasLayer6" style="position: absolute; left: 0; top: 0; z-index: 5;"></canvas>
     </div>
-    <div id="buildDialog" title="Build">
-        <div id="buttonBar">
-        </div>
+<div id="buildDialog" title="Build">
+    <p>You can also select any of these options by using their respective hotkeys.</p>
+    <div id="buttonBar">
     </div>
+</div>
     <div id="budgetDialog" title="City budget">
         <table id="budgetTaxTable"></table>
     </div>
@@ -75,6 +77,14 @@
         <div id="graphTabs">
             <ul id="graphTabHeads"></ul>
         </div>
+    </div>
+    <div id="aboutDialog" title="About">
+        <p>
+            Urbanization is a .NET implementation of a city building simulation game, heavily inspired by the
+            classic <a href="http://en.wikipedia.org/wiki/SimCity_(1989_video_game)">Simcity</a> game released in 1989; of which its
+            source code has been released under the title <a href="https://github.com/SimHacker/micropolis">Micropolis</a>.
+        </p>
+        <p>For more information, check out the <a href="https://github.com/Miragecoder/Urbanization">Urbanization repository on github</a>.</p>
     </div>
 
     <!--Script references. -->

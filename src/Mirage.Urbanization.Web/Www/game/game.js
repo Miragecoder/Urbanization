@@ -44,6 +44,7 @@ $(function () {
         registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500, doNothing, true);
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing, true);
         registerDialogWithButton("#overlayDialog", "#overlayDialogButton", 300, doNothing, true);
+        registerDialogWithButton("#aboutDialog", "#aboutDialogButton", 300, doNothing, true);
         registerDialogWithButton("#graphDialog", "#graphDialogButton", 800, function() {
             document.getElementById("refreshChartsButton").click();
         }, true);
@@ -366,6 +367,8 @@ $(function () {
                 addRow("Projected income", cityBudgetState.totalTaxState.projectedIncome);
                 addRow("Projected expenses", (0 - cityBudgetState.totalCityServiceState.projectedExpenses));
                 addRow("Total income", cityBudgetState.totalTaxState.projectedIncome - cityBudgetState.totalCityServiceState.projectedExpenses);
+
+                $("#budgetTaxTable button").button();
             })();
         });
 
@@ -473,7 +476,7 @@ $(function () {
 
         var createButton = function (text, target, clickHandler) {
             var newButtonElement = document.createElement("button");
-            newButtonElement.innerHTML = "OL: " + text;
+            newButtonElement.innerHTML = text;
             target.appendChild(newButtonElement);
             newButtonElement.addEventListener("click", clickHandler);
             return newButtonElement;
@@ -535,7 +538,7 @@ $(function () {
                 var buttonBar = document.getElementById("buttonBar");
                 if (!buttonDefinitionState.drawn) {
                     var newButtonElement = document.createElement("button");
-                    newButtonElement.innerHTML = buttonDefinitionState.buttonDefinition.name;
+                    newButtonElement.innerHTML = "(" + buttonDefinitionState.buttonDefinition.keyChar.toUpperCase() + ") " + buttonDefinitionState.buttonDefinition.name;
                     buttonBar.appendChild(newButtonElement);
 
                     var registerButton = function (inputButtonDefinition) {
@@ -563,7 +566,7 @@ $(function () {
                 }
             }
         }
-        $("input[type=submit], a, button").button();
+        $("input[type=submit], button").button();
     };
 
     (function () {
