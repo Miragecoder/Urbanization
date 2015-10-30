@@ -30,12 +30,11 @@
 <body>
     <div class="header-container" style="z-index: 6">
         <div id="miscButtonBar">
+            <button id="buildButton">Build</button>
             <button id="budgetDialogButton">Budget</button>
             <button id="evaluationDialogButton">Evaluation</button>
             <button id="graphDialogButton">Statistics</button>
             <button id="overlayDialogButton">Overlay</button>
-        </div>
-        <div id="buttonBar">
         </div>
         <div id="labelBar" style="z-index: 0">
             <span id="currentYearAndMonthLabel">Ready</span>
@@ -51,6 +50,10 @@
         <canvas id="gameCanvasLayer4" style="position: absolute; left: 0; top: 0; z-index: 3;"></canvas>
         <canvas id="gameCanvasLayer5" style="position: absolute; left: 0; top: 0; z-index: 4;"></canvas>
         <canvas id="gameCanvasLayer6" style="position: absolute; left: 0; top: 0; z-index: 5;"></canvas>
+    </div>
+    <div id="buildDialog" title="Build">
+        <div id="buttonBar">
+        </div>
     </div>
     <div id="budgetDialog" title="City budget">
         <table id="budgetTaxTable"></table>

@@ -19,17 +19,17 @@ $(function () {
 
 
 
-        var registerDialog = function (dialogId, width) {
+        var registerDialog = function (dialogId, width, modal) {
             $(dialogId).dialog({
-                modal: true,
+                modal: modal,
                 autoOpen: false,
                 width: width
             });
 
         }
 
-        var registerDialogWithButton = function (dialogId, dialogButtonId, width, onClick) {
-            registerDialog(dialogId, width);
+        var registerDialogWithButton = function (dialogId, dialogButtonId, width, onClick, modal) {
+            registerDialog(dialogId, width, modal);
 
             // Link to open the dialog
             $(dialogButtonId).click(function (event) {
@@ -40,13 +40,14 @@ $(function () {
         };
         var doNothing = function() {};
 
-        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500, doNothing);
-        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing);
-        registerDialogWithButton("#overlayDialog", "#overlayDialogButton", 300, doNothing);
+        registerDialogWithButton("#buildDialog", "#buildButton", 500, doNothing, false);
+        registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500, doNothing, true);
+        registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing, true);
+        registerDialogWithButton("#overlayDialog", "#overlayDialogButton", 300, doNothing, true);
         registerDialogWithButton("#graphDialog", "#graphDialogButton", 800, function() {
             document.getElementById("refreshChartsButton").click();
-        });
-        registerDialog("#hotMessageDialog", 200);
+        }, true);
+        registerDialog("#hotMessageDialog", 200, true);
 
         raiseHotMessage = function (title, message) {
             $("#hotMessageDialog").dialog({ title: title }).dialog("open");
