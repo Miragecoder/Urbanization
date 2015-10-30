@@ -30,9 +30,10 @@
 <body>
     <div class="header-container" style="z-index: 6">
         <div id="miscButtonBar">
-            <button id="budgetDialogButton">City budget</button>
-            <button id="evaluationDialogButton">City evaluation</button>
-            <button id="graphDialogButton">City statistics</button>
+            <button id="budgetDialogButton">Budget</button>
+            <button id="evaluationDialogButton">Evaluation</button>
+            <button id="graphDialogButton">Statistics</button>
+            <button id="overlayDialogButton">Overlay</button>
         </div>
         <div id="buttonBar">
         </div>
@@ -59,6 +60,9 @@
         <table id="cityEvaluationIssuesTable"></table>
         <table id="cityEvaluationBudgetTable"></table>
         <table id="cityEvaluationGeneralOpinionTable"></table>
+    </div>
+    <div id="overlayDialog" title="Select overlay">
+        <div id="overlaySelectionDiv"></div>
     </div>
     <div id="hotMessageDialog" title="">
         <span id="hotMessageText"></span>

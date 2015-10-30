@@ -42,6 +42,7 @@ $(function () {
 
         registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500, doNothing);
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing);
+        registerDialogWithButton("#overlayDialog", "#overlayDialogButton", 300, doNothing);
         registerDialogWithButton("#graphDialog", "#graphDialogButton", 800, function() {
             document.getElementById("refreshChartsButton").click();
         });
@@ -476,11 +477,11 @@ $(function () {
             newButtonElement.addEventListener("click", clickHandler);
             return newButtonElement;
         };
-        var miscButtonBar = document.getElementById("miscButtonBar");
+        var overlaySelectionDiv = document.getElementById("overlaySelectionDiv");
 
         (function () {
             var registerDataMeter = function (dataMeter) {
-                createButton(dataMeter.name, miscButtonBar, function (e) {
+                createButton(dataMeter.name, overlaySelectionDiv, function (e) {
                     simulation.server.joinDataMeterGroup(dataMeter.webId);
                     currentDataMeter = dataMeter;
                     canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
