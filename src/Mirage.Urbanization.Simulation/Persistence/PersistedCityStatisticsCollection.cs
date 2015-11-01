@@ -14,7 +14,7 @@ namespace Mirage.Urbanization.Simulation.Persistence
         public void Add(PersistedCityStatisticsWithFinancialData statistics)
         {
             _persistedCityStatistics = _persistedCityStatistics.Enqueue(statistics);
-            if (_persistedCityStatistics.Count() > 5200)
+            if (_persistedCityStatistics.Count() > 960)
                 _persistedCityStatistics = _persistedCityStatistics.Dequeue();
 
             _mostRecentStatistics = statistics;
