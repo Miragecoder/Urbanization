@@ -56,7 +56,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 Enumerable.Empty<Type>().ToArray()
                 ),
             LandValueDataMeter = new ZoneInfoDataMeter(
-                10, "Land value",
+                3, "Land value",
                 x => x.PersistedCityStatistics.LandValueNumbers.Average,
                 x => x.GetLastLandValueResult().WithResultIfHasMatch(y => y.ValueInUnits),
                 false,

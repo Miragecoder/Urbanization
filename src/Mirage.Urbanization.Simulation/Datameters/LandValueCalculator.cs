@@ -20,6 +20,9 @@ namespace Mirage.Urbanization.Simulation.Datameters
         {
             var score = GetScoreFor(zoneInfo);
 
+            if (!score.HasValue)
+                return QueryResult<IQueryLandValueResult>.Create();
+
             var newScore = GetIssueResults(zoneInfo, x => x.RepresentsIssue)
                 .Aggregate(
                     (decimal)score,
@@ -29,7 +32,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
             return QueryResult<IQueryLandValueResult>.Create(new QueryLandValueResult((int)Math.Round(newScore)));
         }
 
-        private class IssueResult
+        private struct IssueResult
         {
             public IssueResult(string issue, decimal issueAmount)
             {
@@ -88,7 +91,7 @@ namespace Mirage.Urbanization.Simulation.Datameters
 
         private decimal? _taxRateMultiplier;
 
-        private static int GetScoreFor(IReadOnlyZoneInfo zoneInfo)
+        private static int? GetScoreFor(IReadOnlyZoneInfo zoneInfo)
         {
             var consumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption();
 
@@ -99,10 +102,10 @@ namespace Mirage.Urbanization.Simulation.Datameters
                 var parentAsGrowthZone = clusterMemberConsumption.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption;
                 if (parentAsGrowthZone != null)
                 {
-                    return clusterMemberConsumption.SingleCellCost * parentAsGrowthZone.PopulationDensity;
+                    return clusterMemberConsumption.SingleCellCost;
                 }
             }
-            return 0;
+            return null;
         }
     }
 }
