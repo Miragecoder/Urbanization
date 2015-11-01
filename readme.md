@@ -72,6 +72,10 @@ https://jqueryui.com/
 
 https://topshelf-project.com/
 
+#### accounting.js:
+
+http://openexchangerates.github.io/accounting.js/
+
 ## License
 
 This project uses the MIT license. See 'license.txt' for more info.

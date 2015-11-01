@@ -184,7 +184,7 @@ $(function () {
                     if (labelAndValueSet.hasOwnProperty(i)) {
                         var x = labelAndValueSet[i];
                         if (isCurrency) {
-                            $(tableId).append("<tr><td>" + x.label + "</td><td class=\"currencycol\"><span>$</span>" + x.value + "</td></tr>");
+                            $(tableId).append("<tr><td>" + x.label + "</td><td class=\"currencycol\">" + accounting.formatMoney(x.value) + "</td></tr>");
                         } else {
                             $(tableId).append("<tr><td>" + x.label + "</td><td>" + x.value + "</td></tr>");
                         }
@@ -242,12 +242,7 @@ $(function () {
                 (function() {
                     var labelCell = document.createElement("td");
                     labelCell.class = "currencycol";
-                    (function() {
-                        var span = document.createElement("span");
-                        span.innerHTML = "$";
-                        labelCell.appendChild(span);
-                    })();
-                    labelCell.innerHTML = getProjected(taxState);
+                    labelCell.innerHTML = accounting.formatMoney(getProjected(taxState));
                     taxRow.appendChild(labelCell);
                 })();
 
@@ -360,7 +355,7 @@ $(function () {
                         taxRow.appendChild(labelCell);
                     };
                     addCell(label);
-                    addCell(value);
+                    addCell(accounting.formatMoney(value));
                     document.getElementById("budgetTaxTable").appendChild(taxRow);
                 };
 
@@ -373,8 +368,8 @@ $(function () {
         });
 
         simulation.client.submitCityBudgetValue = function (e) {
-            document.getElementById("currentFundsLabel").innerHTML = "Current funds: $ " + e.currentAmount;
-            document.getElementById("projectedIncomeLabel").innerHTML = "Projected income: $ " + e.projectedIncome;
+            document.getElementById("currentFundsLabel").innerHTML = "Current funds: " + accounting.formatMoney(e.currentAmount);
+            document.getElementById("projectedIncomeLabel").innerHTML = "Projected income: $ " + accounting.formatMoney(e.projectedIncome);
             cityBudgetStateService.loadNewState(e.cityBudgetState);
         }
 
@@ -544,6 +539,8 @@ $(function () {
                     var registerButton = function (inputButtonDefinition) {
                         var x = inputButtonDefinition;
                         return function () {
+                            document.getElementById("currentButtonLabel").innerHTML = x.buttonDefinition.name + 
+                                " (Costs: " + accounting.formatMoney(x.buttonDefinition.cost) + ")";
                             currentButton = x.buttonDefinition;
                         };
                     }
