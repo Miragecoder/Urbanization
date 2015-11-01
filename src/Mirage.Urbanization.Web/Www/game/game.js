@@ -45,7 +45,7 @@ $(function () {
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing, true);
         registerDialogWithButton("#overlayDialog", "#overlayDialogButton", 300, doNothing, true);
         registerDialogWithButton("#aboutDialog", "#aboutDialogButton", 300, doNothing, true);
-        registerDialogWithButton("#graphDialog", "#graphDialogButton", 800, function() {
+        registerDialogWithButton("#graphDialog", "#graphDialogButton", 650, function() {
             document.getElementById("refreshChartsButton").click();
         }, true);
         registerDialog("#hotMessageDialog", 200, true);

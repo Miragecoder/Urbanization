@@ -62,7 +62,7 @@ namespace Mirage.Urbanization.Web
                         .Pipe(graphDefinition => ChartDrawer.Value.Draw(
                             graphDefinition,
                             GameServer.Instance.SimulationSession.GetAllCityStatistics(),
-                            SystemFonts.DefaultFont, new Size(500, 300))
+                            SystemFonts.DefaultFont, new Size(600, 250))
                         )
                         .Pipe(image => ServeImage(context, image));
                     return;
