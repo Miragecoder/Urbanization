@@ -55,6 +55,14 @@ namespace Mirage.Urbanization.Charts
 
                 chart.Title.Text = graphDefinition.Title;
 
+                if (graphDefinition.IsCurrency)
+                {
+                    chart.YAxis.ScaleFormatEvent += (pane, axis, val, index) =>
+                    {
+                        return val.ToString("C");
+                    };
+                }
+
                 graphDefinition.DataMeter.WithResultIfHasMatch(dataMeter =>
                 {
                     chart.YAxis.ScaleFormatEvent += (pane, axis, val, index) =>

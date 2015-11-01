@@ -13,7 +13,7 @@ namespace Mirage.Urbanization.Charts
 
         private static IEnumerable<GraphDefinition> GenerateGraphDefinitions()
         {
-            yield return new GraphDefinition("Amount of zones",
+            yield return new GraphDefinition("Amount of zones", false,
                 new GraphSeries(
                     x => x.PersistedCityStatistics.ResidentialZonePopulationStatistics.Count,
                     "Residential",
@@ -33,22 +33,22 @@ namespace Mirage.Urbanization.Charts
                                 )
                 );
 
-            yield return new GraphDefinition("Amount of funds",
+            yield return new GraphDefinition("Amount of funds", true,
                 new GraphSeries(x => x.CurrentAmountOfFunds, "Current amount of funds", Color.Red),
                 new GraphSeries(x => x.CurrentProjectedAmountOfFunds, "Projected income", Color.Gray));
 
-            yield return new GraphDefinition("Tax income",
+            yield return new GraphDefinition("Tax income",true,
                 new GraphSeries(x => x.ResidentialTaxIncome, "Residential zones", Color.Green),
                 new GraphSeries(x => x.CommercialTaxIncome, "Commercial zones", Color.Blue),
                 new GraphSeries(x => x.IndustrialTaxIncome, "Industrial zones", Color.Goldenrod));
 
-            yield return new GraphDefinition("Public sector expenses",
+            yield return new GraphDefinition("Public sector expenses",true,
                 new GraphSeries(x => x.PoliceServiceExpenses, "Police force", Color.Blue),
                 new GraphSeries(x => x.FireServiceExpenses, "Fire fighters", Color.Red),
                 new GraphSeries(x => x.RoadInfrastructureExpenses, "Infrastructure (Road)", Color.Gray),
                 new GraphSeries(x => x.RailroadInfrastructureExpenses, "Infrastructure (Railroad)", Color.Yellow));
 
-            yield return new GraphDefinition("Population",
+            yield return new GraphDefinition("Population", false,
                 new GraphSeries(
                     x => x.PersistedCityStatistics.ResidentialZonePopulationStatistics.Sum,
                     "Residential",
@@ -78,7 +78,7 @@ namespace Mirage.Urbanization.Charts
                 )
                 yield return x;
 
-            yield return new GraphDefinition("Power grid",
+            yield return new GraphDefinition("Power grid", false,
                 new GraphSeries(
                     x => x.PersistedCityStatistics.PowerSupplyInUnits,
                     "Power supply (Total)",
@@ -94,7 +94,7 @@ namespace Mirage.Urbanization.Charts
                             )
                 );
 
-            yield return new GraphDefinition("Infastructure size",
+            yield return new GraphDefinition("Infastructure size", false,
                 new GraphSeries(
                     x => x.PersistedCityStatistics.NumberOfRoadZones,
                     "Total amount of road zones",
@@ -117,7 +117,7 @@ namespace Mirage.Urbanization.Charts
             Func<PersistedCityStatisticsWithFinancialData, PersistedNumberSummary> getNumberSummarySafeFunc =
                 x => getNumberSummary(x) ?? PersistedNumberSummary.EmptyInstance;
 
-            yield return new GraphDefinition(title,
+            yield return new GraphDefinition(title, false,
                 dataMeter,
                 new GraphSeries(
                     x => getNumberSummarySafeFunc(x).Average,

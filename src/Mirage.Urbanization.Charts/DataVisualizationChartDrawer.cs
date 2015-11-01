@@ -56,6 +56,11 @@ namespace Mirage.Urbanization.Charts
                     series.BorderWidth = series.BorderWidth * 4;
 
                     series.Color = graphDefinition.GraphSeriesSet.Single(x => x.Label == series.Name).Color;
+
+                }
+                if (graphDefinition.IsCurrency)
+                {
+                    chart.ChartAreas.Single().AxisY.LabelStyle.Format = "{0:C}";
                 }
 
                 graphDefinition.DataMeter.WithResultIfHasMatch(dataMeter =>

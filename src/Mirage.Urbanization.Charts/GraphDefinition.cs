@@ -18,20 +18,22 @@ namespace Mirage.Urbanization.Charts
     {
         public QueryResult<DataMeter> DataMeter { get; }
         private static int WebIdCounter;
-        public GraphDefinition(string title, params GraphSeries[] graphSeriesSet) : this(title, null, graphSeriesSet)
+        public GraphDefinition(string title, bool isCurrency, params GraphSeries[] graphSeriesSet) : this(title, isCurrency, null, graphSeriesSet)
         {
         }
 
-        public GraphDefinition(string title, DataMeter dataMeter, params GraphSeries[] graphSeriesSet)
+        public GraphDefinition(string title, bool isCurrency, DataMeter dataMeter, params GraphSeries[] graphSeriesSet)
         {
-            DataMeter = QueryResult<DataMeter>.Create(dataMeter); 
+            DataMeter = QueryResult<DataMeter>.Create(dataMeter);
             Title = title;
+            IsCurrency = isCurrency;
             GraphSeriesSet = graphSeriesSet;
         }
 
         public int WebId { get; } = ++WebIdCounter;
 
         public string Title { get; }
+        public bool IsCurrency { get; }
         public IReadOnlyCollection<GraphSeries> GraphSeriesSet { get; }
     }
 }
