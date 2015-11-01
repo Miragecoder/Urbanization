@@ -274,47 +274,6 @@ namespace Mirage.Urbanization.WinForms
             cityBudgetLabel.Text = monthAndYearLabel.Text = toolStripStatusLabel1.Text = string.Empty;
         }
 
-        private class CitySaveStateController
-        {
-            private readonly Action<bool> _onSaveFunctionalityAvailableAction;
-
-            public CitySaveStateController(Action<bool> onSaveFunctionalityAvailableAction)
-            {
-                _onSaveFunctionalityAvailableAction = onSaveFunctionalityAvailableAction;
-            }
-
-            private string _lastSaveFileName;
-
-            private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(PersistedSimulation));
-
-            public void ToggleSaveFunctionalityAvailable()
-            {
-                _onSaveFunctionalityAvailableAction(true);
-            }
-
-            public PersistedSimulation LoadFile(string fileName)
-            {
-                _onSaveFunctionalityAvailableAction(true);
-                _lastSaveFileName = fileName;
-                using (var file = File.OpenRead(fileName))
-                    return _xmlSerializer.Deserialize(file) as PersistedSimulation;
-            }
-
-            public bool CurrentFilenameIsKnown => _lastSaveFileName != null;
-
-            public void Save(PersistedSimulation simulation)
-            {
-                if (!CurrentFilenameIsKnown) throw new InvalidOperationException();
-                SaveFile(_lastSaveFileName, simulation);
-            }
-
-            public void SaveFile(string fileName, PersistedSimulation simulation)
-            {
-                using (var file = File.Open(fileName, FileMode.Create, FileAccess.Write))
-                    _xmlSerializer.Serialize(file, simulation);
-                _lastSaveFileName = fileName;
-            }
-        }
         private readonly SimulationRenderHelperFormManager<EvaluationForm> _evaluationFormManager = new SimulationRenderHelperFormManager<EvaluationForm>(helper => new EvaluationForm(helper));
 
         private void evaluationToolStripMenuItem_Click(object sender, EventArgs e)

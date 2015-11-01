@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,21 +12,38 @@ namespace Mirage.Urbanization.Web
 {
     public class Program
     {
+        private const string WebCityFileName = "webcity.xml";
         public static void Main()
         {
             Logger.Instance.OnLogMessage += Instance_OnLogMessage;
 
             HostFactory.Run(x =>
             {
-                var simulationSession = new SimulationSession(
-                    new SimulationOptions(new Func<TerraformingOptions>(() =>
-                    {
-                        var t = new TerraformingOptions();
-                        t.HorizontalRiver = t.VerticalRiver = true;
-                        t.SetWoodlands(80);
-                        t.SetZoneWidthAndHeight(120);
-                        return t;
-                    })(), new ProcessOptions(() => false, () => false)));
+                var citySaveStateController = new CitySaveStateController(z => { });
+
+                SimulationSession simulationSession;
+
+                try
+                {
+                    var persistedSimulation = citySaveStateController.LoadFile(WebCityFileName);
+                    simulationSession =
+                        new SimulationSession(new SimulationOptions(persistedSimulation,
+                            new ProcessOptions(() => false, () => false)));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogException(ex, $"Loading file: '{new FileInfo(WebCityFileName).FullName}'", 100);
+
+                    simulationSession = new SimulationSession(
+                        new SimulationOptions(new Func<TerraformingOptions>(() =>
+                        {
+                            var t = new TerraformingOptions();
+                            t.HorizontalRiver = t.VerticalRiver = true;
+                            t.SetWoodlands(80);
+                            t.SetZoneWidthAndHeight(120);
+                            return t;
+                        })(), new ProcessOptions(() => false, () => false)));
+                }
 
                 x.Service<GameServer>(s =>
                 {
@@ -35,7 +53,11 @@ namespace Mirage.Urbanization.Web
                         tc.StartServer();
                         simulationSession.StartSimulation();
                     });
-                    s.WhenStopped(tc => tc.Dispose());
+                    s.WhenStopped(tc =>
+                    {
+                        citySaveStateController.SaveFile(WebCityFileName, tc.SimulationSession.GeneratePersistedArea());
+                        tc.Dispose();
+                    });
                 });
                 x.RunAsLocalSystem();
 
