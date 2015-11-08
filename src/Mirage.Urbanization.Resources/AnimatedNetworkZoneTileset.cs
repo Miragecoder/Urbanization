@@ -43,7 +43,7 @@ namespace Mirage.Urbanization.Tilesets
         private readonly IEnumerator<Bitmap> _roadNorthSouthWaterEastWestFrameEnumerator;
 
         public AnimatedRoadNetworkZoneTileset(
-            IEnumerable<NetworkZoneTileset> frameTileSets, 
+            IEnumerable<NetworkZoneTileset> frameTileSets,
             ICollection<Bitmap> powerNorthSouthRoadEastWestFrames,
             ICollection<Bitmap> railNorthSouthRoadEastWestFrames,
             ICollection<Bitmap> waterNorthSouthRoadEastWestFrames,
@@ -97,7 +97,12 @@ namespace Mirage.Urbanization.Tilesets
             yield return _roadNorthSouthWaterEastWestFrameEnumerator;
         }
 
-        public Bitmap GetBitmapFor(IIntersectingZoneConsumption intersection)
+        public BitmapInfo GetBitmapInfoFor(IIntersectingZoneConsumption intersection)
+        {
+            return GetIntersectionBitmapPrivate(intersection).Pipe(bitmap => new BitmapInfo(bitmap, bitmap, this));
+        }
+        
+        private Bitmap GetIntersectionBitmapPrivate(IIntersectingZoneConsumption intersection)
         {
             if (intersection.NorthSouthZoneConsumption is RoadZoneConsumption)
             {
@@ -125,11 +130,11 @@ namespace Mirage.Urbanization.Tilesets
                 throw new ArgumentException("Could not map the specified intersection to a frame.", nameof(intersection));
         }
 
-        public Bitmap GetBitmapFor(BaseNetworkZoneConsumption baseNetworkZoneConsumption)
+        public BitmapInfo GetBitmapInfoFor(BaseNetworkZoneConsumption baseNetworkZoneConsumption)
         {
             _cycler.CheckCycle();
 
-            return _networkTilesetEnumerator.Current.GetBitmapFor(baseNetworkZoneConsumption);
+            return _networkTilesetEnumerator.Current.GetBitmapInfoFor(baseNetworkZoneConsumption);
         }
     }
 

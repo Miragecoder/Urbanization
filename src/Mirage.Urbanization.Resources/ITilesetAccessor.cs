@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.Tilesets
 {
     public interface ITilesetAccessor
     {
         int TileWidthAndSizeInPixels { get; set; }
-        bool TryGetBitmapFor(IAreaZoneConsumption areaZoneConsumption, out BitmapLayer bitmap);
+        QueryResult<BitmapLayer> TryGetBitmapFor(IAreaZoneConsumption consumption);
         Size ResizeToTileWidthAndSize(Size size);
 
         Size GetAreaSize(IReadOnlyArea area);
@@ -20,8 +21,8 @@ namespace Mirage.Urbanization.Tilesets
     public class VehicleBitmapAndPoint
     {
         public VehicleBitmapAndPoint(
-            Bitmap bitmap, 
-            IReadOnlyZoneInfo second, 
+            Bitmap bitmap,
+            IReadOnlyZoneInfo second,
             IReadOnlyZoneInfo third,
             IVehicle vehicle)
         {
@@ -37,23 +38,53 @@ namespace Mirage.Urbanization.Tilesets
         public IVehicle Vehicle { get; }
     }
 
-    public class BitmapLayerOperation
+    public class BitmapInfo
     {
+        public Bitmap BitmapSegment { get; }
+        public Bitmap BitmapParent { get; }
+        public AnimatedBitmap ParentAnimatedBitmap { get; }
+        public IRoadNetworkZoneTileset ParentAnimatedRoadNetworkZoneTileset { get; }
 
+        public BitmapInfo(Bitmap bitmap) : this(bitmap, bitmap)
+        {
+        }
+
+        public BitmapInfo(Bitmap bitmapSegment, Bitmap parent)
+        {
+            if (bitmapSegment == null) throw new ArgumentNullException(nameof(bitmapSegment));
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            BitmapSegment = bitmapSegment;
+            BitmapParent = parent;
+        }
+
+        public BitmapInfo(Bitmap bitmapSegment, Bitmap parent, AnimatedBitmap parentAnimatedBitmap)
+            : this(bitmapSegment, parent)
+        {
+            if (parentAnimatedBitmap == null) throw new ArgumentNullException(nameof(parentAnimatedBitmap));
+            ParentAnimatedBitmap = parentAnimatedBitmap;
+        }
+
+        public BitmapInfo(Bitmap bitmapSegment, Bitmap parent, IRoadNetworkZoneTileset parentAnimatedRoadNetworkZoneTileset)
+             : this(bitmapSegment, parent)
+        {
+            if (parentAnimatedRoadNetworkZoneTileset == null) throw new ArgumentNullException(nameof(parentAnimatedRoadNetworkZoneTileset));
+            ParentAnimatedRoadNetworkZoneTileset = parentAnimatedRoadNetworkZoneTileset;
+        }
     }
+
 
     public class BitmapLayer
     {
-        public BitmapLayer(Bitmap layerOne, Bitmap layerTwo = null)
+        public BitmapLayer(BitmapInfo layerOne, BitmapInfo layerTwo = null)
         {
             if (layerOne == null) throw new ArgumentNullException(nameof(layerOne), "The bitmap specified in 'layerOne' is not allowed to be null.");
             LayerOne = layerOne;
             LayerTwo = layerTwo;
         }
 
-        public Bitmap LayerOne { get; }
+        public BitmapInfo LayerOne { get; }
 
         public bool IsLayerTwoSpecified => LayerTwo != null;
-        public Bitmap LayerTwo { get; }
+        public BitmapInfo LayerTwo { get; }
     }
 }

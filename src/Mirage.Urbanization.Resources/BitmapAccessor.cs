@@ -37,7 +37,7 @@ namespace Mirage.Urbanization.Tilesets
             if (@object is Bitmap)
                 return @object as Bitmap;
             else if (@object is AnimatedBitmap)
-                return (@object as AnimatedBitmap).GetCurrentBitmapFrame();
+                return (@object as AnimatedBitmap).GetCurrentBitmapFrame().Frame;
             throw new InvalidOperationException("Unsupported object type encountered: " + @object.GetType().Name);
         }
     }
@@ -332,16 +332,16 @@ namespace Mirage.Urbanization.Tilesets
                     RoadZoneTileSet = GenerateNetworkZoneTileSet("NetworkZones.Road.road{0}.png");
                 }
 
-                public Bitmap GetBitmapFor(RoadZoneConsumption consumption)
+                public BitmapInfo GetBitmapInfoFor(RoadZoneConsumption consumption)
                 {
                     switch (consumption.GetTrafficDensity())
                     {
                         case TrafficDensity.Low:
-                            return TrafficAnimInstance.Low.GetBitmapFor(consumption);
+                            return TrafficAnimInstance.Low.GetBitmapInfoFor(consumption);
                         case TrafficDensity.High:
-                            return TrafficAnimInstance.High.GetBitmapFor(consumption);
+                            return TrafficAnimInstance.High.GetBitmapInfoFor(consumption);
                         case TrafficDensity.None:
-                            return RoadZoneTileSet.GetBitmapFor(consumption);
+                            return RoadZoneTileSet.GetBitmapInfoFor(consumption);
                         default:
                             throw new NotImplementedException();
                     }
@@ -351,12 +351,12 @@ namespace Mirage.Urbanization.Tilesets
                 {
                     if (intersection.GetIntersectingTypes().Any(x => x == typeof(WaterZoneConsumption)))
                     {
-                        return new BitmapLayer(_waterInstance.WaterNorthWestEastSouth, GetBitmapFor(intersection));
+                        return new BitmapLayer(new BitmapInfo(_waterInstance.WaterNorthWestEastSouth), GetBitmapFor(intersection));
                     }
                     return new BitmapLayer(GetBitmapFor(intersection));
                 }
 
-                private Bitmap GetBitmapFor(IIntersectingZoneConsumption intersection)
+                private BitmapInfo GetBitmapFor(IIntersectingZoneConsumption intersection)
                 {
                     if (intersection.EastWestZoneConsumption is RoadZoneConsumption ^
                         intersection.NorthSouthZoneConsumption is RoadZoneConsumption)
@@ -368,27 +368,27 @@ namespace Mirage.Urbanization.Tilesets
 
                                 if (intersection.EastWestZoneConsumption is RailRoadZoneConsumption)
                                 {
-                                    return _networkZones.RoadNorthSouthRailEastWest.Value;
+                                    return _networkZones.RoadNorthSouthRailEastWest.Value.ToBitmapInfo();
                                 }
                                 else if (intersection.NorthSouthZoneConsumption is RailRoadZoneConsumption)
                                 {
-                                    return _networkZones.RailNorthSouthRoadEastWest;
+                                    return _networkZones.RailNorthSouthRoadEastWest.ToBitmapInfo();
                                 }
                                 else if (intersection.EastWestZoneConsumption is PowerLineConsumption)
                                 {
-                                    return _networkZones.RoadNorthSouthPowerEastWest.Value;
+                                    return _networkZones.RoadNorthSouthPowerEastWest.Value.ToBitmapInfo();
                                 }
                                 else if (intersection.NorthSouthZoneConsumption is PowerLineConsumption)
                                 {
-                                    return _networkZones.PowerNorthSouthRoadEastWest;
+                                    return _networkZones.PowerNorthSouthRoadEastWest.ToBitmapInfo();
                                 }
                                 else if (intersection.NorthSouthZoneConsumption is WaterZoneConsumption)
                                 {
-                                    return _networkZones.WaterNorthSouthRoadEastWest;
+                                    return _networkZones.WaterNorthSouthRoadEastWest.ToBitmapInfo();
                                 }
                                 else if (intersection.EastWestZoneConsumption is WaterZoneConsumption)
                                 {
-                                    return _networkZones.RoadNorthSouthWaterEastWest.Value;
+                                    return _networkZones.RoadNorthSouthWaterEastWest.Value.ToBitmapInfo();
                                 }
                                 else
                                 {
@@ -396,9 +396,9 @@ namespace Mirage.Urbanization.Tilesets
                                 }
 
                             case TrafficDensity.Low:
-                                return TrafficAnimInstance.Low.GetBitmapFor(intersection);
+                                return TrafficAnimInstance.Low.GetBitmapInfoFor(intersection);
                             case TrafficDensity.High:
-                                return TrafficAnimInstance.High.GetBitmapFor(intersection);
+                                return TrafficAnimInstance.High.GetBitmapInfoFor(intersection);
                             default:
                                 throw new NotImplementedException();
                         }

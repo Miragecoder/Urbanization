@@ -62,8 +62,9 @@ namespace Mirage.Urbanization.Tilesets
             clone.RotateFlip(rotateFlipType);
             return clone;
         }
+        
 
-        public Bitmap GetBitmapFor(BaseNetworkZoneConsumption networkConsumption)
+        private Bitmap GetBitmapFor(BaseNetworkZoneConsumption networkConsumption)
         {
             var orientation = networkConsumption.GetOrientation();
 
@@ -110,6 +111,11 @@ namespace Mirage.Urbanization.Tilesets
             else
                 return _bitmapNoDirection;
             throw new InvalidOperationException();
+        }
+
+        public BitmapInfo GetBitmapInfoFor(BaseNetworkZoneConsumption intersection)
+        {
+            return GetBitmapFor(intersection).ToBitmapInfo();
         }
     }
 }

@@ -4,7 +4,23 @@ using System.Drawing;
 
 namespace Mirage.Urbanization.Tilesets
 {
-    internal class AnimatedBitmap
+
+
+    public class AnimatedBitmapFrame
+    {
+        public AnimatedBitmapFrame(AnimatedBitmap parent, Bitmap frame)
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (frame == null) throw new ArgumentNullException(nameof(frame));
+            Parent = parent;
+            Frame = frame;
+        }
+
+        public AnimatedBitmap Parent { get; }
+        public Bitmap Frame { get; }
+    }
+
+    public class AnimatedBitmap
     {
         private Bitmap _currentBitmap;
         private DateTime _lastFrameSkip = DateTime.Now;
@@ -18,12 +34,15 @@ namespace Mirage.Urbanization.Tilesets
             CycleNextFrame();
         }
 
-        public Bitmap GetCurrentBitmapFrame()
+        private Bitmap GetCurrentBitmapFramePrivate()
         {
             if (DateTime.Now - _frameLifeSpan > _lastFrameSkip)
                 CycleNextFrame();
             return _currentBitmap;
         }
+
+        public AnimatedBitmapFrame GetCurrentBitmapFrame()
+            => new AnimatedBitmapFrame(this, GetCurrentBitmapFramePrivate());
 
         private void CycleNextFrame()
         {

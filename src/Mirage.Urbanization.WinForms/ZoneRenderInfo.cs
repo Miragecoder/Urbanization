@@ -65,13 +65,14 @@ namespace Mirage.Urbanization.WinForms
 
             Action drawSecondLayerAction = null;
 
-            BitmapLayer bitmapLayer;
-            if (_tilesetAccessor.TryGetBitmapFor(consumption, out bitmapLayer))
-            {
-                graphics.DrawImage(bitmapLayer.LayerOne, rectangle);
+            var bitmapLayer = _tilesetAccessor.TryGetBitmapFor(consumption);
 
-                if (bitmapLayer.IsLayerTwoSpecified)
-                    drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.LayerTwo, rectangle); };
+            if (bitmapLayer.HasMatch)
+            {
+                graphics.DrawImage(bitmapLayer.MatchingObject.LayerOne.BitmapSegment, rectangle);
+
+                if (bitmapLayer.MatchingObject.IsLayerTwoSpecified)
+                    drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.MatchingObject.LayerTwo.BitmapSegment, rectangle); };
 
                 if (_renderZoneOptions.ShowDebugGrowthPathFinding)
                 {

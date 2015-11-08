@@ -52,6 +52,7 @@
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BitmapSegmenter.cs" />
     <Compile Include="BrushManager.cs" />
+    <Compile Include="IAnimatedRoadNetworkZoneTileset.cs" />
     <Compile Include="INetworkZoneTileset.cs" />
     <Compile Include="ITilesetAccessor.cs" />
     <Compile Include="NetworkZoneTileset.cs" />

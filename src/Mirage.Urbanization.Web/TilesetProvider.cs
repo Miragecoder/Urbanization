@@ -44,11 +44,12 @@ namespace Mirage.Urbanization.Web
             IAreaZoneConsumption consumption, 
             Func<BitmapLayer, Bitmap> bitmapSelector)
         {
-            BitmapLayer bitmapLayer;
-            if (!TilesetAccessor.TryGetBitmapFor(consumption, out bitmapLayer))
+            var result = TilesetAccessor.TryGetBitmapFor(consumption);
+
+            if (result.HasNoMatch)
                 return default(int);
 
-            var bitmap = bitmapSelector(bitmapLayer);
+            var bitmap = bitmapSelector(result.MatchingObject);
             if (bitmap == null)
                 return default(int);
 

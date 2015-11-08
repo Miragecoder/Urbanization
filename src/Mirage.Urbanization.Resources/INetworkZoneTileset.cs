@@ -5,11 +5,11 @@ namespace Mirage.Urbanization.Tilesets
 {
     public interface INetworkZoneTileset
     {
-        Bitmap GetBitmapFor(BaseNetworkZoneConsumption intersection);
+        BitmapInfo GetBitmapInfoFor(BaseNetworkZoneConsumption intersection);
     }
 
     public interface IRoadNetworkZoneTileset : INetworkZoneTileset
     {
-        Bitmap GetBitmapFor(IIntersectingZoneConsumption naseNetworkZoneConsumption);
+        BitmapInfo GetBitmapInfoFor(IIntersectingZoneConsumption intersection);
     }
 }

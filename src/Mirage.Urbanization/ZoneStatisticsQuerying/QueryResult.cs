@@ -2,6 +2,11 @@
 
 namespace Mirage.Urbanization.ZoneStatisticsQuerying
 {
+    public static class ObjectExtensions
+    {
+        public static QueryResult<T> ToQueryResult<T>(this T @object) where T : class => QueryResult<T>.Create(@object);
+    }
+
     public class QueryResult<T>
         where T : class
     {

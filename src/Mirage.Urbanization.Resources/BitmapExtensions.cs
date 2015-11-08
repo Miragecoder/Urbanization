@@ -5,6 +5,9 @@ namespace Mirage.Urbanization.Tilesets
 {
     public static class BitmapExtensions
     {
+        public static BitmapLayer ToBitmapLayer(this BitmapInfo bitmapInfo) => new BitmapLayer(bitmapInfo);
+
+        public static BitmapInfo ToBitmapInfo(this Bitmap bitmap) => new BitmapInfo(bitmap);
         public static Bitmap Get90DegreesRotatedClone(this Bitmap bitmap)
         {
             if (bitmap == null)
