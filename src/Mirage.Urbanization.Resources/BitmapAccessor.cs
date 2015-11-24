@@ -15,13 +15,13 @@ namespace Mirage.Urbanization.Tilesets
     {
         private readonly object[] _objects;
 
-        internal BitmapSelector(params Bitmap[] bitmaps)
+        internal BitmapSelector(params SegmentableBitmap[] bitmaps)
             : this(bitmaps, null)
         {
 
         }
 
-        internal BitmapSelector(Bitmap[] bitmaps = null, AnimatedBitmap[] animatedBitmaps = null)
+        internal BitmapSelector(SegmentableBitmap[] bitmaps = null, AnimatedBitmap[] animatedBitmaps = null)
         {
             var @objects = new List<object>();
             if (bitmaps != null)
@@ -31,13 +31,13 @@ namespace Mirage.Urbanization.Tilesets
             _objects = @objects.ToArray();
         }
 
-        public Bitmap SelectOneWithId(int id)
+        public SegmentableBitmap SelectOneWithId(int id)
         {
             var @object = _objects[id % _objects.Length];
-            if (@object is Bitmap)
-                return @object as Bitmap;
+            if (@object is SegmentableBitmap)
+                return @object as SegmentableBitmap;
             else if (@object is AnimatedBitmap)
-                return (@object as AnimatedBitmap).GetCurrentBitmapFrame().Frame;
+                return (@object as AnimatedBitmap).GetCurrentBitmapFrame().ParentSegmentableBitmap;
             throw new InvalidOperationException("Unsupported object type encountered: " + @object.GetType().Name);
         }
     }
@@ -66,7 +66,7 @@ namespace Mirage.Urbanization.Tilesets
             _predicateAndBitmapSelectors = growthZoneAndBitmapSelectors.ToList();
         }
 
-        public Bitmap GetBitmapFor(T cluster)
+        public SegmentableBitmap GetBitmapFor(T cluster)
         {
             var snapshot = new ClusterSnapshot(cluster);
             return _predicateAndBitmapSelectors
@@ -91,36 +91,36 @@ namespace Mirage.Urbanization.Tilesets
     {
         internal readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> CommercialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity == 0,
-                new BitmapSelector(new[] { BitmapAccessor.GetImage("GrowthZones.Commercial.empty.png") })
+                new BitmapSelector(new[] { BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.empty.png") })
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity > 0 && x.PopulationDensity < 25,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d1q1n1.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d1q1n2.png")
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.d1q1n1.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.d1q1n2.png")
                 )
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity >= 25,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n1.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n2.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n3.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Commercial.d2q1n4.png")
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.d2q1n1.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.d2q1n2.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.d2q1n3.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Commercial.d2q1n4.png")
                 )
             )
         );
 
         internal readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> IndustrialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity == 0,
-                new BitmapSelector(BitmapAccessor.GetImage("GrowthZones.Industrial.empty.png"))
+                new BitmapSelector(BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.empty.png"))
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity > 0 && x.PopulationDensity < 25,
                 new BitmapSelector(
                     animatedBitmaps: new[]
                     {
                         new AnimatedBitmap(300,
-                            BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a1.png"),
-                            BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a2.png"),
-                            BitmapAccessor.GetImage("GrowthZones.Industrial.d1q1n1a3.png")
+                            BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.d1q1n1a1.png"),
+                            BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.d1q1n1a2.png"),
+                            BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.d1q1n1a3.png")
                         ),
                     }
                 )
@@ -130,9 +130,9 @@ namespace Mirage.Urbanization.Tilesets
                     animatedBitmaps: new[]
                     {
                         new AnimatedBitmap(200,
-                            BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a1.png"),
-                            BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a2.png"),
-                            BitmapAccessor.GetImage("GrowthZones.Industrial.d2q1n1a3.png")
+                            BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.d2q1n1a1.png"),
+                            BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.d2q1n1a2.png"),
+                            BitmapAccessor.GetSegmentableBitmap("GrowthZones.Industrial.d2q1n1a3.png")
                         ),
                     }
                 )
@@ -141,19 +141,19 @@ namespace Mirage.Urbanization.Tilesets
 
         internal readonly GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption> ResidentialCollection = new GrowthZoneBitmapSelectorCollection<BaseGrowthZoneClusterConsumption>(
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity <= 8,
-                new BitmapSelector(BitmapAccessor.GetImage("GrowthZones.Residential.empty.png"))
+                new BitmapSelector(BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.empty.png"))
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity > 8 && x.PopulationDensity < 25,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d1q1n1.png")
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.d1q1n1.png")
                 )
             ),
             new GrowthZonePredicateAndBitmapSelector<BaseGrowthZoneClusterConsumption>(x => x.PopulationDensity >= 25,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n1.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n2.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n3.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.d2q1n4.png")
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.d2q1n1.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.d2q1n2.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.d2q1n3.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.d2q1n4.png")
                 )
             )
         );
@@ -161,10 +161,10 @@ namespace Mirage.Urbanization.Tilesets
         internal readonly GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption> ResidentialHouseCollection = new GrowthZoneBitmapSelectorCollection<ZoneClusterMemberConsumption>(
             new GrowthZonePredicateAndBitmapSelector<ZoneClusterMemberConsumption>(x => x.PopulationDensity <= 8,
                 new BitmapSelector(
-                    BitmapAccessor.GetImage("GrowthZones.Residential.Houses.d1q1n1.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.Houses.d1q1n2.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.Houses.d1q1n3.png"),
-                    BitmapAccessor.GetImage("GrowthZones.Residential.Houses.d1q1n4.png")
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.Houses.d1q1n1.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.Houses.d1q1n2.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.Houses.d1q1n3.png"),
+                    BitmapAccessor.GetSegmentableBitmap("GrowthZones.Residential.Houses.d1q1n4.png")
                 )
             )
         );
@@ -234,18 +234,44 @@ namespace Mirage.Urbanization.Tilesets
         }
     }
 
+    public class SegmentableBitmap
+    {
+        private readonly BitmapSegmenter _bitmapSegmenter = new BitmapSegmenter();
+        public SegmentableBitmap(Bitmap bitmap)
+        {
+            _segments = new Dictionary<Point, Bitmap>();
+            foreach (var x in Enumerable.Range(1, bitmap.Size.Width /TilesetAccessor.DefaultTileWidthAndSizeInPixels))
+            {
+                foreach (var y in Enumerable.Range(1, bitmap.Size.Height / TilesetAccessor.DefaultTileWidthAndSizeInPixels))
+                {
+                    _segments.Add(new Point(x, y),
+                        _bitmapSegmenter.GetSegment(bitmap, x, y, TilesetAccessor.DefaultTileWidthAndSizeInPixels));
+                }
+            }
+        }
+
+        public Bitmap GetBitmap(int x, int y) => _segments.Single(z => z.Key.X == x && z.Key.Y == y).Value;
+
+        public Bitmap GetBitmapFor(ZoneClusterMemberConsumption member)
+            => GetBitmap(member.PositionInClusterX, member.PositionInClusterY);
+
+        public BitmapLayer GetBitmapLayerFor(ZoneClusterMemberConsumption member) => new BitmapLayer(new BitmapInfo(GetBitmapFor(member)));
+
+        private readonly Dictionary<Point, Bitmap> _segments;
+    }
+
     internal class BitmapAccessor
     {
-        public readonly AnimatedBitmap PowerPlant = new AnimatedBitmap(250, GetImage("coal1.png"), GetImage("coal2.png"), GetImage("coal3.png"), GetImage("coal4.png"));
+        public readonly AnimatedBitmap PowerPlant = new AnimatedBitmap(250, GetSegmentableBitmap("coal1.png"), GetSegmentableBitmap("coal2.png"), GetSegmentableBitmap("coal3.png"), GetSegmentableBitmap("coal4.png"));
 
-        public readonly Bitmap TrainStation = GetImage("trainstation.png");
-        public readonly Bitmap Airport = GetImage("airport.png");
+        public readonly SegmentableBitmap TrainStation = GetSegmentableBitmap("trainstation.png");
+        public readonly SegmentableBitmap Airport = GetSegmentableBitmap("airport.png");
 
-        public readonly Bitmap NuclearPowerplant = GetImage("nuclear.png");
-        public readonly Bitmap Police = GetImage("police.png");
-        public readonly Bitmap FireStation = GetImage("firestation.png");
-        public readonly Bitmap SeaPort = GetImage("seaport.png");
-        public readonly Bitmap Stadium = GetImage("stadium.png");
+        public readonly SegmentableBitmap NuclearPowerplant = GetSegmentableBitmap("nuclear.png");
+        public readonly SegmentableBitmap Police = GetSegmentableBitmap("police.png");
+        public readonly SegmentableBitmap FireStation = GetSegmentableBitmap("firestation.png");
+        public readonly SegmentableBitmap SeaPort = GetSegmentableBitmap("seaport.png");
+        public readonly SegmentableBitmap Stadium = GetSegmentableBitmap("stadium.png");
 
         public GrowthZones GrowthZonesInstance = new GrowthZones();
 
@@ -524,6 +550,8 @@ namespace Mirage.Urbanization.Tilesets
                 public readonly Bitmap WaterNorthWestEastSouth = GetImage("NetworkZones.Water.waternwes.png");
             }
         }
+
+        public static SegmentableBitmap GetSegmentableBitmap(string name) => new SegmentableBitmap(GetImage(name));
 
         public static Bitmap GetImage(string name)
         {

@@ -12,7 +12,7 @@ namespace Mirage.Urbanization.Tilesets
 {
     public class TilesetAccessor : ITilesetAccessor
     {
-        private const int DefaultTileWidthAndSizeInPixels = 25;
+        public const int DefaultTileWidthAndSizeInPixels = 25;
 
         public int TileWidthAndSizeInPixels { get; set; } = DefaultTileWidthAndSizeInPixels;
 
@@ -144,9 +144,6 @@ namespace Mirage.Urbanization.Tilesets
                 var zoneClusterMemberConsumption = consumption as ZoneClusterMemberConsumption;
                 var parentConsumption = (consumption as ZoneClusterMemberConsumption).ParentBaseZoneClusterConsumption;
 
-                Bitmap toBeSegmentedBitmap = null;
-                AnimatedBitmapFrame animatedBitmapFrame = null;
-
                 if (parentConsumption is BaseImplementedZoneClusterConsumption)
                 {
                     var showHasNoElectricitySymbol = !(parentConsumption as BaseImplementedZoneClusterConsumption).HasPower;
@@ -164,41 +161,39 @@ namespace Mirage.Urbanization.Tilesets
 
                     if (parentConsumption is CoalPowerPlantZoneClusterConsumption)
                     {
-                        animatedBitmapFrame = _bitmapAccessor.PowerPlant.GetCurrentBitmapFrame();
+                        return _bitmapAccessor.PowerPlant.GetBitmapLayer(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is NuclearPowerPlantZoneClusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.NuclearPowerplant;
+                        return _bitmapAccessor.NuclearPowerplant.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is PoliceStationZoneClusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.Police;
+                        return _bitmapAccessor.Police.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is FireStationZoneclusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.FireStation;
+                        return _bitmapAccessor.FireStation.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is TrainStationZoneClusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.TrainStation;
+                        return _bitmapAccessor.TrainStation.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is AirportZoneClusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.Airport;
+                        return _bitmapAccessor.Airport.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is SeaPortZoneClusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.SeaPort;
+                        return _bitmapAccessor.SeaPort.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
                     else if (parentConsumption is StadiumZoneClusterConsumption)
                     {
-                        toBeSegmentedBitmap = _bitmapAccessor.Stadium;
+                        return _bitmapAccessor.Stadium.GetBitmapLayerFor(zoneClusterMemberConsumption).ToQueryResult();
                     }
-
-                    var baseGrowthZoneConsumption = parentConsumption as BaseGrowthZoneClusterConsumption;
-
-                    if (baseGrowthZoneConsumption != null)
+                    else if (parentConsumption is BaseGrowthZoneClusterConsumption)
                     {
+                        var baseGrowthZoneConsumption = parentConsumption as BaseGrowthZoneClusterConsumption;
                         if (baseGrowthZoneConsumption is ResidentialZoneClusterConsumption)
                         {
                             var residentialZoneConsumption =
@@ -207,51 +202,42 @@ namespace Mirage.Urbanization.Tilesets
                             if (residentialZoneConsumption.RenderAsHouse(zoneClusterMemberConsumption))
                             {
                                 return BitmapSelectorCollectionsInstance.ResidentialHouseCollection.GetBitmapFor(
-                                    zoneClusterMemberConsumption)
+                                    zoneClusterMemberConsumption).GetBitmap(1,1)
                                     .ToBitmapInfo()
                                     .ToBitmapLayer()
                                     .ToQueryResult();
                             }
 
-                            toBeSegmentedBitmap = BitmapSelectorCollectionsInstance
+                            return BitmapSelectorCollectionsInstance
                                 .ResidentialCollection
-                                .GetBitmapFor(baseGrowthZoneConsumption);
+                                .GetBitmapFor(baseGrowthZoneConsumption)
+                                .GetBitmapLayerFor(zoneClusterMemberConsumption)
+                                .ToQueryResult();
                         }
                         else if (baseGrowthZoneConsumption is CommercialZoneClusterConsumption)
                         {
-                            toBeSegmentedBitmap = BitmapSelectorCollectionsInstance
+                            return BitmapSelectorCollectionsInstance
                                 .CommercialCollection
-                                .GetBitmapFor(baseGrowthZoneConsumption);
+                                .GetBitmapFor(baseGrowthZoneConsumption)
+                                .GetBitmapLayerFor(zoneClusterMemberConsumption)
+                                .ToQueryResult();
                         }
                         else if (baseGrowthZoneConsumption is IndustrialZoneClusterConsumption)
                         {
-                            toBeSegmentedBitmap = BitmapSelectorCollectionsInstance
+                            return BitmapSelectorCollectionsInstance
                                 .IndustrialCollection
-                                .GetBitmapFor(baseGrowthZoneConsumption);
+                                .GetBitmapFor(baseGrowthZoneConsumption)
+                                .GetBitmapLayerFor(zoneClusterMemberConsumption)
+                                .ToQueryResult();
                         }
-                    }
-                }
-
-                if (toBeSegmentedBitmap != null || animatedBitmapFrame != null)
-                {
-                    var bitmapSegment = bitmapSegmenter.GetSegment(
-                        image: toBeSegmentedBitmap ?? animatedBitmapFrame.Frame,
-                        x: zoneClusterMemberConsumption.PositionInClusterX,
-                        y: zoneClusterMemberConsumption.PositionInClusterY,
-                        multiplier: DefaultTileWidthAndSizeInPixels
-                        );
-
-                    if (animatedBitmapFrame != null)
-                    {
-                        return QueryResult<BitmapLayer>.Create(
-                            new BitmapLayer(
-                                new BitmapInfo(bitmapSegment, animatedBitmapFrame.Frame, animatedBitmapFrame.Parent)));
+                        else
+                        {
+                            throw new InvalidOperationException();
+                        }
                     }
                     else
                     {
-                        return
-                            QueryResult<BitmapLayer>.Create(
-                                new BitmapLayer(new BitmapInfo(bitmapSegment, toBeSegmentedBitmap)));
+                        throw new InvalidOperationException();
                     }
                 }
                 else
@@ -266,8 +252,6 @@ namespace Mirage.Urbanization.Tilesets
         }
 
         internal BitmapSelectorCollections BitmapSelectorCollectionsInstance = new BitmapSelectorCollections();
-
-        private readonly BitmapSegmenter bitmapSegmenter = new BitmapSegmenter();
 
         public TilesetAccessor()
         {

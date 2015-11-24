@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.Tilesets
 {
@@ -8,33 +9,38 @@ namespace Mirage.Urbanization.Tilesets
 
     public class AnimatedBitmapFrame
     {
-        public AnimatedBitmapFrame(AnimatedBitmap parent, Bitmap frame)
+        public AnimatedBitmapFrame(AnimatedBitmap parent, SegmentableBitmap frame)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (frame == null) throw new ArgumentNullException(nameof(frame));
-            Parent = parent;
-            Frame = frame;
+            ParentAnimatedBitmap = parent;
+            ParentSegmentableBitmap = frame;
         }
 
-        public AnimatedBitmap Parent { get; }
-        public Bitmap Frame { get; }
+        public AnimatedBitmap ParentAnimatedBitmap { get; }
+        public SegmentableBitmap ParentSegmentableBitmap { get; }
     }
 
     public class AnimatedBitmap
     {
-        private Bitmap _currentBitmap;
+        private SegmentableBitmap _currentBitmap;
         private DateTime _lastFrameSkip = DateTime.Now;
         private readonly TimeSpan _frameLifeSpan;
-        private readonly IEnumerator<Bitmap> _bitmapEnumerator;
+        private readonly IEnumerator<SegmentableBitmap> _bitmapEnumerator;
 
-        internal AnimatedBitmap(int milliseconds, params Bitmap[] frames)
+        internal AnimatedBitmap(int milliseconds, params SegmentableBitmap[] frames)
         {
             _frameLifeSpan = new TimeSpan(0, 0, 0, 0, milliseconds);
+            MilliSeconds = milliseconds;
+            Frames = frames;
             _bitmapEnumerator = EnumerateBitmapsInfinity(frames).GetEnumerator();
             CycleNextFrame();
         }
 
-        private Bitmap GetCurrentBitmapFramePrivate()
+        public int MilliSeconds { get; }
+        public IEnumerable<SegmentableBitmap> Frames { get; }
+
+        private SegmentableBitmap GetCurrentBitmapFramePrivate()
         {
             if (DateTime.Now - _frameLifeSpan > _lastFrameSkip)
                 CycleNextFrame();
@@ -51,11 +57,23 @@ namespace Mirage.Urbanization.Tilesets
             _lastFrameSkip = DateTime.Now;
         }
 
-        private static IEnumerable<Bitmap> EnumerateBitmapsInfinity(Bitmap[] frames)
+        private static IEnumerable<SegmentableBitmap> EnumerateBitmapsInfinity(SegmentableBitmap[] frames)
         {
             while (true)
                 foreach (var bitmap in frames)
                     yield return bitmap;
+        }
+
+        public BitmapLayer GetBitmapLayer(ZoneClusterMemberConsumption member) => new BitmapLayer(GetBitmapInfoFor(member));
+
+        public BitmapInfo GetBitmapInfoFor(ZoneClusterMemberConsumption member)
+        {
+            var current = this.GetCurrentBitmapFrame();
+            
+            return new BitmapInfo(
+                bitmapSegment: current.ParentSegmentableBitmap.GetBitmapLayerFor(member).LayerOne.BitmapSegment, 
+                parent: current.ParentSegmentableBitmap, 
+                parentAnimatedBitmap: current.ParentAnimatedBitmap);
         }
     }
 }

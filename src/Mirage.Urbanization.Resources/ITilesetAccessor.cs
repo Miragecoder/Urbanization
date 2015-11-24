@@ -41,31 +41,30 @@ namespace Mirage.Urbanization.Tilesets
     public class BitmapInfo
     {
         public Bitmap BitmapSegment { get; }
-        public Bitmap BitmapParent { get; }
+        public QueryResult<SegmentableBitmap> BitmapParent { get; }
         public AnimatedBitmap ParentAnimatedBitmap { get; }
         public IRoadNetworkZoneTileset ParentAnimatedRoadNetworkZoneTileset { get; }
 
-        public BitmapInfo(Bitmap bitmap) : this(bitmap, bitmap)
+        public BitmapInfo(Bitmap bitmap) : this(bitmap, null as SegmentableBitmap)
         {
         }
 
-        public BitmapInfo(Bitmap bitmapSegment, Bitmap parent)
+        public BitmapInfo(Bitmap bitmapSegment, SegmentableBitmap parent)
         {
             if (bitmapSegment == null) throw new ArgumentNullException(nameof(bitmapSegment));
-            if (parent == null) throw new ArgumentNullException(nameof(parent));
             BitmapSegment = bitmapSegment;
-            BitmapParent = parent;
+            BitmapParent = parent.ToQueryResult();
         }
 
-        public BitmapInfo(Bitmap bitmapSegment, Bitmap parent, AnimatedBitmap parentAnimatedBitmap)
+        public BitmapInfo(Bitmap bitmapSegment, SegmentableBitmap parent, AnimatedBitmap parentAnimatedBitmap)
             : this(bitmapSegment, parent)
         {
             if (parentAnimatedBitmap == null) throw new ArgumentNullException(nameof(parentAnimatedBitmap));
             ParentAnimatedBitmap = parentAnimatedBitmap;
         }
 
-        public BitmapInfo(Bitmap bitmapSegment, Bitmap parent, IRoadNetworkZoneTileset parentAnimatedRoadNetworkZoneTileset)
-             : this(bitmapSegment, parent)
+        public BitmapInfo(Bitmap bitmapSegment, IRoadNetworkZoneTileset parentAnimatedRoadNetworkZoneTileset)
+             : this(bitmapSegment, null as SegmentableBitmap)
         {
             if (parentAnimatedRoadNetworkZoneTileset == null) throw new ArgumentNullException(nameof(parentAnimatedRoadNetworkZoneTileset));
             ParentAnimatedRoadNetworkZoneTileset = parentAnimatedRoadNetworkZoneTileset;

@@ -99,7 +99,7 @@ namespace Mirage.Urbanization.Tilesets
 
         public BitmapInfo GetBitmapInfoFor(IIntersectingZoneConsumption intersection)
         {
-            return GetIntersectionBitmapPrivate(intersection).Pipe(bitmap => new BitmapInfo(bitmap, bitmap, this));
+            return GetIntersectionBitmapPrivate(intersection).Pipe(bitmap => new BitmapInfo(bitmap, this));
         }
         
         private Bitmap GetIntersectionBitmapPrivate(IIntersectingZoneConsumption intersection)
