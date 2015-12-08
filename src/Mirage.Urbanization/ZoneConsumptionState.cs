@@ -62,6 +62,21 @@ namespace Mirage.Urbanization
             return GetIsNetworkMember<RailRoadZoneConsumption>();
         }
 
+        public QueryResult<ZoneClusterMemberAndParent<T>> GetIfZoneClusterAndParent<T>() where T : BaseZoneClusterConsumption
+        {
+            return (_zoneConsumption as ZoneClusterMemberConsumption)
+                .ToQueryResult()
+                .WithResultIfHasMatch(x =>
+                {
+                    if (x.ParentBaseZoneClusterConsumption is T)
+                    {
+                        return new ZoneClusterMemberAndParent<T>(x, x.ParentBaseZoneClusterConsumption as T)
+                            .ToQueryResult();
+                    }
+                    return QueryResult<ZoneClusterMemberAndParent<T>>.Empty;
+                }, QueryResult<ZoneClusterMemberAndParent<T>>.Empty);
+        }
+
         public bool GetIsZoneClusterMember()
         {
             return GetZoneConsumption() is ZoneClusterMemberConsumption;

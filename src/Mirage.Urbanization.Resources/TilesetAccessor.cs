@@ -29,9 +29,17 @@ namespace Mirage.Urbanization.Tilesets
 
         public QueryResult<AnimatedCellBitmapSetLayers> TryGetBitmapFor(IReadOnlyZoneInfo zoneInfo)
         {
-            return _staticZonesTileAccessor.GetFor(zoneInfo);
+            return _staticZonesTileAccessor.GetFor(zoneInfo)
+                .Pipe(result =>
+                {
+                    if (result.HasMatch)
+                        return result;
+                    else
+                        return _growthZoneTileAccessor.GetFor(zoneInfo);
+                });
         }
 
+        private readonly GrowthZoneTileAccessor _growthZoneTileAccessor = new GrowthZoneTileAccessor();
         private readonly StaticZonesTileAccessor _staticZonesTileAccessor = new StaticZonesTileAccessor();
 
         public IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle)
@@ -47,15 +55,5 @@ namespace Mirage.Urbanization.Tilesets
                 Convert.ToInt32(Math.Round(size.Height * resizeMultiplier))
             );
         }
-    }
-
-    public static class AnimatedCellBitmapSetLayersDefinitions
-    {
-        private static IReadOnlyCollection<AnimatedCellBitmapSetLayers> _definitions = new[]
-        {
-            new AnimatedCellBitmapSetLayers(null,null)
-        }.ToList();
-
-        public static IEnumerable<AnimatedCellBitmapSetLayers> Definitions => _definitions;
     }
 }

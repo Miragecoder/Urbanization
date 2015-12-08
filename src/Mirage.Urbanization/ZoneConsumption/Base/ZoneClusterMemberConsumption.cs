@@ -97,7 +97,10 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             PositionInClusterY = positionInClusterY;
 
             _zoneInfoFinder = createZoneInfoFinderFunc();
+            PositionInCluster = new Point(PositionInClusterX - 1, PositionInClusterY - 1);
         }
+
+        public Point PositionInCluster { get; }
 
         public static IEnumerable<ZoneClusterMemberConsumption> Generate(BaseZoneClusterConsumption parent, Func<ZoneInfoFinder> createZoneInfoFinderFunc, int widthInZones, int heightInZones, Color color)
         {

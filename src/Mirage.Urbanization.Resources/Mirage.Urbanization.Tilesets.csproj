@@ -51,6 +51,7 @@
     <Compile Include="CellBitmap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TilesetAccessor.cs" />
+    <Compile Include="Tiles\Clusters\StaticZones\EmbeddedBitmapExtractor.cs" />
     <Compile Include="Tiles\Clusters\StaticZones\StaticZonesTileAccessor.cs" />
     <Compile Include="VehicleBitmapAndPoint.cs" />
   </ItemGroup>
@@ -58,9 +59,9 @@
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\CoalPowerPlantZoneClusterConsumption_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\empty.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\empty.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\empty.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d0_q0_n1_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d0_q0_n1_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d0_q0_n1_a1.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
@@ -120,14 +121,14 @@
     <EmbeddedResource Include="NetworkZones\Power\powernwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d1q1n1.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2q1n1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d1_q1_n1_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n1_a1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d1q1n1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d1_q1_n1_a1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2q1n1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2_q1_n1_a1.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\CoalPowerPlantZoneClusterConsumption_2.png" />
@@ -165,19 +166,19 @@
     <EmbeddedResource Include="NetworkZones\Water\waternwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\Houses\d1q1n1.png" />
+    <EmbeddedResource Include="Tiles\Houses\d1q1n1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d1q1n2.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d1_q1_n2_a1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\Houses\d1q1n2.png" />
+    <EmbeddedResource Include="Tiles\Houses\d1q1n2.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\Houses\d1q1n3.png" />
+    <EmbeddedResource Include="Tiles\Houses\d1q1n3.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\Houses\d1q1n4.png" />
+    <EmbeddedResource Include="Tiles\Houses\d1q1n4.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\PoliceStationZoneClusterConsumption.png" />
@@ -312,12 +313,12 @@
     <EmbeddedResource Include="NetworkZones\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2q1n2.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2q1n3.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2q1n4.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2q1n2.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2q1n3.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2q1n4.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2_q1_n2_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2_q1_n3_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2_q1_n4_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n2_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n3_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n4_a1.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\waternsroadew.png" />
@@ -473,14 +474,14 @@
     <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2q1n1a1.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2q1n1a2.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2q1n1a3.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n1_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n1_a2.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n1_a3.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1q1n1a1.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1q1n1a2.png" />
-    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1q1n1a3.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1_q1_n1_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1_q1_n1_a2.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1_q1_n1_a3.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="train.png" />

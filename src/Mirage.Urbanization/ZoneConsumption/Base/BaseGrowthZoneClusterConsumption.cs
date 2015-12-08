@@ -45,7 +45,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public int PopulationStatistics => PopulationDensity * 3;
 
-        private const int MaximumPopulation = 50;
+        public const int MaximumPopulation = 50;
 
         public bool CanGrow => PopulationDensity < MaximumPopulation;
 
