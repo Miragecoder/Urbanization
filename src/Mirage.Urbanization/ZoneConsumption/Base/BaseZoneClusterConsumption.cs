@@ -10,6 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract char KeyChar { get; }
 
         public abstract int Cost { get; }
+        public virtual int FrameSkipDelay { get; } = 500;
 
         public BuildStyle BuildStyle => BuildStyle.SingleClick;
 

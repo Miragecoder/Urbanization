@@ -15,7 +15,6 @@ namespace Mirage.Urbanization.Web
     static class TilesetProvider
     {
         private static readonly ITilesetAccessor TilesetAccessor = new TilesetAccessor();
-        private static readonly MiscBitmaps MiscBitmaps = new MiscBitmaps();
 
         private static readonly Dictionary<int, Bitmap> BitmapsByHashCode = new Dictionary<int, Bitmap>();
 
@@ -26,7 +25,7 @@ namespace Mirage.Urbanization.Web
 
         public static IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle)
         {
-            foreach (var x in TilesetAccessor.GetBitmapsAndPointsFor(vehicle, MiscBitmaps))
+            foreach (VehicleBitmapAndPoint x in TilesetAccessor.GetBitmapsAndPointsFor(vehicle))
             {
                 RegisterBitmap(x.Bitmap);
 
@@ -34,17 +33,17 @@ namespace Mirage.Urbanization.Web
             }
         }
 
-        private static void RegisterBitmap(Bitmap bitmap)
+        private static void RegisterBitmap(BaseBitmap bitmap)
         {
             if (!BitmapsByHashCode.ContainsKey(bitmap.GetHashCode()))
-                BitmapsByHashCode.Add(bitmap.GetHashCode(), bitmap);
+                BitmapsByHashCode.Add(bitmap.Id, bitmap.Bitmap);
         }
 
         public static int GetTilePathFor(
-            IAreaZoneConsumption consumption, 
-            Func<BitmapLayer, Bitmap> bitmapSelector)
+            IReadOnlyZoneInfo zoneInfo, 
+            Func<AnimatedCellBitmapSetLayers, AnimatedCellBitmapSet> bitmapSelector)
         {
-            var result = TilesetAccessor.TryGetBitmapFor(consumption);
+            var result = TilesetAccessor.TryGetBitmapFor(zoneInfo);
 
             if (result.HasNoMatch)
                 return default(int);
@@ -53,7 +52,8 @@ namespace Mirage.Urbanization.Web
             if (bitmap == null)
                 return default(int);
 
-            RegisterBitmap(bitmap);
+            foreach (var x in bitmap.Bitmaps)
+                RegisterBitmap(x);
 
             return bitmap.GetHashCode();
         }

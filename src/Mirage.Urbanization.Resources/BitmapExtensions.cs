@@ -1,13 +1,12 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Mirage.Urbanization.Tilesets
 {
     public static class BitmapExtensions
     {
-        public static BitmapLayer ToBitmapLayer(this BitmapInfo bitmapInfo) => new BitmapLayer(bitmapInfo);
-
-        public static BitmapInfo ToBitmapInfo(this Bitmap bitmap) => new BitmapInfo(bitmap);
         public static Bitmap Get90DegreesRotatedClone(this Bitmap bitmap)
         {
             if (bitmap == null)
@@ -47,6 +46,27 @@ namespace Mirage.Urbanization.Tilesets
             }
 
             return rotatedImage;
+        }
+
+        public static Bitmap GetBitmapSegment(Bitmap image, int x, int y, int multiplier)
+        {
+            // Clone a portion of the Bitmap object.
+            Rectangle cloneRect = new Rectangle(
+                x: (x * multiplier), 
+                y: (y * multiplier), 
+                width: 1 * multiplier, 
+                height: 1 * multiplier
+            );
+            System.Drawing.Imaging.PixelFormat format = image.PixelFormat;
+            return image.Clone(cloneRect, format);
+        }
+
+        public static IEnumerable<KeyValuePair<Point, Bitmap>> GetSegments(this Bitmap image, int multiplier)
+        {
+            return 
+                from x in Enumerable.Range(0, image.Width / multiplier)
+                from y in Enumerable.Range(0, image.Height / multiplier)
+                select new KeyValuePair<Point, Bitmap>(new Point(x,y),  GetBitmapSegment(image, x, y, multiplier));
         }
     }
 }

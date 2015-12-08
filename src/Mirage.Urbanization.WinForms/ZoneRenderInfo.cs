@@ -11,6 +11,7 @@ using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.WinForms.Rendering;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.WinForms
 {
@@ -65,14 +66,14 @@ namespace Mirage.Urbanization.WinForms
 
             Action drawSecondLayerAction = null;
 
-            var bitmapLayer = _tilesetAccessor.TryGetBitmapFor(consumption);
+            QueryResult<AnimatedCellBitmapSetLayers> bitmapLayer = _tilesetAccessor.TryGetBitmapFor(ZoneInfo);
 
             if (bitmapLayer.HasMatch)
             {
-                graphics.DrawImage(bitmapLayer.MatchingObject.LayerOne.BitmapSegment, rectangle);
+                graphics.DrawImage(bitmapLayer.MatchingObject.LayerOne.Current, rectangle);
 
-                if (bitmapLayer.MatchingObject.IsLayerTwoSpecified)
-                    drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.MatchingObject.LayerTwo.BitmapSegment, rectangle); };
+                if (bitmapLayer.MatchingObject.LayerTwo.HasMatch)
+                    drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.MatchingObject.LayerTwo.MatchingObject.Current, rectangle); };
 
                 if (_renderZoneOptions.ShowDebugGrowthPathFinding)
                 {

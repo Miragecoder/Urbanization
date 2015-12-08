@@ -12,9 +12,9 @@ namespace Mirage.Urbanization.Web
             => new ClientZoneInfo
             {
                 bitmapLayerOne = TilesetProvider
-                    .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerOne.BitmapSegment),
+                    .GetTilePathFor(zoneInfo, x => x.LayerOne),
                 bitmapLayerTwo = TilesetProvider
-                    .GetTilePathFor(zoneInfo.ZoneConsumptionState.GetZoneConsumption(), x => x.LayerTwo.BitmapSegment),
+                    .GetTilePathFor(zoneInfo, x => x.LayerTwo.WithResultIfHasMatch(y => y)),
                 x = zoneInfo.Point.X,
                 y = zoneInfo.Point.Y
             };
