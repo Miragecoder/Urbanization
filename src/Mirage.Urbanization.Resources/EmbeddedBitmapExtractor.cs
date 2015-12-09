@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
-namespace Mirage.Urbanization.Tilesets.Tiles.Clusters.StaticZones
+namespace Mirage.Urbanization.Tilesets
 {
     public class EmbeddedBitmapExtractor
     {
@@ -35,6 +35,7 @@ namespace Mirage.Urbanization.Tilesets.Tiles.Clusters.StaticZones
 
             public string ResourceName { get; }
             public Bitmap Bitmap { get; }
+            public string FileName => ResourceName.Split('.').Reverse().Skip(1).Take(1).Single();
         }
     }
 }

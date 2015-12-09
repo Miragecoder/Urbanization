@@ -32,18 +32,18 @@ namespace Mirage.Urbanization.Tilesets
 
     public class DirectionalCellBitmap
     {
-        public AnimatedCellBitmapSetLayers North { get; }
-        public AnimatedCellBitmapSetLayers South { get; }
-        public AnimatedCellBitmapSetLayers East { get; }
-        public AnimatedCellBitmapSetLayers West { get; }
+        public AnimatedCellBitmapSetLayers Up { get; }
+        public AnimatedCellBitmapSetLayers Down { get; }
+        public AnimatedCellBitmapSetLayers Right { get; }
+        public AnimatedCellBitmapSetLayers Left { get; }
 
         public DirectionalCellBitmap(AnimatedCellBitmapSetLayers cellBitmapSet)
         {
             if (cellBitmapSet == null) throw new ArgumentNullException(nameof(cellBitmapSet));
-            North = cellBitmapSet;
-            East = North.Generate90DegreesRotatedClone();
-            South = East.Generate90DegreesRotatedClone();
-            West = South.Generate90DegreesRotatedClone();
+            Up = cellBitmapSet;
+            Right = Up.Generate90DegreesRotatedClone();
+            Down = Right.Generate90DegreesRotatedClone();
+            Left = Down.Generate90DegreesRotatedClone();
         }
     }
 
@@ -73,7 +73,7 @@ namespace Mirage.Urbanization.Tilesets
             }
         }
 
-        private readonly Lazy<AnimatedCellBitmapSet> _rotatedCloneLazy; 
+        private readonly Lazy<AnimatedCellBitmapSet> _rotatedCloneLazy;
 
         public AnimatedCellBitmapSet(int delay, params CellBitmap[] bitmaps)
         {
@@ -89,7 +89,7 @@ namespace Mirage.Urbanization.Tilesets
 
         private DateTime _lastFrameSkip = DateTime.Now;
 
-        private readonly IEnumerator<CellBitmap> _bitmapEnumerator; 
+        private readonly IEnumerator<CellBitmap> _bitmapEnumerator;
 
         public AnimatedCellBitmapSet Generate90DegreesRotatedClone()
         {
@@ -103,9 +103,9 @@ namespace Mirage.Urbanization.Tilesets
         public QueryResult<AnimatedCellBitmapSet> LayerTwo { get; }
 
         private readonly Lazy<AnimatedCellBitmapSetLayers> _rotatedCloneLazy;
-        
+
         public AnimatedCellBitmapSetLayers(
-            AnimatedCellBitmapSet layerOne, 
+            AnimatedCellBitmapSet layerOne,
             AnimatedCellBitmapSet layerTwo
         )
         {
@@ -113,7 +113,7 @@ namespace Mirage.Urbanization.Tilesets
             LayerTwo = layerTwo.ToQueryResult();
 
             _rotatedCloneLazy = new Lazy<AnimatedCellBitmapSetLayers>(() =>
-                new AnimatedCellBitmapSetLayers(LayerOne.Generate90DegreesRotatedClone(), 
+                new AnimatedCellBitmapSetLayers(LayerOne.Generate90DegreesRotatedClone(),
                 LayerTwo.WithResultIfHasMatch(x => x.Generate90DegreesRotatedClone())
             ));
         }
@@ -143,6 +143,58 @@ namespace Mirage.Urbanization.Tilesets
         public DirectionalCellBitmap NorthWest { get; set; }
         public DirectionalCellBitmap NorthWestEast { get; set; }
         public DirectionalCellBitmap NorthWestEastSouth { get; set; }
+
+        public AnimatedCellBitmapSetLayers GetForDirections(bool north, bool east, bool south, bool west)
+        {
+            var specificationCount = new[] { north, east, south, west }.Count(x => x);
+
+            switch (specificationCount)
+            {
+                case 0:
+                    return Center.Right;
+                case 1:
+                    if (east)
+                        return East.Up;
+                    else if (south)
+                        return East.Right;
+                    else if (west)
+                        return East.Down;
+                    else if (north)
+                        return East.Left;
+                    else
+                        throw new InvalidOperationException();
+                case 2:
+                    if (east && west)
+                        return EastWest.Up;
+                    else if (north && south)
+                        return EastWest.Right;
+                    else if (west && north)
+                        return NorthWest.Up;
+                    else if (north && east)
+                        return NorthWest.Right;
+                    else if (east && south)
+                        return NorthWest.Down;
+                    else if (south && west)
+                        return NorthWest.Left;
+                    else
+                        throw new InvalidOperationException();
+                case 3:
+                    if (west && north && east)
+                        return NorthWestEast.Up;
+                    else if (north && east && south)
+                        return NorthWestEast.Right;
+                    else if (east && south && west)
+                        return NorthWestEast.Down;
+                    else if (south && west && north)
+                        return NorthWestEast.Left;
+                    else
+                        throw new InvalidOperationException();
+                case 4:
+                    return NorthWestEastSouth.Up;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
 
         public CellBitmapNetwork(
             DirectionalCellBitmap center,

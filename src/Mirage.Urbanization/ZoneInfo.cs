@@ -342,6 +342,28 @@ namespace Mirage.Urbanization
             return returnValue;
         }
 
+        public ZoneInfoSnapshot TakeSnapshot()
+        {
+            return ConsumptionState
+                .GetZoneConsumption()
+                .Pipe(consumption =>
+                {
+                    return new ZoneInfoSnapshot(
+                        point: Point,
+                        areaZoneConsumption: consumption,
+                        getNorthEastSouthWestFunc:  GetNorthEastSouthWest,
+                        trafficDensity: (consumption as RoadZoneConsumption)
+                            .ToQueryResult()
+                            .WithResultIfHasMatch(x => x.GetTrafficDensity(),
+                                (consumption as IntersectingZoneConsumption)
+                                    .ToQueryResult()
+                                    .WithResultIfHasMatch(x => x.GetTrafficDensity()
+                            )
+                        )
+                    );
+                });
+        }
+
         public QueryResult<IQueryLandValueResult> QueryLandValue()
         {
             return _lastQueryLandValueResult = _landValueCalculator.GetFor(this);

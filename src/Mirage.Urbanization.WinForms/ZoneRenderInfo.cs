@@ -66,7 +66,7 @@ namespace Mirage.Urbanization.WinForms
 
             Action drawSecondLayerAction = null;
 
-            QueryResult<AnimatedCellBitmapSetLayers> bitmapLayer = _tilesetAccessor.TryGetBitmapFor(ZoneInfo);
+            QueryResult<AnimatedCellBitmapSetLayers> bitmapLayer = _tilesetAccessor.TryGetBitmapFor(ZoneInfo.TakeSnapshot());
 
             if (bitmapLayer.HasMatch)
             {

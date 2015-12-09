@@ -46,13 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseGrowthZoneTileAccessor.cs" />
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BrushManager.cs" />
     <Compile Include="CellBitmap.cs" />
+    <Compile Include="CommercialGrowthZoneTileAccessor.cs" />
+    <Compile Include="GrowthZoneTileAccessor.cs" />
+    <Compile Include="GrowthZoneTileCellInfo.cs" />
+    <Compile Include="GrowthZoneTileInfo.cs" />
+    <Compile Include="IBaseGrowthZoneTileAccessor.cs" />
+    <Compile Include="IndustrialGrowthZoneTileAccessor.cs" />
+    <Compile Include="IntersectingZoneTileAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResidentialGrowthZoneTileAccessor.cs" />
+    <Compile Include="WoodZoneTileAccessor.cs" />
     <Compile Include="TilesetAccessor.cs" />
-    <Compile Include="Tiles\Clusters\StaticZones\EmbeddedBitmapExtractor.cs" />
-    <Compile Include="Tiles\Clusters\StaticZones\StaticZonesTileAccessor.cs" />
+    <Compile Include="EmbeddedBitmapExtractor.cs" />
+    <Compile Include="StaticZonesTileAccessor.cs" />
     <Compile Include="VehicleBitmapAndPoint.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,22 +84,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadNone\roadnoneew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadNone\roadnonenw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadNone\roadnonenwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadNone\roadnonenwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadNone\roadnonee.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadNone\roadnone.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NetworkZones\Rail\rail.png" />
@@ -100,7 +110,7 @@
     <EmbeddedResource Include="NetworkZones\Rail\railnwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadNone\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="rubbish.png" />
@@ -109,8 +119,8 @@
     <EmbeddedResource Include="Tiles\Clusters\noelectricity.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\railnspowerew.png" />
-    <EmbeddedResource Include="NetworkZones\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\railnspowerew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadNone\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NetworkZones\Power\power.png" />
@@ -184,133 +194,133 @@
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\PoliceStationZoneClusterConsumption.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame1\roadlow.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame1\roadlowe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame1\roadlowew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame1\roadlownw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame1\roadlownwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame1\roadlownwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame2\roadlow.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame2\roadlowe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame2\roadlowew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame2\roadlownw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame2\roadlownwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame2\roadlownwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame3\roadlow.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame3\roadlowe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame3\roadlowew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame3\roadlownw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame3\roadlownwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame3\roadlownwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame4\roadlow.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame4\roadlowe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame4\roadlowew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame4\roadlownw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame4\roadlownwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame4\roadlownwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame5\roadlow.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame5\roadlowe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame5\roadlowew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame5\roadlownw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame5\roadlownwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadLow\Frame5\roadlownwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame1\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame1\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame2\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame2\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame3\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame3\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame4\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame4\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame5\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame5\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\powernswaterew.png" />
+    <EmbeddedResource Include="IntersectingZones\powernswaterew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\railnswaterew.png" />
+    <EmbeddedResource Include="IntersectingZones\railnswaterew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadNone\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d2_q1_n2_a1.png" />
@@ -321,157 +331,157 @@
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n4_a1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame1\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame1\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame2\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame2\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame3\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame3\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame4\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame4\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\Low\Frame5\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadLow\Frame5\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\TrainStationZoneClusterConsumption.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame1\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame1\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame1\roadhigh.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame1\roadhighe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame1\roadhighew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame1\roadhighnw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame1\roadhighnwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame1\roadhighnwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame1\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame1\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame2\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame2\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame2\roadhigh.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame2\roadhighe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame2\roadhighew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame2\roadhighnw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame2\roadhighnwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame2\roadhighnwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame2\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame2\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame3\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame3\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame3\roadhigh.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame3\roadhighe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame3\roadhighew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame3\roadhighnw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame3\roadhighnwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame3\roadhighnwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame3\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame3\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame4\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame4\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame4\roadhigh.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame4\roadhighe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame4\roadhighew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame4\roadhighnw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame4\roadhighnwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame4\roadhighnwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame4\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame4\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\powernsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame5\powernsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\railnsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame5\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\road.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame5\roadhigh.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\roade.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame5\roadhighe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\roadew.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame5\roadhighew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\roadnw.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame5\roadhighnw.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\roadnwe.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame5\roadhighnwe.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\roadnwes.png" />
+    <EmbeddedResource Include="NetworkZones\RoadHigh\Frame5\roadhighnwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NetworkZones\Road\TrafficAnim\High\Frame5\waternsroadew.png" />
+    <EmbeddedResource Include="IntersectingZones\RoadHigh\Frame5\waternsroadew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n1_a1.png" />
@@ -522,6 +532,7 @@
   <ItemGroup>
     <None Include="BitmapObjects.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

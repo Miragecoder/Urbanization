@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mirage.Urbanization.Tilesets.Tiles.Clusters.StaticZones;
 using Mirage.Urbanization.Vehicles;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
@@ -15,7 +14,7 @@ namespace Mirage.Urbanization.Tilesets
     {
         int TileWidthAndSizeInPixels { get; set; }
         Size GetAreaSize(IReadOnlyArea area);
-        QueryResult<AnimatedCellBitmapSetLayers> TryGetBitmapFor(IReadOnlyZoneInfo zoneInfo);
+        QueryResult<AnimatedCellBitmapSetLayers> TryGetBitmapFor(ZoneInfoSnapshot snapShot);
         IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle);
         Size ResizeToTileWidthAndSize(Size size);
     }
@@ -27,20 +26,35 @@ namespace Mirage.Urbanization.Tilesets
             return new Size(area.AmountOfZonesX * TileWidthAndSizeInPixels, area.AmountOfZonesY * TileWidthAndSizeInPixels);
         }
 
-        public QueryResult<AnimatedCellBitmapSetLayers> TryGetBitmapFor(IReadOnlyZoneInfo zoneInfo)
+        public QueryResult<AnimatedCellBitmapSetLayers> TryGetBitmapFor(ZoneInfoSnapshot snapShot)
         {
-            return _staticZonesTileAccessor.GetFor(zoneInfo)
+            return _staticZonesTileAccessor.GetFor(snapShot)
                 .Pipe(result =>
                 {
                     if (result.HasMatch)
                         return result;
                     else
-                        return _growthZoneTileAccessor.GetFor(zoneInfo);
+                        return _growthZoneTileAccessor.GetFor(snapShot);
+                })
+                .Pipe(result =>
+                {
+                    if (result.HasMatch)
+                        return result;
+                    else
+                        return _networkZoneTileAccessor.GetFor(snapShot);
+                })
+                .Pipe(result =>
+                {
+                    if (result.HasMatch)
+                        return result;
+                    return _intersectingZoneTileAccessor.GetFor(snapShot);
                 });
         }
 
         private readonly GrowthZoneTileAccessor _growthZoneTileAccessor = new GrowthZoneTileAccessor();
         private readonly StaticZonesTileAccessor _staticZonesTileAccessor = new StaticZonesTileAccessor();
+        private readonly NetworkZoneTileAccessor _networkZoneTileAccessor = new NetworkZoneTileAccessor();
+        private readonly IntersectingZoneTileAccessor _intersectingZoneTileAccessor = new IntersectingZoneTileAccessor();
 
         public IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle)
         {
