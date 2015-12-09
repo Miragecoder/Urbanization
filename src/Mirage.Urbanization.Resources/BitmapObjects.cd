@@ -1,71 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Mirage.Urbanization.Tilesets.BaseBitmap" Collapsed="true">
-    <Position X="5.75" Y="0.5" Width="1.5" />
+    <Position X="1.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAQAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <FileName>BaseBitmap.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mirage.Urbanization.Tilesets.VehicleBitmap" Collapsed="true">
-    <Position X="4.5" Y="1.75" Width="1.5" />
+    <Position X="0.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <FileName>VehicleBitmap.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mirage.Urbanization.Tilesets.DirectionalCellBitmap">
-    <Position X="3.5" Y="6.25" Width="1.75" />
+    <Position X="9.25" Y="0.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAABAAQ=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAI=</HashCode>
+      <FileName>DirectionalCellBitmap.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="North" />
+      <Property Name="Down" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Mirage.Urbanization.Tilesets.CellBitmap" Collapsed="true">
-    <Position X="6.75" Y="1.75" Width="1.5" />
+  <Class Name="Mirage.Urbanization.Tilesets.CellBitmap">
+    <Position X="2.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>CellBitmap.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mirage.Urbanization.Tilesets.AnimatedCellBitmapSet">
-    <Position X="6.25" Y="3.5" Width="2.5" />
+    <Position X="5.25" Y="4" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAAAEAACAAAAAAAAJAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <HashCode>AECgAAAAAAAAAAAEAAAAAAAAAAAJAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AnimatedCellBitmapSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Bitmaps" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Mirage.Urbanization.Tilesets.AnimatedCellBitmapSetLayers">
-    <Position X="6.25" Y="6.25" Width="2.5" />
+    <Position X="9.25" Y="4.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAGAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <FileName>AnimatedCellBitmapSetLayers.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="LayerOne" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Mirage.Urbanization.Tilesets.CellBitmapCluster">
-    <Position X="9.75" Y="0.5" Width="1.5" />
+    <Position X="12.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <FileName>CellBitmapCluster.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Bitmaps" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Mirage.Urbanization.Tilesets.CellBitmapNetwork">
-    <Position X="0.5" Y="6" Width="1.75" />
+    <Position X="6.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAACAACEAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAJAAA=</HashCode>
-      <FileName>CellBitmap.cs</FileName>
+      <HashCode>AAACAACEAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAJAgA=</HashCode>
+      <FileName>CellBitmapNetwork.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Center" />

@@ -5,18 +5,18 @@ namespace Mirage.Urbanization.Tilesets
 {
     public class GrowthZoneTileCellInfo
     {
-        public GrowthZoneTileCellInfo(GrowthZoneTileInfo growthZoneTileInfo, Point point)
+        public GrowthZoneTileCellInfo(GrowthZoneClusterTileInfo growthZoneClusterTileInfo, Point point)
         {
-            GrowthZoneTileInfo = growthZoneTileInfo;
+            GrowthZoneClusterTileInfo = growthZoneClusterTileInfo;
             Point = point;
         }
 
-        public GrowthZoneTileInfo GrowthZoneTileInfo { get; }
+        public GrowthZoneClusterTileInfo GrowthZoneClusterTileInfo { get; }
         public Point Point { get; }
 
         public override int GetHashCode()
         {
-            return (GrowthZoneTileInfo.GroupId + Point.X + Point.Y).GetHashCode();
+            return (GrowthZoneClusterTileInfo.GroupId + Point.X + Point.Y).GetHashCode();
         }
 
         public override bool Equals(object obj)

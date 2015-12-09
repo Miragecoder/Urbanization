@@ -46,19 +46,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimatedCellBitmapSet.cs" />
+    <Compile Include="AnimatedCellBitmapSetLayers.cs" />
+    <Compile Include="BaseBitmap.cs" />
     <Compile Include="BaseGrowthZoneTileAccessor.cs" />
+    <Compile Include="BaseNetworkZoneTileAccessor.cs" />
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BrushManager.cs" />
     <Compile Include="CellBitmap.cs" />
+    <Compile Include="CellBitmapCluster.cs" />
+    <Compile Include="CellBitmapNetwork.cs" />
     <Compile Include="CommercialGrowthZoneTileAccessor.cs" />
+    <Compile Include="DirectionalCellBitmap.cs" />
+    <Compile Include="FramerateDelays.cs" />
+    <Compile Include="GrowthZoneHouseTileInfo.cs" />
     <Compile Include="GrowthZoneTileAccessor.cs" />
     <Compile Include="GrowthZoneTileCellInfo.cs" />
-    <Compile Include="GrowthZoneTileInfo.cs" />
+    <Compile Include="GrowthZoneClusterTileInfo.cs" />
     <Compile Include="IBaseGrowthZoneTileAccessor.cs" />
+    <Compile Include="IBaseNetworkZoneTileAccessor.cs" />
     <Compile Include="IndustrialGrowthZoneTileAccessor.cs" />
     <Compile Include="IntersectingZoneTileAccessor.cs" />
+    <Compile Include="ITilesetAccessor.cs" />
+    <Compile Include="NetworkZoneTileAccessor.cs" />
+    <Compile Include="PowerZoneTileAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RailZoneTileAccessor.cs" />
     <Compile Include="ResidentialGrowthZoneTileAccessor.cs" />
+    <Compile Include="RoadHighZoneTileAccessor.cs" />
+    <Compile Include="RoadIntersections.cs" />
+    <Compile Include="RoadLowZoneTileAccessor.cs" />
+    <Compile Include="RoadNoneZoneTileAccessor.cs" />
+    <Compile Include="SynchronizedAnimationFramePicker.cs" />
+    <Compile Include="VehicleBitmap.cs" />
+    <Compile Include="Vehicles\VehicleBitmaps.cs" />
+    <Compile Include="WaterZoneTileAccessor.cs" />
     <Compile Include="WoodZoneTileAccessor.cs" />
     <Compile Include="TilesetAccessor.cs" />
     <Compile Include="EmbeddedBitmapExtractor.cs" />
@@ -113,10 +135,10 @@
     <EmbeddedResource Include="IntersectingZones\RoadNone\railnsroadew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="rubbish.png" />
+    <EmbeddedResource Include="Tiles\Misc\rubbish.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\noelectricity.png" />
+    <EmbeddedResource Include="Tiles\Misc\noelectricity.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IntersectingZones\railnspowerew.png" />
@@ -176,19 +198,7 @@
     <EmbeddedResource Include="NetworkZones\Water\waternwes.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Houses\d1q1n1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Commercial\d1_q1_n2_a1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Tiles\Houses\d1q1n2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Tiles\Houses\d1q1n3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Tiles\Houses\d1q1n4.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\PoliceStationZoneClusterConsumption.png" />
@@ -494,17 +504,17 @@
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d1_q1_n1_a3.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="train.png" />
+    <EmbeddedResource Include="Vehicles\train.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="airplane.png" />
+    <EmbeddedResource Include="Vehicles\airplane.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="shipanim1.png" />
-    <EmbeddedResource Include="shipanim2.png" />
+    <EmbeddedResource Include="Vehicles\shipanim1.png" />
+    <EmbeddedResource Include="Vehicles\shipanim2.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\SeaPortZoneClusterConsumption.png" />
@@ -532,7 +542,78 @@
   <ItemGroup>
     <None Include="BitmapObjects.cd" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q1_n1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q1_n2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q1_n3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q1_n4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q2_n1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q2_n2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q2_n3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Commercial\q2_n4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q2_n4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q1_n1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q1_n2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q1_n3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q1_n4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q2_n1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q2_n2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Industrial\q2_n3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q2_n4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q1_n1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q1_n2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q1_n3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q1_n4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q2_n1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q2_n2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Cells\Residential\q2_n3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

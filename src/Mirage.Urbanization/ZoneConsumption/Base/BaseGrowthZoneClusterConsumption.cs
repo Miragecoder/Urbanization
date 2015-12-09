@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base
@@ -84,6 +86,35 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public void SetAverageTravelDistance(int distance)
         {
             AverageTravelDistance = distance;
+        }
+        private readonly Stack<ZoneClusterMemberConsumption> _houseMembers = new Stack<ZoneClusterMemberConsumption>();
+
+        public bool RenderAsHouse(ZoneClusterMemberConsumption zoneClusterMember)
+        {
+            if (!_zoneClusterMembers.Contains(zoneClusterMember))
+                throw new InvalidOperationException();
+            int localDensity = PopulationDensity;
+            if (localDensity > _zoneClusterMembers.Count(x => !x.IsCentralClusterMember))
+                return false;
+
+            while (_houseMembers.Count > localDensity)
+            {
+                _houseMembers.Pop();
+            };
+
+            while (_houseMembers.Count < localDensity)
+            {
+                _houseMembers
+                    .Push(_zoneClusterMembers
+                        .Where(x => !x.IsCentralClusterMember)
+                        .OrderBy(x => Guid.NewGuid()
+                    )
+                    .Except(_houseMembers)
+                    .First()
+                );
+            };
+
+            return _houseMembers.Contains(zoneClusterMember);
         }
     }
 }

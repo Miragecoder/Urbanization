@@ -56,6 +56,7 @@ namespace Mirage.Urbanization.WinForms
             _renderZoneOptions = renderZoneOptions;
         }
 
+        private static readonly SynchronizedAnimationFramePicker Picker = new SynchronizedAnimationFramePicker();
         public RenderZoneContinuation RenderZoneInto(IGraphicsWrapper graphics, bool isHighlighted)
         {
             if (graphics == null) throw new ArgumentNullException(nameof(graphics));
@@ -66,14 +67,17 @@ namespace Mirage.Urbanization.WinForms
 
             Action drawSecondLayerAction = null;
 
-            QueryResult<AnimatedCellBitmapSetLayers> bitmapLayer = _tilesetAccessor.TryGetBitmapFor(ZoneInfo.TakeSnapshot());
+            QueryResult<AnimatedCellBitmapSetLayers> bitmapLayer = _tilesetAccessor.TryGetBitmapFor(ZoneInfo.TakeSnapshot(), true);
 
             if (bitmapLayer.HasMatch)
             {
-                graphics.DrawImage(bitmapLayer.MatchingObject.LayerOne.Current, rectangle);
+                graphics.DrawImage(Picker.GetFrame(bitmapLayer.MatchingObject.LayerOne).Bitmap, rectangle);
 
                 if (bitmapLayer.MatchingObject.LayerTwo.HasMatch)
-                    drawSecondLayerAction = () => { graphics.DrawImage(bitmapLayer.MatchingObject.LayerTwo.MatchingObject.Current, rectangle); };
+                    drawSecondLayerAction = () =>
+                    {
+                        graphics.DrawImage(Picker.GetFrame(bitmapLayer.MatchingObject.LayerTwo.MatchingObject).Bitmap, rectangle);
+                    };
 
                 if (_renderZoneOptions.ShowDebugGrowthPathFinding)
                 {

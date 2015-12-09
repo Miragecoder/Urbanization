@@ -8,8 +8,6 @@ namespace Mirage.Urbanization.ZoneConsumption
 {
     public class ResidentialZoneClusterConsumption : BaseGrowthZoneClusterConsumption
     {
-        private readonly Stack<ZoneClusterMemberConsumption> _houseMembers = new Stack<ZoneClusterMemberConsumption>();
-
         public ResidentialZoneClusterConsumption(Func<ZoneInfoFinder> createZoneInfoFinderFunc)
             : base(createZoneInfoFinderFunc, Color.Green)
         {
@@ -25,33 +23,5 @@ namespace Mirage.Urbanization.ZoneConsumption
         protected override decimal PopulationFireHazardFactor => 0.5M;
 
         public override string Name => "Residential zone";
-
-        public bool RenderAsHouse(ZoneClusterMemberConsumption zoneClusterMember)
-        {
-            if (!_zoneClusterMembers.Contains(zoneClusterMember))
-                throw new InvalidOperationException();
-            int localDensity = PopulationDensity;
-            if (localDensity > _zoneClusterMembers.Count(x => !x.IsCentralClusterMember))
-                return false;
-
-            while (_houseMembers.Count > localDensity)
-            {
-                _houseMembers.Pop();
-            };
-
-            while (_houseMembers.Count < localDensity)
-            {
-                _houseMembers
-                    .Push(_zoneClusterMembers
-                        .Where(x => !x.IsCentralClusterMember)
-                        .OrderBy(x => Guid.NewGuid()
-                    )
-                    .Except(_houseMembers)
-                    .First()
-                );
-            };
-
-            return _houseMembers.Contains(zoneClusterMember);
-        }
     }
 }

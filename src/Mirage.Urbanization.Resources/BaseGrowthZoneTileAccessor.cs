@@ -23,7 +23,7 @@ namespace Mirage.Urbanization.Tilesets
                             return new
                             {
                                 bitmap.Bitmap,
-                                GrowthZoneTileInfo = new GrowthZoneTileInfo(bitmap.ResourceName)
+                                GrowthZoneTileInfo = new GrowthZoneClusterTileInfo(bitmap.ResourceName)
                             };
                         })
                         .GroupBy(x => x.GrowthZoneTileInfo.GroupId)
@@ -39,15 +39,34 @@ namespace Mirage.Urbanization.Tilesets
                         })
                         .GroupBy(x => x.GrowthZoneTileCellInfo)
                         .ToDictionary(x => x.Key, x => new AnimatedCellBitmapSetLayers(
-                            new AnimatedCellBitmapSet(500, x.Select(y => new CellBitmap(y.Bitmap)).ToArray()), null));
+                            new AnimatedCellBitmapSet(FramerateDelay.Structure, x.Select(y => new CellBitmap(y.Bitmap)).ToArray()), null));
                 });
+
+            _houseLayerDictionaryLazy = new Lazy<IDictionary<GrowthZoneHouseTileInfo, AnimatedCellBitmapSetLayers>>(
+                () =>
+                {
+                    return new EmbeddedBitmapExtractor()
+                        .GetBitmapsFromNamespace("Mirage.Urbanization.Tilesets.Tiles.Cells." + Namespace)
+                        .Select(bitmap =>
+                        {
+                            return new
+                            {
+                                bitmap.Bitmap,
+                                GrowthZoneTileInfo = new GrowthZoneHouseTileInfo(bitmap.ResourceName)
+                            };
+                        })
+                        .ToDictionary(x => x.GrowthZoneTileInfo, x => new AnimatedCellBitmapSetLayers(
+                            new AnimatedCellBitmapSet(FramerateDelay.Structure, new [] { x.Bitmap }.Select(y => new CellBitmap(y)).ToArray()), null));
+                }
+            );
         }
 
         private readonly Lazy<IDictionary<GrowthZoneTileCellInfo, AnimatedCellBitmapSetLayers>> _layerDictionaryLazy;
+        private readonly Lazy<IDictionary<GrowthZoneHouseTileInfo, AnimatedCellBitmapSetLayers>> _houseLayerDictionaryLazy;
 
         public QueryResult<AnimatedCellBitmapSetLayers> GetFor(ZoneInfoSnapshot snapShot)
         {
-            var maxPop = BaseGrowthZoneClusterConsumption.MaximumPopulation / _layerDictionaryLazy.Value.Max(x => x.Key.GrowthZoneTileInfo.Density);
+            var maxPop = BaseGrowthZoneClusterConsumption.MaximumPopulation / _layerDictionaryLazy.Value.Max(x => x.Key.GrowthZoneClusterTileInfo.Density);
 
             return snapShot
                 .Pipe(x =>
@@ -62,24 +81,39 @@ namespace Mirage.Urbanization.Tilesets
                 {
                     return clusterMember.WithResultIfHasMatch(c =>
                     {
-                        var parent = (T) c.ParentBaseZoneClusterConsumption;
-                        if (parent.PopulationDensity == 0)
+                        var parent = (T)c.ParentBaseZoneClusterConsumption;
+                        if (parent.PopulationDensity < 9)
                         {
+                            if (parent.RenderAsHouse(c))
+                            {
+                                return _houseLayerDictionaryLazy
+                                    .Value
+                                    .ToArray()
+                                    .Pipe(set => set[c.Id % set.Length])
+                                    .Value
+                                    .ToQueryResult();
+                            }
                             return _layerDictionaryLazy
                                 .Value
                                 .Where(x => x.Key.Point == c.PositionInCluster)
-                                .First(x => x.Key.GrowthZoneTileInfo.Density == 0)
+                                .First(x => x.Key.GrowthZoneClusterTileInfo.Density == 0)
                                 .Value
                                 .ToQueryResult();
                         }
                         return _layerDictionaryLazy
                             .Value
                             .Where(x => x.Key.Point == c.PositionInCluster)
-                            .Where(x => x.Key.GrowthZoneTileInfo.Density != 0)
-                            .Where(x => x.Key.GrowthZoneTileInfo.Density <= (c.PopulationDensity / maxPop) + 1)
-                            .OrderByDescending(x => x.Key.GrowthZoneTileInfo.Density)
-                            .ThenByDescending(x => x.Key.GrowthZoneTileInfo.Quality)
-                            .First()
+                            .Where(x => x.Key.GrowthZoneClusterTileInfo.Density == Math.Ceiling(c.PopulationDensity / (decimal)maxPop))
+                            .ToArray()
+                            .Pipe(set =>
+                            {
+                                var id = (clusterMember
+                                    .MatchingObject
+                                    .ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption)
+                                    .Id;
+
+                                return set[id % set.Length];
+                            })
                             .Value
                             .ToQueryResult();
                     }, QueryResult<AnimatedCellBitmapSetLayers>.Empty);

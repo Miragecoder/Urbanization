@@ -4,9 +4,9 @@ using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.Tilesets
 {
-    public class GrowthZoneTileInfo
+    public class GrowthZoneClusterTileInfo
     {
-        public GrowthZoneTileInfo(string resourceName)
+        public GrowthZoneClusterTileInfo(string resourceName)
         {
             var fileName = resourceName.Split('.').Reverse().Skip(1).Take(1).First();
             //d0_q0_n1_a1.png
@@ -24,7 +24,7 @@ namespace Mirage.Urbanization.Tilesets
 
         public override bool Equals(object obj)
         {
-            return (obj as GrowthZoneTileInfo).ToQueryResult()
+            return (obj as GrowthZoneClusterTileInfo).ToQueryResult()
                 .WithResultIfHasMatch(x => GroupId == x.GroupId, false);
         }
 
