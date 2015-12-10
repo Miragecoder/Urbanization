@@ -30,6 +30,7 @@ namespace Mirage.Urbanization.Tilesets
                     return ms.ToArray();
                 }
             });
+            var x = _getPngBytesLazy.Value;
         }
     }
 }

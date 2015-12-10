@@ -38,14 +38,14 @@ $(function () {
                 onClick();
             });
         };
-        var doNothing = function() {};
+        var doNothing = function () { };
 
         registerDialogWithButton("#buildDialog", "#buildButton", 500, doNothing, false);
         registerDialogWithButton("#budgetDialog", "#budgetDialogButton", 500, doNothing, true);
         registerDialogWithButton("#cityEvaluationDialog", "#evaluationDialogButton", 400, doNothing, true);
         registerDialogWithButton("#overlayDialog", "#overlayDialogButton", 300, doNothing, true);
         registerDialogWithButton("#aboutDialog", "#aboutDialogButton", 300, doNothing, true);
-        registerDialogWithButton("#graphDialog", "#graphDialogButton", 650, function() {
+        registerDialogWithButton("#graphDialog", "#graphDialogButton", 650, function () {
             document.getElementById("refreshChartsButton").click();
         }, true);
         registerDialog("#hotMessageDialog", 200, true);
@@ -115,7 +115,111 @@ $(function () {
 
     var currentDataMeter = { name: "None", webId: 0 };
 
+
+    var synchronizedAnimator;
+    (function () {
+
+        var getZoneInfoId = function (zoneInfo) {
+            return zoneInfo.x + "_" + zoneInfo.y;
+        };
+
+        var CellAnimator = function (animatedCellBitmapSet, selectCanvasLayer) {
+            var animatedZoneInfos = [];
+            var currentIndex = 0;
+            this.start = function () {
+                (function loopFunction() {
+                    for (var i in animatedZoneInfos) {
+                        if (animatedZoneInfos.hasOwnProperty(i)) {
+                            var animatedZoneInfo = animatedZoneInfos[i];
+
+                            if (animatedZoneInfo !== null) {
+                                drawZoneInfoForBitmapLayer(
+                                    animatedZoneInfo.getZoneInfo(),
+                                    function () { return animatedCellBitmapSet.bitmapIds[currentIndex]; },
+                                    selectCanvasLayer,
+                                    function () { return animatedZoneInfo.getZoneInfo(); }
+                                );
+                            }
+                        }
+                    }
+                    if (currentIndex === (animatedCellBitmapSet.bitmapIds.length - 1))
+                        currentIndex = 0;
+                    else
+                        currentIndex++;
+
+                    setTimeout(loopFunction, animatedCellBitmapSet.delay * 10);
+                })();
+            };
+
+            this.addAnimatedZoneInfo = function (animatedZoneInfo) {
+                var zoneInfoId = getZoneInfoId(animatedZoneInfo.getZoneInfo());
+                animatedZoneInfos[zoneInfoId] = animatedZoneInfo;
+            };
+
+            this.removeAnimatedZoneInfo = function (animatedZoneInfo) {
+                var zoneInfoId = getZoneInfoId(animatedZoneInfo.getZoneInfo());
+                animatedZoneInfos[zoneInfoId] = null;
+            };
+        };
+
+        var AnimatedZoneInfo = function (zoneInfo) {
+            var currentCellAnimator = null;
+            var that = this;
+
+            this.getZoneInfo = function () {
+                return zoneInfo;
+            }
+
+            this.enlistToCellAnimator = function (cellAnimator) {
+                if (currentCellAnimator !== null) {
+                    currentCellAnimator.removeAnimatedZoneInfo(that);
+                }
+                if (cellAnimator !== null) {
+                    cellAnimator.addAnimatedZoneInfo(that);
+                }
+                currentCellAnimator = cellAnimator;
+            };
+        };
+
+        var SynchronizedAnimator = function (bitmapLayerSelector, selectCanvasLayer) {
+            var animatedCellBitmapSets = [];
+            var animatedZoneInfos = [];
+
+            var processPrivate = function (zoneInfo) {
+                var bitmapLayer = bitmapLayerSelector(zoneInfo);
+                var cellAnimator = null;
+
+                if (bitmapLayer !== null && bitmapLayer.bitmapIds.length > 1) {
+                    if (!animatedCellBitmapSets.hasOwnProperty(bitmapLayer.id)) {
+                        cellAnimator = new CellAnimator(bitmapLayer, selectCanvasLayer);
+                        animatedCellBitmapSets[bitmapLayer.id] = cellAnimator;
+                        cellAnimator.start();
+                    }
+                    cellAnimator = animatedCellBitmapSets[bitmapLayer.id];
+                }
+                var zoneInfoId = getZoneInfoId(zoneInfo);
+                if (!animatedZoneInfos.hasOwnProperty(zoneInfoId)) {
+                    animatedZoneInfos[zoneInfoId] = new AnimatedZoneInfo(zoneInfo);
+                }
+                var animatedZoneInfo = animatedZoneInfos[zoneInfoId];
+                animatedZoneInfo.enlistToCellAnimator(cellAnimator);
+            };
+
+            this.process = function (zoneInfo) {
+                processPrivate(zoneInfo, function (x) { return x.bitmapLayerOne; });
+                processPrivate(zoneInfo, function (x) { return x.bitmapLayerTwo; });
+            };
+        };
+        synchronizedAnimator = {
+            layerOne: new SynchronizedAnimator(function (x) { return x.bitmapLayerOne; }, function () { return canvasLayer1; }),
+            layerTwo: new SynchronizedAnimator(function (x) { return x.bitmapLayerTwo; }, function () { return canvasLayer3; })
+        };
+    })();
+
     var drawZoneInfo = function (zoneInfo) {
+
+        synchronizedAnimator.layerOne.process(zoneInfo);
+        synchronizedAnimator.layerTwo.process(zoneInfo);
 
         for (var i = 0; i < canvasLayers.length; i++) {
             var canvasLayer = canvasLayers[i];
@@ -214,7 +318,7 @@ $(function () {
             $("#budgetTaxTable").empty();
             var taxStates = cityBudgetState.taxStates;
 
-            var writeHeader = function(nameHeader, projectedHeader, rateHeader, actions) {
+            var writeHeader = function (nameHeader, projectedHeader, rateHeader, actions) {
                 var taxRow = document.createElement("tr");
 
                 var addCell = function (name) {
@@ -230,16 +334,16 @@ $(function () {
                 document.getElementById("budgetTaxTable").appendChild(taxRow);
             };
 
-            var writeTaxStateRow = function(taxState, isSummary, getName, getProjected, getRate, lowerFunc, raiseFunc) {
+            var writeTaxStateRow = function (taxState, isSummary, getName, getProjected, getRate, lowerFunc, raiseFunc) {
                 var taxRow = document.createElement("tr");
 
-                (function() {
+                (function () {
                     var labelCell = document.createElement("td");
                     labelCell.innerHTML = getName(taxState);
                     taxRow.appendChild(labelCell);
                 })();
 
-                (function() {
+                (function () {
                     var labelCell = document.createElement("td");
                     labelCell.class = "currencycol";
                     labelCell.innerHTML = accounting.formatMoney(getProjected(taxState));
@@ -260,7 +364,7 @@ $(function () {
                         taxRow.appendChild(labelCell);
                     })();
 
-                    (function() {
+                    (function () {
                         var labelCell = document.createElement("td");
                         taxRow.appendChild(labelCell);
 
@@ -268,7 +372,7 @@ $(function () {
 
                         var raiseButton = document.createElement("button");
                         raiseButton.innerHTML = "Raise";
-                        raiseButton.addEventListener("click", function() {
+                        raiseButton.addEventListener("click", function () {
                             raiseFunc(simulation.server, taxState);
                             disableButtons();
                         });
@@ -276,12 +380,12 @@ $(function () {
 
                         var dropButton = document.createElement("button");
                         dropButton.innerHTML = "Lower";
-                        dropButton.addEventListener("click", function() {
+                        dropButton.addEventListener("click", function () {
                             lowerFunc(simulation.server, taxState);
                             disableButtons();
                         });
 
-                        disableButtons = function() {
+                        disableButtons = function () {
                             dropButton.disabled = true;
                             raiseButton.disabled = true;
                         }
@@ -332,7 +436,7 @@ $(function () {
                     function (e) { return e.projectedExpenses; });
             })();
 
-            (function() {
+            (function () {
                 var taxRow = document.createElement("tr");
 
                 (function () {
@@ -438,7 +542,7 @@ $(function () {
 
                     var drawChart = null;
 
-                    (function() {
+                    (function () {
                         var localGraphDef = graphDefinition;
 
                         drawChart = function () {
@@ -455,7 +559,7 @@ $(function () {
             }
         }
 
-        $("#refreshChartsButton").click(function() {
+        $("#refreshChartsButton").click(function () {
             for (var f in refreshChartFunctions) {
                 if (refreshChartFunctions.hasOwnProperty(f)) {
                     refreshChartFunctions[f]();
@@ -539,7 +643,7 @@ $(function () {
                     var registerButton = function (inputButtonDefinition) {
                         var x = inputButtonDefinition;
                         return function () {
-                            document.getElementById("currentButtonLabel").innerHTML = x.buttonDefinition.name + 
+                            document.getElementById("currentButtonLabel").innerHTML = x.buttonDefinition.name +
                                 " (Costs: " + accounting.formatMoney(x.buttonDefinition.cost) + ")";
                             currentButton = x.buttonDefinition;
                         };
