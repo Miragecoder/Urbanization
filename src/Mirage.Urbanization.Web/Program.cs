@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
@@ -12,7 +13,7 @@ namespace Mirage.Urbanization.Web
 {
     public class Program
     {
-        private const string WebCityFileName = "webcity.xml";
+        private static string WebCityFileName => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\webcity.xml";
         public static void Main()
         {
             Logger.Instance.OnLogMessage += Instance_OnLogMessage;
@@ -25,7 +26,8 @@ namespace Mirage.Urbanization.Web
 
                 try
                 {
-                    var persistedSimulation = citySaveStateController.LoadFile(WebCityFileName);
+                    var persistedSimulation = citySaveStateController
+                        .LoadFile(WebCityFileName);
                     simulationSession =
                         new SimulationSession(new SimulationOptions(persistedSimulation,
                             new ProcessOptions(() => false, () => false)));

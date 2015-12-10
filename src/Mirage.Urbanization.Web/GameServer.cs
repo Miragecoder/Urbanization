@@ -128,11 +128,11 @@ namespace Mirage.Urbanization.Web
                             .Clients
                             .Group(SimulationHub.GetDataMeterGroupName(x.DataMeter.WebId))
                             .submitDataMeterInfos(batch);
-                        await Task.Delay(10);
+                        await Task.Delay(30);
                     }
                 }
 
-                await Task.Delay(20);
+                await Task.Delay(30);
             }, _cancellationTokenSource.Token, 10);
 
             _looper = new NeverEndingTask("SignalR Game state submission", async () =>
@@ -144,7 +144,7 @@ namespace Mirage.Urbanization.Web
                     .All
                     .submitZoneInfos(zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create));
 
-                await Task.Delay(20);
+                await Task.Delay(40);
 
                 var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
                     .Select(ClientZoneInfo.Create)
@@ -159,7 +159,7 @@ namespace Mirage.Urbanization.Web
                     toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
                 }
 
-                foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched(40))
+                foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched(20))
                 {
                     GlobalHost
                         .ConnectionManager
@@ -172,7 +172,7 @@ namespace Mirage.Urbanization.Web
 
                 previous = zoneInfos;
 
-                await Task.Delay(20);
+                await Task.Delay(40);
 
                 try
                 {
@@ -187,7 +187,6 @@ namespace Mirage.Urbanization.Web
                                         .GetBitmapsAndPointsFor(vehicle)
                                         .Select(ClientVehiclePositionInfo.Create)
                                     );
-
                                 });
                     }
 
@@ -198,7 +197,7 @@ namespace Mirage.Urbanization.Web
                         .All
                         .submitVehicleStates(list);
 
-                    await Task.Delay(3);
+                    await Task.Delay(6);
                 }
                 catch (Exception ex)
                 {

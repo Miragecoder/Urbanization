@@ -115,7 +115,6 @@ $(function () {
 
     var currentDataMeter = { name: "None", webId: 0 };
 
-
     var synchronizedAnimator;
     (function () {
 
@@ -123,15 +122,53 @@ $(function () {
             return zoneInfo.x + "_" + zoneInfo.y;
         };
 
+        var Animator = function (delay, length) {
+            var currentIndex = 0;
+            var maxIndex = length - 1;
+            var isStarted = false;
+            var handlers = [];
+
+            var start = function () {
+                (function loopFunction() {
+                    for (var h in handlers) {
+                        if (handlers.hasOwnProperty(h)) {
+                            var handler = handlers[h];
+                            handler(currentIndex);
+                        }
+                    }
+                    if (currentIndex === maxIndex)
+                        currentIndex = 0;
+                    else
+                        currentIndex++;
+                    setTimeout(loopFunction, delay * 10);
+                })();
+            };
+
+            this.registerHandler = function (handler) {
+                handlers.push(handler);
+                if (!isStarted)
+                    start();
+                isStarted = true;
+            };
+
+        };
+
         var CellAnimator = function (animatedCellBitmapSet, selectCanvasLayer) {
             var animatedZoneInfos = [];
-            var currentIndex = 0;
+            var animators = [];
+
             this.start = function () {
-                (function loopFunction() {
+                var animatorId = animatedCellBitmapSet.delay + "_" + animatedCellBitmapSet.bitmapIds.length;
+                if (!animators.hasOwnProperty(animatorId)) {
+                    animators[animatorId] = new Animator(animatedCellBitmapSet.delay, animatedCellBitmapSet.bitmapIds.length);
+                }
+
+                var animator = animators[animatorId];
+
+                animator.registerHandler(function (currentIndex) {
                     for (var i in animatedZoneInfos) {
                         if (animatedZoneInfos.hasOwnProperty(i)) {
                             var animatedZoneInfo = animatedZoneInfos[i];
-
                             if (animatedZoneInfo !== null) {
                                 drawZoneInfoForBitmapLayer(
                                     animatedZoneInfo.getZoneInfo(),
@@ -142,13 +179,7 @@ $(function () {
                             }
                         }
                     }
-                    if (currentIndex === (animatedCellBitmapSet.bitmapIds.length - 1))
-                        currentIndex = 0;
-                    else
-                        currentIndex++;
-
-                    setTimeout(loopFunction, animatedCellBitmapSet.delay * 10);
-                })();
+                });
             };
 
             this.addAnimatedZoneInfo = function (animatedZoneInfo) {

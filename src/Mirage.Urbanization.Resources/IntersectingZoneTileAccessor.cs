@@ -46,8 +46,25 @@ namespace Mirage.Urbanization.Tilesets
 
         private readonly Lazy<DirectionalCellBitmap> _railNsPowerEwLazy
             = new Lazy<DirectionalCellBitmap>(() => GetDirectionalCellBitmap("railnspowerew"));
+
         private readonly Lazy<DirectionalCellBitmap> _railNsWaterEwLazy
-            = new Lazy<DirectionalCellBitmap>(() => GetDirectionalCellBitmap("railnswaterew"));
+            = new Lazy<DirectionalCellBitmap>(() =>
+            {
+                return new DirectionalCellBitmap(
+                    new AnimatedCellBitmapSetLayers(
+                        new AnimatedCellBitmapSet(FramerateDelay.None, new EmbeddedBitmapExtractor()
+                            .GetBitmapsFromNamespace("Mirage.Urbanization.Tilesets.NetworkZones.Water.waternwes.png")
+                            .Select(x => new CellBitmap(x.Bitmap))
+                            .Single()
+                            ),
+                        new AnimatedCellBitmapSet(FramerateDelay.None, new EmbeddedBitmapExtractor()
+                            .GetBitmapsFromNamespace("Mirage.Urbanization.Tilesets.IntersectingZones.railnswaterew.png")
+                            .Select(x => new CellBitmap(x.Bitmap))
+                            .Single()
+                        )
+                    )
+                );
+            });
 
         private static DirectionalCellBitmap GetDirectionalCellBitmap(string filename)
         {

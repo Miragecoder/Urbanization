@@ -69,6 +69,7 @@
     <Compile Include="IntersectingZoneTileAccessor.cs" />
     <Compile Include="ITilesetAccessor.cs" />
     <Compile Include="NetworkZoneTileAccessor.cs" />
+    <Compile Include="ParkZoneTileAccessor.cs" />
     <Compile Include="PowerZoneTileAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RailZoneTileAccessor.cs" />
