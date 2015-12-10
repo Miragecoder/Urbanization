@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 
 namespace Mirage.Urbanization.Tilesets
 {
@@ -26,14 +27,18 @@ namespace Mirage.Urbanization.Tilesets
         public CellBitmap[] Bitmaps { get; }
 
         private readonly Lazy<AnimatedCellBitmapSet> _rotatedCloneLazy;
-
+        private static int _idCounter = 0;
+        public int Id { get; }
         public AnimatedCellBitmapSet(FramerateDelay delay, params CellBitmap[] bitmaps)
         {
+            Id = Interlocked.Increment(ref _idCounter);
             Delay = delay.Delay;
             Bitmaps = bitmaps;
             _rotatedCloneLazy = new Lazy<AnimatedCellBitmapSet>(() => new AnimatedCellBitmapSet(
                 delay,
-                Bitmaps.Select(x => BitmapExtensions.Get90DegreesRotatedClone(x.Bitmap)).Select(x => new CellBitmap(x)).ToArray()
+                Bitmaps
+                .Select(x => BitmapExtensions.Get90DegreesRotatedClone(x.Bitmap))
+                .Select(x => new CellBitmap(x)).ToArray()
                 ));
             _bitmapEnumerator = Bitmaps.GetInifiniteEnumerator();
             _bitmapEnumerator.MoveNext();

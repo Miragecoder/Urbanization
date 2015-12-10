@@ -21,7 +21,13 @@ namespace Mirage.Urbanization.Web
 {
     public class Startup
     {
-        private static readonly Lazy<IChartDrawer> ChartDrawer = new Lazy<IChartDrawer>(Mirage.Urbanization.Charts.ChartDrawerFactory.Create); 
+        private static readonly Lazy<IChartDrawer> ChartDrawer = new Lazy<IChartDrawer>(Mirage.Urbanization.Charts.ChartDrawerFactory.Create);
+
+        static async Task ServeImage(IOwinContext context, byte[] bytes)
+        {
+            context.Response.ContentType = "image/png";
+            await context.Response.WriteAsync(bytes);
+        }
 
         static async Task ServeImage(IOwinContext context, Image image)
         {
@@ -30,8 +36,7 @@ namespace Mirage.Urbanization.Web
                 using (var stream = new MemoryStream())
                 {
                     image.Save(stream, ImageFormat.Png);
-                    context.Response.ContentType = "image/png";
-                    await context.Response.WriteAsync(stream.ToArray());
+                    await ServeImage(context, stream.ToArray());
                 }
             }
             catch (Exception ex)
@@ -69,10 +74,10 @@ namespace Mirage.Urbanization.Web
                 }
                 else if (context.Request.Path.Value.StartsWith("/tile/"))
                 {
-                    var bitmap = TilesetProvider.GetBitmapForHashcode(Convert.ToInt32(
+                    var bitmap = TilesetProvider.GetBitmapForId(Convert.ToInt32(
                         context.Request.Path.Value.Split('/').Last()));
 
-                    await ServeImage(context, bitmap);
+                    await ServeImage(context, bitmap.PngBytes);
                     return;
                 }
                 await next();

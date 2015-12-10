@@ -106,7 +106,7 @@ namespace Mirage.Urbanization.Tilesets
                     {
                         if (x.EastWestZoneConsumption is PowerLineConsumption)
                         {
-                            return _powerNsWaterEwLazy.Value.Right.ToQueryResult();
+                            return _railNsPowerEwLazy.Value.Up.ToQueryResult();
                         }
                         else if (x.EastWestZoneConsumption is WaterZoneConsumption)
                         {

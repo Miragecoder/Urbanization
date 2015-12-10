@@ -16,11 +16,11 @@ namespace Mirage.Urbanization.Web
     {
         private static readonly ITilesetAccessor TilesetAccessor = new TilesetAccessor();
 
-        private static readonly Dictionary<int, Bitmap> BitmapsByHashCode = new Dictionary<int, Bitmap>();
+        private static readonly Dictionary<int, BaseBitmap> BitmapsById = new Dictionary<int, BaseBitmap>();
 
-        public static Bitmap GetBitmapForHashcode(int hashCode)
+        public static BaseBitmap GetBitmapForId(int id)
         {
-            return BitmapsByHashCode[hashCode];
+            return BitmapsById[id];
         }
 
         public static IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle)
@@ -35,27 +35,46 @@ namespace Mirage.Urbanization.Web
 
         private static void RegisterBitmap(BaseBitmap bitmap)
         {
-            if (!BitmapsByHashCode.ContainsKey(bitmap.GetHashCode()))
-                BitmapsByHashCode.Add(bitmap.Id, bitmap.Bitmap);
+            if (!BitmapsById.ContainsKey(bitmap.Id))
+                BitmapsById.Add(bitmap.Id, bitmap);
         }
 
-        public static int GetTilePathFor(
-            IReadOnlyZoneInfo zoneInfo, 
+        public static ClientAnimatedCellBitmapSet GetAnimatedCellBitmapSetIdFor(
+            IReadOnlyZoneInfo zoneInfo,
             Func<AnimatedCellBitmapSetLayers, AnimatedCellBitmapSet> bitmapSelector)
         {
             var result = TilesetAccessor.TryGetBitmapFor(zoneInfo.TakeSnapshot(), false);
 
             if (result.HasNoMatch)
-                return default(int);
+                return default(ClientAnimatedCellBitmapSet);
 
-            var bitmap = bitmapSelector(result.MatchingObject);
-            if (bitmap == null)
-                return default(int);
+            var animatedCellBitmapSet = bitmapSelector(result.MatchingObject);
+            if (animatedCellBitmapSet == null)
+                return default(ClientAnimatedCellBitmapSet);
 
-            foreach (var x in bitmap.Bitmaps)
+            foreach (var x in animatedCellBitmapSet.Bitmaps)
                 RegisterBitmap(x);
 
-            return bitmap.GetHashCode();
+            return new ClientAnimatedCellBitmapSet(
+                animatedCellBitmapSet.Id,
+                animatedCellBitmapSet.Delay,
+                animatedCellBitmapSet.Bitmaps.Select(x => x.Id).ToArray());
         }
+    }
+
+    public class ClientAnimatedCellBitmapSet
+    {
+        public ClientAnimatedCellBitmapSet(int id, int delay, int[] bitmapIds)
+        {
+            this.id = id;
+            this.bitmapIds = bitmapIds;
+            this.delay = delay;
+        }
+
+        public int id { get; }
+        public int[] bitmapIds { get; }
+        public int delay { get; }
+
+        public string GetIdentityString() => $"{id}_{string.Join("|", bitmapIds)}";
     }
 }

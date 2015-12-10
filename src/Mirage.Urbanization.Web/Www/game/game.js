@@ -125,15 +125,15 @@ $(function () {
                 canvasLayer.height = zoneInfo.y * 25;
         }
 
-        if (zoneInfo.bitmapLayerOne !== 0) {
+        if (zoneInfo.bitmapLayerOne !== null) {
             drawZoneInfoForBitmapLayer(zoneInfo,
-                function (x) { return x.bitmapLayerOne; },
+                function (x) { return x.bitmapLayerOne.bitmapIds[0]; },
                 function () { return canvasLayer1; },
                 function (x) { return x; });
 
-            if (zoneInfo.bitmapLayerTwo !== 0) {
+            if (zoneInfo.bitmapLayerTwo !== null) {
                 drawZoneInfoForBitmapLayer(zoneInfo,
-                    function (x) { return x.bitmapLayerTwo; },
+                    function (x) { return x.bitmapLayerTwo.bitmapIds[0]; },
                     function () { return canvasLayer3; },
                     function (x) { return x; });
             } else {

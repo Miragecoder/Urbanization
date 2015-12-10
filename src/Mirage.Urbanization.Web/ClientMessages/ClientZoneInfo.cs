@@ -12,18 +12,19 @@ namespace Mirage.Urbanization.Web
             => new ClientZoneInfo
             {
                 bitmapLayerOne = TilesetProvider
-                    .GetTilePathFor(zoneInfo, x => x.LayerOne),
+                    .GetAnimatedCellBitmapSetIdFor(zoneInfo, x => x.LayerOne),
                 bitmapLayerTwo = TilesetProvider
-                    .GetTilePathFor(zoneInfo, x => x.LayerTwo.WithResultIfHasMatch(y => y)),
+                    .GetAnimatedCellBitmapSetIdFor(zoneInfo, x => x.LayerTwo.WithResultIfHasMatch(y => y)),
                 x = zoneInfo.Point.X,
                 y = zoneInfo.Point.Y
             };
         
-        public int bitmapLayerOne { get; set; }
-        public int bitmapLayerTwo { get; set; }
+        public ClientAnimatedCellBitmapSet bitmapLayerOne { get; set; }
+        public ClientAnimatedCellBitmapSet bitmapLayerTwo { get; set; }
         public int x { get; set; }
         public int y { get; set; }
-        public string GetIdentityString() => $"{x}_{y}_{bitmapLayerOne}_{bitmapLayerTwo}";
+        
+        public string GetIdentityString() => $"{x}_{y}_{bitmapLayerOne?.GetIdentityString()}_{bitmapLayerTwo?.GetIdentityString()}";
     }
 
     public struct ClientVehiclePositionInfo
@@ -38,7 +39,7 @@ namespace Mirage.Urbanization.Web
             {
                 pointOne = ClientZonePoint.Create(point.Second.Point),
                 pointTwo = ClientZonePoint.Create(point.Third.Point),
-                bitmapId = point.Bitmap.GetHashCode(),
+                bitmapId = point.Bitmap.Id,
                 isShip = point.Vehicle is IShip
             };
     }
