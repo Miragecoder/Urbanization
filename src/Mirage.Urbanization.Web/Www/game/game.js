@@ -854,7 +854,7 @@ $(function () {
                             cell: cell,
                             clear: function () {
                                 var context = canvasLayer6.getContext("2d");
-                                context.clearRect(((cell.x + currentButton.horizontalCellOffset) * 25) - 50, ((cell.y + currentButton.verticalCellOffset) * 25) - 50, (currentButton.widthInCells * 25) + 60, (currentButton.heightInCells * 25) + 60);
+                                context.clearRect(((cell.x + currentButton.horizontalCellOffset) * 25) - 100, ((cell.y + currentButton.verticalCellOffset) * 25) - 100, (currentButton.widthInCells * 25) + 200, (currentButton.heightInCells * 25) + 200);
                             },
                             draw: function () {
                                 var context = canvasLayer6.getContext("2d");
