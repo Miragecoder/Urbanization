@@ -163,15 +163,18 @@ $(function () {
                 var animator = animators[animatorId];
 
                 animator.registerHandler(function (currentIndex) {
+
+                    var selectBitmapHashCode = function () { return animatedCellBitmapSet.bitmapIds[currentIndex]; };
+
                     for (var i in animatedZoneInfos) {
                         if (animatedZoneInfos.hasOwnProperty(i)) {
                             var animatedZoneInfo = animatedZoneInfos[i];
                             if (animatedZoneInfo !== null) {
                                 drawZoneInfoForBitmapLayer(
                                     animatedZoneInfo.getZoneInfo(),
-                                    function () { return animatedCellBitmapSet.bitmapIds[currentIndex]; },
+                                    selectBitmapHashCode,
                                     selectCanvasLayer,
-                                    function () { return animatedZoneInfo.getZoneInfo(); }
+                                    animatedZoneInfo.getZoneInfo
                                 );
                             }
                         }
@@ -339,7 +342,6 @@ $(function () {
 
     // City budget
     (function () {
-        var numberFormat = new Intl.NumberFormat();
 
         var cityBudgetStateService = new EventPublisherService();
         cityBudgetStateService.addOnNewStateListener(function (cityBudgetState) {
@@ -547,42 +549,44 @@ $(function () {
 
         var refreshChartFunctions = [];
 
+        var drawGraphDefinition = function(graphDefinition, counter) {
+            (function () {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                li.appendChild(a);
+                a.href = "#graphTabs-" + counter;
+                a.innerHTML = graphDefinition.title;
+                graphTabHeads.appendChild(li);
+            })();
+
+            (function () {
+                var div = document.createElement("div");
+                div.id = "graphTabs-" + counter;
+
+                var img = document.createElement("img");
+                div.appendChild(img);
+
+                var drawChart = null;
+
+                (function () {
+                    var localGraphDef = graphDefinition;
+
+                    drawChart = function () {
+                        img.src = "/graph/" + localGraphDef.webId + "/" + new Date().getTime();
+                    };
+                })();
+
+                refreshChartFunctions.push(drawChart);
+
+                graphTabs.appendChild(div);
+            })();
+        };
+
         var counter = 1;
         for (var g in graphDefinitions) {
             if (graphDefinitions.hasOwnProperty(g)) {
                 var graphDefinition = graphDefinitions[g];
-
-                (function () {
-                    var li = document.createElement("li");
-                    var a = document.createElement("a");
-                    li.appendChild(a);
-                    a.href = "#graphTabs-" + counter;
-                    a.innerHTML = graphDefinition.title;
-                    graphTabHeads.appendChild(li);
-                })();
-
-                (function () {
-                    var div = document.createElement("div");
-                    div.id = "graphTabs-" + counter;
-
-                    var img = document.createElement("img");
-                    div.appendChild(img);
-
-                    var drawChart = null;
-
-                    (function () {
-                        var localGraphDef = graphDefinition;
-
-                        drawChart = function () {
-                            img.src = "/graph/" + localGraphDef.webId + "/" + new Date().getTime();
-                        };
-                    })();
-
-                    refreshChartFunctions.push(drawChart);
-
-                    graphTabs.appendChild(div);
-                })();
-
+                drawGraphDefinition(graphDefinition, counter);
                 counter++;
             }
         }
@@ -659,6 +663,15 @@ $(function () {
 
         window.addEventListener("keypress", handleKeyPress, false);
 
+        var registerButton = function (inputButtonDefinition) {
+            var x = inputButtonDefinition;
+            return function () {
+                document.getElementById("currentButtonLabel").innerHTML = x.buttonDefinition.name +
+                    " (Costs: " + accounting.formatMoney(x.buttonDefinition.cost) + ")";
+                currentButton = x.buttonDefinition;
+            };
+        };
+
         for (var i in buttonDefinitionStates) {
             if (buttonDefinitionStates.hasOwnProperty(i)) {
                 var buttonDefinitionState = buttonDefinitionStates[i];
@@ -667,15 +680,6 @@ $(function () {
                     var newButtonElement = document.createElement("button");
                     newButtonElement.innerHTML = "(" + buttonDefinitionState.buttonDefinition.keyChar.toUpperCase() + ") " + buttonDefinitionState.buttonDefinition.name;
                     buttonBar.appendChild(newButtonElement);
-
-                    var registerButton = function(inputButtonDefinition) {
-                        var x = inputButtonDefinition;
-                        return function() {
-                            document.getElementById("currentButtonLabel").innerHTML = x.buttonDefinition.name +
-                                " (Costs: " + accounting.formatMoney(x.buttonDefinition.cost) + ")";
-                            currentButton = x.buttonDefinition;
-                        };
-                    };
 
                     keysAndButtons[buttonDefinitionState.buttonDefinition.keyChar] = newButtonElement;
 
@@ -714,12 +718,17 @@ $(function () {
 
             canvasLayer2.getContext("2d").clearRect(0, 0, canvasLayer2.width, canvasLayer2.height);
             canvasLayer4.getContext("2d").clearRect(0, 0, canvasLayer4.width, canvasLayer4.height);
+
+            var selectCanvasFor = function(vehicleState) {
+                return function() { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; };
+            };
+
             for (var i in vehicleStates) {
                 if (vehicleStates.hasOwnProperty(i)) {
                     var vehicleState = vehicleStates[i];
                     cancelObj = drawZoneInfoForBitmapLayer(vehicleState,
                         function(x) { return x.bitmapId; },
-                        function() { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
+                        selectCanvasFor(vehicleState),
                         function(x) { return x.pointOne; });
 
                     previouslyDrawnVehicleTiles.push(cancelObj);
