@@ -17,16 +17,13 @@ $(function () {
         };
 
 
-
-
-        var registerDialog = function (dialogId, width, modal) {
+        var registerDialog = function(dialogId, width, modal) {
             $(dialogId).dialog({
                 modal: modal,
                 autoOpen: false,
                 width: width
             });
-
-        }
+        };
 
         var registerDialogWithButton = function (dialogId, dialogButtonId, width, onClick, modal) {
             registerDialog(dialogId, width, modal);
@@ -50,10 +47,10 @@ $(function () {
         }, true);
         registerDialog("#hotMessageDialog", 200, true);
 
-        raiseHotMessage = function (title, message) {
+        raiseHotMessage = function(title, message) {
             $("#hotMessageDialog").dialog({ title: title }).dialog("open");
             setSpanText("hotMessageText", message);
-        }
+        };
     })();
 
     var simulation = $.connection.simulationHub;
@@ -74,7 +71,7 @@ $(function () {
     var canvasLayer6 = document.getElementById("gameCanvasLayer6");
     var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5, canvasLayer6];
 
-    canvasLayer6.onselectstart = function () { return false; }
+    canvasLayer6.onselectstart = function() { return false; };
 
     var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
         var context = selectCanvas().getContext("2d");
@@ -140,7 +137,7 @@ $(function () {
                         currentIndex = 0;
                     else
                         currentIndex++;
-                    setTimeout(loopFunction, delay * 10);
+                    setTimeout(loopFunction, delay);
                 })();
             };
 
@@ -197,9 +194,9 @@ $(function () {
             var currentCellAnimator = null;
             var that = this;
 
-            this.getZoneInfo = function () {
+            this.getZoneInfo = function() {
                 return zoneInfo;
-            }
+            };
 
             this.enlistToCellAnimator = function (cellAnimator) {
                 if (currentCellAnimator !== null) {
@@ -283,27 +280,27 @@ $(function () {
         }
     };
 
-    simulation.client.submitAreaMessage = function (message) {
+    simulation.client.submitAreaMessage = function(message) {
         document.getElementById("areaMessageLabel").innerHTML = message;
-    }
+    };
 
-    simulation.client.submitAreaHotMessage = function (message) {
+    simulation.client.submitAreaHotMessage = function(message) {
         raiseHotMessage(message.title, message.message);
-    }
+    };
     var EventPublisherService = function () {
         var currentState;
         var listeners = [];
-        this.loadNewState = function (incomingState) {
+        this.loadNewState = function(incomingState) {
             currentState = incomingState;
             for (var i in listeners) {
                 if (listeners.hasOwnProperty(i)) {
                     listeners[i](incomingState);
                 }
             }
-        }
-        this.addOnNewStateListener = function (listener) {
+        };
+        this.addOnNewStateListener = function(listener) {
             listeners.push(listener);
-        }
+        };
     };
 
     // City evaluation
@@ -334,10 +331,10 @@ $(function () {
         });
 
 
-        simulation.client.onYearAndMonthChanged = function (yearAndMonthChangedState) {
+        simulation.client.onYearAndMonthChanged = function(yearAndMonthChangedState) {
             document.getElementById("currentYearAndMonthLabel").innerHTML = yearAndMonthChangedState.yearAndMonthDescription;
             cityEvaluationStateService.loadNewState(yearAndMonthChangedState);
-        }
+        };
     })();
 
     // City budget
@@ -385,7 +382,7 @@ $(function () {
                     var labelCell = document.createElement("td");
                     labelCell.innerHTML = "";
                     taxRow.appendChild(labelCell);
-                    var labelCell = document.createElement("td");
+                    labelCell = document.createElement("td");
                     labelCell.innerHTML = "";
                     taxRow.appendChild(labelCell);
                 } else {
@@ -416,10 +413,10 @@ $(function () {
                             disableButtons();
                         });
 
-                        disableButtons = function () {
+                        disableButtons = function() {
                             dropButton.disabled = true;
                             raiseButton.disabled = true;
-                        }
+                        };
 
                         labelCell.appendChild(dropButton);
                     })();
@@ -502,11 +499,11 @@ $(function () {
             })();
         });
 
-        simulation.client.submitCityBudgetValue = function (e) {
+        simulation.client.submitCityBudgetValue = function(e) {
             document.getElementById("currentFundsLabel").innerHTML = "Current funds: " + accounting.formatMoney(e.currentAmount);
             document.getElementById("projectedIncomeLabel").innerHTML = "Projected income: $ " + accounting.formatMoney(e.projectedIncome);
             cityBudgetStateService.loadNewState(e.cityBudgetState);
-        }
+        };
 
     })();
 
@@ -523,7 +520,7 @@ $(function () {
         }
     };
 
-    simulation.client.submitDataMeterInfos = function (zoneDataMeterInfos) {
+    simulation.client.submitDataMeterInfos = function(zoneDataMeterInfos) {
 
         for (var i in zoneDataMeterInfos) {
             if (zoneDataMeterInfos.hasOwnProperty(i)) {
@@ -542,7 +539,7 @@ $(function () {
                 }
             }
         }
-    }
+    };
 
     var processGraphDefinitions = function (graphDefinitions) {
         var graphTabs = document.getElementById("graphTabs");
@@ -634,8 +631,8 @@ $(function () {
                 if (dataMeterInstances.hasOwnProperty(d)) {
                     var dataMeter = dataMeterInstances[d];
                     registerDataMeter(dataMeter);
-                };
-            };
+                }
+            }
         })();
 
 
@@ -671,14 +668,14 @@ $(function () {
                     newButtonElement.innerHTML = "(" + buttonDefinitionState.buttonDefinition.keyChar.toUpperCase() + ") " + buttonDefinitionState.buttonDefinition.name;
                     buttonBar.appendChild(newButtonElement);
 
-                    var registerButton = function (inputButtonDefinition) {
+                    var registerButton = function(inputButtonDefinition) {
                         var x = inputButtonDefinition;
-                        return function () {
+                        return function() {
                             document.getElementById("currentButtonLabel").innerHTML = x.buttonDefinition.name +
                                 " (Costs: " + accounting.formatMoney(x.buttonDefinition.cost) + ")";
                             currentButton = x.buttonDefinition;
                         };
-                    }
+                    };
 
                     keysAndButtons[buttonDefinitionState.buttonDefinition.keyChar] = newButtonElement;
 
@@ -703,7 +700,7 @@ $(function () {
 
     (function () {
         var previouslyDrawnVehicleTiles = [];
-        simulation.client.submitVehicleStates = function (vehicleStates) {
+        simulation.client.submitVehicleStates = function(vehicleStates) {
 
             var contextOne = canvasLayer2.getContext("2d");
             var contextTwo = canvasLayer4.getContext("2d");
@@ -721,14 +718,14 @@ $(function () {
                 if (vehicleStates.hasOwnProperty(i)) {
                     var vehicleState = vehicleStates[i];
                     cancelObj = drawZoneInfoForBitmapLayer(vehicleState,
-                        function (x) { return x.bitmapId; },
-                        function () { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
-                        function (x) { return x.pointOne; });
+                        function(x) { return x.bitmapId; },
+                        function() { return vehicleState.isShip ? canvasLayer2 : canvasLayer4; },
+                        function(x) { return x.pointOne; });
 
                     previouslyDrawnVehicleTiles.push(cancelObj);
                 }
             }
-        }
+        };
     })();
 
     $.connection.hub.start().done(function () {
@@ -750,33 +747,33 @@ $(function () {
                 var clickAndDragState = null;
 
                 (function () {
-                    var ClickDragState = function () {
+                    var ClickDragState = function() {
                         var isNetworkZoning = false;
                         var isNetworkDemolishing = false;
 
-                        this.reset = function () {
+                        this.reset = function() {
                             isNetworkZoning = isNetworkDemolishing = false;
-                        }
+                        };
 
-                        this.activateNetworkZoning = function () {
+                        this.activateNetworkZoning = function() {
                             this.reset();
                             isNetworkZoning = true;
-                        }
+                        };
 
-                        this.activateNetworkDemolishing = function () {
+                        this.activateNetworkDemolishing = function() {
                             this.reset();
                             isNetworkDemolishing = true;
-                        }
+                        };
 
-                        this.getIsNetworkZoning = function () {
+                        this.getIsNetworkZoning = function() {
                             return isNetworkZoning;
-                        }
+                        };
 
-                        this.getIsNetworkDemolishing = function () {
+                        this.getIsNetworkDemolishing = function() {
                             return isNetworkDemolishing;
-                        }
+                        };
 
-                        this.getStateAsString = function () {
+                        this.getStateAsString = function() {
                             if (isNetworkZoning && !isNetworkDemolishing) {
                                 return "isNetworkZoning";
                             } else if (isNetworkDemolishing && !isNetworkZoning) {
@@ -788,17 +785,16 @@ $(function () {
                                 name: "Current state of ClickDragState is invalid",
                                 message: "ClickDragState cannot be both in 'networkZoning' and 'networkDemolishing' state."
                             };
-                        }
-                    }
+                        };
+                    };
 
                     clickAndDragState = new ClickDragState();
                 }());
 
-                var consumeZone = function (button, cell) {
-                    if (lastConsumedCell === null
-                        || lastConsumedCell.x !== cell.x
-                        || lastConsumedCell.y !== cell.y
-                        || lastConsumedCell.button !== button) {
+                var consumeZone = function(button, cell) {
+                    if (lastConsumedCell === null ||
+                        lastConsumedCell.x !== cell.x ||
+                        lastConsumedCell.y !== cell.y || lastConsumedCell.button !== button) {
                         simulation.server.consumeZone(button.name, cell.x, cell.y);
                         lastConsumedCell = cell;
                         lastConsumedCell.button = button;
@@ -809,7 +805,7 @@ $(function () {
                         context.fillStyle = "red";
                         context.rect(cell.x * 25, cell.y * 25, 25, 25);
                         context.fill();
-                        setTimeout(function () {
+                        setTimeout(function() {
                             var half = 25 / 2;
                             var quarter = half / 2;
                             context.clearRect(cell.x * 25, cell.y * 25, 25, 25);
@@ -818,11 +814,11 @@ $(function () {
                             context.rect((cell.x * 25) + quarter, (cell.y * 25) + quarter, 25 - half, 25 - half);
                             context.fill();
                         }, 100);
-                        setTimeout(function () {
+                        setTimeout(function() {
                             context.clearRect(cell.x * 25, cell.y * 25, 25, 25);
                         }, 300);
                     }
-                }
+                };
 
                 var previousHighlight = null;
 
@@ -832,10 +828,10 @@ $(function () {
                     currentFocusedCell = cell;
 
                     if (previousHighlight === null || (
-                            previousHighlight.button !== currentButton
-                            || previousHighlight.cell.x !== cell.x
-                            || previousHighlight.cell.y !== cell.y
-                            || previousHighlight.clickDragState !== clickAndDragState.getStateAsString())) {
+                            previousHighlight.button !== currentButton ||
+                            previousHighlight.cell.x !== cell.x ||
+                            previousHighlight.cell.y !== cell.y ||
+                            previousHighlight.clickDragState !== clickAndDragState.getStateAsString())) {
 
                         if (previousHighlight !== null)
                             previousHighlight.clear();
