@@ -43,7 +43,7 @@ namespace Mirage.Urbanization.Web
             IReadOnlyZoneInfo zoneInfo,
             Func<AnimatedCellBitmapSetLayers, AnimatedCellBitmapSet> bitmapSelector)
         {
-            var result = TilesetAccessor.TryGetBitmapFor(zoneInfo.TakeSnapshot(), false);
+            var result = TilesetAccessor.TryGetBitmapFor(snapShot: zoneInfo.TakeSnapshot(), includeNoElectricity: true);
 
             if (result.HasNoMatch)
                 return default(ClientAnimatedCellBitmapSet);
