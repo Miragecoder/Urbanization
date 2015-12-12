@@ -69,7 +69,8 @@ $(function () {
     var canvasLayer4 = document.getElementById("gameCanvasLayer4");
     var canvasLayer5 = document.getElementById("gameCanvasLayer5");
     var canvasLayer6 = document.getElementById("gameCanvasLayer6");
-    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5, canvasLayer6];
+    var canvasLayer7 = document.createElement("canvas");
+    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5, canvasLayer6, canvasLayer7];
 
 
     var citySize = null;
@@ -84,18 +85,48 @@ $(function () {
                 canvasLayer.height = citySize.height * 25;
         }
 
+        var CanvasBuffer = function (bufferCanvas) {
+            var rowWidth = bufferCanvas.width / 25;
+            var storedIds = [];
+            var getImagePosition = function (image) {
+                return {
+                    x: (image.tileId % rowWidth) * 25,
+                    y: (Math.floor(image.tileId / rowWidth)) * 25
+                };
+            };
+            this.storeImage = function (image) {
+                if (!storedIds.hasOwnProperty(image.tileId)) {
+                    var position = getImagePosition(image);
+                    bufferCanvas.getContext("2d").drawImage(image, position.x, position.y);
+                };
+            };
+
+            this.drawImageFromBuffer = function (targetContext, image, x, y) {
+                var imagePosition = getImagePosition(image);
+                targetContext.drawImage(bufferCanvas, imagePosition.x, imagePosition.y, 25, 25, x, y, 25, 25);
+            };
+        };
+
+        var canvasBuffer = new CanvasBuffer(canvasLayer7);
+
         canvasLayer6.onselectstart = function () { return false; };
 
         var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
+
+            var drawImage = function (context, image) {
+                canvasBuffer.drawImageFromBuffer(context, image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                //context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+            };
+
             var context = selectCanvas().getContext("2d");
             if (imageCache.hasOwnProperty(selectBitmapHashCode(zoneInfo)) && imageCache[selectBitmapHashCode(zoneInfo)] !== null) {
                 var image = imageCache[selectBitmapHashCode(zoneInfo)];
 
                 if (image.isLoaded) {
-                    context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                    drawImage(context, image);
                 } else {
                     image.drawPendingZones.push(function () {
-                        context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                        drawImage(context, image);
                     });
                 }
             }
@@ -103,10 +134,12 @@ $(function () {
                 var tileImage = new Image();
                 tileImage.drawPendingZones = [];
                 imageCache[selectBitmapHashCode(zoneInfo)] = tileImage;
+                tileImage.tileId = selectBitmapHashCode(zoneInfo);
                 tileImage.src = "/tile/" + selectBitmapHashCode(zoneInfo);
                 tileImage.onload = function () {
+                    canvasBuffer.storeImage(tileImage);
                     tileImage.isLoaded = true;
-                    context.drawImage(tileImage, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                    drawImage(context, tileImage);
                     if (tileImage.drawPendingZones !== null) {
                         for (var i in tileImage.drawPendingZones) {
                             if (tileImage.drawPendingZones.hasOwnProperty(i)) {
