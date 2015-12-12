@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
@@ -79,6 +80,13 @@ namespace Mirage.Urbanization.Web
 
                     await ServeImage(context, bitmap.PngBytes);
                     return;
+                }
+                else if (context.Request.Path.Value.StartsWith("/citysize/"))
+                {
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(
+                        Encoding.UTF8.GetBytes($"{{ \"width\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesX}, \""
+                        + $"height\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesY} }}"));
                 }
                 await next();
             });
