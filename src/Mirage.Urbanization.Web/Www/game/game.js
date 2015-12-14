@@ -1,4 +1,5 @@
 ﻿"use strict";
+
 $(function () {
 
     var raiseHotMessage = null;
@@ -69,8 +70,8 @@ $(function () {
     var canvasLayer4 = document.getElementById("gameCanvasLayer4");
     var canvasLayer5 = document.getElementById("gameCanvasLayer5");
     var canvasLayer6 = document.getElementById("gameCanvasLayer6");
-    var canvasLayer7 = document.createElement("canvas");
-    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5, canvasLayer6, canvasLayer7];
+    var bufferCanvasLayer = document.getElementById("bufferCanvasLayer");
+    var canvasLayers = [canvasLayer1, canvasLayer2, canvasLayer3, canvasLayer4, canvasLayer5, canvasLayer6, bufferCanvasLayer];
 
 
     var citySize = null;
@@ -107,14 +108,51 @@ $(function () {
             };
         };
 
-        var canvasBuffer = new CanvasBuffer(canvasLayer7);
+        var canvasBuffer = new CanvasBuffer(bufferCanvasLayer);
+
+        var OrderedDrawImageInvoker = function (canvasBuffer) {
+            var deferredImageDrawings = [];
+
+            this.prepareFor = function (targetContext, image, x, y) {
+                if (!deferredImageDrawings.hasOwnProperty(image.tileId)) {
+                    deferredImageDrawings[image.tileId] = [];
+                }
+                deferredImageDrawings[image.tileId].push(function () {
+                    canvasBuffer.drawImageFromBuffer(targetContext, image, x, y);
+                });
+            };
+
+            var forEachAndFlush = function () {
+                for (var i in deferredImageDrawings) {
+                    if (deferredImageDrawings.hasOwnProperty(i)) {
+                        for (var s in deferredImageDrawings[i]) {
+                            if (deferredImageDrawings[i].hasOwnProperty(s)) {
+                                deferredImageDrawings[i][s]();
+                            }
+                        }
+                    }
+                }
+                deferredImageDrawings = [];
+            };
+
+            this.start = function () {
+                (function loopFunction() {
+                    forEachAndFlush();
+                    console.log("Yarr");
+                    setTimeout(loopFunction, 100);
+                })();
+            };
+        };
+
+        var orderedDrawImageInvoker = new OrderedDrawImageInvoker(canvasBuffer);
 
         canvasLayer6.onselectstart = function () { return false; };
 
         var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
 
             var drawImage = function (context, image) {
-                canvasBuffer.drawImageFromBuffer(context, image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                orderedDrawImageInvoker.prepareFor(context, image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
+                //canvasBuffer.drawImageFromBuffer(context, image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
                 //context.drawImage(image, selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25);
             };
 
@@ -946,6 +984,7 @@ $(function () {
             })();
 
             simulation.server.requestMenuStructure();
+            orderedDrawImageInvoker.start();
         });
     });
 });
