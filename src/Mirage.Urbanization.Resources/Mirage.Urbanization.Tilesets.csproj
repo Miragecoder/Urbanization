@@ -628,6 +628,9 @@
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n3_a2.png" />
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n3_a3.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n5_a1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
