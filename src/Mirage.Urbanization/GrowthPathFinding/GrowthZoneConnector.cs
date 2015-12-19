@@ -166,7 +166,11 @@ namespace Mirage.Urbanization.GrowthPathFinding
                         _growthZonesAndTravelDistances.Add(origin, new List<int>());
 
                     z.WithZoneClusterIf<TBaseGrowthZoneClusterConsumption>(
-                        cluster => cluster.IncreaseOrDecreaseByPoweredState()
+                        cluster =>
+                        {
+                            cluster.IncreaseOrDecreaseByPoweredState();
+                            _toBeDecreased.Remove(cluster);
+                        }
                     );
 
                     var pathLength = 0;
@@ -203,7 +207,14 @@ namespace Mirage.Urbanization.GrowthPathFinding
             return new RoadInfrastructureStatistics(_roadZonesAndTraffic.Keys);
         }
 
-        public void DecreasePopulation(ISet<BaseGrowthZoneClusterConsumption> growthZones)
+        private readonly ISet<BaseGrowthZoneClusterConsumption> _toBeDecreased = new HashSet<BaseGrowthZoneClusterConsumption>();
+
+        public void DecreasePopulation()
+        {
+            foreach (var x in _toBeDecreased) x.DecreasePopulation();
+        }
+
+        public void MarkForPopulationDecrease(ISet<BaseGrowthZoneClusterConsumption> growthZones)
         {
             foreach (var growthZone in
                 from growthZone in growthZones
@@ -214,7 +225,8 @@ namespace Mirage.Urbanization.GrowthPathFinding
                 select growthZone
             )
             {
-                growthZone.DecreasePopulation();
+                _toBeDecreased.Add(growthZone);
+                //growthZone.DecreasePopulation();
             }
         }
     }

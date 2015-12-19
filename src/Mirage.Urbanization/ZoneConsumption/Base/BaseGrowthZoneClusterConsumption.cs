@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
+using Mirage.Urbanization.ZoneStatisticsQuerying;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base
 {
@@ -19,13 +20,13 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
 
         protected BaseGrowthZoneClusterConsumption(
-            Func<ZoneInfoFinder> createZoneInfoFinderFunc, 
+            Func<ZoneInfoFinder> createZoneInfoFinderFunc,
             Color color)
             : base(
-            createZoneInfoFinderFunc: createZoneInfoFinderFunc, 
-            electricityBehaviour: new ElectricityConsumerBehaviour(15), 
-            color: color, 
-            widthInZones: 3, 
+            createZoneInfoFinderFunc: createZoneInfoFinderFunc,
+            electricityBehaviour: new ElectricityConsumerBehaviour(15),
+            color: color,
+            widthInZones: 3,
             heightInZones: 3
         )
         {
@@ -49,7 +50,39 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         public const int MaximumPopulation = 50;
 
-        public bool CanGrow => PopulationDensity < MaximumPopulation;
+        public const int LowDensityThreshold = 8;
+        public const int MediumDensityThreshold = 25;
+
+        public virtual int RequiredNeighborsToExceedLowDensity => 2;
+        public virtual int RequiredNeighborsToExceedMediumDensity => 5;
+
+        public bool CanGrow
+        {
+            get
+            {
+                var neighborCount = _zoneClusterMembers
+                    .Single(x => x.IsCentralClusterMember)
+                    .GetZoneInfo()
+                    .WithResultIfHasMatch(centerZoneInfo =>
+                        centerZoneInfo
+                            .GetSurroundingZoneInfosDiamond(20)
+                            .Count(x => x.WithResultIfHasMatch(zoneInfo => (zoneInfo
+                                .ZoneConsumptionState
+                                .GetZoneConsumption() as ZoneClusterMemberConsumption)
+                                .ToQueryResult()
+                                .WithResultIfHasMatch(
+                                    zoneClusterMember => zoneClusterMember.IsCentralClusterMember &&
+                                    (zoneClusterMember.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption)
+                                    .ToQueryResult()
+                                    .WithResultIfHasMatch(neighbor => neighbor.PopulationDensity >= PopulationDensity && neighbor.GetType() == GetType())))));
+
+                if (neighborCount <= RequiredNeighborsToExceedLowDensity)
+                    return PopulationDensity < LowDensityThreshold;
+                else if (neighborCount <= RequiredNeighborsToExceedMediumDensity)
+                    return PopulationDensity < MediumDensityThreshold;
+                return PopulationDensity < MaximumPopulation;
+            }
+        }
 
         public bool CanGrowAndHasPower => CanGrow && HasPower;
 

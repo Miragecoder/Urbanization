@@ -14,6 +14,8 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         protected override decimal PopulationFireHazardFactor => 0.5M;
 
+        public override int RequiredNeighborsToExceedLowDensity => 1;
+        public override int RequiredNeighborsToExceedMediumDensity => 2;
         public override char KeyChar => 'c';
 
         public override string Name => "Commercial zone";
