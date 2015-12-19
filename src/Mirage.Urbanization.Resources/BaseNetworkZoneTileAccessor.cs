@@ -23,6 +23,8 @@ namespace Mirage.Urbanization.Tilesets
 
         protected virtual FramerateDelay Delay => FramerateDelay.None;
 
+        protected virtual bool ConnectToEdgeOfMap => false;
+
         public QueryResult<AnimatedCellBitmapSetLayers> GetFor(ZoneInfoSnapshot snapshot)
         {
             return snapshot
@@ -50,7 +52,7 @@ namespace Mirage.Urbanization.Tilesets
                                                     .ToQueryResult()
                                                     .WithResultIfHasMatch(x => x.NorthSouthZoneConsumption is T);
                                             });
-                                        }, false),
+                                        }, ConnectToEdgeOfMap),
                                     South = vicinity
                                         .Single(x => x.QueryObject.RelativeX == 0 && x.QueryObject.RelativeY == 1)
                                         .WithResultIfHasMatch(match =>
@@ -64,7 +66,7 @@ namespace Mirage.Urbanization.Tilesets
                                                     .ToQueryResult()
                                                     .WithResultIfHasMatch(x => x.NorthSouthZoneConsumption is T);
                                             });
-                                        }, false),
+                                        }, ConnectToEdgeOfMap),
                                     East = vicinity
                                         .Single(x => x.QueryObject.RelativeX == 1 && x.QueryObject.RelativeY == 0)
                                         .WithResultIfHasMatch(match =>
@@ -78,7 +80,7 @@ namespace Mirage.Urbanization.Tilesets
                                                     .ToQueryResult()
                                                     .WithResultIfHasMatch(x => x.EastWestZoneConsumption is T);
                                             });
-                                        }, false),
+                                        }, ConnectToEdgeOfMap),
                                     West = vicinity
                                         .Single(x => x.QueryObject.RelativeX == -1 && x.QueryObject.RelativeY == 0)
                                         .WithResultIfHasMatch(match =>
@@ -92,7 +94,7 @@ namespace Mirage.Urbanization.Tilesets
                                                     .ToQueryResult()
                                                     .WithResultIfHasMatch(x => x.EastWestZoneConsumption is T);
                                             });
-                                        }, false)
+                                        }, ConnectToEdgeOfMap)
                                 };
 
                                 return _cellBitmapNetworkLazy.Value.GetForDirections(
