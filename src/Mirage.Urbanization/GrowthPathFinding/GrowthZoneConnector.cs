@@ -144,21 +144,28 @@ namespace Mirage.Urbanization.GrowthPathFinding
         {
             _cancellationToken.ThrowIfCancellationRequested();
             Action result = null;
-            foreach (var zoneInfoPathNode in destinations.SelectMany(x => x.OrderBy(y => y.Distance)))
+            foreach (var zoneInfoPathNode in destinations
+                .SelectMany(x => x)
+                .OrderBy(x => x.Distance)
+                .Where(zoneInfoPathNode =>
+                {
+                    var foundMatch = false;
+
+                    zoneInfoPathNode.WithDestination(z => z.WithZoneClusterIf<TBaseGrowthZoneClusterConsumption>(
+                        cluster =>
+                        {
+                            if (cluster.CanGrowAndHasPower)
+                                foundMatch = true;
+                        })
+                    );
+
+                    if (!foundMatch || !AllowsForTraffic(zoneInfoPathNode))
+                        return false;
+                    return true;
+                })
+                .Take(origin.PopulationDensity + 1)
+            )
             {
-                var foundMatch = false;
-
-                zoneInfoPathNode.WithDestination(z => z.WithZoneClusterIf<TBaseGrowthZoneClusterConsumption>(
-                    cluster =>
-                    {
-                        if (cluster.CanGrowAndHasPower)
-                            foundMatch = true;
-                    })
-                );
-
-                if (!foundMatch || !AllowsForTraffic(zoneInfoPathNode))
-                    continue;
-
                 var localZoneInfoPathNode = zoneInfoPathNode;
                 result = () => localZoneInfoPathNode.WithDestination(z =>
                 {
