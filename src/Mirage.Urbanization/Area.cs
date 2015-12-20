@@ -243,8 +243,6 @@ namespace Mirage.Urbanization
                     .OfType<BaseGrowthZoneClusterConsumption>()
                     .ToHashSet();
 
-                connector.MarkForPopulationDecrease(growthZones);
-
                 desirableGrowthZones = growthZones
                     .Where(x =>
                     {
@@ -334,7 +332,7 @@ namespace Mirage.Urbanization
             connector.ApplyAverageTravelDistances();
             cancellationToken.ThrowIfCancellationRequested();
 
-            connector.DecreasePopulation();
+            connector.DecreasePopulation(zoneClusters.OfType<BaseGrowthZoneClusterConsumption>().ToHashSet());
 
             Mirage.Urbanization.Logger.Instance.WriteLine("Growth cycle completed. (Took: " + stopwatch.Elapsed + ")");
             return
