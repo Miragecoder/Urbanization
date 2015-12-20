@@ -218,8 +218,15 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
         public void DecreasePopulation(ISet<BaseGrowthZoneClusterConsumption> allClusters)
         {
-            foreach (var x in allClusters.Except(_grownClusters))
+            var toBeDecreased = allClusters.Except(_grownClusters).ToList();
+
+            Mirage.Urbanization.Logger.Instance.WriteLine($"Decreasing population of {toBeDecreased.Count} untouched growth zones...");
+
+            foreach (var x in toBeDecreased)
+            {
                 x.DecreasePopulation();
+                x.DecreasePopulation();
+            }
         }
     }
 }

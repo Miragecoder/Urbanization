@@ -272,6 +272,7 @@ namespace Mirage.Urbanization
 
                 if (industrialZones.All(x => x.PopulationDensity == 0))
                 {
+                    Mirage.Urbanization.Logger.Instance.WriteLine("Injecting outside influence...");
                     foreach (var z in industrialZones.Where(x => x.HasPower).OrderBy(x => _random.Next()).Take(2))
                     {
                         z.IncreasePopulation();
@@ -295,6 +296,7 @@ namespace Mirage.Urbanization
             };
 
             foreach (var poweredCluster in desirableGrowthZones
+                .Where(x => x.IsPopulated)
                 .SelectMany(x => x.ZoneClusterMembers)
                 .Where(
                     x =>
