@@ -280,6 +280,13 @@ namespace Mirage.Urbanization
                         z.IncreasePopulation();
                     }
                 }
+                else
+                {
+                    industrialZones
+                        .FirstOrDefault(x => x.HasPower && !x.IsPopulated)
+                        .ToQueryResult()
+                        .WithResultIfHasMatch(x => x.IncreasePopulation());
+                }
             }
 
             var growthZoneDemandThresholds = new IGrowthZoneDemandThreshold[]
