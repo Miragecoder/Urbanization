@@ -1,16 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mirage.Urbanization.Tilesets
 {
     public class CellBitmapNetwork
     {
-        public DirectionalCellBitmap Center { get; set; }
-        public DirectionalCellBitmap East { get; set; }
-        public DirectionalCellBitmap EastWest { get; set; }
-        public DirectionalCellBitmap NorthWest { get; set; }
-        public DirectionalCellBitmap NorthWestEast { get; set; }
-        public DirectionalCellBitmap NorthWestEastSouth { get; set; }
+        public DirectionalCellBitmap Center { get;  }
+        public DirectionalCellBitmap East { get; }
+        public DirectionalCellBitmap EastWest { get; }
+        public DirectionalCellBitmap NorthWest { get;}
+        public DirectionalCellBitmap NorthWestEast { get; }
+        public DirectionalCellBitmap NorthWestEastSouth { get; }
 
         public AnimatedCellBitmapSetLayers GetForDirections(bool north, bool east, bool south, bool west)
         {
@@ -78,6 +79,16 @@ namespace Mirage.Urbanization.Tilesets
             NorthWest = northWest;
             NorthWestEast = northWestEast;
             NorthWestEastSouth = northWestEastSouth;
+        }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return this.Center.GetAll()
+                .Concat(this.East.GetAll())
+                .Concat(this.EastWest.GetAll())
+                .Concat(this.NorthWest.GetAll())
+                .Concat(this.NorthWestEast.GetAll())
+                .Concat(this.NorthWestEastSouth.GetAll());
         }
     }
 }

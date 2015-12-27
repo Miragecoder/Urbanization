@@ -65,5 +65,10 @@ namespace Mirage.Urbanization.Tilesets
                 QueryResult<AnimatedCellBitmapSetLayers>.Empty)
             );
         }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return this._layerDictionaryLazy.Value.Select(x => x.Value);
+        }
     }
 }

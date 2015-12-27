@@ -13,6 +13,7 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Simulation;
+using Mirage.Urbanization.Tilesets;
 using Owin;
 using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
 
@@ -80,6 +81,10 @@ namespace Mirage.Urbanization.Web
 
                     await ServeImage(context, bitmap.PngBytes);
                     return;
+                }
+                else if (context.Request.Path.Value.StartsWith("/tileset/"))
+                {
+                    await ServeImage(context, TilesetProvider.GetAtlasBytes());
                 }
                 else if (context.Request.Path.Value.StartsWith("/citysize/"))
                 {

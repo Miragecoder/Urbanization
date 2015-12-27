@@ -12,5 +12,6 @@ namespace Mirage.Urbanization.Tilesets
         QueryResult<AnimatedCellBitmapSetLayers> TryGetBitmapFor(ZoneInfoSnapshot snapShot, bool includeNoElectricity);
         IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle);
         Size ResizeToTileWidthAndSize(Size size);
+        IEnumerable<AnimatedCellBitmapSetLayers> GetAll();
     }
 }

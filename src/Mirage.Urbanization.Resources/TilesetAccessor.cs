@@ -164,5 +164,18 @@ namespace Mirage.Urbanization.Tilesets
                 Convert.ToInt32(Math.Round(size.Height * resizeMultiplier))
             );
         }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return _growthZoneTileAccessor.GetAll()
+                .Concat(_intersectingZoneTileAccessor.GetAll())
+                .Concat(_networkZoneTileAccessor.GetAll())
+                .Concat(_staticZonesTileAccessor.GetAll())
+                .Concat(new[]
+                {
+                    _noElectricity,
+                    _rubbish
+                });
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Mirage.Urbanization.Tilesets
         private readonly Lazy<RoadIntersections> _highRoadIntersectionsLazy
             = new Lazy<RoadIntersections>(() => RoadIntersections.CreateFor("High", TrafficDensity.High));
 
-        private IEnumerable<RoadIntersections> GetIntersectionTypes()
+        private IEnumerable<RoadIntersections> GetRoadIntersectionTypes()
         {
             yield return _noneRoadIntersectionsLazy.Value;
             yield return _lowRoadIntersectionsLazy.Value;
@@ -90,7 +90,7 @@ namespace Mirage.Urbanization.Tilesets
                     if (x.NorthSouthZoneConsumption is RoadZoneConsumption ||
                         x.EastWestZoneConsumption is RoadZoneConsumption)
                     {
-                        return GetIntersectionTypes()
+                        return GetRoadIntersectionTypes()
                             .Single(y => y.TrafficDensity == x.GetTrafficDensity())
                             .GetFor(snapshot);
                     }
@@ -134,6 +134,17 @@ namespace Mirage.Urbanization.Tilesets
 
                     return QueryResult<AnimatedCellBitmapSetLayers>.Empty;
                 }, QueryResult<AnimatedCellBitmapSetLayers>.Empty);
+        }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return GetRoadIntersectionTypes().SelectMany(x => x.GetAll())
+                .Concat(new []
+                {
+                    _powerNsWaterEwLazy.Value.GetAll().ToArray(),
+                    _railNsPowerEwLazy.Value.GetAll().ToArray(),
+                    _railNsWaterEwLazy.Value.GetAll().ToArray(),
+                }.ToArray().SelectMany(x => x));
         }
     }
 }

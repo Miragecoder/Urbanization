@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
@@ -110,6 +111,13 @@ namespace Mirage.Urbanization.Tilesets
                 },
                     QueryResult<AnimatedCellBitmapSetLayers>.Empty
                 );
+        }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return this._powerNsRoadEw.GetAll()
+                .Concat(_railNsRoadEw.GetAll())
+                .Concat(_waterNsRoadEw.GetAll());
         }
     }
 }

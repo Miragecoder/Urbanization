@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
 
@@ -23,6 +24,11 @@ namespace Mirage.Urbanization.Tilesets
                     if (match != null) return match;
                     return QueryResult<AnimatedCellBitmapSetLayers>.Empty;
                 });
+        }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return this._accessors.SelectMany(x => x.GetAll());
         }
     }
 }

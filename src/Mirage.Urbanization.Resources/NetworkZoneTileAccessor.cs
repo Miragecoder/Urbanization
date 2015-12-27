@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
 
@@ -24,6 +25,11 @@ namespace Mirage.Urbanization.Tilesets
                 .Select(x => x.GetFor(snapshot).MatchingObject)
                 .SingleOrDefault(x => x != null)
                 .ToQueryResult();
+        }
+
+        public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
+        {
+            return this._accessors.SelectMany(x => x.GetAll());
         }
     }
 }
