@@ -86,12 +86,14 @@ namespace Mirage.Urbanization.Web
                 {
                     await ServeImage(context, TilesetProvider.GetAtlasBytes());
                 }
-                else if (context.Request.Path.Value.StartsWith("/citysize/"))
+                else if (context.Request.Path.Value.StartsWith("/cityinfo/"))
                 {
                     context.Response.ContentType = "application/json";
                     await context.Response.WriteAsync(
-                        Encoding.UTF8.GetBytes($"{{ \"width\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesX}, \""
-                        + $"height\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesY} }}"));
+                        Encoding.UTF8.GetBytes(
+                        $"{{ \"mapWidth\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesX}, "
+                        + $"\"mapHeight\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesY}, "
+                        + $"\"atlasRowWidth\": { TilesetProvider.AtlasRowWidth } }}"));
                 }
                 await next();
             });

@@ -20,10 +20,10 @@ namespace Mirage.Urbanization.Web
 
         private static readonly Dictionary<int, BaseBitmap> BitmapsById = new Dictionary<int, BaseBitmap>();
 
-        public static byte[] GetAtlasBytes()
-        {
-            const int rowWidth = 50;
+        public const int AtlasRowWidth = 50;
 
+        private static readonly Lazy<byte[]> AtlasBytesLazy = new Lazy<byte[]>(() =>
+        {
             var sprites = TilesetAccessor
                 .GetAll()
                 .ToArray()
@@ -34,8 +34,8 @@ namespace Mirage.Urbanization.Web
                         .Concat(cellLayers.Where(x => x.LayerTwo.HasMatch).SelectMany(x => x.LayerTwo.MatchingObject.Bitmaps))
                         .ToDictionary(
                             x =>
-                                new Point((x.Id % rowWidth) * 25,
-                                    Convert.ToInt32(Math.Floor(Convert.ToDecimal(x.Id / rowWidth)) * 25)), x => x);
+                                new Point((x.Id % AtlasRowWidth) * 25,
+                                    Convert.ToInt32(Math.Floor(Convert.ToDecimal(x.Id / AtlasRowWidth)) * 25)), x => x);
                 });
 
             using (var memoryStream = new MemoryStream())
@@ -59,7 +59,9 @@ namespace Mirage.Urbanization.Web
                     }
                 }
             }
-        }
+        });
+
+        public static byte[] GetAtlasBytes() => AtlasBytesLazy.Value;
 
         public static BaseBitmap GetBitmapForId(int id)
         {
