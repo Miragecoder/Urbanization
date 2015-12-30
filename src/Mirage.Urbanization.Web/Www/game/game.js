@@ -93,22 +93,26 @@ $(function () {
 
             canvasLayer6.onselectstart = function () { return false; };
 
-            var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint) {
+            var drawZoneInfoForBitmapLayer = function (zoneInfo, selectBitmapHashCode, selectCanvas, selectPoint, isDrawingVehicle) {
                 var context = selectCanvas().getContext("2d");
 
                 var hashCode = selectBitmapHashCode(zoneInfo);
 
+                var cellWidthOrHeight = isDrawingVehicle ? 50 : 25;
+                var tilesPerRow = isDrawingVehicle ? cityInfo.vehicleTilesPerRow : cityInfo.cellsPerAtlasRow;
+                var yOffset = isDrawingVehicle ? cityInfo.cellSpriteOffset : 0;
+
                 context.drawImage(atlasCanvas,
-                    (hashCode % cityInfo.atlasRowWidth) * 25,
-                    Math.floor(Math.floor(hashCode / cityInfo.atlasRowWidth) * 25),
-                    25,
-                    25,
+                    (hashCode % tilesPerRow) * cellWidthOrHeight,
+                    Math.floor(Math.floor(hashCode / tilesPerRow) * cellWidthOrHeight) + yOffset,
+                    cellWidthOrHeight,
+                    cellWidthOrHeight,
                     selectPoint(zoneInfo).x * 25,
-                    selectPoint(zoneInfo).y * 25, 25, 25);
+                    selectPoint(zoneInfo).y * 25, cellWidthOrHeight, cellWidthOrHeight);
 
                 return {
                     clearRect: function (targetContext) {
-                        targetContext.clearRect(selectPoint(zoneInfo).x * 25, selectPoint(zoneInfo).y * 25, 25, 25);
+                        targetContext.clearRect(selectPoint(zoneInfo).x * cellWidthOrHeight, selectPoint(zoneInfo).y * cellWidthOrHeight, cellWidthOrHeight, cellWidthOrHeight);
                     }
                 };
             };
@@ -177,7 +181,8 @@ $(function () {
                                             animatedZoneInfo.getZoneInfo(),
                                             selectBitmapHashCode,
                                             selectCanvasLayer,
-                                            animatedZoneInfo.getZoneInfo
+                                            animatedZoneInfo.getZoneInfo,
+                                            false
                                         );
                                     }
                                 }
@@ -259,13 +264,15 @@ $(function () {
                     drawZoneInfoForBitmapLayer(zoneInfo,
                         function (x) { return x.bitmapLayerOne.bitmapIds[0]; },
                         function () { return canvasLayer1; },
-                        function (x) { return x; });
+                        function (x) { return x; },
+                        false);
 
                     if (zoneInfo.bitmapLayerTwo !== null) {
                         drawZoneInfoForBitmapLayer(zoneInfo,
                             function (x) { return x.bitmapLayerTwo.bitmapIds[0]; },
                             function () { return canvasLayer3; },
-                            function (x) { return x; });
+                            function (x) { return x; },
+                            false);
                     } else {
                         canvasLayer3.getContext("2d").clearRect(zoneInfo.x * 25, zoneInfo.y * 25, 25, 25);
                     }
@@ -724,7 +731,8 @@ $(function () {
                             cancelObj = drawZoneInfoForBitmapLayer(vehicleState,
                                 function (x) { return x.bitmapId; },
                                 selectCanvasFor(vehicleState),
-                                function (x) { return x.pointOne; });
+                                function (x) { return x.pointOne; },
+                                true);
 
                             previouslyDrawnVehicleTiles.push(cancelObj);
                         }

@@ -74,17 +74,9 @@ namespace Mirage.Urbanization.Web
                         .Pipe(image => ServeImage(context, image));
                     return;
                 }
-                else if (context.Request.Path.Value.StartsWith("/tile/"))
-                {
-                    var bitmap = TilesetProvider.GetBitmapForId(Convert.ToInt32(
-                        context.Request.Path.Value.Split('/').Last()));
-
-                    await ServeImage(context, bitmap.PngBytes);
-                    return;
-                }
                 else if (context.Request.Path.Value.StartsWith("/tileset/"))
                 {
-                    await ServeImage(context, TilesetProvider.GetAtlasBytes());
+                    await ServeImage(context, TilesetProvider.TextureAtlas.GetAtlasBytes());
                 }
                 else if (context.Request.Path.Value.StartsWith("/cityinfo/"))
                 {
@@ -93,7 +85,9 @@ namespace Mirage.Urbanization.Web
                         Encoding.UTF8.GetBytes(
                         $"{{ \"mapWidth\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesX}, "
                         + $"\"mapHeight\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesY}, "
-                        + $"\"atlasRowWidth\": { TilesetProvider.AtlasRowWidth } }}"));
+                        + $"\"cellsPerAtlasRow\": { TextureAtlas.CellsPerRow }, "
+                        + $"\"vehicleTilesPerRow\": { TextureAtlas.VehicleTilesPerRow }, "
+                        + $"\"cellSpriteOffset\": { TilesetProvider.TextureAtlas.CellSpriteOffset } }}"));
                 }
                 await next();
             });

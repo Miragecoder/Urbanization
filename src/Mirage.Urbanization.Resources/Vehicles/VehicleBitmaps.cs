@@ -45,13 +45,21 @@ namespace Mirage.Urbanization.Tilesets.Vehicles
             return DateTime.Now.Millisecond % 400 > 200 ? ShipFrameOne : ShipFrameTwo;
         }
 
+        public IEnumerable<DirectionalBitmap> GetAllVehicleTiles()
+        {
+            yield return Plane;
+            yield return Train;
+            yield return ShipFrameOne;
+            yield return ShipFrameTwo;
+        }
+
         public DirectionalBitmap ShipFrameOne { get; }
         public DirectionalBitmap ShipFrameTwo { get; }
     }
 
     public class DirectionalBitmap
     {
-        private readonly Bitmap _bitmapEast
+        private readonly VehicleBitmap _bitmapEast
             , _bitmapNorth,
             _bitmapWest,
             _bitmapSouth,
@@ -62,18 +70,18 @@ namespace Mirage.Urbanization.Tilesets.Vehicles
 
         public DirectionalBitmap(Bitmap bitmapEast)
         {
-            _bitmapEast = bitmapEast;
-            _bitmapSouth = _bitmapEast.Get90DegreesRotatedClone();
-            _bitmapWest = _bitmapSouth.Get90DegreesRotatedClone();
-            _bitmapNorth = _bitmapWest.Get90DegreesRotatedClone();
+            _bitmapEast = new VehicleBitmap(bitmapEast);
+            _bitmapSouth = new VehicleBitmap(_bitmapEast.Bitmap.Get90DegreesRotatedClone());
+            _bitmapWest = new VehicleBitmap(_bitmapSouth.Bitmap.Get90DegreesRotatedClone());
+            _bitmapNorth = new VehicleBitmap(_bitmapWest.Bitmap.Get90DegreesRotatedClone());
 
-            _southEast = _bitmapEast.RotateImage(45);
-            _southWest = _southEast.Get90DegreesRotatedClone();
-            _northWest = _southWest.Get90DegreesRotatedClone();
-            _northEast = _northWest.Get90DegreesRotatedClone();
+            _southEast = new VehicleBitmap(_bitmapEast.Bitmap.RotateImage(45));
+            _southWest = new VehicleBitmap(_southEast.Bitmap.Get90DegreesRotatedClone());
+            _northWest = new VehicleBitmap(_southWest.Bitmap.Get90DegreesRotatedClone());
+            _northEast = new VehicleBitmap(_northWest.Bitmap.Get90DegreesRotatedClone());
         }
 
-        public Bitmap GetBitmap(Orientation orientation)
+        public VehicleBitmap GetBitmap(Orientation orientation)
         {
             switch (orientation)
             {

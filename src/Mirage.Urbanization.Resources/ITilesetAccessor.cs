@@ -13,5 +13,6 @@ namespace Mirage.Urbanization.Tilesets
         IEnumerable<VehicleBitmapAndPoint> GetBitmapsAndPointsFor(IMoveableVehicle vehicle);
         Size ResizeToTileWidthAndSize(Size size);
         IEnumerable<AnimatedCellBitmapSetLayers> GetAll();
+        IEnumerable<VehicleBitmap> GetAllVehicleBitmaps();
     }
 }

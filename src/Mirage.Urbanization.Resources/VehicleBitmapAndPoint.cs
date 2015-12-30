@@ -1,4 +1,5 @@
-﻿using Mirage.Urbanization.Vehicles;
+﻿using System.Drawing;
+using Mirage.Urbanization.Vehicles;
 
 namespace Mirage.Urbanization.Tilesets
 {

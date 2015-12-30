@@ -138,7 +138,7 @@ namespace Mirage.Urbanization.Tilesets
                     ? pair.Third.Point.OrientationTo(pair.First.Point)
                     : pair.Second.Point.OrientationTo(pair.First.Point);
 
-                Bitmap bitmap;
+                VehicleBitmap bitmap;
 
                 if (vehicle is IAirplane)
                     bitmap = _vehicleBitmaps.Plane.GetBitmap(orientation);
@@ -151,7 +151,7 @@ namespace Mirage.Urbanization.Tilesets
 
                 if (pair.Render)
                 {
-                    yield return new VehicleBitmapAndPoint(new VehicleBitmap(bitmap), pair.Second, pair.Third, vehicle);
+                    yield return new VehicleBitmapAndPoint(bitmap, pair.Second, pair.Third, vehicle);
                 }
             }
         }
@@ -164,6 +164,22 @@ namespace Mirage.Urbanization.Tilesets
                 Convert.ToInt32(Math.Round(size.Height * resizeMultiplier))
             );
         }
+
+        public IEnumerable<VehicleBitmap> GetAllVehicleBitmaps() => _vehicleBitmaps
+            .GetAllVehicleTiles()
+            .SelectMany(x =>new  []
+            {
+                Orientation.East, 
+                Orientation.North, 
+                Orientation.South, 
+                Orientation.West, 
+                Orientation.NorthEast, 
+                Orientation.NorthWest,
+                Orientation.SouthEast,
+                Orientation.SouthWest,
+            }
+                .Select(x.GetBitmap)
+            ); 
 
         public IEnumerable<AnimatedCellBitmapSetLayers> GetAll()
         {
