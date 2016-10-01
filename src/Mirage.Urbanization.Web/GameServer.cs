@@ -96,16 +96,6 @@ namespace Mirage.Urbanization.Web
             _url = url;
             _controlVehicles = controlVehicles;
 
-            simulationSession.Area.ZoneInfoUpdated += (sender, e) =>
-            {
-                GlobalHost
-                    .ConnectionManager
-                    .GetHubContext<SimulationHub>()
-                    .Clients
-                    .All
-                    .submitAndDraw(ClientZoneInfo.Create(e.ZoneInfo));
-            };
-
             List<ClientZoneInfo> previous = null;
 
             _simulationSession.OnAreaMessage += SimulationSession_OnAreaMessage;
