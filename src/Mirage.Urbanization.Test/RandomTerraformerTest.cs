@@ -24,6 +24,7 @@ namespace Mirage.Urbanization.Test
             };
 
             options.SetWoodlands(withWoodlands ? 10 : 0);
+            options.SetLakes(0);
 
             r.ApplyWith(zoneInfoGrid, options);
 
