@@ -22,6 +22,7 @@ namespace Mirage.Urbanization.Test
             };
 
             terraFormingOptions.SetWoodlands(0);
+            terraFormingOptions.SetLakes(0);
 
             return persistedArea != null ?
                 new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, persistedArea, ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()))

@@ -36,10 +36,14 @@
             this.treesTrackBar = new System.Windows.Forms.TrackBar();
             this.checkBoxHorizontalRiver = new System.Windows.Forms.CheckBox();
             this.checkBoxVerticalRiver = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lakesTrackBar = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.sizeTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treesTrackBar)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lakesTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // okNewCityButton
@@ -107,7 +111,7 @@
             this.checkBoxHorizontalRiver.AutoSize = true;
             this.checkBoxHorizontalRiver.Checked = true;
             this.checkBoxHorizontalRiver.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxHorizontalRiver.Location = new System.Drawing.Point(18, 223);
+            this.checkBoxHorizontalRiver.Location = new System.Drawing.Point(18, 432);
             this.checkBoxHorizontalRiver.Name = "checkBoxHorizontalRiver";
             this.checkBoxHorizontalRiver.Size = new System.Drawing.Size(131, 21);
             this.checkBoxHorizontalRiver.TabIndex = 5;
@@ -119,12 +123,31 @@
             this.checkBoxVerticalRiver.AutoSize = true;
             this.checkBoxVerticalRiver.Checked = true;
             this.checkBoxVerticalRiver.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxVerticalRiver.Location = new System.Drawing.Point(18, 250);
+            this.checkBoxVerticalRiver.Location = new System.Drawing.Point(18, 459);
             this.checkBoxVerticalRiver.Name = "checkBoxVerticalRiver";
             this.checkBoxVerticalRiver.Size = new System.Drawing.Size(114, 21);
             this.checkBoxVerticalRiver.TabIndex = 6;
             this.checkBoxVerticalRiver.Text = "Vertical River";
             this.checkBoxVerticalRiver.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.lakesTrackBar);
+            this.groupBox3.Location = new System.Drawing.Point(12, 223);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(458, 90);
+            this.groupBox3.TabIndex = 7;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Lakes";
+            // 
+            // lakesTrackBar
+            // 
+            this.lakesTrackBar.Location = new System.Drawing.Point(6, 30);
+            this.lakesTrackBar.Name = "lakesTrackBar";
+            this.lakesTrackBar.Size = new System.Drawing.Size(446, 56);
+            this.lakesTrackBar.TabIndex = 2;
             // 
             // NewCityForm
             // 
@@ -133,6 +156,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(482, 553);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.checkBoxVerticalRiver);
             this.Controls.Add(this.checkBoxHorizontalRiver);
             this.Controls.Add(this.groupBox2);
@@ -150,6 +174,9 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treesTrackBar)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lakesTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,5 +192,7 @@
         private System.Windows.Forms.TrackBar treesTrackBar;
         private System.Windows.Forms.CheckBox checkBoxHorizontalRiver;
         private System.Windows.Forms.CheckBox checkBoxVerticalRiver;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TrackBar lakesTrackBar;
     }
 }

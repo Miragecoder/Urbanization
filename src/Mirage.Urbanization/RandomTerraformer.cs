@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption;
+using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization
 {
@@ -17,7 +18,21 @@ namespace Mirage.Urbanization
 
         internal void ApplyWith(ZoneInfoGrid repo, TerraformingOptions options)
         {
-            GenerateWoodlands(repo, options);
+            ScatterZoneConsumptionClouds(
+                repo: repo, 
+                options: options, 
+                random: _random, 
+                valueSelector: o => o.Woodlands, 
+                createZoneConsumption: _woodlandZoneFactory
+            );
+            ScatterZoneConsumptionClouds(
+                repo: repo,
+                options: options,
+                random: _random,
+                valueSelector: o => o.Lakes,
+                createZoneConsumption: _waterZoneFactory
+            );
+
             if (options.HorizontalRiver)
             {
                 GenerateRiver(repo, true);
@@ -28,22 +43,27 @@ namespace Mirage.Urbanization
             }
         }
 
-        internal void GenerateWoodlands(ZoneInfoGrid repo, TerraformingOptions options)
+        internal static void ScatterZoneConsumptionClouds(
+            ZoneInfoGrid repo, 
+            TerraformingOptions options,
+            Random random,
+            Func<TerraformingOptions, int> valueSelector,
+            Func<IAreaZoneConsumption> createZoneConsumption)
         {
-            foreach (var iteration in Enumerable.Range(0, options.Woodlands))
+            foreach (var iteration in Enumerable.Range(0, valueSelector(options)))
             {
                 var woodlandTargetPoint = repo.ZoneInfos[new ZonePoint
                 {
-                    X = _random.Next(10, (repo.ZoneWidthAndHeight - 10)),
-                    Y = _random.Next(10, (repo.ZoneWidthAndHeight - 10))
+                    X = random.Next(10, (repo.ZoneWidthAndHeight - 10)),
+                    Y = random.Next(10, (repo.ZoneWidthAndHeight - 10))
                 }];
 
                 foreach (var subiteration in Enumerable.Range(0, 4))
                 {
                     var center = woodlandTargetPoint
                         .GetRelativeZoneInfo(new RelativeZoneInfoQuery(
-                            relativeX: _random.Next(-3, 3),
-                            relativeY: _random.Next(-3, 3)
+                            relativeX: random.Next(-3, 3),
+                            relativeY: random.Next(-3, 3)
 
                             )
                         );
@@ -53,11 +73,19 @@ namespace Mirage.Urbanization
 
                     var targets = center.MatchingObject.GetSurroundingZoneInfosDiamond(3);
 
-                    foreach (var target in targets.Where(x => x.HasMatch))
+                    foreach (var target in targets
+                        .Where(x => x.HasMatch)
+                        .Where(x => x
+                            .MatchingObject
+                            .ConsumptionState
+                            .GetZoneConsumption()
+                            .GetType() != createZoneConsumption().GetType()))
+                    { 
                         target.MatchingObject
                             .ConsumptionState
-                            .TryConsumeWith(_woodlandZoneFactory())
+                            .TryConsumeWith(createZoneConsumption())
                             .Apply();
+                    }
                 }
             }
         }

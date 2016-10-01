@@ -42,6 +42,7 @@ namespace Mirage.Urbanization.Web
                             var t = new TerraformingOptions();
                             t.HorizontalRiver = t.VerticalRiver = true;
                             t.SetWoodlands(80);
+                            t.SetLakes(30);
                             t.SetZoneWidthAndHeight(120);
                             return t;
                         })(), new ProcessOptions(() => false, () => false)));
