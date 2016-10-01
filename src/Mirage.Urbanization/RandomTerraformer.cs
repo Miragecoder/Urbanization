@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using System.Collections.Generic;
 
 namespace Mirage.Urbanization
 {
@@ -19,10 +20,10 @@ namespace Mirage.Urbanization
         internal void ApplyWith(ZoneInfoGrid repo, TerraformingOptions options)
         {
             ScatterZoneConsumptionClouds(
-                repo: repo, 
-                options: options, 
-                random: _random, 
-                valueSelector: o => o.Woodlands, 
+                repo: repo,
+                options: options,
+                random: _random,
+                valueSelector: o => o.Woodlands,
                 createZoneConsumption: _woodlandZoneFactory
             );
             ScatterZoneConsumptionClouds(
@@ -35,16 +36,48 @@ namespace Mirage.Urbanization
 
             if (options.HorizontalRiver)
             {
-                GenerateRiver(repo, true);
+                GenerateRiver(repo: repo, isHorizontal: true);
             }
             if (options.VerticalRiver)
             {
-                GenerateRiver(repo, false);
+                GenerateRiver(repo: repo, isHorizontal: false);
+            }
+            if (options.EastCoast)
+            {
+                GenerateCoastLine(
+                    repo: repo, 
+                    zonePointCoordinateSelector: x => x.X, 
+                    pointValueSelector: x => x.Max()
+                );
+            }
+            if (options.WestCoast)
+            {
+                GenerateCoastLine(
+                    repo: repo,
+                    zonePointCoordinateSelector: x => x.X,
+                    pointValueSelector: x => x.Min()
+                );
+            }
+            if (options.SouthCoast)
+            {
+                GenerateCoastLine(
+                    repo: repo,
+                    zonePointCoordinateSelector: x => x.Y,
+                    pointValueSelector: x => x.Max()
+                );
+            }
+            if (options.NorthCoast)
+            {
+                GenerateCoastLine(
+                    repo: repo,
+                    zonePointCoordinateSelector: x => x.Y,
+                    pointValueSelector: x => x.Min()
+                );
             }
         }
 
         internal static void ScatterZoneConsumptionClouds(
-            ZoneInfoGrid repo, 
+            ZoneInfoGrid repo,
             TerraformingOptions options,
             Random random,
             Func<TerraformingOptions, int> valueSelector,
@@ -74,17 +107,13 @@ namespace Mirage.Urbanization
                     var targets = center.MatchingObject.GetSurroundingZoneInfosDiamond(3);
 
                     foreach (var target in targets
-                        .Where(x => x.HasMatch)
-                        .Where(x => x
-                            .MatchingObject
-                            .ConsumptionState
-                            .GetZoneConsumption()
-                            .GetType() != createZoneConsumption().GetType()))
-                    { 
-                        target.MatchingObject
-                            .ConsumptionState
-                            .TryConsumeWith(createZoneConsumption())
-                            .Apply();
+                        .Where(x => x.HasMatch))
+                    {
+                        var action = target.MatchingObject.ConsumptionState
+                            .TryConsumeWith(createZoneConsumption());
+
+                        if (action.CanOverrideWithResult.WillSucceed)
+                            action.Apply();
                     }
                 }
             }
@@ -92,10 +121,34 @@ namespace Mirage.Urbanization
 
         private readonly Random _random = new Random();
 
+        internal void GenerateCoastLine(
+            ZoneInfoGrid repo, 
+            Func<ZonePoint, int> zonePointCoordinateSelector,
+            Func<IEnumerable<int>, int> pointValueSelector)
+        {
+            var max = pointValueSelector(repo
+                .ZoneInfos
+                .Select(x => zonePointCoordinateSelector(x.Key)));
+
+            Func<ZonePoint, bool> isPartOfSelectedCoastLine = x => zonePointCoordinateSelector(x) == max;
+
+            foreach (var zoneInfo in repo
+                .ZoneInfos
+                .Where(x => isPartOfSelectedCoastLine(x.Key))
+                .SelectMany(x => x.Value.GetSurroundingZoneInfosDiamond(_random.Next(15, 30)).Where(y => y.HasMatch)))
+            {
+                var action = zoneInfo.MatchingObject.ConsumptionState
+                    .TryConsumeWith(_waterZoneFactory());
+
+                if (action.CanOverrideWithResult.WillSucceed)
+                    action.Apply();
+            }
+        }
+
         internal void GenerateRiver(ZoneInfoGrid repo, bool isHorizontal)
         {
             Func<ZonePoint, int> coordinateOne = isHorizontal
-                ? new Func<ZonePoint, int>(x => x.X) : 
+                ? new Func<ZonePoint, int>(x => x.X) :
                 new Func<ZonePoint, int>(x => x.Y);
 
             Func<ZonePoint, int> coordinateTwo = isHorizontal

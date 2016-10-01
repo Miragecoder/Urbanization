@@ -12,6 +12,11 @@ namespace Mirage.Urbanization
         public bool HorizontalRiver { get; set; }
         public bool VerticalRiver { get; set; }
 
+        public bool EastCoast { get; set; }
+        public bool NorthCoast { get; set; }
+        public bool SouthCoast { get; set; }
+        public bool WestCoast { get; set; }
+
         public int Woodlands { get; private set; } = MinWoodlands;
         public int Lakes { get; private set; } = MinLakes;
 

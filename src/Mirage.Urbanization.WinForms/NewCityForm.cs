@@ -43,6 +43,11 @@ namespace Mirage.Urbanization.WinForms
             options.HorizontalRiver = checkBoxHorizontalRiver.Checked;
             options.VerticalRiver = checkBoxVerticalRiver.Checked;
 
+            options.NorthCoast = cbNorthCoast.Checked;
+            options.SouthCoast = cbSouthCoast.Checked;
+            options.EastCoast = cbEastCoast.Checked;
+            options.WestCoast = cbWestCoast.Checked;
+
             return options;
         }
 
