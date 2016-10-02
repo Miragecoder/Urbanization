@@ -168,19 +168,23 @@ namespace Mirage.Urbanization.WinForms
 
         private readonly object _locker = new object();
 
+        private SimpleCache<Point> _cursorpointCache;
+
         private IGraphicsManagerWrapper CreateGraphicsManagerWrapperWithFactory(Func<Panel, Action, IGraphicsManagerWrapper> graphicsManagerWrapper)
         {
+            Point currentCursorPoint = new Point() { X = -100, Y = -100 };
+            _cursorpointCache = new SimpleCache<Point>(
+                () => 
+                {
+                    _canvasPanel.BeginInvoke(new MethodInvoker(() =>{currentCursorPoint = _canvasPanel.PointToClient(Cursor.Position);}));
+                    return currentCursorPoint;
+                }, TimeSpan.FromMilliseconds(80));
+
             return graphicsManagerWrapper(_canvasPanel, () =>
             {
-                Point currentCursorPoint = new Point() { X = -100, Y = -100 };
-
-                _canvasPanel.BeginInvoke(new MethodInvoker(() =>
-                {
-                    currentCursorPoint = _canvasPanel.PointToClient(Cursor.Position);
-                }));
 
                 var continuations = GetToBeRenderedAreas()
-                    .Select(rect => rect.RenderZoneInto(_graphicsManager.GetGraphicsWrapper(), rect.GetRectangle().Contains(currentCursorPoint)))
+                    .Select(rect => rect.RenderZoneInto(_graphicsManager.GetGraphicsWrapper(), rect.GetRectangle().Contains(_cursorpointCache.GetValue())))
                     .ToArray();
 
                 foreach (var controller in SimulationSession.Area.EnumerateVehicleControllers())

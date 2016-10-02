@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Mirage.Urbanization
 {
     public class SimpleCache<T>
-        where T : class
     {
         private readonly Func<T> _acquisitionFunc;
         private readonly TimeSpan _cacheDuration;

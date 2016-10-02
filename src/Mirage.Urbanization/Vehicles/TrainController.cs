@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace Mirage.Urbanization.Vehicles
 {
@@ -13,7 +14,9 @@ namespace Mirage.Urbanization.Vehicles
             GetZoneInfosFunc = getZoneInfosFunc;
         }
 
-        protected readonly HashSet<TVehicle> Vehicles = new HashSet<TVehicle>();
+        private ImmutableHashSet<TVehicle> VehiclesSet = ImmutableHashSet<TVehicle>.Empty;
+
+        protected IEnumerable<TVehicle> Vehicles => VehiclesSet;
 
         protected abstract void PerformMoveCycle();
 
@@ -28,10 +31,12 @@ namespace Mirage.Urbanization.Vehicles
             }
         }
 
+        protected void AddVehicle(TVehicle vehicle) => VehiclesSet = VehiclesSet.Add(vehicle);
+
         protected void RemoveOrphanVehicles()
         {
-            foreach (var orphanVehicle in Vehicles.Where(x => x.CanBeRemoved).ToArray())
-                Vehicles.Remove(orphanVehicle);
+            foreach (var orphanVehicle in VehiclesSet.Where(x => x.CanBeRemoved).ToArray())
+                VehiclesSet = VehiclesSet.Remove(orphanVehicle);
         }
     }
 
@@ -68,7 +73,7 @@ namespace Mirage.Urbanization.Vehicles
                     {
                         foreach (var iteration in Enumerable.Range(0, desiredAmountOfTrains - trainsInNetwork.Count))
                         {
-                            Vehicles.Add(new Train(GetZoneInfosFunc, network
+                            AddVehicle(new Train(GetZoneInfosFunc, network
                                 .OrderBy(x => Random.Next())
                                 .First()
                                 ));

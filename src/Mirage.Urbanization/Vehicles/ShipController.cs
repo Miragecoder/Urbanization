@@ -10,12 +10,15 @@ namespace Mirage.Urbanization.Vehicles
     {
         private readonly TimeSpan _shipInsertionInterval;
         private readonly int _shipSpeedInMilliSeconds;
+        private readonly int _maxDistance;
         internal const int AmountOfShipsPerHarbour = 2;
 
-        public ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc)
+        public ShipController(
+            IReadOnlyArea area,
+            Func<ISet<IZoneInfo>> getZoneInfosFunc)
             :this(getZoneInfosFunc, TimeSpan.FromSeconds(5), 500)
         {
-            
+            _maxDistance = area.AmountOfZonesX + area.AmountOfZonesY;
         }
         internal ShipController(Func<ISet<IZoneInfo>> getZoneInfosFunc, TimeSpan shipInsertionInterval, int shipSpeedInMilliSeconds)
             : base(getZoneInfosFunc)
@@ -41,7 +44,9 @@ namespace Mirage.Urbanization.Vehicles
             if (candidates == null)
                 return;
 
-            while (NewShipCanBeInserted && Vehicles.Count < desiredAmountOfShips)
+            while (NewShipCanBeInserted
+                && Vehicles.Count() < desiredAmountOfShips
+                && Vehicles.All(x => x.IsReadyAndMoving))
             {
                 var candidate = GetZoneInfosFunc()
                     .Where(IsSuitableForShip)
@@ -50,7 +55,7 @@ namespace Mirage.Urbanization.Vehicles
 
                 if (candidate != null)
                 {
-                    Vehicles.Add(new Ship(GetZoneInfosFunc, candidate, _shipSpeedInMilliSeconds));
+                    AddVehicle(new Ship(GetZoneInfosFunc, candidate, _shipSpeedInMilliSeconds, _maxDistance));
                     _lastShipInsertion = DateTime.Now;
                 }
                 else
@@ -71,23 +76,24 @@ namespace Mirage.Urbanization.Vehicles
         {
             protected override int SpeedInMilliseconds { get; }
 
-            public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition, int speedInMilliseconds)
+            public Ship(Func<ISet<IZoneInfo>> getZoneInfosFunc, IZoneInfo currentPosition, int speedInMilliseconds, int maxDistance)
                 : base(getZoneInfosFunc, currentPosition)
             {
                 SpeedInMilliseconds = speedInMilliseconds;
                 _pathEnumeratorTask = new Task<IEnumerator<ShipPathNode>>(() =>
                 {
-                    var pathNode = new ShipPathNode(CurrentPosition);
+                    var pathNode = new ShipPathNode(CurrentPosition, maxDistance);
 
                     var enumerator = pathNode
                         .EnumerateAllChildPathNodes()
+                        .Where(x => x.Distance < maxDistance)
                         .GroupBy(x => CalculateDistance(CurrentPosition.Point, x.CurrentZoneInfo.Point))
                         .OrderByDescending(x => x.Key)
                         .First()
                         .OrderBy(x => x.Distance)
-                        .First()
-                        .EnumeratePathBackwards()
-                        .GetEnumerator();
+                        .FirstOrDefault()
+                        ?.EnumeratePathBackwards()
+                        ?.GetEnumerator() ?? Enumerable.Empty<ShipPathNode>().GetEnumerator();
 
                     enumerator.MoveNext();
 
@@ -97,6 +103,8 @@ namespace Mirage.Urbanization.Vehicles
             }
 
             private readonly Task<IEnumerator<ShipPathNode>> _pathEnumeratorTask;
+
+            public bool IsReadyAndMoving => _pathEnumeratorTask.IsCompleted;
 
             public void Move()
             {
@@ -123,19 +131,20 @@ namespace Mirage.Urbanization.Vehicles
             {
                 private readonly IZoneInfo _rootZoneInfo;
                 private readonly ShipPathNode _preceedingShipPathNode;
+                private readonly int _maxDistance;
 
                 private readonly Lazy<IEnumerable<ShipPathNode>> _childrenLazy;
 
-                public ShipPathNode(IZoneInfo zoneInfo)
+                public ShipPathNode(IZoneInfo zoneInfo, int maxDistance)
                     : this(
                         rootZoneInfo: zoneInfo,
                         currentZoneInfo: zoneInfo,
                         preceedingShipPathNode: null,
                         seenPaths: new HashSet<IZoneInfo>(),
-                        distance: 0
+                        distance: 0,
+                        maxDistance: maxDistance
                         )
                 {
-
                 }
 
                 public IEnumerable<ShipPathNode> EnumerateAllChildPathNodes()
@@ -165,9 +174,11 @@ namespace Mirage.Urbanization.Vehicles
                     IZoneInfo currentZoneInfo,
                     ShipPathNode preceedingShipPathNode,
                     ISet<IZoneInfo> seenPaths,
-                    int distance
+                    int distance,
+                    int maxDistance
                     )
                 {
+                    _maxDistance = maxDistance;
                     if (rootZoneInfo == null) throw new ArgumentNullException(nameof(rootZoneInfo));
                     _rootZoneInfo = rootZoneInfo;
                     if (currentZoneInfo == null) throw new ArgumentNullException(nameof(currentZoneInfo));
@@ -181,7 +192,11 @@ namespace Mirage.Urbanization.Vehicles
                     Distance = distance;
                     _childrenLazy = new Lazy<IEnumerable<ShipPathNode>>(() => CurrentZoneInfo
                         .GetNorthEastSouthWest()
-                        .Where(x => x.HasMatch && IsSuitableForShip(x.MatchingObject))
+                        .Where(x => Distance + 1 < maxDistance)
+                        .Where(x => x.HasMatch)
+                        .Where(x => _preceedingShipPathNode != null ? x.MatchingObject != _preceedingShipPathNode.CurrentZoneInfo : true)
+                        .Where(x => !seenPaths.Contains(x.MatchingObject))
+                        .Where(x => IsSuitableForShip(x.MatchingObject))
                         .OrderByDescending(x => CalculateDistance(x.MatchingObject.Point, _rootZoneInfo.Point))
                         .Where(x => !seenPaths.Contains(x.MatchingObject))
                         .Select(x =>
@@ -190,7 +205,8 @@ namespace Mirage.Urbanization.Vehicles
                                 currentZoneInfo: x.MatchingObject,
                                 preceedingShipPathNode: this,
                                 seenPaths: seenPaths,
-                                distance: Distance + 1
+                                distance: Distance + 1,
+                                maxDistance: _maxDistance
                                 )
                         )
                         );

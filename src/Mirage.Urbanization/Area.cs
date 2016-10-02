@@ -109,7 +109,7 @@ namespace Mirage.Urbanization
 
             TrainController = new TrainController(() => zoneInfos);
             AirplaneController = new AirplaneController(() => zoneInfos);
-            ShipController = new ShipController(() => zoneInfos);
+            ShipController = new ShipController(this, () => zoneInfos);
         }
 
         public IVehicleController<ITrain> TrainController { get; }

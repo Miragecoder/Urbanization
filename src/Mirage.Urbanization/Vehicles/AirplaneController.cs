@@ -26,7 +26,7 @@ namespace Mirage.Urbanization.Vehicles
         {
             int desiredAmountOfPlanes = structures.Count() * 2;
 
-            while (Vehicles.Count < desiredAmountOfPlanes)
+            while (Vehicles.Count() < desiredAmountOfPlanes)
             {
                 var spawnPoint = structures.OrderBy(x => Random.Next()).First();
                 var centralCell = spawnPoint.ZoneClusterMembers.Single(y => y.IsCentralClusterMember);
@@ -36,7 +36,7 @@ namespace Mirage.Urbanization.Vehicles
                     var steerDirection = Directions.OrderBy(d => Random.Next()).First();
                     var alternateDirection = zoneInfo.GetSteerDirections(steerDirection).OrderBy(x => Random.Next()).First();
 
-                    Vehicles.Add(new Airplane(GetZoneInfosFunc, zoneInfo, steerDirection, alternateDirection, Random.Next(5, 10)));
+                    AddVehicle(new Airplane(GetZoneInfosFunc, zoneInfo, steerDirection, alternateDirection, Random.Next(5, 10)));
                 });
             }
         }
