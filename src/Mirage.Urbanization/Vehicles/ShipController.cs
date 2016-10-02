@@ -89,11 +89,11 @@ namespace Mirage.Urbanization.Vehicles
                         .Where(x => x.Distance < maxDistance)
                         .GroupBy(x => CalculateDistance(CurrentPosition.Point, x.CurrentZoneInfo.Point))
                         .OrderByDescending(x => x.Key)
-                        .First()
-                        .OrderBy(x => x.Distance)
                         .FirstOrDefault()
+                        ?.OrderBy(x => x.Distance)
+                        ?.FirstOrDefault()
                         ?.EnumeratePathBackwards()
-                        ?.GetEnumerator() ?? Enumerable.Empty<ShipPathNode>().GetEnumerator();
+                        ?.GetEnumerator() ?? new List<ShipPathNode>() { pathNode }.GetEnumerator();
 
                     enumerator.MoveNext();
 
