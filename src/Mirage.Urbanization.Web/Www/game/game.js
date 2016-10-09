@@ -1,4 +1,15 @@
 ﻿"use strict";
+if (!confirm("You are about to load 'Urbanization' into your browser.\r\n\r\n" +
+    "The game is still in development so you may encounter performance issues when " +
+    "running on Google Chrome or Opera, or any other WebKit-based browser. Should issues " +
+    "arise, try re-opening it in Mozilla Firefox, Microsoft Edge or Internet Explorer. " +
+    "A desktop application is also available. \r\n\r\n" + 
+    "For more information, see:\r\nhttp://www.github.com/Miragecoder/Urbanization/ \r\n\r\n" + 
+    "Would you like to proceed loading the game?")) {
+    throw { message:"User aborted web client initialization.", name:"UserAborted"};
+}
+
+
 $(function () {
 
     var raiseHotMessage = null;
