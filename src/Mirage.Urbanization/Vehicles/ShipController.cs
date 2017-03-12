@@ -113,7 +113,7 @@ namespace Mirage.Urbanization.Vehicles
                 IfMustBeMoved(() =>
                 {
                     var current = _pathEnumeratorTask.Result.Current;
-                    Move(current != null ? current.CurrentZoneInfo : null);
+                    Move(current?.CurrentZoneInfo);
 
                     if (!_pathEnumeratorTask.Result.MoveNext())
                         Move(null);
@@ -179,10 +179,8 @@ namespace Mirage.Urbanization.Vehicles
                     )
                 {
                     _maxDistance = maxDistance;
-                    if (rootZoneInfo == null) throw new ArgumentNullException(nameof(rootZoneInfo));
-                    _rootZoneInfo = rootZoneInfo;
-                    if (currentZoneInfo == null) throw new ArgumentNullException(nameof(currentZoneInfo));
-                    CurrentZoneInfo = currentZoneInfo;
+                    _rootZoneInfo = rootZoneInfo ?? throw new ArgumentNullException(nameof(rootZoneInfo));
+                    CurrentZoneInfo = currentZoneInfo ?? throw new ArgumentNullException(nameof(currentZoneInfo));
 
                     if (!seenPaths.Add(currentZoneInfo))
                         throw new ArgumentException("'currentZoneInfo' was already added to this path.", nameof(currentZoneInfo));

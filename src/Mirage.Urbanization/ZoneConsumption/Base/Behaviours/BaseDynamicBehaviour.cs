@@ -8,8 +8,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base.Behaviours
 
         protected BaseDynamicBehaviour(Func<int> getAmountInUnits)
         {
-            if (getAmountInUnits == null) throw new ArgumentNullException(nameof(getAmountInUnits));
-            _getAmountInUnits = getAmountInUnits;
+            _getAmountInUnits = getAmountInUnits ?? throw new ArgumentNullException(nameof(getAmountInUnits));
         }
 
         public int GetAmountInUnits(RelativeZoneInfoQuery relativeZoneInfoQuery)

@@ -46,9 +46,7 @@ namespace Mirage.Urbanization.Simulation
 
         private void RaiseOnWeekElapsed()
         {
-            var onWeekElapsed = OnWeekElapsed;
-            if (onWeekElapsed != null)
-                onWeekElapsed(this, new YearAndMonthWeekElapsedEventArgs(this));
+            OnWeekElapsed?.Invoke(this, new YearAndMonthWeekElapsedEventArgs(this));
         }
 
         public event EventHandler<YearAndMonthWeekElapsedEventArgs> OnWeekElapsed;

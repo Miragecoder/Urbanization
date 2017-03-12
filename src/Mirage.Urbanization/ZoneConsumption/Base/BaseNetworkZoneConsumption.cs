@@ -32,9 +32,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
 
         protected BaseNetworkZoneConsumption(ZoneInfoFinder neighborNavigator)
         {
-            if (neighborNavigator == null) throw new ArgumentNullException(nameof(neighborNavigator));
-
-            NeighborNavigator = neighborNavigator;
+            NeighborNavigator = neighborNavigator ?? throw new ArgumentNullException(nameof(neighborNavigator));
         }
 
         public bool GetIsOrientedNorth() { return GetIsOriented(x => x.GetNorth()); }

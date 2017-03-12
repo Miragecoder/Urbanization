@@ -111,7 +111,6 @@
     <Compile Include="Statistics\GrowthZoneNetworkStatistics.cs" />
     <Compile Include="Statistics\GrowthZoneStatistics.cs" />
     <Compile Include="Statistics\IGrowthZoneNetworkStatistics.cs" />
-    <Compile Include="Statistics\IGrowthZoneStatistics.cs" />
     <Compile Include="Statistics\INetworkStatistics.cs" />
     <Compile Include="Statistics\IPowerGridNetworkStatistics.cs" />
     <Compile Include="Statistics\IPowerGridStatistics.cs" />

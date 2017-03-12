@@ -12,8 +12,7 @@ namespace Mirage.Urbanization.Tilesets
 
         public DirectionalCellBitmap(AnimatedCellBitmapSetLayers cellBitmapSet)
         {
-            if (cellBitmapSet == null) throw new ArgumentNullException(nameof(cellBitmapSet));
-            Up = cellBitmapSet;
+            Up = cellBitmapSet ?? throw new ArgumentNullException(nameof(cellBitmapSet));
             Right = Up.Generate90DegreesRotatedClone();
             Down = Right.Generate90DegreesRotatedClone();
             Left = Down.Generate90DegreesRotatedClone();

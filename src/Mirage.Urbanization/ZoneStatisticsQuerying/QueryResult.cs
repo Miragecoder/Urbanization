@@ -43,8 +43,7 @@ namespace Mirage.Urbanization.ZoneStatisticsQuerying
         public QueryResult(TQuery queryObject, TMatchingObject matchingObject = null)
             : base(matchingObject)
         {
-            if (queryObject == null) throw new ArgumentNullException(nameof(queryObject));
-            QueryObject = queryObject;
+            QueryObject = queryObject ?? throw new ArgumentNullException(nameof(queryObject));
         }
     }
 }

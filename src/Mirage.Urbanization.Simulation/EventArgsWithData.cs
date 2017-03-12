@@ -9,8 +9,7 @@ namespace Mirage.Urbanization.Simulation
 
         public EventArgsWithData(TEventData data)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
-            EventData = data;
+            EventData = data ?? throw new ArgumentNullException(nameof(data));
         }
     }
 }

@@ -8,8 +8,7 @@ namespace Mirage.Urbanization
 
         public AreaConsumptionResultEventArgs(IAreaConsumptionResult areaConsumptionResult)
         {
-            if (areaConsumptionResult == null) throw new ArgumentNullException(nameof(areaConsumptionResult));
-            AreaConsumptionResult = areaConsumptionResult;
+            AreaConsumptionResult = areaConsumptionResult ?? throw new ArgumentNullException(nameof(areaConsumptionResult));
         }
     }
 }

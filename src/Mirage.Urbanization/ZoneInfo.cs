@@ -29,13 +29,9 @@ namespace Mirage.Urbanization
             ILandValueCalculator landValueCalculator
             )
         {
-            if (zonePoint == null) throw new ArgumentNullException(nameof(zonePoint));
-            if (getRelativeZoneInfo == null) throw new ArgumentNullException(nameof(getRelativeZoneInfo));
-            if (landValueCalculator == null) throw new ArgumentNullException(nameof(landValueCalculator));
-            
             Point = zonePoint;
-            _getRelativeZoneInfo = getRelativeZoneInfo;
-            _landValueCalculator = landValueCalculator;
+            _getRelativeZoneInfo = getRelativeZoneInfo ?? throw new ArgumentNullException(nameof(getRelativeZoneInfo));
+            _landValueCalculator = landValueCalculator ?? throw new ArgumentNullException(nameof(landValueCalculator));
         }
 
         public QueryResult<IZoneInfo, RelativeZoneInfoQuery> GetRelativeZoneInfo(RelativeZoneInfoQuery relativeZoneInfoQuery)
@@ -265,8 +261,7 @@ namespace Mirage.Urbanization
 
         public void WithZoneConsumptionIf<T>(Action<T> action) where T : BaseZoneConsumption
         {
-            var consumption = this.ConsumptionState.GetZoneConsumption() as T;
-            if (consumption != null)
+            if (this.ConsumptionState.GetZoneConsumption() is T consumption)
                 action(consumption);
         }
 
@@ -315,8 +310,7 @@ namespace Mirage.Urbanization
         {
             WithZoneConsumptionIf<ZoneClusterMemberConsumption>(x =>
             {
-                var parent = x.ParentBaseZoneClusterConsumption as T;
-                if (parent != null)
+                if (x.ParentBaseZoneClusterConsumption is T parent)
                     action(parent);
             });
         }

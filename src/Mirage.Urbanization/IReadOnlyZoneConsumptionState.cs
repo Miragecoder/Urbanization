@@ -19,11 +19,8 @@ namespace Mirage.Urbanization
     {
         public ZoneClusterMemberAndParent(ZoneClusterMemberConsumption zoneClusterMemberConsumption, T baseZoneClusterConsumption)
         {
-            if (zoneClusterMemberConsumption == null) throw new ArgumentNullException(nameof(zoneClusterMemberConsumption));
-            if (baseZoneClusterConsumption == null) throw new ArgumentNullException(nameof(baseZoneClusterConsumption));
-
-            ZoneClusterMemberConsumption = zoneClusterMemberConsumption;
-            BaseZoneClusterConsumption = baseZoneClusterConsumption;
+            ZoneClusterMemberConsumption = zoneClusterMemberConsumption ?? throw new ArgumentNullException(nameof(zoneClusterMemberConsumption));
+            BaseZoneClusterConsumption = baseZoneClusterConsumption ?? throw new ArgumentNullException(nameof(baseZoneClusterConsumption));
         }
 
         public ZoneClusterMemberConsumption ZoneClusterMemberConsumption { get; }

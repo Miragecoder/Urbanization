@@ -14,9 +14,8 @@ namespace Mirage.Urbanization.Simulation
         private Task _task;
         public NeverEndingTask(string description, Func<Task> taskAction, CancellationToken token, int pause = 2000)
         {
-            if (taskAction == null) throw new ArgumentNullException(nameof(taskAction));
             _description = description;
-            _taskAction = taskAction;
+            _taskAction = taskAction ?? throw new ArgumentNullException(nameof(taskAction));
             _token = token;
             _pause = pause;
         }

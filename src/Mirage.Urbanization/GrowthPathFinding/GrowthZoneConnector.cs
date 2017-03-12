@@ -206,9 +206,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
             foreach (var zone in _roadZonesAndTraffic)
             {
                 zone.Key.SetTrafficDensity(
-                    zone.Value.NewDensity.HasValue
-                    ? zone.Value.NewDensity.Value
-                    : zone.Value.HalfOfOldDensity
+                    zone.Value.NewDensity ?? zone.Value.HalfOfOldDensity
                 );
             }
             return new RoadInfrastructureStatistics(_roadZonesAndTraffic.Keys);

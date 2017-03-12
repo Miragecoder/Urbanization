@@ -23,8 +23,7 @@ namespace Mirage.Urbanization
             Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
             : this(getLandValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
-            if (terraformingOptions == null) throw new ArgumentNullException(nameof(terraformingOptions));
-            _terraformingOptions = terraformingOptions;
+            _terraformingOptions = terraformingOptions ?? throw new ArgumentNullException(nameof(terraformingOptions));
         }
 
         private AreaOptions(
@@ -32,12 +31,9 @@ namespace Mirage.Urbanization
             ProcessOptions processOptions,
             Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
         {
-            if (getLandValueCalculator == null) throw new ArgumentNullException(nameof(getLandValueCalculator));
-            if (processOptions == null) throw new ArgumentNullException(nameof(processOptions));
-            if (getCityServiceStrengthLevels == null) throw new ArgumentNullException(nameof(getCityServiceStrengthLevels));
-            ProcessOptions = processOptions;
-            _getLandValueCalculator = getLandValueCalculator;
-            _getCityServiceStrengthLevels = getCityServiceStrengthLevels;
+            ProcessOptions = processOptions ?? throw new ArgumentNullException(nameof(processOptions));
+            _getLandValueCalculator = getLandValueCalculator ?? throw new ArgumentNullException(nameof(getLandValueCalculator));
+            _getCityServiceStrengthLevels = getCityServiceStrengthLevels ?? throw new ArgumentNullException(nameof(getCityServiceStrengthLevels));
         }
 
         public AreaOptions(Func<ILandValueCalculator> getLandValueCalculator, 
@@ -46,8 +42,7 @@ namespace Mirage.Urbanization
             Func<ICityServiceStrengthLevels> getCityServiceStrengthLevels)
             : this(getLandValueCalculator, processOptions, getCityServiceStrengthLevels)
         {
-            if (persistedArea == null) throw new ArgumentNullException(nameof(persistedArea));
-            _persistedArea = persistedArea;
+            _persistedArea = persistedArea ?? throw new ArgumentNullException(nameof(persistedArea));
         }
 
         public void WithTerraformingOptions(Action<TerraformingOptions> action)

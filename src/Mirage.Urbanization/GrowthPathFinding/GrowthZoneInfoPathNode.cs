@@ -21,11 +21,7 @@ namespace Mirage.Urbanization.GrowthPathFinding
 
                 while (!evaluatingNonIntersection)
                 {
-                    var intersection =
-                        matchingPath.ZoneInfo.ConsumptionState.GetZoneConsumption() as
-                            IntersectingZoneConsumption;
-
-                    if (intersection != null)
+                    if (matchingPath.ZoneInfo.ConsumptionState.GetZoneConsumption() is IntersectingZoneConsumption)
                     {
                         matchingPath = matchingPath.PreviousPathNode;
                     }

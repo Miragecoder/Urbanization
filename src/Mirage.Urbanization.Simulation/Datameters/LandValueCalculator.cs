@@ -95,12 +95,9 @@ namespace Mirage.Urbanization.Simulation.Datameters
         {
             var consumption = zoneInfo.ZoneConsumptionState.GetZoneConsumption();
 
-            if (consumption is ZoneClusterMemberConsumption)
+            if (consumption is ZoneClusterMemberConsumption clusterMemberConsumption)
             {
-                var clusterMemberConsumption = consumption as ZoneClusterMemberConsumption;
-
-                var parentAsGrowthZone = clusterMemberConsumption.ParentBaseZoneClusterConsumption as BaseGrowthZoneClusterConsumption;
-                if (parentAsGrowthZone != null)
+                if (clusterMemberConsumption.ParentBaseZoneClusterConsumption is BaseGrowthZoneClusterConsumption)
                 {
                     return clusterMemberConsumption.SingleCellCost;
                 }

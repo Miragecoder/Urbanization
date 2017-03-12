@@ -87,12 +87,10 @@ namespace Mirage.Urbanization.Web
 
         public GameServer(ISimulationSession simulationSession, string url, bool controlVehicles)
         {
-            if (simulationSession == null)
-                throw new ArgumentNullException(nameof(simulationSession));
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("", nameof(url));
 
-            _simulationSession = simulationSession;
+            _simulationSession = simulationSession ?? throw new ArgumentNullException(nameof(simulationSession));
             _url = url;
             _controlVehicles = controlVehicles;
 

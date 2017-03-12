@@ -37,14 +37,17 @@ namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
             var Factory2D = new SharpDX.Direct2D1.Factory();
             var FactoryDWrite = new SharpDX.DirectWrite.Factory();
 
-            var properties = new HwndRenderTargetProperties();
-            properties.Hwnd = targetPanel.Handle;
-            properties.PixelSize = new SharpDX.Size2(targetPanel.Width, targetPanel.Height);
-            properties.PresentOptions = PresentOptions.None;
+            var properties = new HwndRenderTargetProperties
+            {
+                Hwnd = targetPanel.Handle,
+                PixelSize = new SharpDX.Size2(targetPanel.Width, targetPanel.Height),
+                PresentOptions = PresentOptions.None
+            };
 
-            _renderTarget = new WindowRenderTarget(Factory2D, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)), properties);
-
-            _renderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
+            _renderTarget = new WindowRenderTarget(Factory2D, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)), properties)
+            {
+                AntialiasMode = AntialiasMode.PerPrimitive
+            };
 
             _wrapper = new DxGraphicsWrapper(_renderTarget, FactoryDWrite, new ImagingFactory());
         }
@@ -157,9 +160,7 @@ namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
 
             public SharpDX.Direct2D1.Bitmap LoadFromFile(RenderTarget renderTarget, System.Drawing.Bitmap bitmap)
             {
-                SharpDX.Direct2D1.Bitmap match;
-
-                if (_cache.TryGetValue(bitmap, out match))
+                if (_cache.TryGetValue(bitmap, out SharpDX.Direct2D1.Bitmap match))
                 {
                     return match;
                 }

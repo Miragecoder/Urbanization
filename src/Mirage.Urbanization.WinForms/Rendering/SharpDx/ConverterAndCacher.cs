@@ -16,8 +16,7 @@ namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
 
         public TOut Convert(TIn input)
         {
-            TOut result;
-            if (_cache.TryGetValue(input, out result)) return result;
+            if (_cache.TryGetValue(input, out TOut result)) return result;
             result = _converter(input);
             _cache.TryAdd(input, _converter(input));
             return result;

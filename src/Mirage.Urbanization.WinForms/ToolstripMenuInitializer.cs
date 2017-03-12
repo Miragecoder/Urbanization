@@ -6,7 +6,7 @@ using System.Windows.Forms;
 namespace Mirage.Urbanization.WinForms
 {
     public abstract class ToolstripMenuInitializer<TOption>
-        where TOption : IToolstripMenuOption
+        where TOption : class, IToolstripMenuOption
     {
         protected ToolstripMenuInitializer(ToolStripMenuItem targetToopToolStripMenuItem, IEnumerable<TOption> options)
         {

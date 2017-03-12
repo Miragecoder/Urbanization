@@ -11,10 +11,8 @@ namespace Mirage.Urbanization
             Func<bool> getStepByStepGrowthCyclingToggledFunc,
             Func<bool> getIsMoneyCheatEnabledFunc)
         {
-            if (getStepByStepGrowthCyclingToggledFunc == null) throw new ArgumentNullException(nameof(getStepByStepGrowthCyclingToggledFunc));
-            if (getIsMoneyCheatEnabledFunc == null) throw new ArgumentNullException(nameof(getIsMoneyCheatEnabledFunc));
-            _getStepByStepGrowthCyclingToggledFunc = getStepByStepGrowthCyclingToggledFunc;
-            _getIsMoneyCheatEnabledFunc = getIsMoneyCheatEnabledFunc;
+            _getStepByStepGrowthCyclingToggledFunc = getStepByStepGrowthCyclingToggledFunc ?? throw new ArgumentNullException(nameof(getStepByStepGrowthCyclingToggledFunc));
+            _getIsMoneyCheatEnabledFunc = getIsMoneyCheatEnabledFunc ?? throw new ArgumentNullException(nameof(getIsMoneyCheatEnabledFunc));
         }
 
         public bool GetStepByStepGrowthCyclingToggled()

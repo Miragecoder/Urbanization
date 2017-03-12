@@ -34,8 +34,7 @@ namespace Mirage.Urbanization
                                       Y = (localY + query.RelativeY)
                                   };
 
-                                  ZoneInfo matchingZoneInfo;
-                                  if (ZoneInfos.TryGetValue(point, out matchingZoneInfo))
+                                  if (ZoneInfos.TryGetValue(point, out ZoneInfo matchingZoneInfo))
                                   {
                                       return new QueryResult<IZoneInfo, RelativeZoneInfoQuery>(query, matchingZoneInfo);
                                   }

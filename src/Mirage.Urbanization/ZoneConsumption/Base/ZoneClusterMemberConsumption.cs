@@ -47,8 +47,9 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public T GetParentAs<T>() where T : BaseZoneClusterConsumption
         {
             var x = ParentBaseZoneClusterConsumption as T;
-            if (x == null) throw new InvalidOperationException(String.Format("ParentBaseZoneClusterConsumption was not of type: \"{0}\", but was: \"{1}\".",
-                typeof(T), ParentBaseZoneClusterConsumption != null ? ParentBaseZoneClusterConsumption.GetType() : null));
+            if (x == null) throw new InvalidOperationException(
+                $"ParentBaseZoneClusterConsumption was not of type: \"{typeof(T)}\", but was: \"{ParentBaseZoneClusterConsumption?.GetType()}\"."
+            );
             return x;
         }
 
@@ -85,11 +86,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
             int positionInClusterY
         )
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (parentBaseZoneClusterConsumption == null) throw new ArgumentNullException(nameof(parentBaseZoneClusterConsumption));
-
-            ParentBaseZoneClusterConsumption = parentBaseZoneClusterConsumption;
-            Name = name;
+            ParentBaseZoneClusterConsumption = parentBaseZoneClusterConsumption ?? throw new ArgumentNullException(nameof(parentBaseZoneClusterConsumption));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
             RelativeToParentCenterX = relativeToParentCenterX;
             RelativeToParentCenterY = relativeToParentCenterY;
             Color = color;
