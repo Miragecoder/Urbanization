@@ -66,8 +66,6 @@
     <Compile Include="GrowthZoneDemandThreshold.cs" />
     <Compile Include="GrowthPathFinding\HighlightState.cs" />
     <Compile Include="Vehicles\IAirplane.cs" />
-    <Compile Include="IAreaConsumptionResult.cs" />
-    <Compile Include="IAreaMessage.cs" />
     <Compile Include="GrowthPathFinding\IGrowthAlgorithmHighlightState.cs" />
     <Compile Include="IGrowthZoneDemandThreshold.cs" />
     <Compile Include="ILandValueCalculator.cs" />
@@ -151,7 +149,6 @@
     <Compile Include="ZoneConsumption\Base\ConsumeAreaOperation.cs" />
     <Compile Include="ZoneConsumption\EmptyZoneConsumption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ZoneConsumption\Base\IAreaConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\IAreaZoneClusterConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\IAreaZoneConsumption.cs" />
     <Compile Include="ZoneConsumption\Base\IConsumeAreaOperation.cs" />

@@ -62,6 +62,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mirage.Urbanization.Core\Mirage.Urbanization.Core.fsproj">
+      <Project>{506cacfe-82e8-4d01-a331-d27c4523f81b}</Project>
+      <Name>Mirage.Urbanization.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
       <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
       <Name>Mirage.Urbanization</Name>

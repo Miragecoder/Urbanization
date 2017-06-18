@@ -97,6 +97,10 @@
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d0_q0_n1_a1.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mirage.Urbanization.Core\Mirage.Urbanization.Core.fsproj">
+      <Project>{506cacfe-82e8-4d01-a331-d27c4523f81b}</Project>
+      <Name>Mirage.Urbanization.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
       <Project>{5a699402-01ae-484e-a489-fd500e868a0c}</Project>
       <Name>Mirage.Urbanization.Simulation</Name>

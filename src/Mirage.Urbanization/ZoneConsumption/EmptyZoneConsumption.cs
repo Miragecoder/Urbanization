@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.ZoneConsumption
