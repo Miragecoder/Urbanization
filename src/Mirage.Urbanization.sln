@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirage.Urbanization", "Mirage.Urbanization\Mirage.Urbanization.csproj", "{06DC9742-27AE-4711-801A-11B2A43CAB8C}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirage.Urbanization.Web", "Mirage.Urbanization.Web\Mirage.Urbanization.Web.csproj", "{E80D47E8-22C1-4CE4-AC67-7F3AB2FCBFE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirage.Urbanization.Charts", "Mirage.Urbanization.Charts\Mirage.Urbanization.Charts.csproj", "{BB0C4FF4-50B5-4D4B-887C-20F9E0775D1A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mirage.Urbanization.Core", "Mirage.Urbanization.Core\Mirage.Urbanization.Core.fsproj", "{506CACFE-82E8-4D01-A331-D27C4523F81B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{BB0C4FF4-50B5-4D4B-887C-20F9E0775D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB0C4FF4-50B5-4D4B-887C-20F9E0775D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB0C4FF4-50B5-4D4B-887C-20F9E0775D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{506CACFE-82E8-4D01-A331-D27C4523F81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{506CACFE-82E8-4D01-A331-D27C4523F81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{506CACFE-82E8-4D01-A331-D27C4523F81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{506CACFE-82E8-4D01-A331-D27C4523F81B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

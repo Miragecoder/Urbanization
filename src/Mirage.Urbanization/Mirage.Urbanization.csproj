@@ -47,7 +47,6 @@
     <Compile Include="LoopBatchEnumerator.cs" />
     <Compile Include="ICityServiceStrengthLevels.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
-    <Compile Include="LogEventArgs.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="PipeOperator.cs" />
     <Compile Include="RuntimeInspection.cs" />
@@ -190,6 +189,12 @@
     <None Include="ZoneConsumptions.cd" />
     <None Include="ZoneConsumption\ZoneClusterConsumptions.cd" />
     <None Include="ZoneConsumption\ZoneConsumptions.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mirage.Urbanization.Core\Mirage.Urbanization.Core.fsproj">
+      <Project>{506cacfe-82e8-4d01-a331-d27c4523f81b}</Project>
+      <Name>Mirage.Urbanization.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
