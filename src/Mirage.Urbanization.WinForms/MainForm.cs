@@ -107,6 +107,9 @@ namespace Mirage.Urbanization.WinForms
             _graphicsManagerSelection.OnSelectionChanged += (sender, e) => WithAreaRenderHelper(helper => helper.ChangeRenderer(e.ToolstripMenuOption.Factory));
 
             _overlaySelection = new OverlaySelection(overlayMenuItem, () => toggleOverlayNumbers.Checked);
+
+            Size = new Size(Screen.PrimaryScreen.WorkingArea.Width * 75 / 100, Screen.PrimaryScreen.WorkingArea.Height * 75 / 100);
+            CenterToScreen();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
