@@ -12,6 +12,7 @@ namespace Mirage.Urbanization.WinForms
     public class ZoneSelectionPanelCreator
     {
         private readonly Panel _targetPanel;
+        private readonly ToolTip _tooltip;
 
         private readonly IDictionary<Button, Func<IAreaConsumption>> _buttonsAndFactories;
         private Func<IAreaConsumption> _currentFactory;
@@ -33,6 +34,7 @@ namespace Mirage.Urbanization.WinForms
             if (area == null) throw new ArgumentNullException(nameof(area));
 
             _targetPanel = targetPanel ?? throw new ArgumentNullException(nameof(targetPanel));
+            _tooltip = new ToolTip();
 
             EventHandler currentClickHandler = null;
 
@@ -68,6 +70,7 @@ namespace Mirage.Urbanization.WinForms
 
                     button.Click += currentClickHandler;
 
+                    _tooltip.SetToolTip(button, $"{sample.Name} ({sample.KeyChar.ToString().ToUpperInvariant()})");
 
                     return new KeyValuePair<Button, Func<IAreaConsumption>>(button, factory);
                 })
