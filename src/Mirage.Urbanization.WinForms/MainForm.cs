@@ -29,6 +29,8 @@ namespace Mirage.Urbanization.WinForms
 
         private readonly CitySaveStateController _citySaveStateController;
 
+        private bool inGame;
+
         private void WithAreaRenderHelper(Action<SimulationRenderHelper> action)
         {
             var helper = _areaRenderHelper;
@@ -110,11 +112,25 @@ namespace Mirage.Urbanization.WinForms
 
             Size = new Size(Screen.PrimaryScreen.WorkingArea.Width * 75 / 100, Screen.PrimaryScreen.WorkingArea.Height * 75 / 100);
             CenterToScreen();
+            inGame = false;
+        }
+
+        private DialogResult AskClosure()
+        {
+            return MessageBox.Show("If you exit you'll lose your unsaved progress.\nDo you want to continue?", "Exiting", MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            WithAreaRenderHelper(helper => helper.Stop());
+            if(!inGame) return;
+
+            DialogResult dr = AskClosure();
+
+            if(dr == DialogResult.Yes)
+                WithAreaRenderHelper(helper => helper.Stop());
+            else
+                e.Cancel = true;
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -129,7 +145,12 @@ namespace Mirage.Urbanization.WinForms
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Close();
+            if(!inGame) return;
+
+            DialogResult dr = AskClosure();
+
+            if(dr == DialogResult.Yes)
+                Close();
         }
 
         private void newCityToolStripMenuItem_Click(object sender, EventArgs e)
@@ -145,6 +166,7 @@ namespace Mirage.Urbanization.WinForms
 
                     RegisterAreaRenderHelper(terraformingOptions: newCityForm.GetTerraformingOptions());
                     ToggleFormText("New city");
+                    inGame = true;
                     break;
                 default:
 
@@ -263,6 +285,7 @@ namespace Mirage.Urbanization.WinForms
                 case DialogResult.OK:
                     RegisterAreaRenderHelper(persistedSimulation: _citySaveStateController.LoadFile(openCityDialog.FileName));
                     ToggleFormText(openCityDialog.FileName);
+                    inGame = true;
                     break;
             }
         }
