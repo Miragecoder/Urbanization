@@ -191,6 +191,30 @@
     <None Include="ZoneConsumption\ZoneClusterConsumptions.cd" />
     <None Include="ZoneConsumption\ZoneConsumptions.cd" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\airport.png" />
+    <EmbeddedResource Include="Tiles\clear.png" />
+    <EmbeddedResource Include="Tiles\coalpowerplant.png" />
+    <EmbeddedResource Include="Tiles\commercial.png" />
+    <EmbeddedResource Include="Tiles\firestation.png" />
+    <EmbeddedResource Include="Tiles\nuclearpowerplant.png" />
+    <EmbeddedResource Include="Tiles\park.png" />
+    <EmbeddedResource Include="Tiles\police.png" />
+    <EmbeddedResource Include="Tiles\powerline.png" />
+    <EmbeddedResource Include="Tiles\residential.png" />
+    <EmbeddedResource Include="Tiles\road.png" />
+    <EmbeddedResource Include="Tiles\seaport.png" />
+    <EmbeddedResource Include="Tiles\stadium.png" />
+    <EmbeddedResource Include="Tiles\trainstation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\factory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\railroad.png" />
+    <EmbeddedResource Include="Tiles\water.png" />
+    <EmbeddedResource Include="Tiles\woodland.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

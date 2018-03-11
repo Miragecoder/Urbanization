@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
@@ -19,6 +20,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         private static readonly DynamicPollutionBehaviour ParkPollutionBehaviour = new DynamicPollutionBehaviour(() => -40);
 
         public IPollutionBehaviour PollutionBehaviour => ParkPollutionBehaviour;
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.park.png"));
 
         public ParkZoneConsumption(ZoneInfoFinder neighborNavigator) : base(neighborNavigator)
         {

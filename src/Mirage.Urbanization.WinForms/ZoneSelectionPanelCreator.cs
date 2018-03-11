@@ -38,17 +38,18 @@ namespace Mirage.Urbanization.WinForms
 
             EventHandler currentClickHandler = null;
 
-            _buttonsAndFactories = area.GetSupportedZoneConsumptionFactories().Reverse()
+            _buttonsAndFactories = area.GetSupportedZoneConsumptionFactories()
                 .Select(factory =>
                 {
                     var sample = factory();
 
                     var button = new Button
                     {
-                        Text = string.Format("{0} ({1})", sample.Name, sample.KeyChar.ToString().ToUpperInvariant()),
                         Dock = DockStyle.Top,
                         BackColor = SystemColors.Control,
-                        Parent = _targetPanel
+                        Parent = _targetPanel,
+                        Image = sample.Tile,
+                        Size = new Size(68, 68)
                     };
 
                     if (_handleKeyCharActions.ContainsKey(sample.KeyChar))

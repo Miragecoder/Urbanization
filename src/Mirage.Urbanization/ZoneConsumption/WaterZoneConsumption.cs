@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
 
@@ -18,6 +19,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override char KeyChar => 'w';
 
         public override string Name => "Water";
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.water.png"));
 
         public override Color Color => System.Drawing.Color.DarkBlue;
 

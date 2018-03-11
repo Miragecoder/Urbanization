@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
@@ -8,6 +9,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     public abstract class BaseZoneClusterConsumption : IAreaZoneClusterConsumption
     {
         public abstract char KeyChar { get; }
+        public abstract Image Tile { get; }
 
         public abstract int Cost { get; }
         public virtual int FrameSkipDelay { get; } = 500;

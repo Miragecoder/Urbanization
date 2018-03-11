@@ -10,6 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract Color Color { get; }
         public abstract char KeyChar { get; }
         public string ColorName => ColorTranslator.ToHtml(Color);
+        public abstract Image Tile { get; }
 
         public abstract int Cost { get; }
         public abstract BuildStyle BuildStyle { get; }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Mirage.Urbanization.ZoneConsumption.Base;
@@ -26,6 +27,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override string Name => "Coal power plant";
         public override ICrimeBehaviour CrimeBehaviour { get; } = new DynamicCrimeBehaviour(() => 0);
         public override int Cost => 15000;
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.coalpowerplant.png"));
 
         public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
     }

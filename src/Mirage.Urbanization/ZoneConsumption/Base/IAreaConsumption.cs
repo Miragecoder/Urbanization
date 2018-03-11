@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base
 {
@@ -9,6 +10,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         char KeyChar { get; }
         int Cost { get; }
         BuildStyle BuildStyle { get; }
+        Image Tile { get; }
     }
 
     public enum BuildStyle
