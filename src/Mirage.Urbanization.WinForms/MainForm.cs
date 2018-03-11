@@ -335,5 +335,17 @@ namespace Mirage.Urbanization.WinForms
         {
             ChartDrawerFactory.ForceZedGraph = forceZedGraphToolStripMenuItem.Checked;
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            dlgStart _dlgStart = new dlgStart();
+            DialogResult drStart = _dlgStart.ShowDialog();
+            if (drStart == DialogResult.Yes)
+                newCityToolStripMenuItem_Click(sender, e);
+            else if (drStart == DialogResult.No)
+                openCityToolStripMenuItem_Click(sender, e);
+            else
+                Close();
+        }
     }
 }
