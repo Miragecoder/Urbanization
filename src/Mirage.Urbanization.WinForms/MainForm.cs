@@ -367,8 +367,6 @@ namespace Mirage.Urbanization.WinForms
                 newCityToolStripMenuItem_Click(sender, e);
             else if (drStart == DialogResult.No)
                 openCityToolStripMenuItem_Click(sender, e);
-            else
-                Close();
         }
     }
 }

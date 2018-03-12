@@ -31,7 +31,7 @@
             this.lblChoose = new System.Windows.Forms.Label();
             this.btnNew = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.btnExit = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblChoose
@@ -63,25 +63,25 @@
             this.btnOpen.Text = "Open saved city...";
             this.btnOpen.UseVisualStyleBackColor = true;
             // 
-            // btnExit
+            // btnCancel
             // 
-            this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnExit.Location = new System.Drawing.Point(65, 56);
-            this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(105, 25);
-            this.btnExit.TabIndex = 3;
-            this.btnExit.Text = "Exit...";
-            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(65, 56);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(105, 25);
+            this.btnCancel.TabIndex = 3;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // dlgStart
             // 
             this.AcceptButton = this.btnNew;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnExit;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(240, 91);
             this.ControlBox = false;
-            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.lblChoose);
@@ -104,6 +104,6 @@
         private System.Windows.Forms.Label lblChoose;
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
