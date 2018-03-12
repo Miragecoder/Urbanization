@@ -62,9 +62,6 @@ namespace Mirage.Urbanization.WinForms
 
                     currentClickHandler = (sender, e) =>
                     {
-                        foreach (var btn in _buttonsAndFactories.Keys.Where(btn => btn != button))
-                            btn.Enabled = true;
-                        button.Enabled = false;
                         _currentFactory = factory;
                         CurrentZoneConsumptionSample = _currentFactory();
                     };
