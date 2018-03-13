@@ -359,7 +359,7 @@ namespace Mirage.Urbanization.WinForms
             ChartDrawerFactory.ForceZedGraph = forceZedGraphToolStripMenuItem.Checked;
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
             dlgStart _dlgStart = new dlgStart();
             DialogResult drStart = _dlgStart.ShowDialog();
