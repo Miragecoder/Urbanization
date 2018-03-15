@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
 namespace Mirage.Urbanization.ZoneConsumption
@@ -17,5 +18,6 @@ namespace Mirage.Urbanization.ZoneConsumption
         protected override decimal PopulationFireHazardFactor => 0.5M;
 
         public override string Name => "Industrial zone";
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.factory.png"));
     }
 }

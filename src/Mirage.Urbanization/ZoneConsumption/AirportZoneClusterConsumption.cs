@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
@@ -23,7 +24,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override char KeyChar => 'a';
 
         public override string Name => "Airport";
-
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.airport.png"));
         public override ICrimeBehaviour CrimeBehaviour { get; }
         public override int Cost => 10000;
 

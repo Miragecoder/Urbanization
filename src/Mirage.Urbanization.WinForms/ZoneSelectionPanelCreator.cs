@@ -12,6 +12,7 @@ namespace Mirage.Urbanization.WinForms
     public class ZoneSelectionPanelCreator
     {
         private readonly Panel _targetPanel;
+        private readonly ToolTip _tooltip;
 
         private readonly IDictionary<Button, Func<IAreaConsumption>> _buttonsAndFactories;
         private Func<IAreaConsumption> _currentFactory;
@@ -33,20 +34,22 @@ namespace Mirage.Urbanization.WinForms
             if (area == null) throw new ArgumentNullException(nameof(area));
 
             _targetPanel = targetPanel ?? throw new ArgumentNullException(nameof(targetPanel));
+            _tooltip = new ToolTip();
 
             EventHandler currentClickHandler = null;
 
-            _buttonsAndFactories = area.GetSupportedZoneConsumptionFactories().Reverse()
+            _buttonsAndFactories = area.GetSupportedZoneConsumptionFactories()
                 .Select(factory =>
                 {
                     var sample = factory();
 
                     var button = new Button
                     {
-                        Text = string.Format("{0} ({1})", sample.Name, sample.KeyChar.ToString().ToUpperInvariant()),
                         Dock = DockStyle.Top,
                         BackColor = SystemColors.Control,
-                        Parent = _targetPanel
+                        Parent = _targetPanel,
+                        Image = sample.Tile,
+                        Size = new Size(68, 68)
                     };
 
                     if (_handleKeyCharActions.ContainsKey(sample.KeyChar))
@@ -59,15 +62,13 @@ namespace Mirage.Urbanization.WinForms
 
                     currentClickHandler = (sender, e) =>
                     {
-                        foreach (var btn in _buttonsAndFactories.Keys.Where(btn => btn != button))
-                            btn.Enabled = true;
-                        button.Enabled = false;
                         _currentFactory = factory;
                         CurrentZoneConsumptionSample = _currentFactory();
                     };
 
                     button.Click += currentClickHandler;
 
+                    _tooltip.SetToolTip(button, $"{sample.Name} ({sample.KeyChar.ToString().ToUpperInvariant()})");
 
                     return new KeyValuePair<Button, Func<IAreaConsumption>>(button, factory);
                 })

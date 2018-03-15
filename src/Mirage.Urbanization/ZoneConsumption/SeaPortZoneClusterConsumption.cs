@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
@@ -28,6 +29,7 @@ namespace Mirage.Urbanization.ZoneConsumption
 
         public override char KeyChar => 'y';
         public override ICrimeBehaviour CrimeBehaviour { get; } = new DynamicCrimeBehaviour(() => 20);
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.seaport.png"));
 
         public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
 

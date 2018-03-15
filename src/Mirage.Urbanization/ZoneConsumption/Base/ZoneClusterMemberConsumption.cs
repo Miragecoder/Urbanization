@@ -9,6 +9,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
     public class ZoneClusterMemberConsumption : BaseZoneConsumption, IAreaObjectWithSeed, IAreaObjectWithPopulationDensity
     {
         public override char KeyChar { get { throw new NotImplementedException(); } }
+        public override Image Tile { get { throw new NotImplementedException(); } }
 
         public override BuildStyle BuildStyle { get { throw new NotImplementedException(); } }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
@@ -44,6 +45,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override bool CanBeOverriddenByZoneClusters => false;
 
         public override Color Color => Color.Gray;
+        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.road.png"));
 
         public IPollutionBehaviour PollutionBehaviour { get; }
 

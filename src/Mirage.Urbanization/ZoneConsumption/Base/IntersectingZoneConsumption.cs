@@ -11,6 +11,8 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         private readonly ZoneInfoFinder _zoneInfoFinder;
 
         public char KeyChar { get { throw new NotImplementedException(); } }
+        public Image Tile { get { throw new NotImplementedException(); } }
+
 
         public BuildStyle BuildStyle { get { throw new NotImplementedException();} }
 

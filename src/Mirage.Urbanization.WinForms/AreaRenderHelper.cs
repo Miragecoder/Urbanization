@@ -17,7 +17,7 @@ namespace Mirage.Urbanization.WinForms
         private readonly ZoneSelectionPanelCreator _zoneSelectionPanelBehaviour;
 
         private readonly Panel _viewportPanel = new Panel();
-        private readonly Panel _zoneSelectionPanel = new Panel();
+        private readonly FlowLayoutPanel _zoneSelectionPanel = new FlowLayoutPanel();
         private readonly Panel _canvasPanel;
         private IGraphicsManagerWrapper _graphicsManager;
         private readonly IDictionary<IReadOnlyZoneInfo, ZoneRenderInfo> _zoneRenderInfos;
