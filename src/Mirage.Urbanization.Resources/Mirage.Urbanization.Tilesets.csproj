@@ -508,9 +508,6 @@
     <EmbeddedResource Include="Vehicles\train.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Vehicles\airplane.png" />
   </ItemGroup>
   <ItemGroup>
@@ -647,6 +644,17 @@
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n6_a1.png" />
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d2_q1_n7_a1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n4_a1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n4_a2.png" />
+    <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Industrial\d2_q1_n4_a3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_1.png" />
+    <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_2.png" />
+    <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_3.png" />
+    <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
