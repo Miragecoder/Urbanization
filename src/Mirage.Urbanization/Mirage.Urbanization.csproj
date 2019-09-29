@@ -1,192 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{06DC9742-27AE-4711-801A-11B2A43CAB8C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mirage.Urbanization</RootNamespace>
-    <AssemblyName>Mirage.Urbanization</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net451</TargetFramework>
+    <AssemblyTitle>Mirage.Urbanization</AssemblyTitle>
+    <Product>Mirage.Urbanization</Product>
+    <Copyright>Copyright ©  2014</Copyright>
+    <AssemblyTitle>Mirage.Urbanization</AssemblyTitle>
+    <Product>Mirage.Urbanization</Product>
+    <Copyright>Copyright ©  2014</Copyright>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoopBatchEnumerator.cs" />
-    <Compile Include="ICityServiceStrengthLevels.cs" />
-    <Compile Include="IEnumerableExtensions.cs" />
-    <Compile Include="LogEventArgs.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="PipeOperator.cs" />
-    <Compile Include="RuntimeInspection.cs" />
-    <Compile Include="Statistics\CityServiceStatistics.cs" />
-    <Compile Include="Statistics\ICityServicesStatistics.cs" />
-    <Compile Include="StringExtensions.cs" />
-    <Compile Include="Vehicles\AirplaneController.cs" />
-    <Compile Include="Area.cs" />
-    <Compile Include="AreaConsumptionResult.cs" />
-    <Compile Include="AreaConsumptionResultEventArgs.cs" />
-    <Compile Include="AreaOptions.cs" />
-    <Compile Include="Vehicles\BaseStructureVehicleController.cs" />
-    <Compile Include="Vehicles\BaseVehicle.cs" />
-    <Compile Include="Vehicles\BaseVehicleController.cs" />
-    <Compile Include="GetRelativeZoneInfoDelegate.cs" />
-    <Compile Include="GrowthPathFinding\GrowthAlgorithmHighlightState.cs" />
-    <Compile Include="GrowthZoneDemandThreshold.cs" />
-    <Compile Include="GrowthPathFinding\HighlightState.cs" />
-    <Compile Include="Vehicles\IAirplane.cs" />
-    <Compile Include="IAreaConsumptionResult.cs" />
-    <Compile Include="IAreaMessage.cs" />
-    <Compile Include="GrowthPathFinding\IGrowthAlgorithmHighlightState.cs" />
-    <Compile Include="IGrowthZoneDemandThreshold.cs" />
-    <Compile Include="ILandValueCalculator.cs" />
-    <Compile Include="Vehicles\IMoveableVehicle.cs" />
-    <Compile Include="ZoneConsumption\ISingleZoneConsumptionWithPollutionBehaviour.cs" />
-    <Compile Include="ZoneConsumption\ParkZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\StadiumZoneClusterConsumption.cs" />
-    <Compile Include="ZoneInfoEventArgs.cs" />
-    <Compile Include="ZoneStatisticsQuerying\IQueryCellValueResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\IQueryCrimeResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\IQueryFireHazardResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\IQueryLandValueResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\IQueryPollutionResult.cs" />
-    <Compile Include="Statistics\IRailroadInfrastructureStatistics.cs" />
-    <Compile Include="IReadOnlyZoneConsumptionState.cs" />
-    <Compile Include="IReadOnlyZoneInfo.cs" />
-    <Compile Include="Statistics\IRoadInfrastructureStatistics.cs" />
-    <Compile Include="Vehicles\IShip.cs" />
-    <Compile Include="Vehicles\ITrain.cs" />
-    <Compile Include="Vehicles\IVehicle.cs" />
-    <Compile Include="Vehicles\IVehicleController.cs" />
-    <Compile Include="IZoneConsumptionState.cs" />
-    <Compile Include="IZoneInfo.cs" />
-    <Compile Include="IZoneInfoPathNode.cs" />
-    <Compile Include="ZoneStatisticsQuerying\QueryCrimeResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\QueryFireHazardResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\QueryLandValueResult.cs" />
-    <Compile Include="ZoneStatisticsQuerying\QueryPollutionResult.cs" />
-    <Compile Include="Statistics\RailroadInfrastructureStatistics.cs" />
-    <Compile Include="RelativeZoneInfoQuery.cs" />
-    <Compile Include="Statistics\RoadInfrastructureStatistics.cs" />
-    <Compile Include="Vehicles\ShipController.cs" />
-    <Compile Include="SimpleCache.cs" />
-    <Compile Include="SimulationSessionHotMessageEventArgs.cs" />
-    <Compile Include="SimulationSessionMessageEventArgs.cs" />
-    <Compile Include="Statistics\BaseStatisticsCollection.cs" />
-    <Compile Include="Networks\BaseZoneNetworkInfo.cs" />
-    <Compile Include="GrowthPathFinding\GrowthZoneConnector.cs" />
-    <Compile Include="GrowthPathFinding\GrowthZoneInfoPathNode.cs" />
-    <Compile Include="Statistics\GrowthZoneNetworkStatistics.cs" />
-    <Compile Include="Statistics\GrowthZoneStatistics.cs" />
-    <Compile Include="Statistics\IGrowthZoneNetworkStatistics.cs" />
-    <Compile Include="Statistics\INetworkStatistics.cs" />
-    <Compile Include="Statistics\IPowerGridNetworkStatistics.cs" />
-    <Compile Include="Statistics\IPowerGridStatistics.cs" />
-    <Compile Include="IReadOnlyArea.cs" />
-    <Compile Include="Persistence\PersistedArea.cs" />
-    <Compile Include="Persistence\PersistedZoneConsumption.cs" />
-    <Compile Include="Statistics\MiscCityStatistics.cs" />
-    <Compile Include="Statistics\PowerGridNetworkStatistics.cs" />
-    <Compile Include="Statistics\PowerGridStatistics.cs" />
-    <Compile Include="Networks\PowerNetworkInfo.cs" />
-    <Compile Include="ZoneStatisticsQuerying\QueryResult.cs" />
-    <Compile Include="RandomTerraformer.cs" />
-    <Compile Include="ProcessOptions.cs" />
-    <Compile Include="TerraformingOptions.cs" />
-    <Compile Include="Vehicles\TrainController.cs" />
-    <Compile Include="ZoneConsumptionCompletedResult.cs" />
-    <Compile Include="ZoneConsumptionFailedResult.cs" />
-    <Compile Include="ZoneConsumptionState.cs" />
-    <Compile Include="ZoneConsumption\AirportZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\AreaZoneConsumptionOverrideInfoResult.cs" />
-    <Compile Include="ZoneConsumption\Base\BaseGrowthZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\BaseNetworkZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\BaseImplementedZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\BaseZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\BaseDynamicBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\DynamicCrimeBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\DynamicPollutionBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\ElectricityConsumerBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\ElectricitySupplierBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\IBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\IElectricityBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\IElectricityConsumer.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\IElectricitySupplier.cs" />
-    <Compile Include="ZoneConsumption\Base\Behaviours\IPollutionBehaviour.cs" />
-    <Compile Include="ZoneConsumption\Base\IAreaObjectWithSeed.cs" />
-    <Compile Include="ZoneConsumption\Base\StaticZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\CoalPowerPlantZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\CommercialZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\ConsumeAreaOperation.cs" />
-    <Compile Include="ZoneConsumption\EmptyZoneConsumption.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ZoneConsumption\Base\IAreaConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\IAreaZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\IAreaZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\IConsumeAreaOperation.cs" />
-    <Compile Include="ZoneConsumption\Base\IGetCanOverrideWithResult.cs" />
-    <Compile Include="ZoneConsumption\Base\IIntersectingZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\FireStationZoneclusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\IndustrialZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\IntersectingZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\NuclearPowerPlantZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\PoliceStationZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\PowerLineConsumption.cs" />
-    <Compile Include="ZoneConsumption\RailRoadZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\ResidentialZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\RoadZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\ZoneClusterMemberConsumption.cs" />
-    <Compile Include="ZoneConsumption\Base\ZoneNeighborNavigator.cs" />
-    <Compile Include="ZoneConsumption\RubbishZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\SeaPortZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\TrafficDensity.cs" />
-    <Compile Include="ZoneConsumption\TrainStationZoneClusterConsumption.cs" />
-    <Compile Include="ZoneConsumption\WaterZoneConsumption.cs" />
-    <Compile Include="ZoneConsumption\WoodlandZoneConsumption.cs" />
-    <Compile Include="ZoneInfo.cs" />
-    <Compile Include="ZoneInfoDistanceTracker.cs" />
-    <Compile Include="ZoneInfoPathNode.cs" />
-    <Compile Include="ZoneInfoGrid.cs" />
-    <Compile Include="ZonePointExtensions.cs" />
-    <Compile Include="ZoneStatisticsQuerying\QueryCellValueResult.cs" />
-    <Compile Include="ZoneConsumption\Base\BaseZoneConsumption.cs" />
-    <Compile Include="ZoneConsumptionResult.cs" />
-    <Compile Include="ZonePoint.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
     <None Include="ZoneConsumptions.cd" />
     <None Include="ZoneConsumption\ZoneClusterConsumptions.cd" />
     <None Include="ZoneConsumption\ZoneConsumptions.cd" />
@@ -215,12 +53,4 @@
     <EmbeddedResource Include="Tiles\water.png" />
     <EmbeddedResource Include="Tiles\woodland.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

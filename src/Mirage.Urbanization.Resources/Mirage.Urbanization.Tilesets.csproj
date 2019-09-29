@@ -1,92 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{73BBFBFD-14A4-40EA-87B5-E1BF9BAF42F7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mirage.Urbanization.Tilesets</RootNamespace>
-    <AssemblyName>Mirage.Urbanization.Tilesets</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net451</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AssemblyTitle>Mirage.Urbanization.Resources</AssemblyTitle>
+    <Product>Mirage.Urbanization.Resources</Product>
+    <Copyright>Copyright ©  2014</Copyright>
+    <AssemblyTitle>Mirage.Urbanization.Resources</AssemblyTitle>
+    <Product>Mirage.Urbanization.Resources</Product>
+    <Copyright>Copyright ©  2014</Copyright>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AnimatedCellBitmapSet.cs" />
-    <Compile Include="AnimatedCellBitmapSetLayers.cs" />
-    <Compile Include="BaseBitmap.cs" />
-    <Compile Include="BaseGrowthZoneTileAccessor.cs" />
-    <Compile Include="BaseNetworkZoneTileAccessor.cs" />
-    <Compile Include="BitmapExtensions.cs" />
-    <Compile Include="BrushManager.cs" />
-    <Compile Include="CellBitmap.cs" />
-    <Compile Include="CellBitmapCluster.cs" />
-    <Compile Include="CellBitmapNetwork.cs" />
-    <Compile Include="CommercialGrowthZoneTileAccessor.cs" />
-    <Compile Include="DirectionalCellBitmap.cs" />
-    <Compile Include="FramerateDelays.cs" />
-    <Compile Include="GrowthZoneHouseTileInfo.cs" />
-    <Compile Include="GrowthZoneTileAccessor.cs" />
-    <Compile Include="GrowthZoneTileCellInfo.cs" />
-    <Compile Include="GrowthZoneClusterTileInfo.cs" />
-    <Compile Include="IBaseGrowthZoneTileAccessor.cs" />
-    <Compile Include="IBaseNetworkZoneTileAccessor.cs" />
-    <Compile Include="IndustrialGrowthZoneTileAccessor.cs" />
-    <Compile Include="IntersectingZoneTileAccessor.cs" />
-    <Compile Include="ITilesetAccessor.cs" />
-    <Compile Include="NetworkZoneTileAccessor.cs" />
-    <Compile Include="ParkZoneTileAccessor.cs" />
-    <Compile Include="PowerZoneTileAccessor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RailZoneTileAccessor.cs" />
-    <Compile Include="ResidentialGrowthZoneTileAccessor.cs" />
-    <Compile Include="RoadHighZoneTileAccessor.cs" />
-    <Compile Include="RoadIntersections.cs" />
-    <Compile Include="RoadLowZoneTileAccessor.cs" />
-    <Compile Include="RoadNoneZoneTileAccessor.cs" />
-    <Compile Include="SynchronizedAnimationFramePicker.cs" />
-    <Compile Include="VehicleBitmap.cs" />
-    <Compile Include="Vehicles\VehicleBitmaps.cs" />
-    <Compile Include="WaterZoneTileAccessor.cs" />
-    <Compile Include="WoodZoneTileAccessor.cs" />
-    <Compile Include="TilesetAccessor.cs" />
-    <Compile Include="EmbeddedBitmapExtractor.cs" />
-    <Compile Include="StaticZonesTileAccessor.cs" />
-    <Compile Include="VehicleBitmapAndPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\CoalPowerPlantZoneClusterConsumption_1.png" />
@@ -97,14 +34,8 @@
     <EmbeddedResource Include="Tiles\Clusters\GrowthZones\Residential\d0_q0_n1_a1.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj">
-      <Project>{5a699402-01ae-484e-a489-fd500e868a0c}</Project>
-      <Name>Mirage.Urbanization.Simulation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj">
-      <Project>{06dc9742-27ae-4711-801a-11b2a43cab8c}</Project>
-      <Name>Mirage.Urbanization</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj" />
+    <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NetworkZones\RoadNone\roadnoneew.png" />
@@ -656,12 +587,4 @@
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_3.png" />
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_4.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
