@@ -14,7 +14,6 @@ using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.WIC;
-using SharpDX.Windows;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Bitmap = SharpDX.WIC.Bitmap;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
@@ -22,7 +21,6 @@ using Factory = SharpDX.Direct2D1.Factory;
 using Font = System.Drawing.Font;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using Rectangle = System.Drawing.Rectangle;
-using RectangleF = SharpDX.RectangleF;
 
 namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
 {
@@ -88,11 +86,11 @@ namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
                 _imagingFactory = imagingFactory;
 
                 _solidColorBrushConverter = new ConverterAndCacher<SolidBrush, SolidColorBrush>(
-                    brush => new SolidColorBrush(_renderTarget2D, new Color4(
-                    red: ((float)brush.Color.R) / byte.MaxValue,
-                    green: ((float)brush.Color.G) / byte.MaxValue,
-                    blue: ((float)brush.Color.B) / byte.MaxValue,
-                    alpha: 1
+                    brush => new SolidColorBrush(_renderTarget2D, new SharpDX.Mathematics.Interop.RawColor4(
+                    r: ((float)brush.Color.R) / byte.MaxValue,
+                    g: ((float)brush.Color.G) / byte.MaxValue,
+                    b: ((float)brush.Color.B) / byte.MaxValue,
+                    a: 1
                     )
                 ));
 
@@ -128,13 +126,13 @@ namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
                 _renderTarget2D.DrawRectangle(
                     _rectangleConverter.Convert(rectangle),
                     new SolidColorBrush(_renderTarget2D,
-                        new Color4(red: pen.Color.R, blue: pen.Color.B, green: pen.Color.G, alpha: pen.Color.A)
+                        new SharpDX.Mathematics.Interop.RawColor4(r: pen.Color.R, b: pen.Color.B, g: pen.Color.G, a: pen.Color.A)
                     )
                 );
             }
 
-            private readonly ConverterAndCacher<System.Drawing.RectangleF, RectangleF> _rectangleFConverter
-                = new ConverterAndCacher<System.Drawing.RectangleF, RectangleF>(rectangle => new RectangleF(
+            private readonly ConverterAndCacher<System.Drawing.RectangleF, SharpDX.Mathematics.Interop.RawRectangleF> _rectangleFConverter
+                = new ConverterAndCacher<System.Drawing.RectangleF, SharpDX.Mathematics.Interop.RawRectangleF>(rectangle => new SharpDX.Mathematics.Interop.RawRectangleF(
                     rectangle.X,
                     rectangle.Y,
                     rectangle.Width,
@@ -142,8 +140,8 @@ namespace Mirage.Urbanization.WinForms.Rendering.SharpDx
                 )
             );
 
-            private readonly ConverterAndCacher<System.Drawing.Rectangle, RectangleF> _rectangleConverter
-                = new ConverterAndCacher<Rectangle, RectangleF>(rectangle => new RectangleF(
+            private readonly ConverterAndCacher<System.Drawing.Rectangle, SharpDX.Mathematics.Interop.RawRectangleF> _rectangleConverter
+                = new ConverterAndCacher<Rectangle, SharpDX.Mathematics.Interop.RawRectangleF>(rectangle => new SharpDX.Mathematics.Interop.RawRectangleF(
                     rectangle.X,
                     rectangle.Y,
                     rectangle.Width,
