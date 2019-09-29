@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <ProjectGuid>{B4E3622E-4CF0-4E39-888D-10D9F4C960DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Mirage.Urbanization.WinForms</AssemblyTitle>
     <Product>Mirage.Urbanization.WinForms</Product>
@@ -12,9 +13,6 @@
     <Copyright>Copyright ©  2014</Copyright>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-    <PostBuildEvent>copy $(TargetDir)Mirage.Urbanization.WinForms.exe.config $(TargetDir)Mirage.Urbanization.Web.exe.config</PostBuildEvent>
-    <PostBuildEvent>copy $(TargetDir)Mirage.Urbanization.WinForms.exe.config $(TargetDir)Mirage.Urbanization.Web.exe.config</PostBuildEvent>
-    <PostBuildEvent>copy $(TargetDir)Mirage.Urbanization.WinForms.exe.config $(TargetDir)Mirage.Urbanization.Web.exe.config</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -25,22 +23,11 @@
   <PropertyGroup>
     <ApplicationIcon>urbanization.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)Mirage.Urbanization.WinForms.exe.config $(TargetDir)Mirage.Urbanization.Web.exe.config</PostBuildEvent>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="4.0.1" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.DataVisualization" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="BudgetForm.cs">
@@ -88,9 +75,7 @@
     <Compile Update="StatisticsForm.Designer.cs">
       <DependentUpon>StatisticsForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="WebServerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="WebServerForm.cs" />
     <Compile Update="WebServerForm.Designer.cs">
       <DependentUpon>WebServerForm.cs</DependentUpon>
     </Compile>
@@ -142,7 +127,6 @@
     <ProjectReference Include="..\Mirage.Urbanization.Charts\Mirage.Urbanization.Charts.csproj" />
     <ProjectReference Include="..\Mirage.Urbanization.Resources\Mirage.Urbanization.Tilesets.csproj" />
     <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj" />
-    <ProjectReference Include="..\Mirage.Urbanization.Web\Mirage.Urbanization.Web.csproj" />
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj" />
   </ItemGroup>
   <ItemGroup>

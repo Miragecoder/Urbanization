@@ -5,8 +5,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Web.UI.DataVisualization.Charting;
-using System.Web.UI.WebControls;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
 using Mirage.Urbanization.ZoneStatisticsQuerying;

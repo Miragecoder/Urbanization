@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <ProjectGuid>{73BBFBFD-14A4-40EA-87B5-E1BF9BAF42F7}</ProjectGuid>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Mirage.Urbanization.Resources</AssemblyTitle>
     <Product>Mirage.Urbanization.Resources</Product>
@@ -21,10 +21,6 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\CoalPowerPlantZoneClusterConsumption_1.png" />
   </ItemGroup>

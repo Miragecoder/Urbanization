@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{06DC9742-27AE-4711-801A-11B2A43CAB8C}</ProjectGuid>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyTitle>Mirage.Urbanization</AssemblyTitle>
     <Product>Mirage.Urbanization</Product>
     <Copyright>Copyright ©  2014</Copyright>
@@ -18,11 +18,8 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ZoneConsumptions.cd" />

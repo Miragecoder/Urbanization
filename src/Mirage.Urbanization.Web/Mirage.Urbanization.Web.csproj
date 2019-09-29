@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectGuid>{E80D47E8-22C1-4CE4-AC67-7F3AB2FCBFE7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Mirage.Urbanization.Web</AssemblyTitle>
     <Product>Mirage.Urbanization.Web</Product>
@@ -23,24 +23,24 @@
     <StartupObject>Mirage.Urbanization.Web.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="jQuery" Version="1.6.4" />
-    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.JS" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.Sample" Version="2.2.0.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.SystemWeb" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Owin" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Diagnostics" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.FileSystems" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Owin.Hosting" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Security" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Owin.SelfHost" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="3.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="6.0.4" />
+    <PackageReference Include="jQuery" Version="3.4.1" />
+    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.1" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.1" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.JS" Version="2.4.1" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.Sample" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.SystemWeb" Version="2.4.1" />
+    <PackageReference Include="Microsoft.Owin" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.Diagnostics" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.FileSystems" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.Hosting" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.Security" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.SelfHost" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="4.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Owin" Version="1.0" />
-    <PackageReference Include="Topshelf" Version="3.2.0" />
+    <PackageReference Include="Topshelf" Version="4.2.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
