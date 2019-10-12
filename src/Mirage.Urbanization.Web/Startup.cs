@@ -24,7 +24,7 @@ namespace Mirage.Urbanization.Web
         static async Task ServeImage(HttpContext context, byte[] bytes)
         {
             context.Response.ContentType = "image/png";
-            await context.Response.WriteAsync(Encoding.UTF8.GetString(bytes), Encoding.UTF8);
+            await context.Response.BodyWriter.WriteAsync(bytes);
         }
 
         static async Task ServeImage(HttpContext context, Image image)
