@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -7,17 +6,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
-using Microsoft.Owin;
-using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.StaticFiles;
 using Mirage.Urbanization.Charts;
-using Mirage.Urbanization.Simulation;
-using Mirage.Urbanization.Tilesets;
-using Owin;
-using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
-
-[assembly: OwinStartup(typeof(Mirage.Urbanization.Web.Startup))]
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Mirage.Urbanization.Web
 {
@@ -25,21 +21,19 @@ namespace Mirage.Urbanization.Web
     {
         private static readonly Lazy<IChartDrawer> ChartDrawer = new Lazy<IChartDrawer>(Mirage.Urbanization.Charts.ChartDrawerFactory.Create);
 
-        static async Task ServeImage(IOwinContext context, byte[] bytes)
+        static async Task ServeImage(HttpContext context, byte[] bytes)
         {
             context.Response.ContentType = "image/png";
-            await context.Response.WriteAsync(bytes);
+            await context.Response.WriteAsync(Encoding.UTF8.GetString(bytes), Encoding.UTF8);
         }
 
-        static async Task ServeImage(IOwinContext context, Image image)
+        static async Task ServeImage(HttpContext context, Image image)
         {
             try
             {
-                using (var stream = new MemoryStream())
-                {
-                    image.Save(stream, ImageFormat.Png);
-                    await ServeImage(context, stream.ToArray());
-                }
+                using var stream = new MemoryStream();
+                image.Save(stream, ImageFormat.Png);
+                await ServeImage(context, stream.ToArray());
             }
             catch (Exception ex)
             {
@@ -47,7 +41,14 @@ namespace Mirage.Urbanization.Web
             }
         }
 
-        public void Configuration(IAppBuilder app)
+        private static Func<IHubContext<SimulationHub>> _getSimulationHub;
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSignalR();
+            services.AddSignalRCore();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             app.Use(async (context, next) =>
             {
@@ -82,26 +83,29 @@ namespace Mirage.Urbanization.Web
                 {
                     context.Response.ContentType = "application/json";
                     await context.Response.WriteAsync(
-                        Encoding.UTF8.GetBytes(
                         $"{{ \"mapWidth\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesX}, "
                         + $"\"mapHeight\": {GameServer.Instance.SimulationSession.Area.AmountOfZonesY}, "
                         + $"\"cellsPerAtlasRow\": { TextureAtlas.CellsPerRow }, "
                         + $"\"vehicleTilesPerRow\": { TextureAtlas.VehicleTilesPerRow }, "
-                        + $"\"cellSpriteOffset\": { TilesetProvider.TextureAtlas.CellSpriteOffset } }}"));
+                        + $"\"cellSpriteOffset\": { TilesetProvider.TextureAtlas.CellSpriteOffset } }}");
                 }
                 await next();
             });
 
-
-            app.UseErrorPage();
-            app.MapSignalR(new HubConfiguration() { EnableDetailedErrors = true });
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<SimulationHub>("/chathub");
+            });
             app.UseFileServer(new FileServerOptions()
             {
-                FileSystem = new EmbeddedResourceFileSystem(Assembly.GetAssembly(GetType()), "Mirage.Urbanization.Web.Www"),
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetEntryAssembly(), "Www"),
                 EnableDirectoryBrowsing = true
             });
-
-            // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
+            var hubContext = serviceProvider.GetService<IHubContext<SimulationHub>>();
+            _getSimulationHub = new Func<IHubContext<SimulationHub>>(() => hubContext);
         }
+
+        public static IHubContext<SimulationHub> GetSimulationHub() => _getSimulationHub();
     }
 }

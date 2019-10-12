@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Datameters;
-using Mirage.Urbanization.Simulation.Persistence;
 using Mirage.Urbanization.Tilesets;
 using Mirage.Urbanization.Web.ClientMessages;
 
@@ -56,7 +55,7 @@ namespace Mirage.Urbanization.Web
             _previousClientDataMeterStates = currentClientDataMeterStates;
         }
 
-        private ISet<ClientDataMeterZoneInfo> _previousClientDataMeterStates = new HashSet<ClientDataMeterZoneInfo>(); 
+        private ISet<ClientDataMeterZoneInfo> _previousClientDataMeterStates = new HashSet<ClientDataMeterZoneInfo>();
     }
 
     public class DataMeterPublishStateManager
@@ -79,7 +78,6 @@ namespace Mirage.Urbanization.Web
         private readonly ISimulationSession _simulationSession;
         private readonly string _url;
         private readonly bool _controlVehicles;
-        private IDisposable _webServer;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly NeverEndingTask _looper, _dataMeterStateLooper;
 
@@ -111,11 +109,11 @@ namespace Mirage.Urbanization.Web
                 {
                     foreach (var batch in x.GetChanged().GetBatched(100))
                     {
-                        GlobalHost
-                            .ConnectionManager.GetHubContext<SimulationHub>()
+                        await Startup
+                            .GetSimulationHub()
                             .Clients
                             .Group(SimulationHub.GetDataMeterGroupName(x.DataMeter.WebId))
-                            .submitDataMeterInfos(batch);
+                            .SendAsync("submitDataMeterInfos", batch);
                         await Task.Delay(30);
                     }
                 }
@@ -125,12 +123,11 @@ namespace Mirage.Urbanization.Web
 
             _looper = new NeverEndingTask("SignalR Game state submission", async () =>
             {
-                GlobalHost
-                    .ConnectionManager
-                    .GetHubContext<SimulationHub>()
+                await Startup
+                    .GetSimulationHub()
                     .Clients
                     .All
-                    .submitZoneInfos(zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create));
+                    .SendAsync("submitZoneInfos", zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create), _cancellationTokenSource.Token);
 
                 await Task.Delay(40);
 
@@ -149,12 +146,10 @@ namespace Mirage.Urbanization.Web
 
                 foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched(20))
                 {
-                    GlobalHost
-                        .ConnectionManager
-                        .GetHubContext<SimulationHub>()
+                    await Startup.GetSimulationHub()
                         .Clients
                         .All
-                        .submitZoneInfos(toBeSubmittedBatch);
+                        .SendAsync("submitZoneInfos", toBeSubmittedBatch);
                     await Task.Delay(20);
                 }
 
@@ -178,12 +173,10 @@ namespace Mirage.Urbanization.Web
                                 });
                     }
 
-                    GlobalHost
-                        .ConnectionManager
-                        .GetHubContext<SimulationHub>()
+                    await Startup.GetSimulationHub()
                         .Clients
                         .All
-                        .submitVehicleStates(list);
+                        .SendAsync("submitVehicleStates", list);
 
                     await Task.Delay(6);
                 }
@@ -199,95 +192,114 @@ namespace Mirage.Urbanization.Web
             else throw new InvalidOperationException();
         }
 
-        private void SimulationSession_OnAreaHotMessage(object sender, SimulationSessionHotMessageEventArgs e)
+        private async void SimulationSession_OnAreaHotMessage(object sender, SimulationSessionHotMessageEventArgs e)
         {
-            GlobalHost
-                .ConnectionManager
-                .GetHubContext<SimulationHub>()
-                .Clients
-                .All
-                .submitAreaHotMessage(new
-                {
-                    title = e.Title,
-                    message = e.Message
-                });
+            try
+            {
+                await Startup.GetSimulationHub()
+                    .Clients
+                    .All
+                    .SendAsync("submitAreaHotMessage", new
+                    {
+                        title = e.Title,
+                        message = e.Message
+                    });
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteLine(ex);
+            }
         }
 
         private readonly CityBudgetPanelPublisher _cityBudgetPanelPublisher = new CityBudgetPanelPublisher();
 
-        private void SimulationSession_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
+        private async void SimulationSession_OnCityBudgetValueChanged(object sender, CityBudgetValueChangedEventArgs e)
         {
-            GlobalHost
-                .ConnectionManager
-                .GetHubContext<SimulationHub>()
-                .Clients
-                .All
-                .submitCityBudgetValue(new
-                {
-                    cityBudgetState = _cityBudgetPanelPublisher.GenerateCityBudgetState(_simulationSession),
-                    currentAmount = e.EventData.CurrentAmount,
-                    projectedIncome = e.EventData.ProjectedIncome
-                });
-        }
-
-        private void SimulationSession_OnYearAndOrMonthChanged(object sender, EventArgsWithData<IYearAndMonth> e)
-        {
-            SimulationSession.GetRecentStatistics().WithResultIfHasMatch(cityStatistics =>
+            try
             {
-                var cityStatisticsView = new CityStatisticsView(cityStatistics);
-
-                GlobalHost
-                    .ConnectionManager
-                    .GetHubContext<SimulationHub>()
+                await Startup.GetSimulationHub()
                     .Clients
                     .All
-                    .onYearAndMonthChanged(new YearAndMonthChangedState
+                    .SendAsync("submitCityBudgetValue", new
                     {
-                        yearAndMonthDescription = e.EventData.GetCurrentDescription(),
-                        overallLabelsAndValues = new[]
+                        cityBudgetState = _cityBudgetPanelPublisher.GenerateCityBudgetState(_simulationSession),
+                        currentAmount = e.EventData.CurrentAmount,
+                        projectedIncome = e.EventData.ProjectedIncome
+                    });
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteLine(ex);
+            }
+        }
+
+        private async void SimulationSession_OnYearAndOrMonthChanged(object sender, EventArgsWithData<IYearAndMonth> e)
+        {
+            try
+            {
+                await SimulationSession.GetRecentStatistics().WithResultIfHasMatch(cityStatistics =>
+                {
+                    var cityStatisticsView = new CityStatisticsView(cityStatistics);
+
+                    return Startup.GetSimulationHub()
+                        .Clients
+                        .All
+                        .SendAsync("onYearAndMonthChanged", new YearAndMonthChangedState
                         {
+                            yearAndMonthDescription = e.EventData.GetCurrentDescription(),
+                            overallLabelsAndValues = new[]
+                            {
                             new LabelAndValue { label = "Population", value = cityStatisticsView.Population.ToString("N0") },
                             new LabelAndValue { label = "Assessed value", value = cityStatisticsView.AssessedValue.ToString("C0") },
                             new LabelAndValue { label = "Category", value = cityStatisticsView.CityCategory }
-                        },
-                        generalOpinion = new[]
-                        {
+                            },
+                            generalOpinion = new[]
+                            {
                             new { Opinion = cityStatisticsView.GetPositiveOpinion(), Label = "Positive" },
                             new { Opinion = cityStatisticsView.GetNegativeOpinion(), Label = "Negative" }
-                        }
-                        .OrderByDescending(y => y.Opinion)
-                        .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion.ToString("P1")}" })
-                        .ToArray(),
-                        cityBudgetLabelsAndValues = new[]
-                        {
+                            }
+                            .OrderByDescending(y => y.Opinion)
+                            .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion.ToString("P1")}" })
+                            .ToArray(),
+                            cityBudgetLabelsAndValues = new[]
+                            {
                             new LabelAndValue { label = "Current funds", value = cityStatisticsView.CurrentAmountOfFunds.ToString()},
                             new LabelAndValue { label = "Projected income", value = cityStatisticsView.CurrentProjectedAmountOfFunds.ToString()},
-                        },
-                        issueLabelAndValues = cityStatisticsView
-                            .GetIssueDataMeterResults()
-                            .Select(x => new LabelAndValue()
-                            {
-                                label = x.Name,
-                                value = $"{x.ValueCategory} ({x.PercentageScoreString}%)"
-                            })
-                            .ToArray()
-                    });
-            });
+                            },
+                            issueLabelAndValues = cityStatisticsView
+                                .GetIssueDataMeterResults()
+                                .Select(x => new LabelAndValue()
+                                {
+                                    label = x.Name,
+                                    value = $"{x.ValueCategory} ({x.PercentageScoreString}%)"
+                                })
+                                .ToArray()
+                        });
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteLine(ex);
+            }
         }
 
-        private static void SimulationSession_OnAreaMessage(object sender, SimulationSessionMessageEventArgs e)
+        private static async void SimulationSession_OnAreaMessage(object sender, SimulationSessionMessageEventArgs e)
         {
-            GlobalHost
-                .ConnectionManager
-                .GetHubContext<SimulationHub>()
-                .Clients
-                .All
-                .submitAreaMessage(e.Message);
+            try
+            {
+                await Startup.GetSimulationHub()
+                    .Clients
+                    .All
+                    .SendAsync("submitAreaMessage", e.Message);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteLine(ex);
+            }
         }
 
         public void StartServer()
         {
-            _webServer = Microsoft.Owin.Hosting.WebApp.Start<Startup>(_url);
             _looper.Start();
             _dataMeterStateLooper.Start();
         }
@@ -301,7 +313,6 @@ namespace Mirage.Urbanization.Web
             _cancellationTokenSource.Cancel();
             _looper.Wait();
             _dataMeterStateLooper.Wait();
-            _webServer?.Dispose();
             Instance = null;
         }
     }

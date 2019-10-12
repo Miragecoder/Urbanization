@@ -20,7 +20,7 @@ namespace Mirage.Urbanization
         const string EventSource = "Urbanization";
         public void LogException(Exception exception, string operationDescription, int eventId)
         {
-            throw new NotImplementedException();
+            OnLogMessage?.Invoke(this, new LogEventArgs($"Unhandled exception was thrown during '{operationDescription}': {exception}."));
         }
     }
 }

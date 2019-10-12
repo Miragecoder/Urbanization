@@ -15,7 +15,7 @@ namespace Mirage.Urbanization.Test
             var r = new RandomTerraformer(
                 () => new WaterZoneConsumption(new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create())),
                 () => new WoodlandZoneConsumption(new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create())));
-            var zoneInfoGrid = new ZoneInfoGrid(100, MockRepository.GenerateMock<ILandValueCalculator>());
+            var zoneInfoGrid = new ZoneInfoGrid(100, MockRepository.Mock<ILandValueCalculator>());
 
             var options = new TerraformingOptions()
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Datameters;
@@ -36,7 +36,6 @@ namespace Mirage.Urbanization.Web
         {
             Task.Run(async () =>
             {
-
                 var initialState = GameServer
                     .Instance
                     .SimulationSession
@@ -47,21 +46,20 @@ namespace Mirage.Urbanization.Web
 
                 foreach (var batchState in initialState.GetBatched(100))
                 {
-                    Clients.Caller.submitDataMeterInfos(batchState);
-
+                    await Clients.Caller.SendAsync("submitDataMeterInfos", batchState);
                     await Task.Delay(200);
                 }
             });
         }
 
-        public void JoinDataMeterGroup(int dataMeterId)
+        public async Task JoinDataMeterGroup(int dataMeterId)
         {
             foreach (var x in DataMeterInstances.DataMeters.Select(x => x.WebId))
             {
-                Groups.Remove(Context.ConnectionId, GetDataMeterGroupName(x));
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetDataMeterGroupName(x));
             }
 
-            Groups.Add(Context.ConnectionId, GetDataMeterGroupName(dataMeterId));
+            await Groups.AddToGroupAsync(Context.ConnectionId, GetDataMeterGroupName(dataMeterId));
         }
 
         public static string GetDataMeterGroupName(int dataMeterId) => "dataMeter" + dataMeterId;
@@ -109,7 +107,7 @@ namespace Mirage.Urbanization.Web
         {
             Task.Run(async () =>
             {
-                Clients.Caller.submitMenuStructure(
+                await Clients.Caller.SendAsync("submitMenuStructure", 
                     new
                     {
                         graphDefinitions = GraphDefinitions
@@ -143,8 +141,8 @@ namespace Mirage.Urbanization.Web
                     );
                 await Task.Delay(1000);
 
-                Clients.Caller
-                    .submitZoneInfos(GameServer
+                await Clients.Caller
+                    .SendAsync("submitZoneInfos", GameServer
                         .Instance
                         .SimulationSession
                         .Area
@@ -166,8 +164,8 @@ namespace Mirage.Urbanization.Web
 
                 foreach (var batchState in initialState.GetBatched(50))
                 {
-                    Clients.Caller
-                        .submitZoneInfos(batchState.Select(ClientZoneInfo.Create));
+                    await Clients.Caller
+                        .SendAsync("submitZoneInfos", batchState.Select(ClientZoneInfo.Create));
 
                     await Task.Delay(200);
                 }

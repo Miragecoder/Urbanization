@@ -17,8 +17,8 @@ namespace Mirage.Urbanization.Test
         private static IZoneInfo GenerateZoneInfoMockFor<T>(IReadOnlyArea area)
             where T : class, IAreaZoneConsumption
         {
-            var zone = MockRepository.GenerateMock<IZoneInfo>();
-            var consumptionState = MockRepository.GenerateMock<IZoneConsumptionState>();
+            var zone = MockRepository.Mock<IZoneInfo>();
+            var consumptionState = MockRepository.Mock<IZoneConsumptionState>();
 
             consumptionState
                 .Expect(x => x.GetZoneConsumption())
@@ -37,7 +37,7 @@ namespace Mirage.Urbanization.Test
         private static IZoneInfoPathNode GenerateIZoneInfoPathNodeMock<T>(IReadOnlyArea area)
             where T : class, IAreaZoneConsumption
         {
-            var pathNodeMock = MockRepository.GenerateMock<IZoneInfoPathNode>();
+            var pathNodeMock = MockRepository.Mock<IZoneInfoPathNode>();
 
             pathNodeMock
                 .Expect(x => x.ZoneInfo)
@@ -49,7 +49,7 @@ namespace Mirage.Urbanization.Test
         [TestMethod]
         public void SimpleDistanceTrackerTest()
         {
-            var area = new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, new TerraformingOptions(), new ProcessOptions(() => true, () => false), () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()));
+            var area = new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, new TerraformingOptions(), new ProcessOptions(() => true, () => false), () => MockRepository.Mock<ICityServiceStrengthLevels>()));
 
             var tracker = new ZoneInfoDistanceTracker(x => x.IsGrowthZoneClusterOfType<ResidentialZoneClusterConsumption>());
 
