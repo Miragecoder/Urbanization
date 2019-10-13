@@ -207,10 +207,10 @@ namespace Mirage.Urbanization.WinForms
             _areaRenderHelper.SimulationSession.OnAreaHotMessage +=
                 (_sender, _e) =>
                 {
-                    //if (_webserverForm == null)
+                    if (_webserverForm == null)
                         MessageBox.Show(_e.Message, _e.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //else
-                    //    statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message; }));
+                    else
+                        statusStrip1.BeginInvoke(new MethodInvoker(() => { toolStripStatusLabel1.Text = _e.Message; }));
                 };
 
             _areaRenderHelper.SimulationSession.OnCityBudgetValueChanged +=
@@ -337,11 +337,11 @@ namespace Mirage.Urbanization.WinForms
             _logWindowFormManager.Show(this);
         }
 
-       // private WebServerForm _webserverForm;
+        private WebServerForm _webserverForm;
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            /*if (_webserverForm == null)
+            if (_webserverForm == null)
                 WithAreaRenderHelper(helper =>
                 {
                     _webserverForm = new WebServerForm(helper.SimulationSession);
@@ -351,7 +351,7 @@ namespace Mirage.Urbanization.WinForms
                         _webserverForm.Dispose();
                         _webserverForm = null;
                     };
-                });*/
+                });
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

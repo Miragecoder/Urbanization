@@ -1,0 +1,22 @@
+﻿{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.3.1",
+      "destination": "Www/scripts/jquery/"
+    },
+    {
+      "library": "jqueryui@1.12.1",
+      "destination": "Www/scripts/jqueryui/"
+    },
+    {
+      "library": "accounting.js@0.4.1",
+      "destination": "Www/scripts/accountingjs/"
+    },
+    {
+      "library": "aspnet-signalr@1.1.4",
+      "destination": "Www/scripts/signalr/"
+    }
+  ]
+}

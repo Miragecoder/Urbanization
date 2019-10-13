@@ -127,6 +127,7 @@
     <ProjectReference Include="..\Mirage.Urbanization.Charts\Mirage.Urbanization.Charts.csproj" />
     <ProjectReference Include="..\Mirage.Urbanization.Resources\Mirage.Urbanization.Tilesets.csproj" />
     <ProjectReference Include="..\Mirage.Urbanization.Simulation\Mirage.Urbanization.Simulation.csproj" />
+    <ProjectReference Include="..\Mirage.Urbanization.Web\Mirage.Urbanization.Web.csproj" />
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj" />
   </ItemGroup>
   <ItemGroup>

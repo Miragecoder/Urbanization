@@ -95,7 +95,7 @@ namespace Mirage.Urbanization.Web
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<SimulationHub>("/chathub");
+                endpoints.MapHub<SimulationHub>("/simulationHub");
             });
             app.UseFileServer(new FileServerOptions()
             {
