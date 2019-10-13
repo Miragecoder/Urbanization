@@ -107,84 +107,77 @@ namespace Mirage.Urbanization.Web
             {
                 foreach (var x in dataMeterStateManager.DataMeterPublishStates)
                 {
-                    foreach (var batch in x.GetChanged().GetBatched(100))
+                    await Startup.WithSimulationHub(async hub =>
                     {
-                        await Startup
-                            .GetSimulationHub()
-                            .Clients
-                            .Group(SimulationHub.GetDataMeterGroupName(x.DataMeter.WebId))
-                            .SendAsync("submitDataMeterInfos", batch);
-                        await Task.Delay(30);
-                    }
+                        foreach (var batch in x.GetChanged().GetBatched(100))
+                        {
+                            await hub
+                                .Clients
+                                .Group(SimulationHub.GetDataMeterGroupName(x.DataMeter.WebId))
+                                .SendAsync("submitDataMeterInfos", batch);
+                        }
+                    });
                 }
-
-                await Task.Delay(30);
             }, _cancellationTokenSource.Token, 10);
 
             _looper = new NeverEndingTask("SignalR Game state submission", async () =>
             {
-                await Startup
-                    .GetSimulationHub()
-                    .Clients
-                    .All
-                    .SendAsync("submitZoneInfos", zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create), _cancellationTokenSource.Token);
-
-                await Task.Delay(40);
-
-                var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
-                    .Select(ClientZoneInfo.Create)
-                    .ToList();
-
-                var toBeSubmitted = zoneInfos;
-
-                if (previous != null)
+                await Startup.WithSimulationHub(async simulationHub =>
                 {
-                    var previousUids = previous.Select(x => x.GetIdentityString()).ToHashSet();
-
-                    toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
-                }
-
-                foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched(20))
-                {
-                    await Startup.GetSimulationHub()
+                    await simulationHub
                         .Clients
                         .All
-                        .SendAsync("submitZoneInfos", toBeSubmittedBatch);
-                    await Task.Delay(20);
-                }
+                        .SendAsync("submitZoneInfos", zoneInfoBatchLooper.GetBatch().Select(ClientZoneInfo.Create), _cancellationTokenSource.Token);
 
-                previous = zoneInfos;
+                    var zoneInfos = _simulationSession.Area.EnumerateZoneInfos()
+                        .Select(ClientZoneInfo.Create)
+                        .ToList();
 
-                await Task.Delay(40);
+                    var toBeSubmitted = zoneInfos;
 
-                try
-                {
-                    var list = new List<ClientVehiclePositionInfo>();
-                    foreach (var vehicleController in _simulationSession.Area.EnumerateVehicleControllers())
+                    if (previous != null)
                     {
-                        vehicleController
-                            .ForEachActiveVehicle(_controlVehicles,
-                                vehicle =>
-                                {
-                                    list.AddRange(TilesetProvider
-                                        .GetBitmapsAndPointsFor(vehicle)
-                                        .Select(ClientVehiclePositionInfo.Create)
-                                    );
-                                });
+                        var previousUids = previous.Select(x => x.GetIdentityString()).ToHashSet();
+
+                        toBeSubmitted = zoneInfos.Where(z => !previousUids.Contains(z.GetIdentityString())).ToList();
                     }
 
-                    await Startup.GetSimulationHub()
-                        .Clients
-                        .All
-                        .SendAsync("submitVehicleStates", list);
+                    foreach (var toBeSubmittedBatch in toBeSubmitted.GetBatched(20))
+                    {
+                        await simulationHub
+                            .Clients
+                            .All
+                            .SendAsync("submitZoneInfos", toBeSubmittedBatch);
+                    }
 
-                    await Task.Delay(6);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Instance.WriteLine("Possible race condition-based exception:: " + ex);
-                }
+                    previous = zoneInfos;
 
+                    try
+                    {
+                        var list = new List<ClientVehiclePositionInfo>();
+                        foreach (var vehicleController in _simulationSession.Area.EnumerateVehicleControllers())
+                        {
+                            vehicleController
+                                .ForEachActiveVehicle(_controlVehicles,
+                                    vehicle =>
+                                    {
+                                        list.AddRange(TilesetProvider
+                                            .GetBitmapsAndPointsFor(vehicle)
+                                            .Select(ClientVehiclePositionInfo.Create)
+                                        );
+                                    });
+                        }
+
+                        await simulationHub
+                            .Clients
+                            .All
+                            .SendAsync("submitVehicleStates", list);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance.WriteLine("Possible race condition-based exception:: " + ex);
+                    }
+                });
             }, _cancellationTokenSource.Token, 10);
 
             if (Instance == null)
@@ -196,14 +189,18 @@ namespace Mirage.Urbanization.Web
         {
             try
             {
-                await Startup.GetSimulationHub()
-                    .Clients
-                    .All
-                    .SendAsync("submitAreaHotMessage", new
-                    {
-                        title = e.Title,
-                        message = e.Message
-                    });
+                await Startup.WithSimulationHub(async simulationHub =>
+                {
+                    await simulationHub
+                        .Clients
+                        .All
+                        .SendAsync("submitAreaHotMessage", new
+                        {
+                            title = e.Title,
+                            message = e.Message
+                        });
+                });
+
             }
             catch (Exception ex)
             {
@@ -217,15 +214,19 @@ namespace Mirage.Urbanization.Web
         {
             try
             {
-                await Startup.GetSimulationHub()
-                    .Clients
-                    .All
-                    .SendAsync("submitCityBudgetValue", new
-                    {
-                        cityBudgetState = _cityBudgetPanelPublisher.GenerateCityBudgetState(_simulationSession),
-                        currentAmount = e.EventData.CurrentAmount,
-                        projectedIncome = e.EventData.ProjectedIncome
-                    });
+
+                await Startup.WithSimulationHub(async simulationHub =>
+                {
+                    await simulationHub
+                        .Clients
+                        .All
+                        .SendAsync("submitCityBudgetValue", new
+                        {
+                            cityBudgetState = _cityBudgetPanelPublisher.GenerateCityBudgetState(_simulationSession),
+                            currentAmount = e.EventData.CurrentAmount,
+                            projectedIncome = e.EventData.ProjectedIncome
+                        });
+                });
             }
             catch (Exception ex)
             {
@@ -237,44 +238,47 @@ namespace Mirage.Urbanization.Web
         {
             try
             {
-                await SimulationSession.GetRecentStatistics().WithResultIfHasMatch(cityStatistics =>
+                await Startup.WithSimulationHub(async simulationHub =>
                 {
-                    var cityStatisticsView = new CityStatisticsView(cityStatistics);
+                    await SimulationSession.GetRecentStatistics().WithResultIfHasMatch(cityStatistics =>
+                    {
+                        var cityStatisticsView = new CityStatisticsView(cityStatistics);
 
-                    return Startup.GetSimulationHub()
-                        .Clients
-                        .All
-                        .SendAsync("onYearAndMonthChanged", new YearAndMonthChangedState
-                        {
-                            yearAndMonthDescription = e.EventData.GetCurrentDescription(),
-                            overallLabelsAndValues = new[]
+                        return simulationHub
+                            .Clients
+                            .All
+                            .SendAsync("onYearAndMonthChanged", new YearAndMonthChangedState
                             {
+                                yearAndMonthDescription = e.EventData.GetCurrentDescription(),
+                                overallLabelsAndValues = new[]
+                                {
                             new LabelAndValue { label = "Population", value = cityStatisticsView.Population.ToString("N0") },
                             new LabelAndValue { label = "Assessed value", value = cityStatisticsView.AssessedValue.ToString("C0") },
                             new LabelAndValue { label = "Category", value = cityStatisticsView.CityCategory }
-                            },
-                            generalOpinion = new[]
-                            {
+                                },
+                                generalOpinion = new[]
+                                {
                             new { Opinion = cityStatisticsView.GetPositiveOpinion(), Label = "Positive" },
                             new { Opinion = cityStatisticsView.GetNegativeOpinion(), Label = "Negative" }
-                            }
-                            .OrderByDescending(y => y.Opinion)
-                            .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion.ToString("P1")}" })
-                            .ToArray(),
-                            cityBudgetLabelsAndValues = new[]
-                            {
+                                }
+                                .OrderByDescending(y => y.Opinion)
+                                .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion.ToString("P1")}" })
+                                .ToArray(),
+                                cityBudgetLabelsAndValues = new[]
+                                {
                             new LabelAndValue { label = "Current funds", value = cityStatisticsView.CurrentAmountOfFunds.ToString()},
                             new LabelAndValue { label = "Projected income", value = cityStatisticsView.CurrentProjectedAmountOfFunds.ToString()},
-                            },
-                            issueLabelAndValues = cityStatisticsView
-                                .GetIssueDataMeterResults()
-                                .Select(x => new LabelAndValue()
-                                {
-                                    label = x.Name,
-                                    value = $"{x.ValueCategory} ({x.PercentageScoreString}%)"
-                                })
-                                .ToArray()
-                        });
+                                },
+                                issueLabelAndValues = cityStatisticsView
+                                    .GetIssueDataMeterResults()
+                                    .Select(x => new LabelAndValue()
+                                    {
+                                        label = x.Name,
+                                        value = $"{x.ValueCategory} ({x.PercentageScoreString}%)"
+                                    })
+                                    .ToArray()
+                            });
+                    });
                 });
             }
             catch (Exception ex)
@@ -287,10 +291,14 @@ namespace Mirage.Urbanization.Web
         {
             try
             {
-                await Startup.GetSimulationHub()
-                    .Clients
-                    .All
-                    .SendAsync("submitAreaMessage", e.Message);
+
+                await Startup.WithSimulationHub(async simulationHub =>
+                {
+                    await simulationHub
+                        .Clients
+                        .All
+                        .SendAsync("submitAreaMessage", e.Message);
+                });
             }
             catch (Exception ex)
             {

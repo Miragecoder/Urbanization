@@ -106,6 +106,12 @@ namespace Mirage.Urbanization.Web
             _getSimulationHub = new Func<IHubContext<SimulationHub>>(() => hubContext);
         }
 
-        public static IHubContext<SimulationHub> GetSimulationHub() => _getSimulationHub();
+        public static Task WithSimulationHub(Func<IHubContext<SimulationHub>, Task> work)
+        {
+            var hub = _getSimulationHub != null ? _getSimulationHub() : null;
+            if (hub == null)
+                return Task.CompletedTask;
+            return work(hub);
+        }
     }
 }

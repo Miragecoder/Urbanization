@@ -449,8 +449,8 @@ $(function () {
                                     function (e) { return e.name; },
                                     function (e) { return e.projectedIncome; },
                                     function (e) { return e.currentRate; },
-                                    function (server, cityServiceState) { server.invoke("lowerTax", cityServiceState.name); },
-                                    function (server, cityServiceState) { server.invoke("raiseTax", cityServiceState.name); });
+                                    function (server, taxState) { server.invoke("lowerTax", taxState.name); },
+                                    function (server, taxState) { server.invoke("raiseTax", taxState.name); });
                             }
                         }
                         writeTaxStateRow(cityBudgetState.totalTaxState,
@@ -817,7 +817,7 @@ $(function () {
                             if (lastConsumedCell === null ||
                                 lastConsumedCell.x !== cell.x ||
                                 lastConsumedCell.y !== cell.y || lastConsumedCell.button !== button) {
-                                simulation.invoke("consumeZone", button.name, cell.x, cell.y);
+                                simulation.invoke("consumeZone", { name: button.name, x: cell.x, y: cell.y });
                                 lastConsumedCell = cell;
                                 lastConsumedCell.button = button;
 

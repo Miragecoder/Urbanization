@@ -48,6 +48,7 @@ namespace Mirage.Urbanization.Web
             }
             simulationSession.StartSimulation();
             _gameServer = new GameServer(simulationSession, "http://+:80/", true);
+            _gameServer.StartServer();
             return Task.CompletedTask;
         }
 
