@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{73BBFBFD-14A4-40EA-87B5-E1BF9BAF42F7}</ProjectGuid>
     <TargetFramework>netcoreapp3.0</TargetFramework>
