@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mirage.Urbanization.ZoneConsumption.Base;
+using SixLabors.ImageSharp;
 
 namespace Mirage.Urbanization.Tilesets.Vehicles
 {
@@ -68,17 +69,17 @@ namespace Mirage.Urbanization.Tilesets.Vehicles
             _northWest,
             _northEast;
 
-        public DirectionalBitmap(Bitmap bitmapEast)
+        public DirectionalBitmap(Image bitmapEast)
         {
             _bitmapEast = new VehicleBitmap(bitmapEast);
-            _bitmapSouth = new VehicleBitmap(_bitmapEast.Bitmap.Get90DegreesRotatedClone());
-            _bitmapWest = new VehicleBitmap(_bitmapSouth.Bitmap.Get90DegreesRotatedClone());
-            _bitmapNorth = new VehicleBitmap(_bitmapWest.Bitmap.Get90DegreesRotatedClone());
+            _bitmapSouth = new VehicleBitmap(_bitmapEast.Bitmap.RotateImage(45));
+            _bitmapWest = new VehicleBitmap(_bitmapSouth.Bitmap.RotateImage(45));
+            _bitmapNorth = new VehicleBitmap(_bitmapWest.Bitmap.RotateImage(45));
 
             _southEast = new VehicleBitmap(_bitmapEast.Bitmap.RotateImage(45));
-            _southWest = new VehicleBitmap(_southEast.Bitmap.Get90DegreesRotatedClone());
-            _northWest = new VehicleBitmap(_southWest.Bitmap.Get90DegreesRotatedClone());
-            _northEast = new VehicleBitmap(_northWest.Bitmap.Get90DegreesRotatedClone());
+            _southWest = new VehicleBitmap(_southEast.Bitmap.RotateImage(45));
+            _northWest = new VehicleBitmap(_southWest.Bitmap.RotateImage(45));
+            _northEast = new VehicleBitmap(_northWest.Bitmap.RotateImage(45));
         }
 
         public VehicleBitmap GetBitmap(Orientation orientation)

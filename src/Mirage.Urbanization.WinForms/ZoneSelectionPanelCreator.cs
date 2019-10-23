@@ -48,7 +48,7 @@ namespace Mirage.Urbanization.WinForms
                         Dock = DockStyle.Top,
                         BackColor = SystemColors.Control,
                         Parent = _targetPanel,
-                        Image = sample.Tile,
+                        Image = sample.Tile.ToSysDrawingBitmap(),
                         Size = new Size(68, 68)
                     };
 

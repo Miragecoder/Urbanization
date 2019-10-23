@@ -584,6 +584,6 @@
     <EmbeddedResource Include="Tiles\Clusters\StaticZones\AirportZoneClusterConsumption_4.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
   </ItemGroup>
 </Project>

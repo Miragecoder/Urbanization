@@ -17,10 +17,10 @@ namespace Mirage.Urbanization.Web
         {
             return new ClientDataMeterZoneInfo
             {
-                colour = BrushManager
+                colour = DatameterColourDefinitions
                             .Instance
-                            .GetBrushFor(zoneInfoDataMeter.GetDataMeterResult(zoneInfo).ValueCategory)
-                            .WithResultIfHasMatch(brush => System.Drawing.ColorTranslator.ToHtml(brush.Color), string.Empty),
+                            .GetColorFor(zoneInfoDataMeter.GetDataMeterResult(zoneInfo).ValueCategory)
+                            .Pipe(x => x.HasValue ? x.Value.ToHex() : string.Empty),
                 x = zoneInfo.Point.X,
                 y = zoneInfo.Point.Y
             };

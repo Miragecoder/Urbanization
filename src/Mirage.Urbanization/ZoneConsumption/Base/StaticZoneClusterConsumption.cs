@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base

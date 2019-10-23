@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 
@@ -23,7 +23,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override char KeyChar => 'c';
 
         public override Image Tile =>
-            new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.commercial.png"));
+            Image.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.commercial.png"));
 
         public override string Name => "Commercial zone";
     }

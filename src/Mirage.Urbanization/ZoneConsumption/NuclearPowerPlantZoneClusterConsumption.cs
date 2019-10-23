@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
@@ -23,7 +23,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override string Name => "Nuclear power plant";
         public override ICrimeBehaviour CrimeBehaviour { get; } = new DynamicCrimeBehaviour(() => 0);
         public override int Cost => 30000;
-        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.nuclearpowerplant.png"));
+        public override Image Tile => Image.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.nuclearpowerplant.png"));
 
         public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
     }

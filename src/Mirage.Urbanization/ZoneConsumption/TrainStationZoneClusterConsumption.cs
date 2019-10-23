@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
@@ -27,7 +27,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         }
 
         public override ICrimeBehaviour CrimeBehaviour { get; }
-        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.trainstation.png"));
+        public override Image Tile => Image.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.trainstation.png"));
 
         public override IFireHazardBehaviour FireHazardBehaviour { get; } = new DynamicFireHazardBehaviour(() => 20);
     }

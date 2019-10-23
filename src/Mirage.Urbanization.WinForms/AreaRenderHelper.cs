@@ -113,7 +113,7 @@ namespace Mirage.Urbanization.WinForms
 
             _canvasPanel = new Panel
             {
-                BackColor = EmptyZoneConsumption.DefaultColor,
+                BackColor = EmptyZoneConsumption.DefaultColor.ToSysDrawingColor(),
                 Size = _tilesetAccessor.GetAreaSize(SimulationSession.Area),
                 Dock = DockStyle.None
             };
@@ -201,10 +201,10 @@ namespace Mirage.Urbanization.WinForms
                         {
                             var pointOne =
                                 _zoneRenderInfos[bitmapAndPoint.Third].GetRectangle()
-                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Bitmap.Size));
+                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Bitmap.ToSysDrawingBitmap().Size));
                             var pointTwo =
                                 _zoneRenderInfos[bitmapAndPoint.Second].GetRectangle()
-                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Bitmap.Size));
+                                    .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Bitmap.ToSysDrawingBitmap().Size));
 
                             var distanceX =
                                 Convert.ToInt32(pointOne.Location.X +
@@ -215,12 +215,12 @@ namespace Mirage.Urbanization.WinForms
 
                             var currentRectangle = _zoneRenderInfos[bitmapAndPoint.Second]
                                 .GetRectangle()
-                                .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Bitmap.Size));
+                                .ChangeSize(_tilesetAccessor.ResizeToTileWidthAndSize(bitmapAndPoint.Bitmap.Bitmap.ToSysDrawingBitmap().Size));
 
                             currentRectangle.Location = new Point(distanceX, distanceY);
 
                             _graphicsManager.GetGraphicsWrapper().DrawImage(
-                                bitmap: bitmapAndPoint.Bitmap.Bitmap,
+                                bitmap: bitmapAndPoint.Bitmap.Bitmap.ToSysDrawingBitmap(),
                                 rectangle: currentRectangle
                             );
                         }

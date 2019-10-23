@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -45,7 +45,7 @@ namespace Mirage.Urbanization.ZoneConsumption
         public override bool CanBeOverriddenByZoneClusters => false;
 
         public override Color Color => Color.Gray;
-        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.road.png"));
+        public override Image Tile => Image.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.road.png"));
 
         public IPollutionBehaviour PollutionBehaviour { get; }
 

@@ -89,7 +89,8 @@ namespace Mirage.Urbanization.Web
                         + $"\"vehicleTilesPerRow\": { TextureAtlas.VehicleTilesPerRow }, "
                         + $"\"cellSpriteOffset\": { TilesetProvider.TextureAtlas.CellSpriteOffset } }}");
                 }
-                await next();
+                else
+                    await next();
             });
 
             app.UseRouting();
