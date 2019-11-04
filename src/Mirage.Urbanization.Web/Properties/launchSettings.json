@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Mirage.Urbanization.Web": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
