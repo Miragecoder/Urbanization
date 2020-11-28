@@ -13,6 +13,18 @@ Among the features offered by this implementation are:
 
 ![Screenshot of 'Urbanization'](/screenshot.png?raw=true "Screenshot of 'Urbanization'")
 
+## Docker
+
+A Dockerfile is included which can be used to build and run the webserver.
+
+For example, run from within the /src/-folder the following commands:
+```
+# Build an image, tag it as 'urbanization'...
+docker build . --tag urbanization
+# Run a container instance named 'mycity' on port 80...
+docker run -d -p 80:80 --name mycity urbanization
+```
+
 ## Demo
 
 A live demo of the web app is hosted at:
