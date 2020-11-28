@@ -64,7 +64,7 @@ $(function () {
         };
     })();
 
-    var simulation = $.connection.simulationHub;
+    var simulation = new signalR.HubConnectionBuilder().withUrl("/simulationHub").build();
     var buttonDefinitionStates = {};
     var dummyButton = {
         horizontalCellOffset: 0,
@@ -296,13 +296,13 @@ $(function () {
                 }
             };
 
-            simulation.client.submitAreaMessage = function (message) {
+            simulation.on("submitAreaMessage", function (message) {
                 document.getElementById("areaMessageLabel").innerHTML = message;
-            };
+            });
 
-            simulation.client.submitAreaHotMessage = function (message) {
+            simulation.on("submitAreaHotMessage", function (message) {
                 raiseHotMessage(message.title, message.message);
-            };
+            });
             var EventPublisherService = function () {
                 var currentState;
                 var listeners = [];
@@ -345,12 +345,11 @@ $(function () {
                     handleLabelAndValueTable("#cityEvaluationGeneralOpinionTable", cityEvaluationState.generalOpinion, "General opinion", false);
 
                 });
-
-
-                simulation.client.onYearAndMonthChanged = function (yearAndMonthChangedState) {
+                                
+                simulation.on("onYearAndMonthChanged", function (yearAndMonthChangedState) {
                     document.getElementById("currentYearAndMonthLabel").innerHTML = yearAndMonthChangedState.yearAndMonthDescription;
                     cityEvaluationStateService.loadNewState(yearAndMonthChangedState);
-                };
+                });
             })();
 
             // City budget
@@ -416,7 +415,7 @@ $(function () {
                                 var raiseButton = document.createElement("button");
                                 raiseButton.innerHTML = "Raise";
                                 raiseButton.addEventListener("click", function () {
-                                    raiseFunc(simulation.server, taxState);
+                                    raiseFunc(simulation, taxState);
                                     disableButtons();
                                 });
                                 labelCell.appendChild(raiseButton);
@@ -424,7 +423,7 @@ $(function () {
                                 var dropButton = document.createElement("button");
                                 dropButton.innerHTML = "Lower";
                                 dropButton.addEventListener("click", function () {
-                                    lowerFunc(simulation.server, taxState);
+                                    lowerFunc(simulation, taxState);
                                     disableButtons();
                                 });
 
@@ -450,8 +449,8 @@ $(function () {
                                     function (e) { return e.name; },
                                     function (e) { return e.projectedIncome; },
                                     function (e) { return e.currentRate; },
-                                    function (server, taxState) { server.lowerTax(taxState.name); },
-                                    function (server, taxState) { server.raiseTax(taxState.name); });
+                                    function (server, taxState) { server.invoke("lowerTax", taxState.name); },
+                                    function (server, taxState) { server.invoke("raiseTax", taxState.name); });
                             }
                         }
                         writeTaxStateRow(cityBudgetState.totalTaxState,
@@ -469,8 +468,8 @@ $(function () {
                                     function (e) { return e.name; },
                                     function (e) { return e.projectedExpenses; },
                                     function (e) { return e.currentRate; },
-                                    function (server, cityServiceState) { server.lowerCityServiceFunding(cityServiceState.name); },
-                                    function (server, cityServiceState) { server.raiseCityServiceFunding(cityServiceState.name); });
+                                    function (server, cityServiceState) { server.invoke("lowerCityServiceFunding", cityServiceState.name); },
+                                    function (server, cityServiceState) { server.invoke("raiseCityServiceFunding", cityServiceState.name); });
                             }
                         }
                         writeTaxStateRow(cityBudgetState.totalCityServiceState,
@@ -514,28 +513,28 @@ $(function () {
                     })();
                 });
 
-                simulation.client.submitCityBudgetValue = function (e) {
+                simulation.on("submitCityBudgetValue", function (e) {
                     document.getElementById("currentFundsLabel").innerHTML = "Current funds: " + accounting.formatMoney(e.currentAmount);
                     document.getElementById("projectedIncomeLabel").innerHTML = "Projected income: $ " + accounting.formatMoney(e.projectedIncome);
                     cityBudgetStateService.loadNewState(e.cityBudgetState);
-                };
+                });
 
             })();
 
-            simulation.client.submitAndDraw = function (zoneInfo) {
+            simulation.on("submitAndDraw", function (zoneInfo) {
                 drawZoneInfo(zoneInfo);
-            };
+            });
 
-            simulation.client.submitZoneInfos = function (zoneInfos) {
+            simulation.on("submitZoneInfos", function (zoneInfos) {
                 for (var i in zoneInfos) {
                     if (zoneInfos.hasOwnProperty(i)) {
                         var zoneInfo = zoneInfos[i];
                         drawZoneInfo(zoneInfo);
                     }
                 }
-            };
+            });
 
-            simulation.client.submitDataMeterInfos = function (zoneDataMeterInfos) {
+            simulation.on("submitDataMeterInfos", function (zoneDataMeterInfos) {
 
                 for (var i in zoneDataMeterInfos) {
                     if (zoneDataMeterInfos.hasOwnProperty(i)) {
@@ -554,7 +553,7 @@ $(function () {
                         }
                     }
                 }
-            };
+            });
 
             var processGraphDefinitions = function (graphDefinitions) {
                 var graphTabs = document.getElementById("graphTabs");
@@ -614,7 +613,7 @@ $(function () {
                 $("#graphTabs").tabs();
             };
 
-            simulation.client.submitMenuStructure = function (request) {
+            simulation.on("submitMenuStructure", function (request) {
 
                 processGraphDefinitions(request.graphDefinitions);
 
@@ -630,12 +629,12 @@ $(function () {
                 (function () {
                     var registerDataMeter = function (dataMeter) {
                         createButton(dataMeter.name, overlaySelectionDiv, function (e) {
-                            simulation.server.joinDataMeterGroup(dataMeter.webId);
+                            simulation.invoke("joinDataMeterGroup", dataMeter.webId);
                             currentDataMeter = dataMeter;
                             canvasLayer5.getContext("2d").clearRect(0, 0, canvasLayer5.width, canvasLayer5.height);
 
                             if (currentDataMeter.webId !== 0) {
-                                simulation.server.requestZonesFor(currentDataMeter.webId);
+                                simulation.invoke("requestZonesFor",currentDataMeter.webId);
                             }
                         });
                     };
@@ -713,11 +712,11 @@ $(function () {
                     }
                 }
                 $("input[type=submit], button").button();
-            };
+            });
 
             (function () {
                 var previouslyDrawnVehicleTiles = [];
-                simulation.client.submitVehicleStates = function (vehicleStates) {
+                simulation.on("submitVehicleStates", function (vehicleStates) {
 
                     var contextOne = canvasLayer2.getContext("2d");
                     var contextTwo = canvasLayer4.getContext("2d");
@@ -748,10 +747,10 @@ $(function () {
                             previouslyDrawnVehicleTiles.push(cancelObj);
                         }
                     }
-                };
+                });
             })();
 
-            $.connection.hub.start().done(function () {
+            simulation.start().then(function () {
 
                 // Mouse events and handlers
                 (function () {
@@ -818,7 +817,7 @@ $(function () {
                             if (lastConsumedCell === null ||
                                 lastConsumedCell.x !== cell.x ||
                                 lastConsumedCell.y !== cell.y || lastConsumedCell.button !== button) {
-                                simulation.server.consumeZone(button.name, cell.x, cell.y);
+                                simulation.invoke("consumeZone", { name: button.name, x: cell.x, y: cell.y });
                                 lastConsumedCell = cell;
                                 lastConsumedCell.button = button;
 
@@ -921,7 +920,7 @@ $(function () {
                     })();
                 })();
 
-                simulation.server.requestMenuStructure();
+                simulation.invoke("requestMenuStructure");
             });
         });
     };

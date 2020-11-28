@@ -1,5 +1,5 @@
-using System.Drawing;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
+using SixLabors.Primitives;
 
 namespace Mirage.Urbanization.Tilesets
 {

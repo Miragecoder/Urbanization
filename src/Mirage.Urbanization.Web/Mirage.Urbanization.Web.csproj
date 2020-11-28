@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectGuid>{E80D47E8-22C1-4CE4-AC67-7F3AB2FCBFE7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Mirage.Urbanization.Web</AssemblyTitle>
     <Product>Mirage.Urbanization.Web</Product>
@@ -12,6 +12,7 @@
     <Copyright>Copyright ©  2015</Copyright>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -21,44 +22,15 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Mirage.Urbanization.Web.Program</StartupObject>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="jQuery" Version="1.6.4" />
-    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.JS" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.Sample" Version="2.2.0.0" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.SystemWeb" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Owin" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Diagnostics" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.FileSystems" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Owin.Hosting" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Security" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Owin.SelfHost" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="3.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="6.0.4" />
-    <PackageReference Include="Owin" Version="1.0" />
-    <PackageReference Include="Topshelf" Version="3.2.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\icons\manifest.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\index.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\scripts\jquery-1.6.4-vsdoc.js" />
-    <EmbeddedResource Include="Www\scripts\jquery-1.6.4.js" />
-    <EmbeddedResource Include="Www\scripts\jquery-1.6.4.min.js" />
-    <EmbeddedResource Include="Www\scripts\jquery.signalR-2.2.0.js" />
-    <EmbeddedResource Include="Www\scripts\jquery.signalR-2.2.0.min.js" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Urbanization.Charts\Mirage.Urbanization.Charts.csproj" />
@@ -72,65 +44,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Www\icons\android-chrome-144x144.png" />
-    <EmbeddedResource Include="Www\icons\android-chrome-192x192.png" />
-    <EmbeddedResource Include="Www\icons\android-chrome-36x36.png" />
-    <EmbeddedResource Include="Www\icons\android-chrome-48x48.png" />
-    <EmbeddedResource Include="Www\icons\android-chrome-72x72.png" />
-    <EmbeddedResource Include="Www\icons\android-chrome-96x96.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-114x114.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-120x120.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-144x144.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-152x152.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-180x180.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-57x57.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-60x60.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-72x72.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-76x76.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon-precomposed.png" />
-    <EmbeddedResource Include="Www\icons\apple-touch-icon.png" />
-    <EmbeddedResource Include="Www\icons\browserconfig.xml" />
-    <EmbeddedResource Include="Www\icons\favicon-16x16.png" />
-    <EmbeddedResource Include="Www\icons\favicon-194x194.png" />
-    <EmbeddedResource Include="Www\icons\favicon-32x32.png" />
-    <EmbeddedResource Include="Www\icons\favicon-96x96.png" />
-    <EmbeddedResource Include="Www\icons\favicon.ico" />
-    <EmbeddedResource Include="Www\icons\mstile-144x144.png" />
-    <EmbeddedResource Include="Www\icons\mstile-150x150.png" />
-    <EmbeddedResource Include="Www\icons\mstile-310x150.png" />
-    <EmbeddedResource Include="Www\icons\mstile-310x310.png" />
-    <EmbeddedResource Include="Www\icons\mstile-70x70.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\css\jquery-ui.css" />
-    <EmbeddedResource Include="Www\css\jquery-ui.theme.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\css\jquery-ui.min.css" />
-    <EmbeddedResource Include="Www\css\jquery-ui.structure.min.css" />
-    <EmbeddedResource Include="Www\scripts\jquery-ui.min.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\css\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_flat_10_000000_40x100.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <EmbeddedResource Include="Www\css\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <EmbeddedResource Include="Www\css\images\ui-icons_222222_256x240.png" />
-    <EmbeddedResource Include="Www\css\images\ui-icons_228ef1_256x240.png" />
-    <EmbeddedResource Include="Www\css\images\ui-icons_ef8c08_256x240.png" />
-    <EmbeddedResource Include="Www\css\images\ui-icons_ffd27a_256x240.png" />
-    <EmbeddedResource Include="Www\css\images\ui-icons_ffffff_256x240.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\game\game.css" />
-    <EmbeddedResource Include="Www\game\game.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Www\scripts\accounting.min.js" />
+    <EmbeddedResource Include="Www\**\*" />
   </ItemGroup>
 </Project>

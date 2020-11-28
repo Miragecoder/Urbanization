@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using SixLabors.ImageSharp;
 using System.Reflection;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
@@ -15,12 +15,12 @@ namespace Mirage.Urbanization.ZoneConsumption
             return new AreaZoneConsumptionOverrideInfoResult(consumption, consumption);
         }
 
-        public override Color Color => System.Drawing.Color.DarkGreen;
+        public override Color Color => Color.DarkGreen;
 
         private static readonly DynamicPollutionBehaviour ParkPollutionBehaviour = new DynamicPollutionBehaviour(() => -40);
 
         public IPollutionBehaviour PollutionBehaviour => ParkPollutionBehaviour;
-        public override Image Tile => new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.park.png"));
+        public override Image Tile => Image.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream("Mirage.Urbanization.Tiles.park.png"));
 
         public ParkZoneConsumption(ZoneInfoFinder neighborNavigator) : base(neighborNavigator)
         {

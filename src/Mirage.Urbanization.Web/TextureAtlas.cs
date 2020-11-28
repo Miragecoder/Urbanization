@@ -1,9 +1,11 @@
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using Mirage.Urbanization.Tilesets;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
 namespace Mirage.Urbanization.Web
 {
@@ -65,29 +67,29 @@ namespace Mirage.Urbanization.Web
                 using (var memoryStream = new MemoryStream())
                 {
                     memoryStream.Position = 0;
-                    using (var bitmap = new Bitmap(
+                    using (var bitmap = new Image<Rgba32>(
                         width: cellSprites.Keys.Max(x => x.X).Pipe(x => x + 50),
                         height: cellSprites.Keys.Max(x => x.Y)
                             .Pipe(x => x + 75 + vehicleSprites.Max(v => v.Key.Y)))
                         )
                     {
-                        using (var graphics = Graphics.FromImage(bitmap))
+                        var cellSpriteOffset = default(int);
+                        bitmap.Mutate(graphics =>
                         {
                             foreach (var x in cellSprites)
                             {
-                                graphics.DrawImage(x.Value.Bitmap, x.Key);
+                                graphics.DrawImage(x.Value.Bitmap, x.Key, 1);
                             }
+                            cellSpriteOffset = cellSprites.Max(x => x.Key.Y) + 25;
 
-                            var cellSpriteOffset = cellSprites.Max(x => x.Key.Y) + 25;
                             foreach (var x in vehicleSprites)
                             {
-                                graphics.DrawImage(x.Value.Bitmap, new Point { X = x.Key.X, Y = x.Key.Y + cellSpriteOffset });
+                                graphics.DrawImage(x.Value.Bitmap, new Point { X = x.Key.X, Y = x.Key.Y + cellSpriteOffset }, 1);
                             }
+                        });
 
-                            graphics.Save();
-                            bitmap.Save(memoryStream, ImageFormat.Png);
-                            return new InitializedAtlas(memoryStream.ToArray(), cellSpriteOffset);
-                        }
+                        bitmap.SaveAsPng(memoryStream);
+                        return new InitializedAtlas(memoryStream.ToArray(), cellSpriteOffset);
                     }
                 }
             });

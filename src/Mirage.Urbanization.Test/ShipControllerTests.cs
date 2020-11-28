@@ -25,7 +25,7 @@ namespace Mirage.Urbanization.Test
             };
 
             terraFormingOptions.SetZoneWidthAndHeight(TerraformingOptions.MinWidthAndHeight);
-            var area = new Area(new AreaOptions(() => MockRepository.GenerateMock<ILandValueCalculator>(), terraFormingOptions, new ProcessOptions(() => false, () => false), () => MockRepository.GenerateMock<ICityServiceStrengthLevels>()));
+            var area = new Area(new AreaOptions(() => MockRepository.Mock<ILandValueCalculator>(), terraFormingOptions, new ProcessOptions(() => false, () => false), () => MockRepository.Mock<ICityServiceStrengthLevels>()));
             var shipController = new ShipController(() => area.EnumerateZoneInfos().OfType<IZoneInfo>().ToHashSet(), TimeSpan.FromMilliseconds(1), 1);
 
             var harbourFactory = new Func<SeaPortZoneClusterConsumption>(

@@ -1,3 +1,4 @@
+using SixLabors.ImageSharp;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -14,12 +15,9 @@ namespace Mirage.Urbanization.Tilesets
                 .GetManifestResourceNames()
                 .Where(x => x.Contains(@namespace))
                 .Select(resourceName => new EmbeddedResourceBitmap(resourceName,
-                    new Bitmap(
-                        Image.FromStream(
-                            Assembly
-                                .GetExecutingAssembly()
-                                .GetManifestResourceStream(resourceName)
-                            )
+                    Image.Load(Assembly
+                            .GetExecutingAssembly()
+                            .GetManifestResourceStream(resourceName)
                         )
                     )
                 );
@@ -27,14 +25,14 @@ namespace Mirage.Urbanization.Tilesets
 
         public class EmbeddedResourceBitmap
         {
-            public EmbeddedResourceBitmap(string resourceName, Bitmap bitmap)
+            public EmbeddedResourceBitmap(string resourceName, Image bitmap)
             {
                 ResourceName = resourceName;
                 Bitmap = bitmap;
             }
 
             public string ResourceName { get; }
-            public Bitmap Bitmap { get; }
+            public Image Bitmap { get; }
             public string FileName => ResourceName.Split('.').Reverse().Skip(1).Take(1).Single();
         }
     }

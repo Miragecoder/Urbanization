@@ -71,12 +71,12 @@ namespace Mirage.Urbanization.WinForms
 
             if (bitmapLayer.HasMatch)
             {
-                graphics.DrawImage(Picker.GetFrame(bitmapLayer.MatchingObject.LayerOne).Bitmap, rectangle);
+                graphics.DrawImage(Picker.GetFrame(bitmapLayer.MatchingObject.LayerOne).Bitmap.ToSysDrawingBitmap(), rectangle);
 
                 if (bitmapLayer.MatchingObject.LayerTwo.HasMatch)
                     drawSecondLayerAction = () =>
                     {
-                        graphics.DrawImage(Picker.GetFrame(bitmapLayer.MatchingObject.LayerTwo.MatchingObject).Bitmap, rectangle);
+                        graphics.DrawImage(Picker.GetFrame(bitmapLayer.MatchingObject.LayerTwo.MatchingObject).Bitmap.ToSysDrawingBitmap(), rectangle);
                     };
 
                 if (_renderZoneOptions.ShowDebugGrowthPathFinding)

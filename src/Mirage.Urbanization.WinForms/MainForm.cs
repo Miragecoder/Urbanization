@@ -15,7 +15,7 @@ using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.Simulation;
 using Mirage.Urbanization.Simulation.Persistence;
-using Mirage.Urbanization.Web;
+//using Mirage.Urbanization.Web;
 using Mirage.Urbanization.WinForms.Overlay;
 
 namespace Mirage.Urbanization.WinForms
@@ -352,11 +352,6 @@ namespace Mirage.Urbanization.WinForms
                         _webserverForm = null;
                     };
                 });
-        }
-
-        private void forceZedGraphToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ChartDrawerFactory.ForceZedGraph = forceZedGraphToolStripMenuItem.Checked;
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

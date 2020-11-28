@@ -9,8 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.UI.DataVisualization.Charting;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Mirage.Urbanization.Charts;
 using Mirage.Urbanization.Statistics;

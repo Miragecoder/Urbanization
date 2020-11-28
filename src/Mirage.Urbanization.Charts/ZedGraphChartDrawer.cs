@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Web.UI.WebControls;
 using Mirage.Urbanization.Simulation.Datameters;
 using Mirage.Urbanization.Simulation.Persistence;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
@@ -22,13 +21,7 @@ namespace Mirage.Urbanization.Charts
         {
             using (var chartMemoryStream = new MemoryStream())
             {
-                var zg = new ZedGraphControl
-                {
-                    Size = size,
-                    Font = font
-                };
-
-                var chart = zg.GraphPane;
+                var chart = new ZedGraph.GraphPane();
 
                 foreach (var axis in new[] { chart.XAxis, chart.YAxis as Axis })
                 {
@@ -77,9 +70,7 @@ namespace Mirage.Urbanization.Charts
 
                 });
 
-                zg.AxisChange();
-
-                return zg.GetImage();
+                return chart.GetImage();
             }
         }
     }

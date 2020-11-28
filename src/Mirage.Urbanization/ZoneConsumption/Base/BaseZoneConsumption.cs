@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
+using SixLabors.ImageSharp;
 
 namespace Mirage.Urbanization.ZoneConsumption.Base
 {
@@ -9,7 +9,7 @@ namespace Mirage.Urbanization.ZoneConsumption.Base
         public abstract string Name { get; }
         public abstract Color Color { get; }
         public abstract char KeyChar { get; }
-        public string ColorName => ColorTranslator.ToHtml(Color);
+        public string ColorName => Color.ToHex();
         public abstract Image Tile { get; }
 
         public abstract int Cost { get; }

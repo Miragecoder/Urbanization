@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
@@ -34,7 +32,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>());
+            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () => MockRepository.Mock<ICityServiceStrengthLevels>());
 
             var area = new Area(options);
 
@@ -50,7 +48,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () =>MockRepository.GenerateMock<ICityServiceStrengthLevels>());
+            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () =>MockRepository.Mock<ICityServiceStrengthLevels>());
 
             var area = new Area(options);
 
@@ -70,7 +68,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>());
+            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () => MockRepository.Mock<ICityServiceStrengthLevels>());
             var area = new Area(options);
 
             var predicate = new Func<IZoneInfo, bool>(x => x.Point.X == 2 && x.Point.Y == 4);
@@ -87,7 +85,7 @@ namespace Mirage.Urbanization.Test
         {
             var terraFormingOptions = new TerraformingOptions();
             terraFormingOptions.SetZoneWidthAndHeight(100);
-            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () => MockRepository.GenerateMock<ICityServiceStrengthLevels>());
+            var options = new AreaOptions(() => FakeLandValueCalculator.Instance, terraFormingOptions, TestCity.ProcessOptions, () => MockRepository.Mock<ICityServiceStrengthLevels>());
             var area = new Area(options);
 
             var predicate = new Func<IZoneInfo, bool>(x => x.Point.X == 2 && x.Point.Y == 4);

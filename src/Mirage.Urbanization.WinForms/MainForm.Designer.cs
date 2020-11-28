@@ -59,7 +59,6 @@
             this.toggleOverlayNumbers = new System.Windows.Forms.ToolStripMenuItem();
             this.debugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.forceZedGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.monthAndYearLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.cityBudgetLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -265,8 +264,7 @@
             this.toolStripSeparator5,
             this.toggleOverlayNumbers,
             this.debugWindowToolStripMenuItem,
-            this.toolStripSeparator6,
-            this.forceZedGraphToolStripMenuItem});
+            this.toolStripSeparator6});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -308,14 +306,6 @@
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(207, 6);
-            // 
-            // forceZedGraphToolStripMenuItem
-            // 
-            this.forceZedGraphToolStripMenuItem.CheckOnClick = true;
-            this.forceZedGraphToolStripMenuItem.Name = "forceZedGraphToolStripMenuItem";
-            this.forceZedGraphToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.forceZedGraphToolStripMenuItem.Text = "Force ZedGraph";
-            this.forceZedGraphToolStripMenuItem.Click += new System.EventHandler(this.forceZedGraphToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -434,7 +424,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem forceZedGraphToolStripMenuItem;
     }
 }
 

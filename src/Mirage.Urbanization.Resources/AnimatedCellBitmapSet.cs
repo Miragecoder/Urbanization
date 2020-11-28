@@ -37,7 +37,7 @@ namespace Mirage.Urbanization.Tilesets
             _rotatedCloneLazy = new Lazy<AnimatedCellBitmapSet>(() => new AnimatedCellBitmapSet(
                 delay,
                 Bitmaps
-                .Select(x => BitmapExtensions.Get90DegreesRotatedClone(x.Bitmap))
+                .Select(x => ImageExtensions.RotateImage(x.Bitmap, 90))
                 .Select(x => new CellBitmap(x)).ToArray()
                 ));
             _bitmapEnumerator = Bitmaps.GetInifiniteEnumerator();

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
+using SixLabors.Primitives;
 
 namespace Mirage.Urbanization.Tilesets
 {
