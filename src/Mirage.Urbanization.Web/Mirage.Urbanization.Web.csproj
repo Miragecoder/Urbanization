@@ -2,11 +2,8 @@
   <PropertyGroup>
     <ProjectGuid>{E80D47E8-22C1-4CE4-AC67-7F3AB2FCBFE7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <AssemblyTitle>Mirage.Urbanization.Web</AssemblyTitle>
-    <Product>Mirage.Urbanization.Web</Product>
-    <Copyright>Copyright ©  2015</Copyright>
     <AssemblyTitle>Mirage.Urbanization.Web</AssemblyTitle>
     <Product>Mirage.Urbanization.Web</Product>
     <Copyright>Copyright ©  2015</Copyright>

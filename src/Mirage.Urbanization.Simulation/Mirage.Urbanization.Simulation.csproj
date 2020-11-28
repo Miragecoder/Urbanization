@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{5A699402-01AE-484E-A489-FD500E868A0C}</ProjectGuid>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AssemblyTitle>Mirage.Urbanization.Simulation</AssemblyTitle>
-    <Product>Mirage.Urbanization.Simulation</Product>
-    <Copyright>Copyright ©  2014</Copyright>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyTitle>Mirage.Urbanization.Simulation</AssemblyTitle>
     <Product>Mirage.Urbanization.Simulation</Product>
     <Copyright>Copyright ©  2014</Copyright>
@@ -18,7 +15,7 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Urbanization\Mirage.Urbanization.csproj" />

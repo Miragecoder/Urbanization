@@ -9,7 +9,7 @@ using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneConsumption.Base.Behaviours;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
-using Rhino.Mocks;
+using Moq;
 
 namespace Mirage.Urbanization.Test
 {
@@ -25,7 +25,7 @@ namespace Mirage.Urbanization.Test
             };
 
             terraFormingOptions.SetZoneWidthAndHeight(TerraformingOptions.MinWidthAndHeight);
-            var area = new Area(new AreaOptions(() => MockRepository.Mock<ILandValueCalculator>(), terraFormingOptions, new ProcessOptions(() => false, () => false), () => MockRepository.Mock<ICityServiceStrengthLevels>()));
+            var area = new Area(new AreaOptions(() => new Mock<ILandValueCalculator>().Object, terraFormingOptions, new ProcessOptions(() => false, () => false), () => new Mock<ICityServiceStrengthLevels>().Object));
             var shipController = new ShipController(() => area.EnumerateZoneInfos().OfType<IZoneInfo>().ToHashSet(), TimeSpan.FromMilliseconds(1), 1);
 
             var harbourFactory = new Func<SeaPortZoneClusterConsumption>(

@@ -262,7 +262,7 @@ namespace Mirage.Urbanization.Web
                             new { Opinion = cityStatisticsView.GetNegativeOpinion(), Label = "Negative" }
                                 }
                                 .OrderByDescending(y => y.Opinion)
-                                .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion.ToString("P1")}" })
+                                .Select(y => new LabelAndValue { label = $"{y.Label}", value = $"{y.Opinion:P1}" })
                                 .ToArray(),
                                 cityBudgetLabelsAndValues = new[]
                                 {

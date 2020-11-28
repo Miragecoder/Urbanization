@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mirage.Urbanization.Persistence;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
-using Rhino.Mocks;
+using Moq;
 
 namespace Mirage.Urbanization.Test
 {
@@ -25,13 +23,13 @@ namespace Mirage.Urbanization.Test
             terraFormingOptions.SetLakes(0);
 
             return persistedArea != null ?
-                new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, persistedArea, ProcessOptions, () => MockRepository.Mock<ICityServiceStrengthLevels>()))
+                new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, persistedArea, ProcessOptions, () => new Mock<ICityServiceStrengthLevels>().Object))
                 : new Area(
                     options: new AreaOptions(
                         getLandValueCalculator: () => FakeLandValueCalculator.Instance, 
                         terraformingOptions: terraFormingOptions,
                         processOptions: ProcessOptions,
-                        getCityServiceStrengthLevels: () => MockRepository.Mock<ICityServiceStrengthLevels>()
+                        getCityServiceStrengthLevels: () => new Mock<ICityServiceStrengthLevels>().Object
                         )
                     );
         }

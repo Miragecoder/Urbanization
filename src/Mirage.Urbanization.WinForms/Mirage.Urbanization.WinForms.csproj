@@ -2,12 +2,9 @@
   <PropertyGroup>
     <ProjectGuid>{B4E3622E-4CF0-4E39-888D-10D9F4C960DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <AssemblyTitle>Mirage.Urbanization.WinForms</AssemblyTitle>
-    <Product>Mirage.Urbanization.WinForms</Product>
-    <Copyright>Copyright ©  2014</Copyright>
     <AssemblyTitle>Mirage.Urbanization.WinForms</AssemblyTitle>
     <Product>Mirage.Urbanization.WinForms</Product>
     <Copyright>Copyright ©  2014</Copyright>
@@ -24,7 +21,6 @@
     <ApplicationIcon>urbanization.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="4.0.1" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />

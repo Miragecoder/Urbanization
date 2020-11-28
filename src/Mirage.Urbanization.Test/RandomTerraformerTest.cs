@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
 using Mirage.Urbanization.ZoneStatisticsQuerying;
-using Rhino.Mocks;
+using Moq;
 
 namespace Mirage.Urbanization.Test
 {
@@ -15,7 +15,7 @@ namespace Mirage.Urbanization.Test
             var r = new RandomTerraformer(
                 () => new WaterZoneConsumption(new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create())),
                 () => new WoodlandZoneConsumption(new ZoneInfoFinder(x => QueryResult<IZoneInfo>.Create())));
-            var zoneInfoGrid = new ZoneInfoGrid(100, MockRepository.Mock<ILandValueCalculator>());
+            var zoneInfoGrid = new ZoneInfoGrid(100, new Mock<ILandValueCalculator>().Object);
 
             var options = new TerraformingOptions()
             {
