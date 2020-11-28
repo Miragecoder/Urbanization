@@ -188,16 +188,14 @@ namespace Mirage.Urbanization.Test
             yield return
                 x =>
                 {
-                    var y = x as ZoneClusterMemberConsumption;
-                    if (y == null) return false;
+                    if (!(x is ZoneClusterMemberConsumption y)) return false;
 
                     return y.ParentBaseZoneClusterConsumption is TrainStationZoneClusterConsumption
                         || y.ParentBaseZoneClusterConsumption is BaseGrowthZoneClusterConsumption;
                 };
             yield return x =>
             {
-                var y = x as IntersectingZoneConsumption;
-                if (y == null) return false;
+                if (!(x is IntersectingZoneConsumption y)) return false;
 
                 return
                     y.GetIntersectingTypes()

@@ -48,7 +48,7 @@ namespace Mirage.Urbanization.Web
             services.AddSignalRCore();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, /*IWebHostEnvironment env,*/ IServiceProvider serviceProvider)
         {
             app.Use(async (context, next) =>
             {

@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{BB0C4FF4-50B5-4D4B-887C-20F9E0775D1A}</ProjectGuid>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyTitle>Mirage.Urbanization.Charts</AssemblyTitle>
     <Product>Mirage.Urbanization.Charts</Product>
     <Copyright>Copyright ©  2015</Copyright>
-    <AssemblyTitle>Mirage.Urbanization.Charts</AssemblyTitle>
-    <Product>Mirage.Urbanization.Charts</Product>
     <Copyright>Copyright ©  2015</Copyright>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>

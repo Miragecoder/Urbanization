@@ -6,8 +6,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mirage.Urbanization.ZoneConsumption;
 using Mirage.Urbanization.ZoneConsumption.Base;
-using Rhino;
-using Rhino.Mocks;
+using Moq;
 
 namespace Mirage.Urbanization.Test
 {
@@ -17,39 +16,39 @@ namespace Mirage.Urbanization.Test
         private static IZoneInfo GenerateZoneInfoMockFor<T>(IReadOnlyArea area)
             where T : class, IAreaZoneConsumption
         {
-            var zone = MockRepository.Mock<IZoneInfo>();
-            var consumptionState = MockRepository.Mock<IZoneConsumptionState>();
+            var zone = new Mock<IZoneInfo>();
+            var consumptionState = new Mock<IZoneConsumptionState>();
 
             consumptionState
-                .Expect(x => x.GetZoneConsumption())
-                .Return(area
+                .Setup(x => x.GetZoneConsumption())
+                .Returns(area
                     .GetSupportedZoneConsumptionFactories()
                     .Single(x => x() is T)() as T
             );
 
             zone
-                .Expect(x => x.ConsumptionState)
-                .Return(consumptionState);
+                .Setup(x => x.ConsumptionState)
+                .Returns(consumptionState.Object);
 
-            return zone;
+            return zone.Object;
         }
 
         private static IZoneInfoPathNode GenerateIZoneInfoPathNodeMock<T>(IReadOnlyArea area)
             where T : class, IAreaZoneConsumption
         {
-            var pathNodeMock = MockRepository.Mock<IZoneInfoPathNode>();
+            var pathNodeMock = new Mock<IZoneInfoPathNode>();
 
             pathNodeMock
-                .Expect(x => x.ZoneInfo)
-                .Return(GenerateZoneInfoMockFor<T>(area));
+                .Setup(x => x.ZoneInfo)
+                .Returns(GenerateZoneInfoMockFor<T>(area));
 
-            return pathNodeMock;
+            return pathNodeMock.Object;
         }
 
         [TestMethod]
         public void SimpleDistanceTrackerTest()
         {
-            var area = new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, new TerraformingOptions(), new ProcessOptions(() => true, () => false), () => MockRepository.Mock<ICityServiceStrengthLevels>()));
+            var area = new Area(new AreaOptions(() => FakeLandValueCalculator.Instance, new TerraformingOptions(), new ProcessOptions(() => true, () => false), () => new Mock<ICityServiceStrengthLevels>().Object));
 
             var tracker = new ZoneInfoDistanceTracker(x => x.IsGrowthZoneClusterOfType<ResidentialZoneClusterConsumption>());
 
