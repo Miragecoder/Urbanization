@@ -94,6 +94,7 @@ namespace Mirage.Urbanization.Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://0.0.0.0:5000");
                 });
 
         private static void Instance_OnLogMessage(object sender, LogEventArgs e)
