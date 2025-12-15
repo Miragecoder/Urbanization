@@ -1,0 +1,27 @@
+{
+  "name": "mirage.urbanization.web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "copy:libs": "npm run copy:jquery && npm run copy:jqueryui:js && npm run copy:jqueryui:css && npm run copy:accounting && npm run copy:signalr",
+    "copy:jquery": "npx copyfiles -f node_modules/jquery/dist/jquery.min.js Www/scripts/jquery",
+    "copy:jqueryui:js": "npx copyfiles -f node_modules/jquery-ui/dist/jquery-ui.min.js Www/scripts/jqueryui",
+    "copy:jqueryui:css": "npx copyfiles -u 2 node_modules/jquery-ui/dist/themes/** Www/scripts/jqueryui",
+    "copy:accounting": "npx copyfiles -f node_modules/accounting/accounting.min.js Www/scripts/accountingjs",
+    "copy:signalr": "npx copyfiles -f node_modules/@microsoft/signalr/dist/browser/signalr.min.js Www/scripts/signalr"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@microsoft/signalr": "^10.0.0",
+    "accounting": "^0.4.1",
+    "jquery": "^3.7.1",
+    "jquery-ui": "^1.13.2"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}

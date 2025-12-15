@@ -2,8 +2,8 @@
   <PropertyGroup>
     <ProjectGuid>{B4E3622E-4CF0-4E39-888D-10D9F4C960DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+	  <TargetFramework>net8.0-windows</TargetFramework>
+	  <UseWindowsForms>true</UseWindowsForms>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Mirage.Urbanization.WinForms</AssemblyTitle>
     <Product>Mirage.Urbanization.WinForms</Product>

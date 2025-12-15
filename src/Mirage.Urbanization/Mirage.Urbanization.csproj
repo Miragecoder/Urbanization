@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{06DC9742-27AE-4711-801A-11B2A43CAB8C}</ProjectGuid>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <TargetFramework>net8.0</TargetFramework>
     <AssemblyTitle>Mirage.Urbanization</AssemblyTitle>
     <Product>Mirage.Urbanization</Product>
     <Copyright>Copyright ©  2014</Copyright>
