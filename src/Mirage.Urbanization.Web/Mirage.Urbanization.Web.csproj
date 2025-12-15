@@ -41,4 +41,23 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Www\**\*" />
 	</ItemGroup>
+	
+	<!-- Custom npm targets go here -->
+	<Target Name="NpmInstall" BeforeTargets="Build">
+		<!-- Run npm install only if node_modules is missing -->
+		<Exec Command="npm install" Condition="!Exists('$(ProjectDir)node_modules')" />
+	</Target>
+
+	<Target Name="CopyClientLibs" AfterTargets="Build">
+		<!-- jQuery -->
+		<Exec Command="npm run copy:jquery" Condition="!Exists('$(ProjectDir)Www\scripts\jquery\jquery.min.js')" />
+		<!-- jQuery UI JS -->
+		<Exec Command="npm run copy:jqueryui:js" Condition="!Exists('$(ProjectDir)Www\scripts\jqueryui\jquery-ui.min.js')" />
+		<!-- jQuery UI CSS -->
+		<Exec Command="npm run copy:jqueryui:css" Condition="!Exists('$(ProjectDir)Www\scripts\jqueryui\themes\base\jquery-ui.min.css')" />
+		<!-- Accounting.js -->
+		<Exec Command="npm run copy:accounting" Condition="!Exists('$(ProjectDir)Www\scripts\accountingjs\accounting.min.js')" />
+		<!-- SignalR -->
+		<Exec Command="npm run copy:signalr" Condition="!Exists('$(ProjectDir)Www\scripts\signalr\signalr.min.js')" />
+	</Target>
 </Project>

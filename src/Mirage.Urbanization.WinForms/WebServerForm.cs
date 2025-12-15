@@ -21,7 +21,7 @@ namespace Mirage.Urbanization.WinForms
             FormClosing += WebServerForm_FormClosing;
 
 
-            _webServer = new GameServer(simulationSession, "http://*:80/", false);
+            _webServer = new GameServer(simulationSession, "http://*:5000/", false);
             _webServer.StartServer();
         }
 
