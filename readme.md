@@ -37,12 +37,13 @@ Note: Availability and performance may vary. If the link doesn't work, you can a
 1. Clone the repository
 2. Build the solution
 3. Run the (primarily, integration) tests
-4. Run the *Mirage.Urbanization.WinForms*-project (if you wish to run from your desktop)
+4. Inside the *Mirage.Urbanization.Web*-project directory, invoke both 'npm install' and 'npm run copy:libs';
 5. Run the *Mirage.Urbanization.Web*-project (if you wish to host a web server)
+6. Run the *Mirage.Urbanization.WinForms*-project (if you wish to run from your desktop)
 
 ## Usage
 
-Run the *Mirage.Urbanization.WinForms*-project and use the application by intuition like any other windows application. The *Mirage.Urbanization.Web*-project can be utilized if you wish to run the web version of the game. Starting the *web*-project will immediately start a web server on all network devices, on port 80. (Http)
+Run the *Mirage.Urbanization.WinForms*-project and use the application by intuition like any other windows application. The *Mirage.Urbanization.Web*-project can be utilized if you wish to run the web version of the game. Starting the *web*-project will immediately start a web server on all network devices, on port 5000. (Http)
 
 You can also start a web server from within an instance of *Mirage.Urbanization.WinForms*; allowing access to the game session that is taking place inside the desktop app from the web.
 

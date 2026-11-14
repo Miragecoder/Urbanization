@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{73BBFBFD-14A4-40EA-87B5-E1BF9BAF42F7}</ProjectGuid>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <TargetFramework>net8.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Mirage.Urbanization.Resources</AssemblyTitle>
     <Product>Mirage.Urbanization.Resources</Product>
